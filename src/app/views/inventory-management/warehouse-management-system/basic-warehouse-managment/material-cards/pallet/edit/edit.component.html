@@ -1,0 +1,184 @@
+<div class="card">
+    <span class="card-header">{{ "pallet-setting-list" | translate }}
+        <button style="float: right;" type="button" class="btn btn-primary" data-toggle="modal"
+            (click)="showDialogToAdd()">
+            <i class="fa fa-plus-circle"></i>
+        </button>
+    </span>
+
+    <div class="card-body">
+        <p-table #dt [value]="palletSetupList" [rows]="pagination.rows" [totalRecords]="pagination.totalElements"
+        [columns]="cols" dataKey="palletStockId">
+
+            <ng-template pTemplate="header" let-columns>
+                <tr>
+                    <th *ngFor="let col of columns; let i=index;"> {{col.header|translate}}</th>
+                    <th width="80px" rowspan="2">{{'action' | translate}}</th>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-palletSetup let-rowData let-columns="columns" let-index="rowIndex">
+                <tr [pSelectableRow]="rowData">
+
+                    <td *ngFor="let col of columns" style="cursor: pointer" [ngSwitch]="col.field">
+
+                        <span *ngSwitchCase="'settingNo'">{{index +1 }}</span>
+                        <span *ngSwitchCase="'palletName'"> {{palletSetup.palletSetting?.palletName}}</span>
+                        <span *ngSwitchCase="'palletCode'"> {{palletSetup.palletSetting?.palletCode}}</span>
+                        <span *ngSwitchDefault>{{palletSetup[col.field]}}</span>
+
+                    </td>
+                    <td width="80px">
+                        <button class="btn btn-sm btn-outline-danger" type="button" (click)="delete(palletSetup)">
+                            <i class="fa fa-trash"></i></button>
+                        <button class="btn btn-sm btn-outline-info" type="button"
+                            (click)="onRowSelect(palletSetup);">
+                            <i class="fa fa-edit"></i></button>
+                    </td>
+                </tr>
+
+            </ng-template>
+        </p-table>
+
+        <br />
+        <div class="row">
+            <div class="col-md-12">
+                <app-paging [showSearch]="false" [TotalElements]="pagination.totalElements"
+                [CurrentPage]="pagination.currentPage" [PageSize]="pagination.pageSize" [rows]="pagination.rows"
+                [TotalPageLinkButtons]="pagination.TotalPageLinkButtons"
+                [RowsPerPageOptions]="pagination.RowsPerPageOptions" (onPageChange)="myChanges($event)"></app-paging>
+            <span style="margin-left:2px; padding-top: 2px " class="text-muted">{{'total-records'|translate}}:
+                {{pagination?.totalElements}}</span>
+            </div>
+
+        </div>
+    </div>
+
+
+</div>
+
+
+<ng-template [ngIf]="modal.active">
+    <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #palletModal="bs-modal"
+        (onHidden)="modal.active=false" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-success" role="document">
+            <form #palletSetupForm="ngForm" focusInvalidInput>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title"> {{'pallet-setting-information' | translate}}</h4>
+                        <button type="button" class="close" (click)="palletModal.hide()" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-bordered">
+
+                            <tr>
+                                <td>{{'pallet-setting-name' | translate}}</td>
+                                <td>
+                                    <select id="palletSetting" name="palletSetting" class="form-control"
+                                        (ngModelChange)="palletSettingNameChanged($event)" [(ngModel)]="palletSetupDto.palletSettingId" required>
+                                        <option [value]="null"> {{ "please-select" | translate }}</option>
+                                        <option *ngFor="let item of palletSettingList" [value]="item.palletSettingId">
+                                            {{item.palletName}}</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>{{'pallet-code' | translate}}</td>
+                                <td>
+                                    <select id="palletCode" name="palletCode" class="form-control"
+                                        (ngModelChange)="palletSettingCodeChanged($event)" [(ngModel)]="palletSetupDto.palletCode" required>
+                                        <option [value]="null"> {{ "please-select" | translate }}</option>
+                                        <option *ngFor="let item of palletSettingList" [value]="item.palletCode">
+                                            {{item.palletCode}}</option>
+                                    </select>
+                                </td>
+                            </tr>
+
+                         
+
+
+                            <tr>
+                                <td>{{ "Maximum Quantity" | translate }}</td>
+                                <td>
+                                    <input type="number" id="maxQuanity" name="maxQuanity" class="form-control" class="form-control"
+                                        [(ngModel)]="palletSetupDto.maxQuantity" required/>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>{{'max-qty-unit' | translate}}</td>
+                                <td>
+                                  <unit-auto-complete [required]="true" [selectedUnit]="palletSetupDto.maxQuantityUnit" (unitChangeEvent)="palletSetupDto.maxQuantityUnit=$event"></unit-auto-complete>
+                                </td>
+                              </tr>
+                            <tr>
+                                <td>{{ "Minimum Quantity" | translate }}</td>
+                                <td>
+                                    <input type="number" id="minQuantity" name="minQuantity" class="form-control" class="form-control"
+                                        [(ngModel)]="palletSetupDto.minQuantity" required/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>{{ "min-pallet-quantity" | translate }}</td>
+                                <td>
+                                    <input type="number" id="minPalletQuantity" name="minPalletQuantity" class="form-control" class="form-control"
+                                        [(ngModel)]="palletSetupDto.minPalletQuantity" required/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>{{'min-qty-unit' | translate}}</td>
+                                <td>
+                                  <unit-auto-complete [required]="true" [selectedUnit]="palletSetupDto.minQuantityUnit" (unitChangeEvent)="palletSetupDto.minQuantityUnit=$event"></unit-auto-complete>
+                                </td>
+                              </tr>
+
+                            <tr>
+
+                                <td>{{'variety'|translate}}</td>
+                                <td>
+                                  <select class="form-control" name="variety" [(ngModel)]="palletSetupDto.variety">
+
+                                    <option *ngFor="let variety of varieties" [value]="variety">{{variety}}</option>
+                                  </select>
+                                </td>
+                            </tr>
+                            <tr>
+
+                              <td>{{'max-box-quantity'|translate}}</td>
+                              <td>
+                                <input type="number" class="form-control" name="maxBoxQuantity"
+                                [(ngModel)]="palletSetupDto.maxBoxQuantity"/>
+                              </td>
+
+
+                            </tr>
+                            <tr>
+
+                              <td>{{'requirement-pallet-quantity-for-forklift'|translate}}</td>
+                              <td>
+                                <input type="number" class="form-control" name="requirementPalletQuantityForForklift"
+                                [(ngModel)]="palletSetupDto.requirementPalletQuantityForForklift"/>
+                              </td>
+                            </tr>
+
+
+                        </table>
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" (click)="palletModal.hide()">
+                            {{ "close" | translate }}
+                        </button>
+                        <button type="button" class="btn btn-success" (click)="save()"
+                            [disabled]="palletSetupForm.invalid">{{ "add" | translate }}</button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</ng-template>

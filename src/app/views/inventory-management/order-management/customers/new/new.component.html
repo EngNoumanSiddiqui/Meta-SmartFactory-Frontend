@@ -1,0 +1,857 @@
+
+<div class="animated fadeIn">
+  <div class="row">
+      <p-tabView class="col-md-12">
+          <p-tabPanel header="{{'basic-informations'| translate }}">
+            <div class="row col-md-12 m-0">
+              <div class="col-md-6">
+                <div class="card">
+                  <div class="card-header">
+                    {{'account-information' | translate}}
+                  </div>
+                    <div class="card-body">
+                      <form #customerForm="ngForm">
+                        <div class="form-group row">
+                          <label class="col-md-3 col-form-label" for="actNo"> {{'accountNo' | translate}} *</label>
+                          <div class="col-md-9">
+  
+                            <div class="input-group">
+                              <input type="text" id="actNo" name="actNo" [(ngModel)]="customer.actNo"
+                                     class="form-control" placeholder="{{'accountNo' | translate}}" >
+                              <span class="input-group-btn">
+                                   <button type="button" class="btn btn-primary" data-toggle="modal"
+                                           (click)="op.toggle($event)"><i
+                                     class="fa fa-question-circle"></i></button>
+                               </span>
+                              <p-overlayPanel #op [dismissable]="true" [showCloseIcon]="true" appendTo="body" baseZIndex="9999">
+                                <strong  class="border-bottom">{{'last-given-no'|translate}}</strong>
+                                <ng-container *ngFor="let st of lastAccountNos">
+                                    <span class="d-block small border-bottom">
+                                      {{st}}
+                                    </span>
+                                </ng-container>
+                              </p-overlayPanel>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="form-group row">
+                          <label class="col-md-3 col-form-label" for="actName"> {{'prefix' | translate}}</label>
+                          <div class="col-md-9">
+                            <input type="text" id="prefix" name="prefix" [(ngModel)]="customer.prefix"
+                                   class="form-control" placeholder="{{'prefix' | translate}}">
+                            <!--<span class="help-block">This is a help text</span>-->
+                          </div>
+                        </div>
+  
+                        <div class="form-group row">
+                          <label class="col-md-3 col-form-label" for="actName"> {{'accountName' | translate}} *</label>
+                          <div class="col-md-9">
+                            <input type="text" id="actName" name="actName" [(ngModel)]="customer.actName"
+                                   class="form-control" placeholder="{{'accountName' | translate}}" required>
+                            <!--<span class="help-block">This is a help text</span>-->
+                          </div>
+                        </div>
+  
+                        <div class="form-group row">
+                          <label class="col-md-3 col-form-label" for="actName2">{{'accountName' | translate}}-2</label>
+                          <div class="col-md-9">
+                            <input type="text" id="actName2" name="actName2" [(ngModel)]="customer.actName2"
+                                   class="form-control" placeholder=" {{'accountName' | translate}}">
+                            <!--<span class="help-block">This is a help text</span>-->
+                          </div>
+                        </div>
+  
+                        <div class="form-group row">
+                          <label class="col-md-3 col-form-label" for="contactName">{{'contact-name' | translate}} *</label>
+                          <div class="col-md-9">
+                            <input type="text" id="contactName" name="contactName" [(ngModel)]="customer.contactName"
+                                   class="form-control" placeholder="{{'contact-name' | translate}}">
+                            <!--<span class="help-block">This is a help text</span>-->
+                          </div>
+                        </div>
+  
+  
+                        <div class="form-group row">
+                          <label class="col-md-3 col-form-label" for="actTypeId">{{'account-type' | translate }}</label>
+                          <div class="col-md-9">
+                            <div class="input-group">
+  
+                              <select id="actTypeId" name="actTypeId" class="form-control" [(ngModel)]="customer.actTypeId" (ngModelChange)="onAccountTypeChanged($event)">
+                                <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                                <option *ngFor="let type of actTypes" value="{{type.actTypeId}}">{{type.actTypeName}}</option>
+                              </select>
+  
+                              <span class="input-group-btn">
+                                   <button type="button" class="btn btn-primary" data-toggle="modal"
+                                           (click)="params.dialog.title = 'type'; myModal.show()"><i class="fa fa-plus-circle"></i></button>
+                               </span>
+  
+                            </div>
+                          </div>
+                        </div>
+  
+                        <div class="form-group row">
+                          <label class="col-md-3 col-form-label" for="accountType"> {{'account-position' | translate}}</label>
+                          <div class="col-md-9" style="align-self: center;">
+                            <div style="display: flex">
+                              <p style="align-items: center">
+                                <input type="radio" name="customer" value="CUSTOMER" [(ngModel)]="customer.accountPosition"
+                                  required="" oninvalid="this.setCustomValidity('Choose Account Type Customer or Supplier or Both')" oninput="this.setCustomValidity('')" />  Customer</p>
+                              <p style="align-items: center; margin-left: 10px">
+                                <input type="radio" name="supplier" value="SUPPLIER" [(ngModel)]="customer.accountPosition" required=""
+                                  oninvalid="this.setCustomValidity('Choose Account Type Customer or Supplier or Both')" oninput="this.setCustomValidity('')" /> Supplier</p>
+                              <p style="align-items: center; margin-left: 10px">
+                                  <input type="radio" name="Both" value="BOTH" [(ngModel)]="customer.accountPosition" required=""
+                                     oninvalid="this.setCustomValidity('Choose Account Type Customer or Supplier or Both')" oninput="this.setCustomValidity('')" /> Both</p>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <label class="col-md-3 col-form-label" for="description"> {{'description' | translate}}</label>
+                          <div class="col-md-9">
+                            <input type="text" id="description" name="description" [(ngModel)]="customer.description"
+                                   class="form-control" placeholder="{{'description' | translate}}">
+                            <!--<span class="help-block">This is a help text</span>-->
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="taxId"> {{'tax-id' | translate}} *</label>
+                            <div class="col-md-9">
+                              <input type="text" id="taxId" name="taxId" [(ngModel)]="customer.taxId"
+                                     class="form-control" placeholder="{{'tax-id' | translate}}">
+                            </div>
+                        </div>
+  
+                        <div class="form-group row">
+                          <label class="col-md-3 col-form-label" for="webSite"> {{'web' | translate}}</label>
+                          <div class="col-md-9">
+                            <input type="text" id="webSite" name="webSite" [(ngModel)]="customer.webSite"
+                                   class="form-control" placeholder="http://www.">
+                            <!--<span class="help-block">This is a help text</span>-->
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <label class="col-md-3 col-form-label" for="registrationNo"> {{'registration-no' | translate}}</label>
+                          <div class="col-md-9">
+                            <input type="text" id="registrationNo" name="registrationNo" [(ngModel)]="customer.registrationNo"
+                                   class="form-control" placeholder="{{'registration-no' | translate}}">
+                            <!--<span class="help-block">This is a help text</span>-->
+                          </div>
+                        </div>
+            
+  
+                        <div class="form-group row">
+                          <label class="col-md-3 col-form-label" for="webSite"> {{'priority' | translate}}</label>
+                          <div class="col-md-9">
+                            <select [(ngModel)]="customer.priority" id="priorityId" name="priorityId" class="form-control" (change)="prioritySelection($event)" required>
+                              <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                              <option value="{{priority}}" *ngFor="let priority of commonPriorities">{{priority}}
+                              </option>
+                            </select>
+                          </div>
+                        </div>
+  
+                      </form>
+                    </div>
+  
+  
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="card">
+                  <div class="card-header">
+                    {{'contact-info' | translate}}
+                  </div>
+                      <div class="card-body">
+                        <form action="" method="post" class="form-horizontal">
+
+                          <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="address1"> {{'address' | translate}} *</label>
+                            <div class="col-md-9">
+                              <input type="text" id="address1" name="address1" [(ngModel)]="customer.address1"
+                                    class="form-control" placeholder="{{'address' | translate}}">
+                              <!--<span class="help-block">This is a help text</span>-->
+                            </div>
+                          </div>
+
+                          <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="address2"> {{'address' | translate}} 2 *</label>
+                            <div class="col-md-9">
+                              <input type="text" id="address2" name="address2" [(ngModel)]="customer.address2"
+                                    class="form-control" placeholder="{{'address' | translate}} 2">
+                              <!--<span class="help-block">This is a help text</span>-->
+                            </div>
+                          </div>
+
+
+                          <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="countryId">{{'country' | translate }} *</label>
+                            <div class="col-md-9">
+                              <select id="countryId" name="countryId" class="form-control" (change)="countrySelection($event)"
+                                      [(ngModel)]="customer.countryId">
+                                <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                                <option value="{{country.countryId}}" *ngFor="let country of countries">{{country.countryName}}
+                                </option>
+                              </select>
+                            </div>
+                          </div>
+
+                          <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="cityId">{{'city' | translate }} *</label>
+                            <div class="col-md-9">
+                              <select id="cityId" name="cityId" class="form-control" [(ngModel)]="customer.cityId"
+                                      [disabled]="params.cityDisabled">
+                                <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                                <option value="{{city.cityId}}" *ngFor="let city of cities">{{city.cityName}}</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="postalCode"> {{'postal-code' | translate}} *</label>
+                            <div class="col-md-9">
+                              <input type="text" id="postalCode" name="postalCode" [(ngModel)]="customer.postalCode"
+                                    class="form-control" placeholder="{{'postal-code' | translate}}">
+                              <!--<span class="help-block">This is a help text</span>-->
+                            </div>
+                          </div>
+
+
+                          <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="phone"> {{'phone' | translate}} *</label>
+                            <div class="col-md-9">
+                              <input type="text" id="phone" name="phone" [(ngModel)]="customer.phone"
+                                    class="form-control" placeholder="{{'phone' | translate}}">
+                              <!--<span class="help-block">This is a help text</span>-->
+                            </div>
+                          </div>
+
+                          <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="fax"> {{'fax' | translate}} *</label>
+                            <div class="col-md-9">
+                              <input type="text" id="fax" name="fax" [(ngModel)]="customer.fax"
+                                    class="form-control" placeholder="{{'fax' | translate}}">
+                              <!--<span class="help-block">This is a help text</span>-->
+                            </div>
+                          </div>
+
+                          <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="gsm"> {{'mobile' | translate}}</label>
+                            <div class="col-md-9">
+                              <input type="text" id="gsm" name="gsm" [(ngModel)]="customer.gsm"
+                                    class="form-control" placeholder="{{'mobile' | translate}}">
+                              <!--<span class="help-block">This is a help text</span>-->
+                            </div>
+                          </div>
+                          <!-- pattern="[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}"
+                          required  -->
+                          <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="hf-email">{{'email' | translate}}</label>
+                            <div class="col-md-9">
+                              <input type="text"
+                            id="hf-email" name="hf-email" class="form-control"
+                                    [(ngModel)]="customer.email" placeholder="{{'email'  |translate}}">
+                              <!--<span class="help-block">Please enter your email</span>-->
+                            </div>
+                          </div>
+
+                        </form>
+                      </div>
+                </div>
+              </div>
+            </div>
+             
+          </p-tabPanel>
+          <p-tabPanel header="{{'contract'| translate }}">
+            <div class="row col-md-12">
+              <div class="col-md-6">
+                <div class="card">
+                  <div class="card-header">
+                    {{'contract-information' | translate}}
+                  </div>
+                  <div class="card-body">
+                    <div class="form-group row">
+                      <label class="col-md-3 col-form-label" for="currency"> {{'currency' | translate}}</label>
+                      <div class="col-md-9">
+                        <currency-auto-complete [selectedCurrency]="customer.contractDto.currency"
+                        (selectedCurrencyEvent)="customer.contractDto.currency=$event?.currencyCode" >
+                        </currency-auto-complete>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-md-3 col-form-label" for="vat"> {{'VAT %' | translate}}</label>
+                      <div class="col-md-9">
+                        <input type="number" id="vat" name="vat" [(ngModel)]="customer.contractDto.vat"
+                               class="form-control" placeholder="{{'VAT' | translate}}">
+                        <!--<span class="help-block">This is a help text</span>-->
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-md-3 col-form-label" for="deliveryTerm"> {{'delivery-term' | translate}} (days)</label>
+                      <div class="col-md-9">
+                        <input type="number" id="deliveryTerm" name="deliveryTerm" [(ngModel)]="customer.contractDto.deliveryTerm"
+                               class="form-control" placeholder="{{'delivery-term' | translate}}">
+                        <!--<span class="help-block">This is a help text</span>-->
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-md-3 col-form-label" for="discount"> {{'discount' | translate}} %</label>
+                      <div class="col-md-9">
+                        <input type="number" id="discount" name="discount" [(ngModel)]="customer.contractDto.discount"
+                               class="form-control" placeholder="{{'discount' | translate}}">
+                        <!--<span class="help-block">This is a help text</span>-->
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-md-3 col-form-label" for="language"> {{'language' | translate}}</label>
+                      <div class="col-md-9">
+                        <input type="text" id="language" name="language" [(ngModel)]="customer.contractDto.language"
+                               class="form-control" placeholder="{{'language' | translate}}">
+                        <!--<span class="help-block">This is a help text</span>-->
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-md-3 col-form-label" for="parity"> {{'parity' | translate}}</label>
+                      <div class="col-md-9">
+                        <parity-auto-complete [selectedParity]="customer.contractDto.parity"
+                        (selectedParityEvent)="customer.contractDto.parity=$event?.parityName;"></parity-auto-complete>
+                        <!-- <input type="text" id="parity" name="parity" [(ngModel)]="customer.contractDto.parity"
+                               class="form-control" placeholder="{{'parity' | translate}}"> -->
+                        <!--<span class="help-block">This is a help text</span>-->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="card">
+                  <div class="card-header">
+                    {{'contract-information' | translate}}
+                  </div>
+                  <div class="card-body">
+                    <div class="form-group row">
+                      <label class="col-md-3 col-form-label" for="paymentTerm"> {{'payment-term' | translate}} (days)</label>
+                      <div class="col-md-9">
+                        <input type="number" id="paymentTerm" name="paymentTerm" [(ngModel)]="customer.contractDto.paymentTerm"
+                               class="form-control" placeholder="{{'payment-term' | translate}}">
+                        <!--<span class="help-block">This is a help text</span>-->
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-md-3 col-form-label" for="insurance"> {{'insurance' | translate}}</label>
+                      <div class="col-md-9">
+                        <input type="number" id="insurance" name="insurance" [(ngModel)]="customer.contractDto.insurance"
+                               class="form-control" placeholder="{{'insurance' | translate}}">
+                        <!--<span class="help-block">This is a help text</span>-->
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-md-3 col-form-label" for="rebate"> {{'rebate' | translate}}</label>
+                      <div class="col-md-9">
+                        <input type="number" id="rebate" name="rebate" [(ngModel)]="customer.contractDto.rabate"
+                               class="form-control" placeholder="{{'rebate' | translate}}">
+                        <!--<span class="help-block">This is a help text</span>-->
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-md-3 col-form-label" for="bankName"> {{'bank-name' | translate}}</label>
+                      <div class="col-md-9">
+                        <input type="text" id="bankName" name="bankName" [(ngModel)]="customer.contractDto.bankName"
+                               class="form-control" placeholder="{{'bank-name' | translate}}">
+                        <!--<span class="help-block">This is a help text</span>-->
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-md-3 col-form-label" for="bankAccountNumber"> {{'bank-account-number' | translate}}</label>
+                      <div class="col-md-9">
+                        <input type="text" id="bankAccountNumber" name="bankAccountNumber" [(ngModel)]="customer.contractDto.bankAccountNumber"
+                               class="form-control" placeholder="{{'bank-account-number' | translate}}">
+                        <!--<span class="help-block">This is a help text</span>-->
+                      </div>
+                    </div>
+                   </div>
+                </div>
+              </div>
+            </div>
+          </p-tabPanel>
+
+          <p-tabPanel header="{{'employee'| translate }} {{'details'| translate }}">
+
+
+            <div class="row col-md-12">
+              <div class="col-md-6">
+                <div class="card">
+                  <div class="card-header">
+                    {{'employee' | translate}} {{'information' | translate}}
+                  </div>
+
+          <div class="card-body">
+            <form action="" method="post" class="form-horizontal">
+
+
+              <div class="form-group row">
+                <label class="col-md-4 col-form-label" for="responsibleEmployeeId"> {{'responsible_employee' | translate}}</label>
+                <div class="col-md-8">
+                  <employee-auto-complete  [plantId]="selectedPlant?.plantId"
+                  [selectedEmployeeId]="customer.responsibleEmployeeId"
+                  (selectedEmployeeEvent)="customer.responsibleEmployeeId=$event?.employeeId"></employee-auto-complete>
+                </div>
+              </div>
+
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="createdByName"> {{'created-by-name' | translate}}</label>
+              <div class="col-md-8">
+                <input type="text" id="createdByName" name="createdByName" [(ngModel)]="customer.createdByName"
+                       class="form-control" placeholder="{{'created-by-name' | translate}}">
+                <!--<span class="help-block">This is a help text</span>-->
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="createdByCode"> {{'created-by-code' | translate}}</label>
+              <div class="col-md-8">
+                <input type="text" id="createdByCode" name="createdByCode" [(ngModel)]="customer.createdByCode"
+                       class="form-control" placeholder="{{'created-by-code' | translate}}">
+                <!--<span class="help-block">This is a help text</span>-->
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="updatedByName"> {{'updated-by-name' | translate}}</label>
+              <div class="col-md-8">
+                <input type="text" id="updatedByName" name="updatedByName" [(ngModel)]="customer.updatedByName"
+                       class="form-control" placeholder="{{'updated-by-name' | translate}}">
+                <!--<span class="help-block">This is a help text</span>-->
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="updatedByCode"> {{'updated-by-code' | translate}}</label>
+              <div class="col-md-8">
+                <input type="text" id="updatedByCode" name="updatedByCode" [(ngModel)]="customer.updatedByCode"
+                       class="form-control" placeholder="{{'updated-by-code' | translate}}">
+                <!--<span class="help-block">This is a help text</span>-->
+              </div>
+            </div>
+            </form>
+          </div>
+                </div>
+              </div>
+            </div>
+
+          </p-tabPanel>
+          <p-tabPanel header="{{'billing-address'| translate }}">
+            <div class="row col-md-12">
+              <div class="col-md-6">
+                <div class="card">
+                  <div class="card-header">
+                    {{'billing-information' | translate}}
+                  </div>
+                  <div class="card-body">
+                    <div class="form-group row">
+                      <label class="col-md-3 col-form-label" for="billingAddressaddress1"> {{'address' | translate}}</label>
+                      <div class="col-md-9">
+                        <input type="text" id="billingAddressaddress1" name="billingAddressaddress1" [(ngModel)]="customer.billingAddress.address1"
+                               class="form-control" placeholder="{{'address' | translate}}">
+                        <!--<span class="help-block">This is a help text</span>-->
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-md-3 col-form-label" for="billingAddressaddress2"> {{'address' | translate}} 2</label>
+                      <div class="col-md-9">
+                        <input type="text" id="billingAddressaddress2" name="billingAddressaddress2" [(ngModel)]="customer.billingAddress.address2"
+                               class="form-control" placeholder="{{'address' | translate}} 2">
+                        <!--<span class="help-block">This is a help text</span>-->
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-md-3 col-form-label" for="billingAddresscountryId">{{'country' | translate }}</label>
+                      <div class="col-md-9">
+                        <select id="billingAddresscountryId" name="billingAddresscountryId" class="form-control" (change)="countrySelection($event)"
+                                [(ngModel)]="customer.billingAddress.countryId">
+                          <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                          <option value="{{country.countryId}}" *ngFor="let country of countries">{{country.countryName}}
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="card">
+                  <div class="card-header">
+                    {{'billing-information' | translate}}
+                  </div>
+                  <div class="card-body">
+                   
+                    <div class="form-group row">
+                      <label class="col-md-3 col-form-label" for="billingAddresscityId">{{'city' | translate }}</label>
+                      <div class="col-md-9">
+                        <select id="billingAddresscityId" name="billingAddresscityId" class="form-control"
+                          [(ngModel)]="customer.billingAddress.cityId">
+                          <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                          <option value="{{city.cityId}}" *ngFor="let city of cities">{{city.cityName}}</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-md-3 col-form-label" for="billingAddresspostalCode"> {{'postal-code' | translate}}</label>
+                      <div class="col-md-9">
+                        <input type="text" id="billingAddresspostalCode" name="billingAddresspostalCode" [(ngModel)]="customer.billingAddress.postalCode"
+                               class="form-control" placeholder="{{'postal-code' | translate}}">
+                        <!--<span class="help-block">This is a help text</span>-->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+           
+          </p-tabPanel>
+          <p-tabPanel header="{{'shipping-address'| translate }}">
+            <div class="row col-md-12">
+              <div class="col-md-6">
+                <div class="card">
+                  <div class="card-header">
+                    {{'shipping-information' | translate}}
+                  </div>
+                  <div class="card-body">
+                    <div class="form-group row">
+                      <label class="col-md-3 col-form-label" for="shippingAddressaddress1"> {{'address' | translate}}</label>
+                      <div class="col-md-9">
+                        <input type="text" id="shippingAddressaddress1" name="shippingAddressaddress1" [(ngModel)]="customer.shippingAddress.address1"
+                              class="form-control" placeholder="{{'address' | translate}}">
+                        <!--<span class="help-block">This is a help text</span>-->
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-md-3 col-form-label" for="shippingAddressaddress2"> {{'address' | translate}} 2</label>
+                      <div class="col-md-9">
+                        <input type="text" id="shippingAddressaddress2" name="shippingAddressaddress2" [(ngModel)]="customer.shippingAddress.address2"
+                              class="form-control" placeholder="{{'address' | translate}} 2">
+                        <!--<span class="help-block">This is a help text</span>-->
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-md-3 col-form-label" for="shippingAddresscountryId">{{'country' | translate }}</label>
+                      <div class="col-md-9">
+                        <select id="shippingAddresscountryId" name="shippingAddresscountryId" class="form-control" (change)="countrySelection($event)"
+                                [(ngModel)]="customer.shippingAddress.countryId">
+                          <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                          <option value="{{country.countryId}}" *ngFor="let country of countries">{{country.countryName}}
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="card">
+                  <div class="card-header">
+                    {{'shipping-information' | translate}}
+                  </div>
+                  <div class="card-body">
+                    <div class="form-group row">
+                      <label class="col-md-3 col-form-label" for="shippingAddresscityId">{{'city' | translate }}</label>
+                      <div class="col-md-9">
+                        <select id="shippingAddresscityId" name="shippingAddresscityId" class="form-control"
+                          [(ngModel)]="customer.shippingAddress.cityId">
+                          <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                          <option value="{{city.cityId}}" *ngFor="let city of cities">{{city.cityName}}</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-md-3 col-form-label" for="shippingAddresspostalCode"> {{'postal-code' | translate}}</label>
+                      <div class="col-md-9">
+                        <input type="text" id="shippingAddresspostalCode" name="shippingAddresspostalCode" [(ngModel)]="customer.shippingAddress.postalCode"
+                              class="form-control" placeholder="{{'postal-code' | translate}}">
+                        <!--<span class="help-block">This is a help text</span>-->
+                      </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          </p-tabPanel>
+          <p-tabPanel header="{{'contact-persons'| translate }}">
+              <div class="col-md-12">
+                  <div class="card">
+                    <div class="card-header">
+                      {{'contact-persons' | translate}}
+                      <div class="card-actions">
+                        <button type="button" class="btn btn-primary" data-toggle="modal"
+                              (click)="newcontactPerson()"  ><i class="fa fa-plus"></i></button>
+                      </div>
+                    </div>
+                    <div class="card-body m-0 p-0">
+
+                      <p-table [value]="contactPersons" [autoLayout]="true">
+                        <ng-template pTemplate="header">
+                          <tr>
+                            <th>{{'id' |translate}}</th>
+                            <th>{{'name' | translate}}</th>
+                            <th>{{'email' |translate}}</th>
+                            <th>{{'mobile' |translate}}</th>
+                            <th>{{'phone' |translate}}</th>
+                            <th>{{'fax' |translate}}</th>
+                            <th>{{'action' |translate}}</th>
+                          </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-person let-rowIndex="rowIndex">
+                          <tr>
+                            <td>{{person.actContactPersonId}}</td>
+                            <td>{{person.name}}</td>
+                            <td>{{person.email}}</td>
+                            <td>{{person.mobile}}</td>
+                            <td>{{person.phone}}</td>
+                            <td>{{person.fax}}</td>
+                            <td width="70px">
+                              <div style="display:inline-flex">
+                                <button class="btn btn-sm btn-outline-info float-left" (click)="editContactPerson(rowIndex)"><i
+                                    class="fa fa-edit"></i></button>
+                                <button class="btn btn-sm btn-outline-danger float-right"
+                                  (click)="removeContactPerson(rowIndex, person.actContactPersonId)"><i
+                                    class="fa fa-close"></i></button>
+                              </div>
+                            </td>
+                          </tr>
+
+
+                        </ng-template>
+
+                        <ng-template pTemplate="emptymessage" let-columns>
+                          <tr *ngIf="!contactPersons || contactPersons.length==0">
+                            <td colspan="10" class="noData text-center">
+                              <strong class=""><i class="fa fa-warning "></i>{{'NO_DATA_FOUND'|translate}}!</strong>
+                            </td>
+                          </tr>
+                        </ng-template>
+                      </p-table>
+                        <!-- <table class="table table-sm table-responsive-sm table-hover table-outline m-0">
+                          <thead class="table-secondary">
+                          <tr>
+                            <th>{{'id' |translate}}</th>
+                            <th>{{'name' | translate}}</th>
+                            <th>{{'email' |translate}}</th>
+                            <th>{{'mobile' |translate}}</th>
+                            <th>{{'phone' |translate}}</th>
+                            <th>{{'fax' |translate}}</th>
+                            <th>{{'action' |translate}}</th>
+                          </tr>
+                          </thead>
+                          <tbody>
+                          <tr *ngFor="let person of contactPersons; let i = index">
+                            <td>{{person.actContactPersonId}}</td>
+                            <td>{{person.name}}</td>
+                            <td>{{person.email}}</td>
+                            <td>{{person.mobile}}</td>
+                            <td>{{person.phone}}</td>
+                            <td>{{person.fax}}</td>
+                            <td width="70px" ><button class="btn btn-sm btn-outline-info float-left" (click)="editContactPerson(i)"><i class="fa fa-edit"></i></button>
+                              <button class="btn btn-sm btn-outline-danger float-right" (click)="removeContactPerson(i)"><i class="fa fa-close"></i></button></td>
+                          </tr>
+                          </tbody>
+                          <tr *ngIf="!contactPersons || contactPersons.length==0">
+                            <td colspan="10" class="noData text-center">
+                              <strong class=""><i class="fa fa-warning "></i>{{'NO_DATA_FOUND'|translate}}!</strong>
+                            </td>
+                          </tr>
+                        </table> -->
+                    </div>
+                  </div>
+              </div>
+          </p-tabPanel>
+          <p-tabPanel header="{{'email'| translate }}">
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-header">
+                  {{'email' | translate}}
+                </div>
+                <div class="card-body m-0 p-0">
+                  <table class="table table-bordered">
+                    <tbody>
+                      <tr>
+                        <td>
+                          {{'email-template' |translate}}
+                      </td>
+                        <td>
+                          <textarea class="form-control" rows="5" [(ngModel)]="customer.emailTemplate" name="emailTemplate"></textarea>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </p-tabPanel>
+          <p-tabPanel header="{{'documentation'| translate }}">
+            <div class="card">
+              <div class="card-header">
+                <i class="fa fa-align-justify"></i>{{ "documentation" | translate }}
+              </div>
+              <div class="card-body">
+                <table class="table table-bordered">
+                  <tbody>
+                    <tr align="center">
+                      <td class="text-center" colspan="2">
+                        <image-adder [isFile]="true"></image-adder>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </p-tabPanel>
+          <p-tabPanel header="{{'analysis'| translate }}">
+          </p-tabPanel>
+      </p-tabView>
+  </div>
+  <div class="row col-md-12" *ngIf="fromAutoComplete">
+        <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+          {{'reset' | translate}}
+        </button>
+        <button type="submit" class="btn btn-sm btn-primary" [disabled]="!customerForm.form.valid||submitted"
+                (click)="save()"><i class="fa fa-dot-circle-o"></i>
+          {{'save' | translate}}
+        </button>
+        <!-- <button type="button" class="btn btn-sm btn-secondary float-right" (click)="goPage()">
+          <i class="icon-arrow-left-circle"></i> {{'cancel' | translate}}
+        </button> -->
+  </div>
+</div>
+<!--</form>-->
+
+
+<!------------------------- Modals ---------------------------------------->
+
+<div bsModal [config]="{backdrop: 'static', keyboard: false}" #myModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-success" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{params.dialog.title | translate}}</h4>
+        <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <table class="table table-bordered">
+          <tbody>
+            <tr>
+              <td>
+                {{'account-type-no' | translate}}
+              </td>
+              <td><input type="text" class="form-control"  name="actTypeNo"
+                required [(ngModel)]="params.dialog.actTypeNo"/>
+              </td>
+            </tr>
+          <tr>
+            <td>
+              {{'account-type-name' | translate}}
+            </td>
+            <td><input type="text" class="form-control"  name="actTypeName"
+              required [(ngModel)]="params.dialog.inputValue"/>
+            </td>
+          </tr>
+          <tr>
+            <td> {{'account-position' | translate}}</td>
+            <td>
+              <div style="display: flex">
+                <p style="align-items: center">
+                  <input type="radio" name="customer" value="CUSTOMER" [(ngModel)]="params.dialog.accountPosition"
+                    required="" oninvalid="this.setCustomValidity('Choose Account Type Customer or Supplier or Both')" oninput="this.setCustomValidity('')" />  Customer</p>
+                <p style="align-items: center; margin-left: 10px">
+                  <input type="radio" name="supplier" value="SUPPLIER" [(ngModel)]="params.dialog.accountPosition" required=""
+                    oninvalid="this.setCustomValidity('Choose Account Type Customer or Supplier or Both')" oninput="this.setCustomValidity('')" /> Supplier</p>
+                <p style="align-items: center; margin-left: 10px">
+                    <input type="radio" name="Both" value="BOTH" [(ngModel)]="params.dialog.accountPosition" required=""
+                       oninvalid="this.setCustomValidity('Choose Account Type Customer or Supplier or Both')" oninput="this.setCustomValidity('')" /> Both</p>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>{{'plant' | translate}}</td>
+            <td>
+              {{selectedPlant.plantName}}
+            </td>
+          </tr>
+
+          </tbody>
+        </table>
+
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="myModal.hide()">{{'close' | translate}}</button>
+        <button type="button" class="btn btn-success" (click)="saveDialog(); myModal.hide()">{{'save' | translate}}
+        </button>
+      </div>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<p-dialog header="{{'contact-person' | translate}}" [(visible)]="contactpersonDialog.active"
+
+  [style]="{'min-width': '800px','width': '900px'}"   
+  [maximizable]="true" #dial
+    [contentStyle]="{'min-height':'400px'}" modal="true" dismissableMask="true">
+  <div class="col-md-12">
+      <form #contactPersonForm="ngForm">
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label" for="actName"> {{'name' | translate}}</label>
+            <div class="col-md-9">
+              <input type="text" id="actName" name="actName" [(ngModel)]="contactperson.name" class="form-control"
+                placeholder="{{'name' | translate}}" required>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label" for="actName2">{{'surname' | translate}}</label>
+            <div class="col-md-9">
+              <input type="text" id="actName" name="actName2" [(ngModel)]="contactperson.surname" class="form-control"
+                placeholder=" {{'surname' | translate}}">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label" for="email">{{'email' | translate}}</label>
+            <div class="col-md-9">
+              <input type="email" id="email" name="email" [(ngModel)]="contactperson.email" class="form-control"
+                placeholder="{{'email' | translate}}">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label" for="phone">{{'phone' | translate}}</label>
+            <div class="col-md-9">
+              <input type="text" id="phone" name="phone" [(ngModel)]="contactperson.phone" class="form-control"
+                placeholder="{{'phone' | translate}}">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label" for="mobile">{{'mobile' | translate}}</label>
+            <div class="col-md-9">
+              <input type="text" id="mobile" name="mobile" [(ngModel)]="contactperson.mobile" class="form-control"
+                placeholder="{{'mobile' | translate}}">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label" for="fax">{{'fax' | translate}}</label>
+            <div class="col-md-9">
+              <input type="text" id="fax" name="fax" [(ngModel)]="contactperson.fax" class="form-control"
+                placeholder="{{'fax' | translate}}">
+            </div>
+          </div>
+          <div class="form-group row">
+            <button type="reset" class="btn btn-sm btn-danger" (click)="contactpersonreset()">
+              {{'reset' | translate}}
+            </button>
+            <button type="submit" class="btn btn-sm btn-primary" [disabled]="!contactPersonForm.form.valid" (click)="savecontactPerson()"><i
+                class="fa fa-dot-circle-o"></i>
+              {{'save' | translate}}
+            </button>
+          </div>
+        </form>
+  </div>
+</p-dialog>

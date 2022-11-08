@@ -1,0 +1,85 @@
+<div class="animated fadeIn row col-md-12 m-0">
+  <div class="card col-md-12 p-0">
+    <div class="card-header">
+      {{'workcenter-calendar' | translate}}
+    </div>
+    <div class="card-body">
+      <form #holidayForm="ngForm" >
+        <div class="col-md-12 p-0">
+          <table class="table table-bordered" *ngIf="dataModel">
+            <tbody>
+              <tr>
+                <td>
+                  {{'workcenter-calendar-id' | translate}}
+                </td>
+                <td>
+                  {{dataModel.workCenterCalendarId}}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  {{'reference-id' | translate}}
+                </td>
+                <td>
+                  {{dataModel.calendarReferenceId}}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  {{'workcenter' | translate}}
+                </td>
+                <td>
+                 {{dataModel.workCenterDto?.workCenterName}}
+                </td>
+              </tr>
+              <tr>
+                <td>{{'workstation' | translate}}</td>
+                <td>
+                  {{dataModel.workStationId}}
+                </td>
+              </tr>
+              
+            
+              <tr>
+                <td>
+                  {{'from-erp' | translate}}
+                </td>
+                <td>
+                  <p-checkbox name="fromerp" [disabled]="true" [(ngModel)]="dataModel.fromERP"  
+                  binary="true" inputId="fromerp"></p-checkbox>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                    {{'start-time' | translate}}
+                </td>
+                <td>
+                    {{dataModel.startTime|date:'dd-MM-yyyy HH:mm'}}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                    {{'end-time' | translate}}
+                </td>
+                <td>
+                  {{dataModel.endTime|date:'dd-MM-yyyy HH:mm'}}
+                  
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  {{'no-update' | translate}}
+                </td>
+                <td>
+                  <p-checkbox name="noUpdate" [disabled]="true" [(ngModel)]="dataModel.noUpdate"  
+                  binary="true" inputId="noUpdate"></p-checkbox>
+                </td>
+              </tr>
+              
+            </tbody>
+          </table>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

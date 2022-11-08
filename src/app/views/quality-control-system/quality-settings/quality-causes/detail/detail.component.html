@@ -1,0 +1,31 @@
+<div class="animated fadeIn">
+    <div class="col-md-12" (onChange)="handleChange($event)">
+      <div class="card" *ngIf="qualityCausesType">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i> {{'cause-details' | translate}}
+        </div>
+        <div class="card-body">
+          <form #stockForm="ngForm">
+            <table class="table table-striped table-outline">
+              <tbody>
+                <tr>
+                  <td width="30%" class="text-bold">{{'quality-cause-id' | translate}} <span style="width: 0 !important;" class="float-right">:</span> </td>
+                  <td>{{qualityCausesType.qualityCauseTypeId}}</td>
+                </tr>
+                <tr>
+                  <td class="text-bold">{{'code' | translate}} <span style="width: 0 !important;" class="float-right">:</span> </td>
+                  <td>{{qualityCausesType.qualityCauseTypeCode}}</td>
+                </tr>
+                <tr>
+                  <td class="text-bold">{{'quality-cause-Description' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                  <td>{{qualityCausesType.qualityCauseTypeDescription}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  

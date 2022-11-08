@@ -1,0 +1,44 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i>{{'workstation-type-information' | translate}}
+        </div>
+        <div class="card-body">
+          <form #workstationType="ngForm">
+            <table class="table table-bordered">
+              <tbody>
+                <tr>
+                    <td>
+                      {{'type-id' | translate}}
+                    </td>
+                    <td><input type="text" class="form-control" readonly  name="typeid" required [(ngModel)]="payLoadObject.workStationTypeId"/>
+                    </td>
+                  </tr>
+              <tr>
+                <td>
+                  {{'type-name' | translate}}
+                </td>
+                <td><input type="text" class="form-control"  name="typename" required [(ngModel)]="payLoadObject.workStationTypeName"/>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                  <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+                    {{'reset' | translate}}
+                  </button>
+                  <button type="submit" class="btn btn-sm btn-primary" [disabled]="!workstationType.form.valid"
+                          (click)="save()"><i class="fa fa-dot-circle-o"></i>
+                    {{'save' | translate}}
+                  </button>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,42 @@
+<div class="modal-body">
+  <form #capform="ngForm">
+   
+    <div class="form-group row">
+      <label class="col-md-3 col-form-label" for="catCode">{{'category-id'|translate}}</label>
+      <div class="col-md-9">
+          <label class="col-form-label">{{skillcategDto.skillMatrixCategoryId}}</label>
+        <!-- <input type="text" id="catCode" name="catCode" [(ngModel)]="skillcategDto.skillMatrixCategoryCode"
+               class="form-control" maxlength="50" placeholder="{{'category-code'|translate}}" required> -->
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-md-3 col-form-label" for="grouptype">{{'group-type'|translate}}</label>
+      <div class="col-md-9">
+        <select name="grouptype" class="form-control" [(ngModel)]="skillcategDto.groupType">
+          <option [value]="null"> {{'please-select' | translate}}</option>
+          <option *ngFor="let status of groupTypeList" value="{{status}}">{{status}}</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-md-3 col-form-label" for="catCode">{{'category-code'|translate}}</label>
+      <div class="col-md-9">
+        <input type="text" id="catCode" name="catCode" [(ngModel)]="skillcategDto.skillMatrixCategoryCode"
+               class="form-control" maxlength="50" placeholder="{{'category-code'|translate}}" required>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-md-3 col-form-label" for="catdesc">{{'category-description'|translate}}</label>
+      <div class="col-md-9">
+        <textarea type="text" id="catdesc" name="catdesc" [(ngModel)]="skillcategDto.skillMatrixCategoryDescription"
+               class="form-control" maxlength="150" placeholder="{{'category-description'|translate}}" required></textarea>
+      </div>
+    </div>
+  </form>
+  <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+    {{'reset' | translate}}</button>
+  <button type="submit" class="btn btn-sm btn-primary"  [disabled]="!capform.form.valid"  (click)="save()"><i class="fa fa-dot-circle-o"></i>
+    {{'save' | translate}}
+  </button>
+    
+</div>

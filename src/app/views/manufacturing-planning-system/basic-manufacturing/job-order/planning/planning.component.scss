@@ -1,0 +1,92 @@
+.myCalendar{
+  width: 30px;
+}
+.container_components {
+  max-height: 100px;
+  overflow: hidden;
+  /* display: list-item; */
+}
+
+ .show_components {
+  overflow: visible;
+  max-height: 100%;
+}
+
+.input-tooltip{
+  padding: 0.3em 0.6em 0.3em 0.6em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
+}
+.jobOdrOPer td {
+  display: block;
+}
+
+.input-space{
+  padding: 0.6em;
+  height: 22px;
+}
+
+.jOrderParent{
+  list-style: none;
+  border-bottom: 1px solid grey;
+  padding: 0;
+  margin-bottom: 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  flex-direction: column;
+}
+
+.jOrderParent li {
+  border-bottom: 1px solid grey;
+  padding: 0;
+  
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.jOrderParent li:last-child {
+  border-bottom: none;
+}
+
+.jOrderParent li a{
+  padding: 3px;
+  // white-space: nowrap;
+  // overflow: hidden;
+  // text-overflow: ellipsis;
+  // max-width: 190px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  padding-left: 5px;
+  // word-break: break-all;
+
+}
+
+.jOrderParent li a.nowraptext {
+  padding: 1px;
+  // white-space: nowrap;
+  // overflow: hidden;
+  // text-overflow: ellipsis;
+  // max-width: 190px;
+  white-space: normal;
+  // text-overflow: ellipsis;
+  overflow: hidden;
+  // padding-left: 5px;
+  // word-break: break-all;
+
+}
+
+.jOrderParent li span{
+  padding: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 190px;
+  padding-left: 5px;
+  word-break: break-all;
+}

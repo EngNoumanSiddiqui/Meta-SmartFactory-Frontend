@@ -1,0 +1,55 @@
+<div class="col-md-12">
+
+  <p-tabView>
+    <p-tabPanel header="{{'efficiency-and-performance'|translate}}">
+      <div [ngStyle]="{'width': '100%', 'overflow-x': 'auto', 'overflow-y': 'none'}">
+        <p-chart type="line" [data]="lineEfficiencyData" [options]="efficiencyOptions" 
+        [width]="((items.length * 40) >= 1000) ?  (items.length * 40)+ 'px' : '100%'" [height]="'600px'"></p-chart>
+      </div>
+    </p-tabPanel>
+    <!-- <p-tabPanel header="{{'power-cost'|translate}}">
+      <p-chart type="line" [data]="linePowerData" [options]="costOptions"></p-chart>
+    </p-tabPanel>
+    <p-tabPanel header="{{'power-consumption'|translate}}">
+      <p-chart type="line" [data]="linePowerConsData" [options]="consumpOptions"></p-chart>
+    </p-tabPanel> -->
+    <p-tabPanel header="{{'quantity'|translate}}">
+      <div [ngStyle]="{'width': '100%', 'overflow-x': 'auto', 'overflow-y': 'none'}">
+        <p-chart type="line" [data]="lineQuantityData" [options]="quantityOptions"
+        [width]="((items.length * 40) >= 1000) ?  (items.length * 40)+ 'px' : '100%'" [height]="'600px'"></p-chart>
+      </div>
+    </p-tabPanel>
+
+    <p-tabPanel header="{{'stops'|translate}}">
+      <div class="row text-center noData" *ngIf=" (!stops|| stops.length==0)">
+        <strong class=""><i class="fa fa-warning "></i>{{'NO_STOP_FOUND'|translate}}!</strong>
+      </div>
+      <ng-container *ngIf=" (stops&& stops.length>0)">
+        <stop-analysis [injected]="stops"></stop-analysis>
+      </ng-container>
+    </p-tabPanel>
+
+    <p-tabPanel header="{{'machine-status'|translate}}">
+      <div class="row text-center noData" *ngIf=" (!machineStates|| machineStates.length==0)">
+        <strong class=""><i class="fa fa-warning "></i>{{'NO_STATUS_FOUND'|translate}}!</strong>
+      </div>
+      <ng-container *ngIf=" (machineStates&& machineStates.length>0)">
+        <machine-status-analysis [injected]="machineStates"></machine-status-analysis>
+      </ng-container>
+    </p-tabPanel>
+
+    <p-tabPanel header="{{'single-cycle-time'|translate}}">
+      <div [ngStyle]="{'width': '100%', 'overflow-x': 'auto', 'overflow-y': 'none'}">
+        <p-chart type="line" [data]="lineCycleTimeData" [options]="cycleTimeOptions" 
+        [width]="((items.length * 40) >= 1000) ?  (items.length * 40)+ 'px' : '100%'" [height]="'600px'"></p-chart>
+      </div>
+    </p-tabPanel>
+
+  </p-tabView>
+
+</div>
+
+
+
+
+

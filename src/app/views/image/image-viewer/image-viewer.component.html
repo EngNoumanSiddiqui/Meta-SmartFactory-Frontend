@@ -1,0 +1,62 @@
+
+<div class="row">
+  <div class="col-lg-12">
+    <p-progressBar  *ngIf="showUploadSpin" mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>
+  </div>
+</div>
+<table *ngIf="images && images.length>0" class="table table-bordered">
+  <tbody >
+  <tr align="center">
+    <td   colspan="2" style="max-height: 400px;max-width: 300px; vertical-align: bottom">
+      <carousel  [interval]="0" [(activeSlide)]="activeSlideIndex">
+
+        <slide *ngFor=" let im of images; let index=index" style="max-height: 400px">
+          <!-- <img class="img-fluid" [src]="im.path" [alt]="im.title" style="display: block;  max-height: 360px; max-width: 100%"> -->
+          <img *ngIf="(im.extension==='jpg')||(im.extension==='png'); else fileLink" [src]="im.path" [alt]="im.title"
+                style="display: block;  max-height: 250px; max-width: 100%" (click)="activeIndex=index; displayCustom=true;">
+          <ng-template #fileLink>
+          <!-- <a href="{{im.path}}" download="{{im.fileName}}">{{im.fileName}}</a> -->
+          <!-- <pdf-viewer [src]="im.path"
+                [original-size]="false" [autoresize]="true" style="width: 570px; max-height: 450px; overflow-y: scroll; display: block;"
+          ></pdf-viewer> -->
+          <ngx-doc-viewer [url]="im.path" viewer="google"  style="width:100%;height:396px;">
+          </ngx-doc-viewer>
+          </ng-template>
+        </slide>
+      </carousel>
+    </td>
+
+  </tr>
+  <tr *ngIf="images && images.length">
+    <p-galleria [(value)]="images" [(visible)]="displayCustom" [(activeIndex)]="activeIndex" [responsiveOptions]="responsiveOptions" [containerStyle]="{'max-width': '850px'}" [numVisible]="7"
+      [circular]="true" [fullScreen]="true" [showItemNavigators]="true" [showThumbnails]="false" [baseZIndex]="100000"> 
+      <ng-template pTemplate="item" let-item>
+          <img [src]="item.path" style="width: 100%; display: block;"/>
+      </ng-template>
+      <ng-template pTemplate="thumbnail" let-item>
+          <div class="p-grid p-nogutter p-justify-center">
+              <img [src]="item.path" style="display: block;"/>
+          </div>
+      </ng-template>
+  </p-galleria>
+  </tr>
+  <tr *ngIf="showTitle">
+    <td style="width: 30%" class="">{{'title' | translate}}</td>
+    <td>{{images[activeSlideIndex]?.title}}</td>
+  </tr>
+  <tr *ngIf="showDescription">
+    <td style="width: 30%" class="">{{'image-description' | translate}}</td>
+    <td>{{images[activeSlideIndex]?.description}}</td>
+  </tr>
+
+  </tbody>
+</table>
+<table *ngIf="!images || images.length==0" class="table-bordered">
+  <tbody>
+  <tr align="center">
+    <td  colspan="2"  style="height: 200px;width: 200px; vertical-align: bottom">
+      <img [src]="'assets/img/logo.png'" style=" width: 200px" >
+    </td>
+  </tr>
+  </tbody>
+</table>

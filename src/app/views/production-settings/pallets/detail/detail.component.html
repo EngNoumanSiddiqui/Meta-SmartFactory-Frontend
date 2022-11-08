@@ -1,0 +1,114 @@
+
+<div class="animated fadeIn">
+  <div class="row">
+
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i> {{'pallet' | translate}} {{'details' | translate}}
+        </div>
+        <div class="card-body">
+          <form #warehouseForm="ngForm">
+          <table class="table table-bordered">
+            <tbody>
+              <tr>
+                <td width="20%">{{'pallet-id'|translate}}</td>
+                <td width="30%">
+                  {{pallet?.palletSettingId}}
+                </td>
+                <td width="20%">{{'pallet-name'|translate}}</td>
+                <td>
+                  {{pallet?.palletName}}
+                </td>
+              </tr>
+              <tr>
+                <td>{{'warehouse'|translate}}</td>
+                <td>
+                 <a href="javascript:;" (click)="showWareHouseDetail(pallet?.wareHouse?.wareHouseId)">{{pallet?.wareHouse?.wareHouseName}}</a>
+                </td>
+               
+                <td>{{'height-cm'|translate}}</td>
+                <td>
+                  {{pallet?.height}}
+                </td>
+    
+              </tr>
+              <tr>
+
+                <td>{{'operation'|translate}}</td>
+                <td>
+                  {{pallet?.operation?.operationName}}
+                </td>
+                <td>{{'width-cm'|translate}}</td>
+                <td>
+                  {{pallet?.width}}
+                </td>
+    
+              </tr>
+              <tr>
+                <td>{{'plant' | translate}}</td>
+                  <td>
+                   <a href="javascript:;" (click)="showPlantDetail(pallet?.plant?.plantId)">{{pallet?.plant?.plantName}}</a>
+                  </td>
+                <td>{{'min-quantity'|translate}}</td>
+                <td>
+                  {{pallet?.minQuantity}}
+                </td>
+    
+              </tr>
+              <tr>
+                 
+                  <td>{{'max-quantity'|translate}}</td>
+                  <td>
+                   {{pallet?.maxQuantity}}
+                  </td>
+                    <td>{{'current-stock-quantity'|translate}}</td>
+                    <td>
+                      {{pallet?.currentStockQuantity}}
+                    </td>
+                    
+              </tr>
+
+              <tr>
+                <!-- <td>{{'plant' | translate}}</td>
+                <td>
+                  <span *ngIf="palletdto.plantId && selectedPlant && palletdto.plantId=== selectedPlant.plantId">{{selectedPlant.plantName}}</span>
+                  <plant-auto-complete *ngIf="!palletdto.plantId && !selectedPlant"  [selectedPlantId]="palletdto.plantId" 
+                  (selectedPlantEvent)="setSelectedPlant($event)" [eventFire]="true"></plant-auto-complete>
+                </td> -->
+
+                <td>{{'variety'|translate}}</td>
+                <td>
+                  {{pallet?.variety}}
+                </td>
+
+                <td>{{'max-box-quantity'|translate}}</td>
+                <td>
+                 {{pallet?.maxBoxQuantity}}
+                </td>
+            </tr>
+            <tr>
+
+              <td>{{'reserved-quantity'|translate}}</td>
+              <td>
+               {{pallet.reservedStockQuantity}}
+              </td>
+              <td>{{'requirement-pallet-quantity-for-forklift'|translate}}</td>
+              <td>
+                {{pallet.requirementPalletQuantityForForklift}}
+              </td>
+            </tr>
+            </tbody>
+          </table>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+

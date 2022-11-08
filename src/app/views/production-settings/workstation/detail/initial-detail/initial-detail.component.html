@@ -1,0 +1,131 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i>{{'picture' | translate}}
+        </div>
+        <div class="card-body">
+          <table class="table table-bordered">
+            <tbody>
+            <tr align="center">
+              <td class=" text-center" colspan="2" >
+                <image-adder></image-adder>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i>{{'workstation-information' | translate}}
+        </div>
+        <div class="card-body">
+          <form #workstationForm="ngForm">
+            <table class="table table-bordered">
+              <tbody>
+              <tr>
+                <td>{{'workstation-no' | translate}}</td>
+                <td><input type="text" style="width: 100%" name="workstationNo" [(ngModel)]="workstation.workstationNo"/> </td>
+              </tr>
+
+              <tr>
+                <td>{{'workstation-name' | translate}}* </td>
+                <td><input type="text" style="width: 100%"  required name="workstationName" [(ngModel)]="workstation.workstationName"/> </td>
+              </tr>
+
+              <tr>
+                <td>{{'workstation-type' | translate}}</td>
+                <td>
+                  <input type="text" style="width: 100%"  required name="workstationTypeName" [(ngModel)]="workstation.workstationTypeName"/>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'plant' | translate}}</td>
+                <td>
+                  <input type="text" style="width: 100%"  required name="workstationPlantName" [(ngModel)]="workstation.plant.plantName"/>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'work-station-category'|translate}}</td>
+                <td>
+                  <input type="text" style="width: 100%"  required name="workstationCategoryName" [(ngModel)]="workstation.workstationCategory"/>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'work-center' | translate}} </td>
+                <td>
+                  <input type="text" style="width: 100%"  required name="workstationWorkCenterName" [(ngModel)]="workstation.workCenter"/>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'description' | translate}}</td>
+                <td><input type="text" style="width: 100%"  name="desc" [(ngModel)]="workstation.description"/> </td>
+              </tr>
+              </tbody>
+            </table>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 ui-fluid">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i>{{'producer-info' | translate}}
+        </div>
+        <div class="card-body">
+          <table class="table table-bordered">
+            <tbody >
+            <tr>
+              <td>{{'serial-no'  | translate}}</td>
+              <td><input type="text" style="width: 100%" [(ngModel)]="workstation.serialNo"/> </td>
+            </tr>
+            <tr>
+              <td>{{'producer' | translate}}</td>
+              <td><input type="text" style="width: 100%" [(ngModel)]="workstation.producer"/> </td>
+            </tr>
+            <tr>
+              <td>{{'trade-mark' | translate}}</td>
+              <td><input type="text" style="width: 100%" [(ngModel)]="workstation.mark"/> </td>
+            </tr>
+            <tr>
+              <td>{{ 'model' | translate}}</td>
+              <td><input type="text" style="width: 100%" [(ngModel)]="workstation.model"/> </td>
+            </tr>
+            <tr>
+              <td>{{'production' | translate}} {{'date' | translate}}</td>
+              <td>{{workstation.productDate | date:'dd.MM.yyy'}}</td>
+            </tr>
+            <tr>
+              <td>{{'purchase-date'| translate}}</td>
+              <td>{{workstation.purchaseDate | date:'dd.MM.yyy'}}</td>
+            </tr>
+            <tr>
+              <td>{{'capacity' | translate}}</td>
+              <td><input type="text" style="width: 100%" [(ngModel)]="workstation.capacity"/> </td>
+            </tr>
+            <tr>
+              <td>{{'min-capacity' | translate}}</td>
+              <td><input type="text" style="width: 100%" [(ngModel)]="workstation.minCapacity"/> </td>
+            </tr>
+            <tr>
+              <td>{{'cycle-period'|translate}}</td>
+              <td><input type="text" style="width: 100%"  [(ngModel)]="workstation.cyclePeriod"/> </td>
+            </tr>
+            <tr>
+              <td>KWh</td>
+              <td><input type="text" style="width: 100%"  [(ngModel)]="workstation.kwh"/> </td>
+            </tr>
+            <tr>
+              <td>KWh {{'cost' | translate}}</td>
+              <td><input type="text" style="width: 100%" [(ngModel)]="workstation.kwhCost"/> </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

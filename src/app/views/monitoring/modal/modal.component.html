@@ -1,0 +1,22 @@
+<ng-template [ngIf]="modal.active">
+
+  <div bsModal  [config]="{show: true}" #myModal="bs-modal" 
+  (onHidden)="onHideModal()" class="modal fade"
+       tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: 91%;" >
+      <div class="modal-content ">
+        <div class="modal-body">
+          <ng-template [ngIf]="workstationCategory==='none'">
+          <factory-modal-detail [model]="model" [stops]="stops" 
+          [scrapData]="scrapData" [reworkData]="reworkData"></factory-modal-detail>
+          </ng-template>
+          <ng-template [ngIf]="workstationCategory==='LABOR'">
+            <monitor-labor-modal-detail [model]="model" [stops]="stops"></monitor-labor-modal-detail>
+          </ng-template>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</ng-template>

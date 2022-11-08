@@ -1,0 +1,61 @@
+<div class="animated fadeIn">
+  <div class="card">
+    <div class="card-body">
+      <form #customerForm="ngForm">
+        <div class="form-group row">
+          <label class="col-md-3 col-form-label" for="actName"> {{'name' | translate}}</label>
+          <div class="col-md-9">
+            <input type="text" id="actName" name="actName" [(ngModel)]="customer.name" class="form-control"
+              placeholder="{{'name' | translate}}" required>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-md-3 col-form-label" for="actName2">{{'surname' | translate}}</label>
+          <div class="col-md-9">
+            <input type="text" id="actName" name="actName2" [(ngModel)]="customer.surname" class="form-control"
+              placeholder=" {{'surname' | translate}}">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-md-3 col-form-label" for="contactName">{{'email' | translate}}</label>
+          <div class="col-md-9">
+            <input type="email" id="contactName" name="contactName" [(ngModel)]="customer.email" class="form-control"
+              placeholder="{{'email' | translate}}">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-md-3 col-form-label" for="contactName">{{'phone' | translate}}</label>
+          <div class="col-md-9">
+            <input type="text" id="contactName" name="contactName" [(ngModel)]="customer.phone" class="form-control"
+              placeholder="{{'phone' | translate}}">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-md-3 col-form-label" for="contactName">{{'mobile' | translate}}</label>
+          <div class="col-md-9">
+            <input type="text" id="contactName" name="contactName" [(ngModel)]="customer.mobile" class="form-control"
+              placeholder="{{'mobile' | translate}}">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-md-3 col-form-label" for="contactName">{{'fax' | translate}}</label>
+          <div class="col-md-9">
+            <input type="text" id="contactName" name="contactName" [(ngModel)]="customer.fax" class="form-control"
+              placeholder="{{'fax' | translate}}">
+          </div>
+        </div>
+        <div class="form-group row">
+          <button type="reset" class="btn btn-sm btn-danger" (click)="reset()">
+            {{'reset' | translate}}
+          </button>
+          <button type="submit" class="btn btn-sm btn-primary" [disabled]="!customerForm.form.valid" (click)="save()"><i
+              class="fa fa-dot-circle-o"></i>
+            {{'save' | translate}}
+          </button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+</div>
+<!--</form>-->

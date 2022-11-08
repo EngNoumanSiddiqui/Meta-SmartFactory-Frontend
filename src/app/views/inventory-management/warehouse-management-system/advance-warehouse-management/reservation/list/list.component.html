@@ -1,0 +1,277 @@
+<p-confirmDialog  [autoZIndex]="true" [baseZIndex]="999999"></p-confirmDialog>
+
+
+<div class="animated fadeIn">
+
+
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+
+        <div class="card-body" >
+          <p-table #dt [columns]="selectedColumns" [value]="equipments" scrollable="true" scrollDirection="both" scrollHeight="55vh"
+          [rows]="pagination.rows" [totalRecords]="pagination.totalElements"
+          dataKey="reservationId" [(selection)]="selectedEquipments" >
+
+            <ng-template pTemplate="caption">
+              <div style="text-align:left">
+                <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header" maxSelectedLabels="0"  selectedItemsLabel="{{'columns-selected'|translate}}"
+                               [style]="{minWidth: '200px'}" defaultLabel="Choose Columns">
+                  <ng-template let-col let-i="index" pTemplate="item">
+                    {{col.label|translate}}
+                  </ng-template>
+                </p-multiSelect>
+                <button pButton type="button" style="margin-left: 5px; margin-top: 1px;" class="float-right" icon="fa fa-refresh" name="refresh" (click)="filter(pageFilter)"></button>
+                <button pButton  type="button" class="ui-button-warning float-right ml-1" label="{{'reset'  |translate}}" (click)="resetFilter()"></button>
+                <button pButton  class="ui-button-success float-right ml-1" (click)="modalShow(null,'NEW')" label="{{'add-new'|translate}}"> </button>
+                <p-splitButton [style]="{'margin-right' : '5px'}"  label="{{'export-selected'|translate}}" 
+                icon="fa fa-file" [model]="selecteMenuItems" 
+                styleClass="ui-button-warning float-right">
+                </p-splitButton>
+                <p-splitButton [style]="{'margin-right' : '5px'}"  label="{{'export-all'|translate}}" 
+                icon="fa fa-file-alt" [model]="menuItems" 
+                styleClass="ui-button-warning float-right"></p-splitButton>
+                <button pButton class="float-right ml-1" 
+                [ngClass]="{'ui-button-primary': !filterButtonClicked, 'ui-button-secondary': filterButtonClicked}"
+                type="button" (click)="filterWaitingMaterial()" label="{{'filter'|translate}}"></button>
+              </div>
+              <!--<hr>-->
+
+            </ng-template>
+            <ng-template pTemplate="header" let-columns>
+
+              <tr>
+                <th style="width: 3em" rowspan="2">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th width="80px" rowspan="2">{{'action' | translate}}</th>
+                <th *ngFor="let col of columns; let i=index;" style="cursor: pointer; width:10rem;" [ngClass]="{'bg-selected-order':pageFilter.orderByProperty ==col.field}" (click)="reOrderData(i,col.field)"><i [ngClass]="'fa  fa-sort-alpha-' + classReOrder[i]"></i>
+                  {{col.header|translate}}
+                </th>
+                
+              </tr>
+              <tr>
+                <th *ngFor="let col of columns" class="ui-fluid" [ngSwitch]="col.field">
+                  <input *ngSwitchDefault style="width: 100%" name="{{col.field}}"  
+                  pInputText type="text" [(ngModel)]="pageFilter[col.field]" 
+                  (input)="filterByColumn($event.target.value,col.field)" />
+                  <select *ngSwitchCase="'equipmentStatus'" id="status" name="status" class="form-control" [(ngModel)]="pageFilter.equipmentStatus" (ngModelChange)="filter(pageFilter)">
+                    <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                    <option *ngFor="let status of listStatus" value="{{status}}">{{status}}</option>
+                  </select>
+
+                  <p-multiSelect display="chip" appendTo="body" *ngSwitchCase="'movementType'"
+                  [options]="movementTypeList" [(ngModel)]="pageFilter.movementTypeList"
+                  (ngModelChange)="filter(pageFilter)" optionLabel="name"
+                  optionValue="name"
+                  selectedItemsLabel="{{'select-options'|translate}}" [style]="{minWidth: '100px'}"
+                  defaultLabel="Choose Options">
+                </p-multiSelect>
+
+                  <!-- <select *ngSwitchCase="'movementType'" id="movementType" name="movementType" class="form-control" [(ngModel)]="pageFilter.movementType" (ngModelChange)="filter(pageFilter)">
+                    <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                    <option *ngFor="let status of movementTypeList" value="{{status}}">{{status}}</option>
+                  </select> -->
+
+                  <p-multiSelect display="chip" appendTo="body" *ngSwitchCase="'latestReservationStatus'"
+                  [options]="reservationsStatusList" [(ngModel)]="pageFilter.latestReservationStatusList"
+                  (ngModelChange)="filter(pageFilter)" optionLabel="name"
+                  optionValue="name"
+                  selectedItemsLabel="{{'select-options'|translate}}" [style]="{minWidth: '100px'}"
+                  defaultLabel="Choose Options">
+                </p-multiSelect>
+
+                  <!-- <select *ngSwitchCase="'latestReservationStatus'" id="latestReservationStatus" name="latestReservationStatus" class="form-control"
+                    [(ngModel)]="pageFilter.latestReservationStatus" (ngModelChange)="filter(pageFilter)">
+                    <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                    <option *ngFor="let status of reservationsStatusList" value="{{status}}">{{status}}</option>
+                  </select> -->
+                  <!-- <input *ngSwitchCase="'warehouseName'" style="width: 100%"  pInputText type="text" [(ngModel)]="pageFilter.warehouseName" (input)="filterByColumn($event.target.value,col.field)"> -->
+                  <!-- <input *ngSwitchCase="'materialName'" style="width: 100%"  pInputText type="text" [(ngModel)]="pageFilter.materialName" (input)="filterByColumn($event.target.value,col.field)"> -->
+                  <input *ngSwitchCase="'plantName'" name="plantName" disabled style="width: 100%"  pInputText type="text" [(ngModel)]="pageFilter.plantName" (input)="filterByColumn($event.target.value,col.field)">
+                  
+                  <p-multiSelect display="chip" appendTo="body" *ngSwitchCase="'orderDetailstatus'"
+                  [options]="listOrderDetailStatus" [(ngModel)]="pageFilter.orderDetailStatusList"
+                  (ngModelChange)="filter(pageFilter)" optionLabel="name"
+                  optionValue="name"
+                  selectedItemsLabel="{{'select-options'|translate}}" [style]="{minWidth: '100px'}"
+                  defaultLabel="Choose Options">
+                </p-multiSelect>
+
+                  <!-- <select *ngSwitchCase="'orderDetailstatus'" id="orderDetailstatus" name="orderDetailstatus" class="form-control"
+                    [(ngModel)]="pageFilter.orderDetailstatus" (ngModelChange)="filter(pageFilter)">
+                    <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                    <option *ngFor="let status of listOrderDetailStatus" value="{{status}}">{{status}}</option>
+                  </select> -->
+                  <p-multiSelect display="chip" appendTo="body" *ngSwitchCase="'purcahseOrderDetailstatus'"
+                  [options]="listPorderStatus" [(ngModel)]="pageFilter.orderStatusList"
+                  (ngModelChange)="filter(pageFilter)" optionLabel="name"
+                  optionValue="name"
+                  selectedItemsLabel="{{'select-options'|translate}}" [style]="{minWidth: '100px'}"
+                  defaultLabel="Choose Options">
+                </p-multiSelect>
+
+                  <!-- <select *ngSwitchCase="'purcahseOrderDetailstatus'" id="purcahseOrderDetailstatus" name="purcahseOrderDetailstatus" class="form-control"
+                  [(ngModel)]="pageFilter.purcahseOrderDetailstatus" (ngModelChange)="filter(pageFilter)">
+                  <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                  <option *ngFor="let status of listPorderStatus" value="{{status}}">{{status}}</option>
+                </select> -->
+
+                <p-multiSelect display="chip" appendTo="body" *ngSwitchCase="'jobOrderStatus'"
+                [options]="jobOrderStatusList" [(ngModel)]="pageFilter.jobOrderStatusList"
+                (ngModelChange)="filter(pageFilter)" optionLabel="name"
+                optionValue="name"
+                selectedItemsLabel="{{'select-options'|translate}}" [style]="{minWidth: '100px'}"
+                defaultLabel="Choose Options">
+              </p-multiSelect>
+
+                <!-- <select *ngSwitchCase="'jobOrderStatus'" id="jobOrderStatus" name="jobOrderStatus" class="form-control"
+                [(ngModel)]="pageFilter.jobOrderStatus" (ngModelChange)="filter(pageFilter)">
+                <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                <option *ngFor="let status of jobOrderStatusList" value="{{status}}">{{status}}</option>
+              </select> -->
+
+              <p-multiSelect display="chip" appendTo="body" *ngSwitchCase="'prodOrderStatus'"
+              [options]="listProdOrderStatus" [(ngModel)]="pageFilter.prodOrderStatusList"
+              (ngModelChange)="filter(pageFilter)" optionLabel="name"
+              optionValue="name"
+              selectedItemsLabel="{{'select-options'|translate}}" [style]="{minWidth: '100px'}"
+              defaultLabel="Choose Options">
+            </p-multiSelect>
+
+              <!-- <select *ngSwitchCase="'prodOrderStatus'" id="prodOrderStatus" name="prodOrderStatus" class="form-control"
+              [(ngModel)]="pageFilter.prodOrderStatus" (ngModelChange)="filter(pageFilter)">
+              <option [ngValue]="null"> {{'please-select' | translate}}</option>
+              <option *ngFor="let status of listProdOrderStatus" value="{{status}}">{{status}}</option>
+            </select> -->
+                  
+                  
+                  <!-- <span *ngSwitchCase="'jobOrderStatus'"></span>
+                  <span *ngSwitchCase="'prodOrderStatus'"></span> -->
+
+                </th>
+
+              </tr>
+
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr [pSelectableRow]="rowData">
+                <td style="width: 3em">
+                  <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                </td>
+                <td width="80px" >
+                  <button class="btn btn-sm btn-outline-danger" type="button" (click)="delete(rowData.reservationId)">
+                    <i class="fa fa-trash"></i></button>
+                  <button class="btn btn-sm btn-outline-info" type="button" (click)="modalShow(rowData.reservationId,'EDIT')">
+                    <i class="fa fa-edit"></i></button>
+                </td>
+                <td *ngFor="let col of columns" style="cursor: pointer;width:10rem;"
+                    [ngSwitch]="col.field">
+
+                  <ng-container *ngSwitchCase="'itemNo'">
+
+                    <span *ngIf="rowData.movementType === 'RESERVATION_FOR_SALE_ORDER'" >
+                      <a href="javascript:;" (click)="showSalesOrderDetailItem(rowData.orderDetailId)" > {{rowData.itemNo}}</a>
+                    </span>
+
+                    <span *ngIf="rowData.movementType === 'RESERVATION_FOR_PRODUCTION_ORDER'">
+                      <a href="javascript:;" (click)="showProdOrderDetail(rowData.prodOrderId)" > {{rowData.itemNo}}</a>
+                    </span>
+
+                    <span *ngIf="rowData.movementType === 'RESERVATION_FOR_JOB_ORDER'">
+                      <a href="javascript:;" (click)="showJobOrderDetail(rowData.itemNo)" > {{rowData.itemNo}}</a>
+                    </span>
+
+                  </ng-container>
+
+                  <a href="javascript:;" *ngSwitchCase="'batch'" (click)="showBatchDetail(rowData.batch)" > {{rowData.batch}}</a>
+                  <a href="javascript:;" *ngSwitchCase="'materialNo'" (click)="showMaterialDetail(rowData.materialId)" > {{rowData.materialNo}}</a>
+                  <a href="javascript:;" *ngSwitchCase="'materialName'" (click)="showMaterialDetail(rowData.materialId)" > {{rowData.materialName}}</a>
+
+                  <a href="javascript:;" *ngSwitchCase="'plantName'" (click)="showPlantDetail(rowData.plantId)" > {{rowData.plantName}}</a>
+                  <a href="javascript:;" *ngSwitchCase="'waitingForJobOrderOperationId'" (click)="showJobOperationDetail(rowData.waitingForJobOrderOperationId)"> 
+                    {{rowData[col.field] ? rowData[col.field] : ''}}
+                  </a>
+
+                  <a href="javascript:;" *ngSwitchCase="'warehouseFromName'"
+                  (click)="showWarehouseDetail(rowData.fromWareHouse?.wareHouseId)" > 
+                  {{rowData.fromWareHouse?.wareHouseName}}</a>
+                  <a href="javascript:;" *ngSwitchCase="'warehouseName'" (click)="showWarehouseDetail(rowData.warehouseId)" > {{rowData.warehouseName}}</a>
+
+                  <a href="javascript:;" *ngSwitchCase="'purchaseOrderDetailId'" (click)="showPurchaseOrderDetailItem((rowData[col.field]?(rowData[col.field]+''):''))" >{{(rowData[col.field]?(rowData[col.field]+''):'')|translate}}</a>
+                  <a href="javascript:;" *ngSwitchCase="'reservationId'" 
+                  pTooltip="{{rowData.latestReservationStatus}}"
+                  (click)="modalShow(rowData.reservationId,'DETAIL')">
+                    {{rowData[col.field]}}
+                  </a>
+                  <span *ngSwitchCase ="'requirementQuantity'" (click)="modalShow(rowData.reservationId,'DETAIL')">{{ fixRoundedDigit(rowData[col.field]) }}</span>
+
+                  <p-checkbox *ngSwitchCase="'finalIssue'" name="finalIssue" binary="true" disabled="true"
+                              [(ngModel)]="rowData.finalIssue"
+                              pTooltip="{{'final-issue'  | translate}}"
+                              tooltipPosition="top">
+                  </p-checkbox>
+
+                  <span *ngSwitchDefault (click)="modalShow(rowData.reservationId,'DETAIL')"> {{(rowData[col.field]?(rowData[col.field]+''):'')|translate}} </span>
+                </td>
+               
+              </tr>
+
+            </ng-template>
+          </p-table>
+
+          <br/>
+
+          <div class="row">
+            <app-paging
+              [showSearch]="false"
+              [TotalElements]="pagination.totalElements"
+              [CurrentPage]="pagination.currentPage"
+              [PageSize]="pagination.pageSize"            [rows]="pagination.rows"
+              [TotalPageLinkButtons]="pagination.TotalPageLinkButtons"
+              [RowsPerPageOptions]="pagination.RowsPerPageOptions"
+              (onPageChange)="myChanges($event)"
+            ></app-paging>
+            <span style="margin-left:2px; padding-top: 2px " class="text-muted" >{{'total-records'|translate}}: {{pagination?.totalElements}}</span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <!--/.col-->
+  </div>
+</div>
+<div bsModal [config]="{backdrop: 'static', keyboard: false}" #myModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true" (onHidden)="reservationModal.active=false">
+  <div class="modal-dialog modal-success modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"> {{'reservation-information' | translate}}</h4>
+        <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <ng-template [ngIf]="reservationModal.modal=='NEW'">
+          <reservation-new (saveAction)="myModal.hide(); search(pageFilter)"></reservation-new>
+        </ng-template>
+        <ng-template [ngIf]="reservationModal.modal=='EDIT'">
+          <reservation-edit [id]="reservationModal.id" (saveAction)="myModal.hide(); search(pageFilter)"></reservation-edit>
+        </ng-template>
+        <ng-template [ngIf]="reservationModal.modal=='DETAIL'">
+          <reservation-detail [id]="reservationModal.id"></reservation-detail>
+        </ng-template>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary" (click)="myModal.hide()">{{'close' | translate}}</button>
+        <button *ngIf="reservationModal.modal=='DETAIL'" type="button" class="btn rounded btn-primary" (click)="reservationModal.modal='NEW'">{{'new' | translate}}</button>
+        <button *ngIf="reservationModal.modal=='DETAIL'" type="button" class="btn rounded btn-success"
+                (click)="reservationModal.modal='EDIT'">{{'edit' | translate}}</button>
+
+
+      </div>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

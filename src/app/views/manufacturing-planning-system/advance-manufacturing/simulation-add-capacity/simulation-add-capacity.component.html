@@ -1,0 +1,123 @@
+<form #capacityForm="ngForm">
+  <table class="table table-bordered">
+    <tbody>
+      <tr>
+        <td>{{'workstation' | translate}}</td>
+        <td>
+          <workstation-auto-complete [selectedWorkStationId]="capacity.workstationId" 
+            [workCenterId]="capacity.workCenterId"
+            (selectedWorkStationEvent)="capacity.workstationId=$event?.workStationId;">
+          </workstation-auto-complete>
+        </td>
+      </tr>
+      <tr>
+        <td>{{'capacity-category' | translate}}</td>
+        <td>
+          <div class="input-group">
+            <select id="workStationCapacityCategoryListId" name="workStationCapacityCategoryListName"
+              class="form-control" [(ngModel)]="capacity.capacityUnitId" required>
+              <option [ngValue]="null"> {{'please-select' | translate}}</option>
+              <option *ngFor="let workCapacity of workStationCapacityCategoryList"
+                value="{{workCapacity.wsCapacityCode}}">{{workCapacity.wsCapacityCategory}}</option>
+            </select>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>{{'factory-calendar' | translate}}</td>
+        <td>
+          <div class="input-group">
+            <select id="workstationFactoryCalendarListId" name="workstationFactoryCalendarListName" class="form-control"
+              [(ngModel)]="capacity.factoryCalendarId">
+              <option [value]="null"> {{'please-select' | translate}}</option>
+              <option *ngFor="let factoryCalendar of workstationFactoryCalendarList"
+                [value]="factoryCalendar.factoryCalendarId">{{factoryCalendar.category}}</option>
+            </select>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>{{'base-unit-measure' | translate}}</td>
+        <td>
+          <unit-auto-complete [addIfMissing]="true" [required]="true" [selectedUnit]="capacity.baseUnitMeasurementId"
+            (unitChangeEvent)="baseUnitChanged($event)"></unit-auto-complete>
+        </td>
+      </tr>
+      <tr>
+        <td>{{'start' | translate}}</td>
+        <td>
+          <p-calendar [(ngModel)]="capacity.start" (ngModelChange)="startTimeChange($event)" [timeOnly]="true"
+            [required]="true" name="start" id="start">
+          </p-calendar>
+        </td>
+      </tr>
+      <tr>
+        <td>{{'finish' | translate}} </td>
+        <td>
+          <p-calendar [(ngModel)]="capacity.finish" (ngModelChange)="endTimeChange($event)" name="finish"
+            [required]="true" id="finish" [timeOnly]="true">
+          </p-calendar>
+        </td>
+      </tr>
+      <tr>
+        <td>{{'length-break' | translate}} </td>
+        <td>
+          <!--                    <input type="text" style="width: 100%"  required name="lenBreak" [(ngModel)]="capacities.lenghtOfBreaks"-->
+          <!--                    (ngModelChange)="LengthBreak($event)"-->
+          <!--                     />-->
+          <p-calendar [(ngModel)]="capacity.lenghtOfBreaks" [required]="true"
+            (ngModelChange)="calculateAutoFields()" [timeOnly]="true" [showSeconds]="true" name="lenBreak"
+            id="lenBreak">
+          </p-calendar>
+        </td>
+      </tr>
+      <tr>
+        <td>{{'capacity-utilize'|translate}}</td>
+        <td>
+          <input type="number" #capacityUtilizer="ngModel" pattern="\d+" class="form-control" name="capacityUtilization"
+            [(ngModel)]="capacity.capacityUtilization" (ngModelChange)="capacityUtilizations($event)" />
+          <div *ngIf="capacityUtilizer.dirty && capacityUtilizer.hasError('pattern')" class="alert alert-danger p-0 m-0"
+            role="alert">
+            <strong>It should be only number </strong>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>{{'operating-time'|translate}} </td>
+        <td><input type="text" class="form-control" name="operationTime" [(ngModel)]="capacity.operationTime"
+            readonly /> </td>
+      </tr>
+      <tr>
+        <td>{{'number-of-individual-capacity'|translate}}</td>
+        <td>
+          <input type="number" pattern="\d+" class="form-control" min="0" max="100" required
+            name="numberOfIndividualCapacity" [(ngModel)]="capacity.numberOfIndividualCapacity"
+            (ngModelChange)="calculateAutoFields()" />
+        </td>
+      </tr>
+      <tr>
+        <td>{{'capacity'|translate}} </td>
+        <td><input type="text" class="form-control" name="capacity" [(ngModel)]="capacity.capacity" readonly /> </td>
+      </tr>
+      <tr *ngIf="!editMode">
+        <td colspan="2">
+          <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+            {{'reset' | translate}}</button>
+          <button type="submit" class="btn btn-sm btn-primary" [disabled]="!capacityForm.form.valid" (click)="save()"><i
+              class="fa fa-dot-circle-o"></i>
+            {{'add' | translate}}</button>
+        </td>
+      </tr>
+      <tr *ngIf="editMode">
+        <td colspan="2">
+          <button  type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+            {{'reset' | translate}}</button>
+          <button type="submit" class="btn btn-sm btn-primary" [disabled]="!capacityForm.form.valid" (click)="save()"><i
+              class="fa fa-hand-o-right"></i>
+            {{'update '|translate}}
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</form>

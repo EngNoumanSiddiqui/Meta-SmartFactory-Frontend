@@ -1,0 +1,69 @@
+<!--<form #orderEdit="ngForm" >-->
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          {{'maintenance-cycle-set'|translate}}
+        </div>
+        <div class="card-body">
+          <form #saleForm="ngForm" class="form-horizontal ui-fluid">
+            <table class="table table-bordered">
+              <tbody>
+              <tr>
+                <td width="45%">{{'cycle-set-id'|translate}}</td>
+                <td>{{data.maintenanceStrategyPackageId}}
+                </td>
+              </tr>
+              <tr>
+                <td>{{'cycle-set-name' | translate}}</td>
+                <td>{{data.strategyName}}
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card">
+          <span class="card-header">Package Screen
+          </span>
+         <div class="card-body">
+            <form action="" method="post" class="form-horizontal">
+                <table class="table table-sm table-responsive-sm table-hover table-outline mb-0">
+                    <thead class="table-secondary">
+                    <tr>
+                      <th>{{'package-number'|translate}}</th>
+                      <th>{{'cycle-length'|translate}}</th>
+                      <th>{{'unit'|translate}}</th>
+                      <th>{{'maintenance-cycle-text'|translate}}</th>
+                      <th>{{'hierarchy'|translate}}</th>
+                      <th>{{'hierarchy-text'|translate}}</th>
+                      <th>{{'offset'|translate}}</th>
+                      <th>{{'offset-short-text'|translate}}</th>
+                      <th></th>
+                      <th></th>
+                    </tr>
+                    </thead>
+                    <tbody *ngIf="data && data.maintenanceStrategyPackageList">
+                      <tr *ngFor="let item of data.maintenanceStrategyPackageList;let i=index">
+                        <td>{{item.packageNumber}}</td>
+                        <td>{{item.cycleLenght}}</td>
+                        <td>{{item.cycleUnit}}</td>
+                        <td>{{item.maintenanceCycleText}}</td>
+                        <td>{{item.hierarchy}}</td>
+                        <td>{{item.hierarchyText}}</td>
+                        <td>{{item.offset}}</td>
+                        <td>{{item.offsetShortText}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+            </form>
+         </div>
+       </div>
+    </div>
+  </div><!--/.row-->
+</div>
+<!--</form>-->

@@ -1,0 +1,349 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class=" mb-0">
+        <div class=" p-0">
+          <table class="table table-responsive-sm table-striped  table-outline mb-0">
+            <tbody *ngIf="batch">
+              <tr>
+                <td width="15%" class="text-bold"> {{'material-no' | translate}} <span class="float-right">:</span></td>
+                <td width="35%">
+                  <a href="javascript:;" (click)="openStockDetails(batch.stockId)">{{batch.stockNo}}</a>
+                </td>
+                <td width="15%" class="text-bold"> {{'material' | translate}} <span class="float-right">:</span></td>
+                <td width="35%">
+                  <a href="javascript:;" (click)="openStockDetails(batch.stockId)">{{batch.stockName}}</a>
+                </td>
+
+              </tr>
+              <tr>
+                <td class="text-bold"> {{'plant' | translate}}<span class="float-right">:</span></td>
+                <td>
+                  <a href="javascript:;" (click)="openPlantDetails(batch.plantId)">{{batch.plantName}}</a>
+                </td>
+                <td class="text-bold">{{'batch-level' | translate}}<span class="float-right">:</span></td>
+                <td>{{batch.batchLevel}}</td>
+               
+              </tr>
+              <tr>
+                <td width="15%" class="text-bold"> {{'internal-batch-prefix' | translate}}<span class="float-right">:</span></td>
+                <td width="35%">{{batch.batchCode}}</td>
+                <td class="text-bold">{{'requested-by' | translate}}<span class="float-right">:</span></td>
+                <td>
+                  <a href="javascript:;" (click)="openEmployeeDetails(batch.requestedByObj?.employeeId)">
+                    {{batch.requestedByObj?.firstName}} {{batch.requestedByObj?.lastName}}
+                  </a>
+                </td>
+              </tr>
+              <tr>
+                <td class="text-bold">{{'description' | translate}}<span class="float-right">:</span></td>
+                <td>{{batch.note}}</td>
+                <td class="text-bold">{{'create-date' | translate}}<span class="float-right">:</span></td>
+                <td>{{ batch.createDate && batch.createDate !== 0 ? (batch.createDate|date:'dd/MM/yyyy HH:mm') : ''}}</td>
+              </tr>
+              
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <!---->
+    <div class="col-lg-12">
+      <p-tabView class="ui-tabview">
+        <p-tabPanel class="ui-tabview-nav" header="{{'reservation' | translate}}">
+          <p-table [columns]="reservationColumns" [value]="reservationDetail" [paginator]="reservationDetail.length>10"
+            [rows]="10" [responsive]="true" scrollable="true" scrollHeight="42vh">
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th *ngFor="let col of columns let i=index" style="cursor: pointer">
+                  {{col.header|translate}}
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr [pSelectableRow]="rowData">
+                <td *ngFor="let col of columns" style="cursor: pointer" [ngSwitch]="col.field">
+                  <a *ngSwitchCase="'materialNo'" href="javascript:;" (click)="openStockDetails(rowData.materialId)">{{rowData[col.field]}}</a>
+                  <a *ngSwitchCase="'materialName'" href="javascript:;" (click)="openStockDetails(rowData.materialId)">{{rowData[col.field]}}</a>
+                  <a *ngSwitchCase="'warehouseName'" href="javascript:;" (click)="openWarehouseDetails(rowData.warehouseId)">{{rowData[col.field]}}</a>
+                  <ng-container *ngSwitchCase="'batch'">
+                    <a *ngIf="rowData.batch!==batch.batchCode" href="javascript:;" (click)="openBatchDetail(rowData.batch)">{{rowData[col.field]}}</a>
+                    <span *ngIf="rowData.batch===batch.batchCode">{{rowData[col.field]}}</span>
+                  </ng-container>
+                  <a *ngSwitchCase="'itemNo'" href="javascript:;" (click)="openItemNoDetails(rowData)">{{rowData[col.field]}}</a>
+                  <span style="overflow-wrap: break-word;" *ngSwitchDefault>{{rowData[col.field]}}</span>
+                  
+                </td>
+
+              </tr>
+
+            </ng-template>
+          </p-table>
+        </p-tabPanel>
+        <p-tabPanel class="ui-tabview-nav" header="{{'good-movements' | translate}}">
+          <p-table [columns]="goodMovementsColumns" [value]="goodMovementsDetail"
+            [paginator]="goodMovementsDetail.length>10" [rows]="10" [responsive]="true" scrollable="true"
+            scrollHeight="42vh" dataKey="stockTransferDetailId">
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th style="width: 3rem"></th>
+                <th *ngFor="let col of columns let i=index">
+                  {{col.header|translate}}
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns" let-expanded="expanded">
+              <tr [pSelectableRow]="rowData">
+                <td style="width: 3rem">
+                  <a href="#" [pRowToggler]="rowData">
+                      <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+                  </a>
+                </td>
+                <td *ngFor="let col of columns" [ngSwitch]="col.field">
+                  <a *ngSwitchCase="'stockTransferDetailId'" href="javascript:;" (click)="openGoodTransferDetails(rowData.stockTransferDetailId)">{{rowData[col.field]}}</a>
+                  <a *ngSwitchCase="'materialNo'" href="javascript:;" (click)="openStockDetails(rowData.materialId)">{{rowData[col.field]}}</a>
+                  <a *ngSwitchCase="'materialName'" href="javascript:;" (click)="openStockDetails(rowData.materialId)">{{rowData[col.field]}}</a>
+                  <ng-container *ngSwitchCase="'batch'">
+                    <a *ngIf="rowData.batch!==batch.batchCode" href="javascript:;" (click)="openBatchDetail(rowData.batch)">{{rowData[col.field]}}</a>
+                    <span *ngIf="rowData.batch===batch.batchCode">{{rowData[col.field]}}</span>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'batchFrom'">
+                    <a *ngIf="rowData.batchFrom!==batch.batchCode" href="javascript:;" (click)="openBatchDetail(rowData.batchFrom)">{{rowData[col.field]}}</a>
+                    <span *ngIf="rowData.batchFrom===batch.batchCode">{{rowData[col.field]}}</span>
+                  </ng-container>
+                  <a *ngSwitchCase="'itemNo'" href="javascript:;" (click)="openItemNoDetails(rowData)">{{rowData[col.field]}}</a>
+                  <span *ngSwitchCase="'postingDate'">{{rowData[col.field]|date:'dd-MM-yyyy hh:mm':'-000'}} </span>
+                  <span style="overflow-wrap: break-word;" *ngSwitchDefault> {{rowData[col.field]}}</span>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="rowexpansion" let-item>
+              <tr>
+                  <td></td>
+                  <td colspan="10">
+                    <div class="p-p-3">
+                      <table class="table table-bordered">
+                        <thead>
+                          <tr>
+                            <th>{{'warehouse-from'|translate}}</th>
+                            <th>{{'warehouse-to'|translate}}</th>
+                            <th>{{'document-date'|translate}}</th>
+                            <th>{{'posting-date'|translate}}</th>
+                            <th>{{'defected'|translate}}</th>
+                            <th>{{'good-movement-status'|translate}}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>
+                              <a href="javascript:;" (click)="openWarehouseDetails(item.wareHouseFromId)">{{item.wareHouseFromName}}</a>
+                            </td>
+                            <td>
+                              <a href="javascript:;" (click)="openWarehouseDetails(item.wareHouseToId)">{{item.wareHouseToName}}</a>
+                            </td>
+                            <td>{{item.documentDate | date:'dd/MM/yyyy HH:mm'}}</td>
+                            <td>{{item.postingDate | date:'dd/MM/yyyy HH:mm'}}</td>
+                            <td>{{item.defected ? 'Yes' : 'No'}}</td>
+                            <td>{{item.goodsMovementStatus}}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </p-tabPanel>
+        <p-tabPanel class="ui-tabview-nav" header="{{'prod-order' | translate}}">
+          <p-table [columns]="prodOrderColumns" [value]="prodOrderDetail" [paginator]="prodOrderDetail.length>10"
+            [rows]="10" scrollable="true" scrollHeight="42vh">
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th *ngFor="let col of columns let i=index">
+                  {{col.header|translate}}
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr [pSelectableRow]="rowData">
+                <td *ngFor="let col of columns" [ngSwitch]="col.field">
+                  <a *ngSwitchCase="'prodOrderId'" href="javascript:;" (click)="openProdOrderDetails(rowData.prodOrderId)">{{rowData[col.field]}}</a>
+                  <a *ngSwitchCase="'materialNo'" href="javascript:;" (click)="openStockDetails(rowData.materialId)">{{rowData[col.field]}}</a>
+                  <a *ngSwitchCase="'materialName'" href="javascript:;" (click)="openStockDetails(rowData.materialId)">{{rowData[col.field]}}</a>
+                  <ng-container *ngSwitchCase="'batch'">
+                    <a *ngIf="rowData.batch!==batch.batchCode" href="javascript:;" (click)="openBatchDetail(rowData.batch)">{{rowData[col.field]}}</a>
+                    <span *ngIf="rowData.batch===batch.batchCode">{{rowData[col.field]}}</span>
+                  </ng-container>
+                  <a *ngSwitchCase="'warehouseName'" href="javascript:;" (click)="openWarehouseDetails(rowData.wareHouseId)">{{rowData[col.field]}}</a>
+                  <span *ngSwitchDefault style="overflow-wrap: break-word;">
+                    {{rowData[col.field]}}
+                  </span>
+                </td>
+
+              </tr>
+
+            </ng-template>
+          </p-table>
+        </p-tabPanel>
+        <p-tabPanel class="ui-tabview-nav" header="{{'sales-order' | translate}}">
+          <p-table [columns]="saleOrderColumns" [value]="orderDetail" [responsive]="true"
+            [paginator]="orderDetail.length>10" [rows]="10" scrollable="true" scrollHeight="42vh">
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th *ngFor="let col of columns let i=index">
+                  {{col.header|translate}}
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr [pSelectableRow]="rowData">
+                <td *ngFor="let col of columns" [ngSwitch]="col.field">
+                  <a *ngSwitchCase="'orderId'" href="javascript:;" (click)="openSaleOrderDetails(rowData.orderId)">{{rowData[col.field]}}</a>
+                  <a *ngSwitchCase="'stockNo'" href="javascript:;" (click)="openStockDetails(rowData.stock.stockId)">{{rowData.stock?.stockNo}}</a>
+                  <a *ngSwitchCase="'stockName'" href="javascript:;" (click)="openStockDetails(rowData.stock.stockId)">{{rowData.stock?.stockName}}</a>
+                  <a *ngSwitchCase="'warehouse'" href="javascript:;" (click)="openWarehouseDetails(rowData.warehouse?.wareHouseId)">{{rowData[col.field]?.wareHouseName}}</a>
+                  <ng-container *ngSwitchCase="'batch'">
+                    <a *ngIf="rowData.batch!==batch.batchCode" href="javascript:;" (click)="openBatchDetail(rowData.batch)">{{rowData[col.field]}}</a>
+                    <span *ngIf="rowData.batch===batch.batchCode">{{rowData[col.field]}}</span>
+                  </ng-container>
+                  <a *ngSwitchCase="'customer'" href="javascript:;" (click)="openSupplierDetails(rowData.order?.actId)">{{rowData.order?.actName}}</a>
+                  <span *ngSwitchDefault> {{rowData[col.field]}}</span>
+                </td>
+              </tr>
+
+            </ng-template>
+          </p-table>
+        </p-tabPanel>
+        <p-tabPanel class="ui-tabview-nav" header="{{'stock-report' | translate}}">
+          <p-table [columns]="stockReportColumns" [value]="stockReportDetail" [responsive]="true"
+            [paginator]="stockReportDetail.length>10" [rows]="10" scrollable="true" scrollHeight="42vh">
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th *ngFor="let col of columns let i=index">
+                  {{col.header|translate}}
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr [pSelectableRow]="rowData">
+                <td *ngFor="let col of columns" [ngSwitch]="col.field">
+                  <a *ngSwitchCase="'materialNo'" href="javascript:;" (click)="openStockDetails(rowData.materialId)">{{rowData[col.field]}}</a>
+                  <a *ngSwitchCase="'materialName'" href="javascript:;" (click)="openStockDetails(rowData.materialId)">{{rowData[col.field]}}</a>
+                  <a *ngSwitchCase="'warehouseName'" href="javascript:;" (click)="openWarehouseDetails(rowData.warehouseId)">{{rowData[col.field]}}</a>
+                  <ng-container *ngSwitchCase="'batch'">
+                    <a *ngIf="rowData.batch!==batch.batchCode" href="javascript:;" (click)="openBatchDetail(rowData.batch)">{{rowData[col.field]}}</a>
+                    <span *ngIf="rowData.batch===batch.batchCode">{{rowData[col.field]}}</span>
+                  </ng-container>
+                  <span *ngSwitchDefault style="overflow-wrap: break-word;"> {{rowData[col.field]}}</span>
+                </td>
+
+              </tr>
+
+            </ng-template>
+          </p-table>
+        </p-tabPanel>
+        <p-tabPanel class="ui-tabview-nav" header="{{'purchase-order' | translate}}">
+          <p-table class="mytable" [columns]="porderOrderColumns" [responsive]="true"
+            [paginator]="purchaseOrderDetailList.length>10" [rows]="10" [value]="purchaseOrderDetailList"
+            scrollable="true" scrollHeight="42vh">
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th *ngFor="let col of columns let i=index">
+                  {{col.header|translate}}
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr [pSelectableRow]="rowData">
+
+                <td class="ui-fluid" *ngFor="let col of columns" [ngSwitch]="col.field">
+                  <a *ngSwitchCase="'purchaseOrderDetailId'" href="javascript:;" (click)="openPurchaseOrderDetails(rowData.purchaseOrderDetailId)">{{rowData[col.field]}}</a>
+                  <a *ngSwitchCase="'stockNo'" href="javascript:;" (click)="openStockDetails(rowData.stockId)">{{rowData[col.field]}}</a>
+                  <a *ngSwitchCase="'stockName'" href="javascript:;" (click)="openStockDetails(rowData.stockId)">{{rowData[col.field]}}</a>
+                  <a *ngSwitchCase="'wareHouseName'" href="javascript:;" (click)="openWarehouseDetails(rowData.wareHouseId)">{{rowData[col.field]}}</a>
+                  <ng-container *ngSwitchCase="'batch'">
+                    <a *ngIf="rowData.batch!==batch.batchCode" href="javascript:;" (click)="openBatchDetail(rowData.batch)">{{rowData[col.field]}}</a>
+                    <span *ngIf="rowData.batch===batch.batchCode">{{rowData[col.field]}}</span>
+                  </ng-container>
+                  <a *ngSwitchCase="'supplierName'" href="javascript:;" (click)="openSupplierDetails(rowData.supplierId)">{{rowData[col.field]}}</a>
+                  <span *ngSwitchCase="'porderDate'">{{rowData[col.field]|date:'dd-MM-yyyy':'-000'}} </span>
+                  <!--                  <span *ngSwitchCase="'plantName'">{{rowData.plantName}}</span>-->
+                  <!--                  <span *ngSwitchCase="'batch'">{{rowData.batch}}</span>-->
+                  <!--                  <span *ngSwitchCase="'totalIncomeQuantity'">{{rowData.totalIncomeQuantity}}</span>-->
+                  <!--                  <span *ngSwitchCase="'purchaseOrderStatus'">{{rowData[col.field]|translate}}</span>-->
+                  <span *ngSwitchDefault>{{rowData[col.field]}}</span>
+                </td>
+
+
+              </tr>
+
+            </ng-template>
+          </p-table>
+        </p-tabPanel>
+        <p-tabPanel class="ui-tabview-nav" header="{{'batch-mapping-lot' | translate}}">
+          <p-table class="ui-table" [columns]="batchMappingsColumns" [responsive]="true"
+            [paginator]="batchMappings.length>10" [rows]="10" [value]="batchMappings" scrollable="true"
+            scrollHeight="42vh">
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th *ngFor="let col of columns let i=index">
+                  {{col.header|translate}}
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr [pSelectableRow]="rowData">
+                <td class="ui-fluid" style="overflow-wrap: break-word;"
+                  *ngFor="let col of columns" [ngSwitch]="col.field">
+                  <ng-container *ngSwitchCase="'baseBatch'">
+                    <a *ngIf="rowData.baseBatch!==batch.batchCode" href="javascript:;" (click)="openBatchDetail(rowData.baseBatch)">{{rowData[col.field]}}</a>
+                    <span *ngIf="rowData.baseBatch===batch.batchCode">{{rowData[col.field]}}</span>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'activeBatch'">
+                    <a *ngIf="rowData.activeBatch!==batch.batchCode" href="javascript:;" (click)="openBatchDetail(rowData.activeBatch)">{{rowData[col.field]}}</a>
+                    <span *ngIf="rowData.activeBatch===batch.batchCode">{{rowData[col.field]}}</span>
+                  </ng-container>
+                  <a *ngSwitchCase="'stockNo'" href="javascript:;" (click)="openStockDetails(rowData.stock?.stockId)">{{rowData.stock[col.field]}}</a>
+                  <a *ngSwitchCase="'stockName'" href="javascript:;" (click)="openStockDetails(rowData.stock?.stockId)">{{rowData.stock[col.field]}}</a>
+                  <a *ngSwitchCase="'requestedBy'" href="javascript:;" (click)="openEmployeeDetails(rowData.requestedBy?.employeeId)">
+                    {{rowData.requestedBy?.firstName}}  {{rowData.requestedBy?.lastName}}
+                  </a>
+                  <span *ngSwitchDefault>{{rowData[col.field]}}</span>
+                  <span *ngSwitchCase="'stockTypeName'">{{rowData.stock?.stockTypeName}}</span>
+                  <a href="javascript:;" *ngSwitchCase="'referenceId'"
+                    (click)="showReferenceIdDetails(rowData)">{{rowData?.referenceId}}</a>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </p-tabPanel>
+      </p-tabView>
+    </div>
+  </div>
+</div>
+
+<!-- <ng-template [ngIf]="modal2.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal2="bs-modal" class="modal fade" tabindex="-1"
+    role="dialog" aria-labelledby="myModalLabel" (onHidden)="modal2.active=false; modal2.id=null; modal2.mode=null;"
+    aria-hidden="true">
+    <div class="modal-dialog modal-success modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" *ngIf="modal2.mode=== 'PURCHASE_ORDER'"> {{'porder-information' | translate}}</h4>
+          <button type="button" class="close" (click)="myModal2.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <ng-template [ngIf]="modal2.mode==='PURCHASE_ORDER'">
+            <porder-detail [id]="modal2.id"></porder-detail>
+          </ng-template>
+        </div>
+        <div class="modal-footer">
+          <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary"
+            (click)="myModal2.hide()">{{'close' | translate}}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template> -->

@@ -1,0 +1,64 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i> {{'common-template-detail' | translate}}
+        </div>
+        <div class="card-body">
+          <table class="table table-bordered">
+            <tbody *ngIf="commonTemplateDto">
+            <tr>
+              <td width="30%">{{'common-template-type' | translate}}</td>
+              <td>{{commonTemplateDto.commonTemplateType}}</td>
+            </tr>
+            <tr>
+              <td>{{'common-template-title' | translate}}</td>
+              <td>{{commonTemplateDto.templeteTitle}}</td>
+            </tr>
+            <tr>
+              <td>{{'default' | translate}}</td>
+              <td>
+                <p-checkbox disabled=true id="defaultTemplate" name="defaultTemplate" [(ngModel)]="commonTemplateDto.defaultTemplate" binary="true" inputId="binary"></p-checkbox>
+              </td>
+            </tr>
+            <tr>
+              <td>{{'common-template-text' | translate}}</td>
+<!--              <td>{{commonTemplateDto.templeteText}}</td>-->
+              <td>
+<!--                <ckeditor [editor]="EditorDocument" name="commonTemplateText"-->
+<!--                          [(ngModel)]="commonTemplateDto.templeteText" (ready)="onReady($event)" disabled></ckeditor>-->
+                <angular-editor [config]="editorConfig" name="commonTemplateText"
+                                [(ngModel)]="commonTemplateDto.templeteText" disabled></angular-editor>
+              </td>
+            </tr>
+            <tr>
+              <td>{{'email-body' | translate}}*</td>
+              <td>
+                <angular-editor [config]="editorConfigEmailBody" name="emailBody" [placeholder]="'Enter text here...'"
+                                [(ngModel)]="commonTemplateDto.emailBody"></angular-editor>
+              </td>
+            </tr>
+
+            <tr>
+              <td>{{'customer' | translate}}</td>
+              <td>{{commonTemplateDto.act?.actName}}</td>
+            </tr>
+
+            <tr>
+              <td>{{'common-template-print-size' | translate}}</td>
+              <td>{{commonTemplateDto.templetePrintSize}}</td>
+            </tr>
+            <tr>
+              <td>{{'lang-code' | translate}}</td>
+              <td>{{commonTemplateDto.langCode}}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

@@ -1,0 +1,203 @@
+<div class="ui-g layout-dashboard p-0">
+
+    <div class="ui-g w-100">
+        <div class="ui-lg-12" style="
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        align-items: baseline;
+    ">
+            <span style="margin-right: 12px;">
+                <strong>{{'select_document_date' | translate}}</strong> :
+            </span>
+            <p-calendar name="startDate" [(ngModel)]="pageFilter.startDate"
+            (ngModelChange)="filter(pageFilter)" dateFormat="dd/mm/yy"
+            [monthNavigator]="true" [yearNavigator]="true" yearRange="2018:2100" [showTime]="true"
+            [showIcon]="true" placeholder="{{'start-date'|translate}}"></p-calendar>
+
+            <p-calendar name="endDate" [(ngModel)]="pageFilter.endDate"
+            (ngModelChange)="filter(pageFilter)" dateFormat="dd/mm/yy"
+            [monthNavigator]="true" [yearNavigator]="true" yearRange="2018:2100" [showTime]="true"
+            [showIcon]="true" placeholder="{{'end-date'|translate}}"></p-calendar>
+        </div>
+        <div class="ui-lg-3 ui-md-12 ui-sm-12 ui-xs-12 p-0 mt-2">
+            <div class="ui-g">
+                <div class="ui-lg-12 ui-md-12 ui-sm-12 ui-xs-12">
+                    <p-panel styleClass="my-contacts" header="{{'awaiting_confirmation_doc_type' | translate}}">
+
+                        <ng-container *ngFor="let orderSummary of notificationInfo.documentTypeAwaitingConfirmationList last as isLast">
+                            <div class="ui-xl-6 ui-lg-6 ui-md-6 ui-sm-6 ui-xs-12" style="display: inline-block;">
+                                <div class="stats-box" [class]="randomColors(orderSummary.type)"
+                                    (click)="openModal(orderSummary.type, 'DOCUMENT_TYPE', orderSummary.count)">
+                                    <span class="statistics">{{orderSummary.count}}</span>
+                                    <div class="statistics-info-bg" style="padding: 0">
+                                        <span class="statistics-info" *ngIf="orderSummary.type === 'SALES_ORDER'">{{'ready-for-shipping' | translate}}</span>
+                                        <span class="statistics-info" *ngIf="orderSummary.type !== 'SALES_ORDER'">{{orderSummary.type | translate}}</span>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- <div class="ui-xl-6 ui-lg-6 ui-md-6 ui-xs-6" style="display: inline-block;"
+                                    *ngIf="isLast">
+                                <div class="stats-box totalactive">
+                                    <span class="statistics">{{orderSummary.count}}</span>
+                                    <div class="statistics-info-bg" style="padding: 0">
+                                        <span class="statistics-info">{{'total_active_notifications' | translate}}</span>
+                                    </div>
+                                </div>
+
+                            </div> -->
+                            <!-- <div class="ui-xl-6 ui-lg-6 ui-md-6 ui-xs-6" style="display: inline-block;" *ngIf="isLast">
+
+                                <p-card header="{{'total_active_notifications' | translate}}" class="ui-g-nopad card-content-red">
+                                    {{orderSummary.count}}
+                                </p-card>
+                            </div> -->
+
+                        </ng-container>
+                    </p-panel>
+                </div>
+
+            </div>
+        </div>
+        <div class="ui-lg-9 ui-md-12 ui-sm-12 ui-xs-12">
+            <div class="ui-g">
+                <div class="ui-lg-6 ui-md-12 ui-sm-12">
+                    <p-panel styleClass="my-contacts" header="{{'confirmed_notifications' | translate}}">
+                        <ng-container *ngIf="confirmedNotifications1">
+                            <div class="ui-g">
+                                <div class="ui-g ui-md-12 p-0"
+                                    *ngFor="let confirmNotification of confirmedNotifications1;let i=index;">
+                                    <div class="ui-md-3">
+
+                                        <circle-progress [percent]="(confirmNotification?.confirmedCount / confirmNotification.totalCount) * 100" [radius]="50"
+                                            name="confirmNotification{{i}}"
+                                            (click)="openModal(confirmNotification.type, 'CONFIRMED_NOTIFICATIONS', confirmNotification.confirmedCount)"
+                                            [outerStrokeWidth]="12" [innerStrokeWidth]="50" [space]="5"
+                                            [title]="(confirmNotification?.confirmedCount ? confirmNotification?.confirmedCount : '0')  + '/' + (confirmNotification?.totalCount ? confirmNotification?.totalCount : '0')"
+                                            [outerStrokeColor]="'#4882c2'" [innerStrokeColor]="'#e7e8ea'"
+                                            [titleFontSize]="18" [showUnits]="false" [showSubtitle]="false"
+                                            [animation]="true" [animationDuration]="300" [startFromZero]="false"
+                                            [responsive]="false">
+                                        </circle-progress>
+                                    </div>
+                                    <div class="ui-md-7"
+                                        style="align-self: center; text-align: start; margin-left: 40px;">
+                                        <strong>{{ confirmNotification?.typeName | translate}}</strong>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </ng-container>
+                    </p-panel>
+
+                </div>
+
+                <div class="ui-lg-6 ui-md-12 ui-sm-12">
+                    <p-panel styleClass="my-contacts" header="{{'confirmed_notifications' | translate}}">
+                        <div class="ui-g">
+                            <div class="ui-g ui-md-12 p-0" *ngFor="let confirmNotification of confirmedNotifications2; let i=index;">
+                                <div class="ui-md-3">
+
+                                    <circle-progress [percent]="(confirmNotification?.confirmedCount / confirmNotification.totalCount) * 100" [radius]="50"
+                                        [outerStrokeWidth]="12" [innerStrokeWidth]="50" [space]="5"
+                                        name="confirmNotification-2{{i}}"
+                                        (click)="openModal(confirmNotification.type, 'CONFIRMED_NOTIFICATIONS',confirmNotification?.confirmedCount)"
+                                        [title]="(confirmNotification?.confirmedCount ? confirmNotification?.confirmedCount : '0')  + '/' + (confirmNotification?.totalCount ? confirmNotification?.totalCount : '0')"
+                                        [outerStrokeColor]="'#4882c2'" [innerStrokeColor]="'#e7e8ea'"
+                                        [titleFontSize]="18" [showUnits]="false" [showSubtitle]="false"
+                                        [animation]="true" [animationDuration]="300" [startFromZero]="false"
+                                        [responsive]="false">
+                                    </circle-progress>
+                                </div>
+                                <div class="ui-md-7" style="align-self: center; text-align: start; margin-left: 40px;">
+                                    <strong>{{ confirmNotification?.typeName | translate}}</strong>
+                                </div>
+
+                            </div>
+                        </div>
+                    </p-panel>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="ui-g">
+            <div class="ui-lg-6 ui-md-12 ui-sm-12 mt-1">
+                <p-panel header="{{'awaiting_confirmation_activity_type'| translate}}">
+                    <table class="activity-table">
+                        <tbody>
+                            <tr *ngFor="let activityType of notificationInfo.activityTypeAwaitingConfirmationList">
+                                <td style="width: 10%;">
+                                    <i class="fa fa-cubes" aria-hidden="true"></i>
+                                </td>
+                                <td style="width: 70%;"><strong>{{activityType.type | translate}}</strong></td>
+                                <!-- <td>
+                                    <div class="good-issue">{{activityType.count}}</div>
+                                </td> -->
+                                <td style="text-align:center; width: 20%;">
+                                    <ng-container *ngIf="activityType.type === 'GOODS_ISSUE'">
+                                        <button pButton type="button" (click)="openModal(activityType.type, 'ACTIVITY_TYPE', activityType.count)" label="{{activityType.count}}" class="ui-button-info" style="width: 70px;"></button>
+                                    </ng-container>
+                                    <ng-container *ngIf="activityType.type === 'GOODS_RECEIPT'">
+                                        <button pButton type="button" (click)="openModal(activityType.type, 'ACTIVITY_TYPE', activityType.count)" label="{{activityType.count}}" class="ui-button-success" style="width: 70px;"></button>
+                                    </ng-container>
+                                    <ng-container *ngIf="activityType.type === 'TRANSFER_POSTING'">
+                                        <button pButton type="button" (click)="openModal(activityType.type, 'ACTIVITY_TYPE', activityType.count)" label="{{activityType.count}}" class="ui-button-danger" style="width: 70px;"></button>
+                                    </ng-container>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </p-panel>
+            </div>
+            <div class="ui-lg-6 ui-md-12 ui-sm-12">
+                <p-panel header="{{'notification_summary'| translate}}" styleClass="my-table"
+                    [style]="{'padding': '5px'}">
+                    <p-table [value]="notificationInfo.notificationSummaryList">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th width="35%" class="first-header">{{'status' | translate}}</th>
+                                <th>{{'today' | translate}}</th>
+                                <th>{{'this-week' | translate}}</th>
+                                <th>{{'this-month' | translate}}</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-data>
+                            <tr>
+                                <td class="first-header first-rowData">{{data.status +'_NS' | translate}}</td>
+                                <td>{{data.dailyCount}}</td>
+                                <td>{{data.weeklyCount}}</td>
+                                <td>{{data.monthlyCount}}</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </p-panel>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<ng-template [ngIf]="modal.active">
+    <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal" (onHidden)="modal.active=false; modal.activityType=null; modal.status=null; modal.goodsMovementStatus=null" class="modal fade"
+         tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+    <div class="modal-dialog modal-success modal-lg" role="document" style="max-width: 90%;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"> {{'Good Movement Notifications' | translate}}</h4>
+          <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <!--step2-->
+        <div>
+            <!-- <app-transfer-notification-list [documentType]="modal.status" [activityType]="modal.activityType"  [goodsMovementStatus]="modal.goodsMovementStatus" ></app-transfer-notification-list> -->
+            <app-transfer-notification-list [dashboardStatus]="modal" (closeEvent)="myModal.hide();"></app-transfer-notification-list>
+        </div>
+
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+  </ng-template>

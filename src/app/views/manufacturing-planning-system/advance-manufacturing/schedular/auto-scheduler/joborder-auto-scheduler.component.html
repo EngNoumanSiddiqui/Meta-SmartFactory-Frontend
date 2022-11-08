@@ -1,0 +1,889 @@
+<div class="animated fadeIn position-relative">
+  <div id="topDiv" class="row badge-light border border-bottom-0 p-2 ml-1 mr-1">
+    <div class="px-1 ui-fluid" style="width: 130px;">
+      <select name="searchplanned" class="form-control" [(ngModel)]="searchBy"
+        (ngModelChange)="onSearchByChanged($event)">
+        <option [value]="'searchbyscheduled'"> {{'search-scheduled' | translate}}</option>
+        <option [value]="'searchbyerp'"> {{'search-erp' | translate}}</option>
+      </select>
+    </div>
+    <ng-template [ngIf]="searchBy==='searchbyscheduled'">
+      <div class="px-1 ui-fluid" style="width: 130px;">
+        <p-calendar [(ngModel)]="filterSchedule.startDate" [monthNavigator]="true" [yearNavigator]="true"
+          [showTime]="true" yearRange="1990:2100" [showIcon]="true" dateFormat="dd/mm/yy" appendTo="body"
+          placeholder="{{'start-date'|translate}}"></p-calendar>
+      </div>
+      <div class="px-1 ui-fluid" style="width: 130px;">
+        <p-calendar [(ngModel)]="filterSchedule.finishDate" [monthNavigator]="true" [yearNavigator]="true"
+          [showTime]="true" yearRange="1990:2100" placeholder="{{'finish-date'|translate}}" appendTo="body"
+          [showIcon]="true" dateFormat="dd/mm/yy">
+        </p-calendar>
+      </div>
+      <div class="px-1 ui-fluid" style="width: 150px;">
+        <p-dropdown [options]="simulations" [(ngModel)]="selectedSimulation"
+          placeholder="{{'select-simulation' | translate}}" optionLabel="scheduleSimulationName" [filter]="true"
+          (onChange)="simulationChanged($event)"></p-dropdown>
+      </div>
+    </ng-template>
+    <ng-template [ngIf]="searchBy==='searchbyerp'">
+      <div class="px-1 ui-fluid" style="width: 130px;">
+        <p-calendar [(ngModel)]="filterSchedule.erpStartDate" [monthNavigator]="true" [yearNavigator]="true"
+          yearRange="1990:2100" [showIcon]="true" dateFormat="dd/mm/yy" [showTime]="true" appendTo="body"
+          placeholder="{{'start-date'|translate}}"></p-calendar>
+      </div>
+      <div class="px-1 ui-fluid" style="width: 130px;;">
+        <p-calendar [(ngModel)]="filterSchedule.erpFinishDate" [monthNavigator]="true" [yearNavigator]="true"
+          [showTime]="true" yearRange="1990:2100" placeholder="{{'finish-date'|translate}}" appendTo="body"
+          [showIcon]="true" dateFormat="dd/mm/yy">
+        </p-calendar>
+      </div>
+      <div class="px-1 ui-fluid" style="width: 150px;">
+        <p-dropdown [options]="simulations" [(ngModel)]="selectedSimulation"
+          placeholder="{{'select-simulation' | translate}}" optionLabel="scheduleSimulationName" [filter]="true"
+          (onChange)="simulationChanged($event)"></p-dropdown>
+      </div>
+    </ng-template>
+
+
+    <div class="px-1 ui-fluid" style="width: 170px;">
+      <p-dropdown [options]="workcenterTypes" [(ngModel)]="selectedWorkCenterTypes"
+        placeholder="{{'select-workcenter-types' | translate}}" optionLabel="workCenterTypeName" [filter]="true"
+        (onChange)="workcenterTypeChanged($event)"></p-dropdown>
+    </div>
+
+    <div class="px-1 ui-fluid" style="width: 150px;">
+      <p-dropdown [options]="workcenters" [(ngModel)]="selectedWorkCenters"
+        placeholder="{{'select-workcenters' | translate}}" optionLabel="workCenterName" [filter]="true"
+        (onChange)="workcenterChanged($event)"></p-dropdown>
+    </div>
+    <div class="col-md2 px-1 ">
+      <select class="form-control" [(ngModel)]="filterSchedule.scheduleProdOrderType">
+        <option [value]="'ALL'">ALL</option>
+        <option [value]="'STANDARD'">STANDARD</option>
+        <option [value]="'FORECAST'">FORECAST</option>
+        <option [value]="'ALL'">ALL</option>
+      </select>
+    </div>
+    <div class="col px-1">
+      <button pButton label="{{'load-data'|translate}}" class="ui-button-success" [disabled]="showLoader"
+        (click)="loadData()"></button>
+    </div>
+
+
+
+  </div>
+  <div id="midDiv" class="row col-md-12 align-items-center badge-light border p-2 ml-1 mr-1">
+    <div class="mx-1">
+      <select class="form-control" [(ngModel)]="requestScheduleJobOrdersDto.presetView">
+        <option [value]="'minuteAndHour'">Minutely</option>
+        <option [value]="'hourAndDay'">Hourly</option>
+        <option [value]="'dayAndWeek'">Daily</option>
+        <option [value]="'weekAndMonth'">Weekly</option>
+        <option [value]="'monthAndYear'">Monthly</option>
+      </select>
+    </div>
+    <div class="ml-1">
+      <!--      <p-dropdown [options]="scheduleTypeList" [style]="{'width':'100%'}" [(ngModel)]="this.requestScheduleJobOrdersDto.scheduleType"-->
+      <!--                  (ngModelChange)="setSelectedScheduleMode($event)"></p-dropdown>-->
+      <select id="scheduleType" name="scheduleType" class="form-control"
+        [(ngModel)]="requestScheduleJobOrdersDto.scheduleType" (ngModelChange)="setSelectedScheduleMode($event)">
+        <option *ngFor="let item of scheduleTypeList" value="{{item}}">{{item}}</option>
+      </select>
+    </div>
+
+    <!-- <div class="ml-1">
+      <label class="sel-event">
+        <p-checkbox [(ngModel)]="showEmptyJobs" (onChange)="filterAndCreateEvents()" binary="true"></p-checkbox>
+        {{'show-empty-jobs'|translate}} </label>
+    </div> -->
+    <!--    <div class="ml-1">-->
+    <!--      <p-checkbox name="showEmptyJobs" label="{{'show-empty-jobs'|translate}}" binary="true"-->
+    <!--                  [(ngModel)]="showEmptyJobs" (onChange)="onShowEmptyJobsChanged($event)"></p-checkbox>-->
+    <!--    </div>-->
+
+    <div style="width: 150px" class="ml-1 ui-fluid">
+      <p-calendar [(ngModel)]="calendarDate" (ngModelChange)="onDateChange($event)" [monthNavigator]="true"
+        [yearNavigator]="true" yearRange="2018:2100" appendTo="body" [showIcon]="true" dateFormat="dd-mm-yy"
+        placeholder="{{'navigate-to-date'|translate}}">
+        <ng-template pTemplate="date" let-date>
+          <span [ngClass]="{'dirty-day':containDate(date)}">{{date.day}}</span>
+        </ng-template>
+      </p-calendar>
+    </div>
+    <div class="ml-1">
+      <input type="text" pInputText placeholder="Filter task by name" [(ngModel)]="filterName"
+        (ngModelChange)="filterEvents('name', $event)" />
+    </div>
+    <!-- <div class="ml-1">
+      <input type="text" pInputText placeholder="Filter task by equipment" 
+      [(ngModel)]="filterEquipmentName" 
+      (ngModelChange)="filterEvents('name', $event)" />
+  </div> -->
+
+
+    <div class="ml-1">
+      <button type="button" class="btn btn-primary" data-toggle="modal" (click)="openScheduleSettingsModal()"><i
+          class="fa fa-gear"></i></button>
+    </div>
+    <div class="px-1">
+      <button pButton label="{{'save-changes'|translate}}" class="ui-button-info" [disabled]="showLoader"
+        (click)="saveChanges()"></button>
+    </div>
+    <div class="px-1">
+      <p-splitButton label="{{'configure'|translate}}" icon="fa fa-gear" [model]="selecteMenuItems"
+        [disabled]="showLoader" styleClass="ui-button-primary" menuStyleClass="overlay-menu-width">
+      </p-splitButton>
+    </div>
+    <div class="px-1">
+      <button pButton label="{{'schedule-job-orders'|translate}}" class="ui-button-success" [disabled]="showLoader"
+        (click)="filterMaintenanceOperationsFromSetting2()"></button>
+    </div>
+    <div class="ml-1">
+      <button pButton data-ref="exportButton" id="b-button-18" class="ui-button-warning float-right ml-1" type="button"
+        icon="fa fa-file-alt" iconPos="left" label="{{'export-pdf'|translate}}" [disabled]="showLoader"
+        (click)="exportToPDF()"></button>
+    </div>
+    <div class="ml-1">
+      <button pButton data-ref="exportButton" id="b-button-18" class="ui-button-warning float-right ml-1" type="button"
+        icon="fa fa-file-alt" iconPos="left" label="{{'export-excel'|translate}}" [disabled]="showLoader"
+        (click)="exportToExcel()"></button>
+    </div>
+    <div class="ml-1">
+      <div class="p-field-checkbox pt-1">
+        <!-- <p-dropdown  [options]="simulations" [(ngModel)]="selectedSimulation"
+          optionLabel="scheduleSimulationName" [filter]="true"
+          (onChange)="simulationChanged($event)" placeholder="{{'view-option' | translate}}"></p-dropdown> -->
+
+        <p-multiSelect [options]="cols" optionLabel="header" maxSelectedLabels="0"
+          selectedItemsLabel="{{ 'columns-selected' | translate }}" [style]="{minWidth: '200px'}"
+          defaultLabel="{{ 'view-option' | translate }}" [(ngModel)]="viewOption"
+          (ngModelChange)="viewOptionChange($event)">
+          <ng-template let-col let-i="index" pTemplate="item">
+            {{col.label|translate}}
+          </ng-template>
+        </p-multiSelect>
+
+        <!-- <select class="form-control " style="margin-top:0px; padding-top: 5px;" 
+        [(ngModel)]="viewOption" (ngModelChange)="viewOptionChange($event)">
+          <option [value]="null">{{'view-option'|translate}}</option>
+          <option [value]="1">{{'show-planned-stops'|translate}}</option>
+          <option [value]="2">{{'visible-due-jobs'|translate}}</option>
+        </select> -->
+
+
+        <!-- <p-checkbox name="isPlannedStopVisible" [(ngModel)]="isPlannedStopVisible" binary="true" inputId="binary"
+            (ngModelChange)="isPlannedStopVisibleEvent($event)"></p-checkbox>
+          <label for="binary">{{'show-planned-stops'|translate}}</label> -->
+
+      </div>
+    </div>
+    <div class="ml-1">
+      <div class="p-field-checkbox pt-1">
+        <!-- <p-checkbox name="showDueJobs" [(ngModel)]="showDueJobs" binary="true"
+          (ngModelChange)="showDueJobsEvent($event)"></p-checkbox>
+        <label for="binary">{{'visible-due-jobs'|translate}}</label> -->
+      </div>
+    </div>
+    <!-- <div class="col p-1">
+      <div class="col-sm-10 pt-2 px-1 border border-3" style="height: 30px; width: 230px;">
+        <span class="col p-1" style="font-weight:bold">{{'last-schedule-date'|translate}} :</span>
+        <span name="lastScheduleDate"> {{requestScheduleJobOrdersDto.lastScheduleDate |date:'dd.MM.yyyy HH:mm'}}</span>
+      </div>
+
+    </div> -->
+  </div>
+
+  <div class="row" id="fullscreenview">
+
+    <div class="col-md-12" id="app">
+      <div class="row text-center noData" *ngIf="!showLoader&&resources.length<1">
+        <strong class=""><i class="fa fa-warning "></i>{{'NO_DATA_FOUND'|translate}}!</strong>
+      </div>
+
+      <div id="allocationDiv" class="col p-1" style="background-color: rgb(246, 246, 246);"
+        *ngIf="!showLoader&&resources.length>0">
+        <span class="bg-danger text-white p-2"> Total Allocation Average: {{totalAllocationAverage | number :
+          '1.1-1'}}</span>
+        <span class="bg-success text-white p-2"> Total Individual Capacity: {{totalIndividualCapacity}}</span>
+        <button type="button" class="btn btn-primary" *ngIf="resources.length>0" data-toggle="tooltip"
+          data-placement="top" title="Report" style="margin-left: 8.5em;"
+          (click)="showAllcationByShiftGraph(null, 'workstation')"><i class="fa fa-line-chart"></i></button>
+        <!-- <button type="button" class="btn btn-secondary float-right"
+          *ngIf="resources.length>0"
+          data-toggle="tooltip" data-placement="top" title="Full Screen"
+          (click)="showFullScreen()"><i class="fa" [ngClass]="{'fa-arrows-alt': !isFullScreen, 'fa-times': isFullScreen}"></i></button> -->
+      </div>
+      <scheduler *ngIf="resources.length>0" #scheduler [frameHeight]="findTotalHeight()" [rowHeight]=50
+        [autoHeight]=false [barMargin]="barMargin" [createEventOnDblClick]="false" [events]="events"
+        [showDueJobs]="showDueJobs" [dependencies]="dependencies" [filter]="true" [resources]="resources"
+        [enableDeleteKey]="false" [featuretimeRanges]="featuretimeRanges" [startDate]="startDate" [stripe]="true"
+        [endDate]="endDate" [viewPreset]="requestScheduleJobOrdersDto.presetView"
+        [viewPeriod]="requestScheduleJobOrdersDto.viewPeriod" [pdfExport]="pdfExport" [excelExporter]="excelExporter"
+        [group]="'workCenterName'" [columns]="columns" [validateDelete]="validateDelete"
+        [validateDropEvent]="validateDropEvent" [eventDragCreate]="false" [eventEdit]="false" [labels]="labels"
+        [eventContextMenu]="eventContextMenu" [showAddEventInContextMenu]="false" [showRemoveRowInContextMenu]="false"
+        eventStyle="border" [nonWorkingTime]="true" [eventResize]="false" [eventRenderer]="eventRenderer"
+        [eventDrag]="eventDrag" [stopCauseList]="stopCauseListFinal"
+        (onSchedulerEventSelected)="onSchedulerEventSelected($event)"
+        (onSchedulerEventDropped)="onSchedulerEventDropped($event)"
+        (onSchedulerEventUpdated)="onSchedulerEventUpdated($event)"
+        (onSchedulerEventDbClicked)="onSchedulerEventDbClicked($event)">
+
+
+      </scheduler>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!--<p-dialog header="{{'schedule-parameters' | translate}}" [(visible)]="params.dialog.visible" [style]="{width: '800px'}">-->
+<!--  <div class="col-md-12 m-0 p-0">-->
+<!--    <form #scheduleSettingsForm="ngForm">-->
+<!--      <table class="table table-bordered">-->
+<!--        <tbody>-->
+
+<!--          <tr>-->
+<!--            <td>{{'schedule-iteration-count' | translate}}</td>-->
+<!--            <td><input name="iterationCount" type="number" min="0" class="form-control" style="width: 100%" [(ngModel)]="requestScheduleJobOrdersDto.iterationCount"/>-->
+<!--          </tr>-->
+
+<!--          <tr>-->
+<!--            <td>{{'schedule-empty-task-count' | translate}}</td>-->
+<!--            <td><input name="emptyTaskCount" type="number" min="0" class="form-control" style="width: 100%" [(ngModel)]="requestScheduleJobOrdersDto.emptyTaskCount"/>-->
+<!--          </tr>-->
+
+<!--          <tr>-->
+<!--            <td>{{'schedule-empty-task-duration-list' | translate}}</td>-->
+<!--            <td><input name="emptyTaskDurationList" type="text" class="form-control" style="width: 100%" [(ngModel)]="requestScheduleJobOrdersDto.emptyTaskDurationList"/>-->
+<!--          </tr>-->
+
+<!--          <tr>-->
+<!--            <td colspan="2">-->
+<!--              <button type="submit" class="btn btn-primary rounded" style="float:right"-->
+<!--                      (click)="closeScheduleSettingsModal()"><i class="fa fa-close"></i>-->
+<!--                {{'close' | translate}}-->
+<!--              </button>-->
+<!--            </td>-->
+<!--          </tr>-->
+
+<!--        </tbody>-->
+<!--      </table>-->
+<!--    </form>-->
+<!--  </div>-->
+<!--</p-dialog>-->
+
+<div bsModal [config]="{backdrop: 'static', keyboard: false}" #settingsModal="bs-modal" class="modal fade" tabindex="-1"
+  role="dialog" aria-labelledby="settingsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-success modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"> {{'schedule-parameters' | translate}}</h4>
+        <button type="button" class="close" (click)="settingsModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p-tabView>
+          <p-tabPanel header="{{'constraints' |translate}}">
+            <table class="table table-bordered">
+              <tbody>
+
+                <tr>
+                  <td>{{'view-period' | translate}}</td>
+                  <td>
+                    <input name="viewPeriod" type="number" min="0" class="form-control" style="width: 100%"
+                      [(ngModel)]="requestScheduleJobOrdersDto.viewPeriod" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'start-date' | translate}}</td>
+                  <td style="display: flex;
+                  border: 0px;
+                  justify-content: space-between;">
+                    <p-checkbox name="isStartDateSelected" binary="true" [(ngModel)]="isStartDateSelected"
+                      (ngModelChange)="onStartDateSelected($event)"></p-checkbox>
+                    <p-calendar *ngIf="isStartDateSelected" class="ui-fluid"
+                      [(ngModel)]="requestScheduleJobOrdersDto.startDate" name="startDate" [monthNavigator]="true"
+                      [yearNavigator]="true" yearRange="2020:2100" [style.width]="'90%'" [showIcon]="true"
+                      dateFormat="dd/mm/yy" showTime="true" timeFormat="HH:mm:ss"></p-calendar>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>{{'schedule-macro-plan-finish-date' | translate}}</td>
+                  <td>
+                    <p-calendar *ngIf="!requestScheduleJobOrdersDto.startDate" class="ui-fluid"
+                      [(ngModel)]="requestScheduleJobOrdersDto.finishDate" name="finishDate" [monthNavigator]="true"
+                      [yearNavigator]="true" yearRange="2020:2100" [showIcon]="true" dateFormat="dd/mm/yy"
+                      showTime="true" timeFormat="HH:mm:ss"></p-calendar>
+                    <p-calendar *ngIf="requestScheduleJobOrdersDto.startDate" class="ui-fluid"
+                      [(ngModel)]="requestScheduleJobOrdersDto.finishDate" name="finishDate" [monthNavigator]="true"
+                      [yearNavigator]="true" yearRange="2020:2100" [showIcon]="true" dateFormat="dd/mm/yy"
+                      showTime="true" timeFormat="HH:mm:ss"></p-calendar>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>{{'schedule-time-between-jobs' | translate}}</td>
+                  <td><input name="timeBetweenJobs" type="number" min="0" class="form-control" style="width: 100%"
+                      [(ngModel)]="requestScheduleJobOrdersDto.timeBetweenJobs" />
+                </tr>
+                <!--                <tr>-->
+                <!--                  <td>{{'schedule-job-order-order-no-check' | translate}}</td>-->
+                <!--                  <td>-->
+                <!--                    <p-checkbox name="jobOrderOrderNoCheck" binary="true"-->
+                <!--                                [(ngModel)]="requestScheduleJobOrdersDto.jobOrderOrderNoCheck"></p-checkbox>-->
+                <!--                  </td>-->
+                <!--                </tr>-->
+                <tr>
+                  <td>{{'schedule-job-order-order-no-weight' | translate}}</td>
+                  <td>
+                    <select id="jobOrderOrderNoWeight" name="jobOrderOrderNoWeight" class="form-control"
+                      [(ngModel)]="requestScheduleJobOrdersDto.jobOrderOrderNoWeight">
+                      <option *ngFor="let item of weightValues" value="{{item}}">{{item}}</option>
+                    </select>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>{{'divide-job-orders' | translate}}</td>
+                  <td>
+                    <p-checkbox name="divideJobs" binary="true" [(ngModel)]="requestScheduleJobOrdersDto.divideJobs">
+                    </p-checkbox>
+                  </td>
+                </tr>
+                <tr *ngIf="requestScheduleJobOrdersDto.divideJobs">
+                  <td>{{'schedule-divide-jobs-max-duration' | translate}}</td>
+                  <td><input name="divideJobMaxDuration" type="number" min="0" class="form-control" style="width: 100%"
+                      [(ngModel)]="requestScheduleJobOrdersDto.divideJobsMaxDuration" />
+                </tr>
+                <tr>
+                  <td>{{'schedule-workstation-capacity-check' | translate}}</td>
+                  <td>
+                    <p-checkbox name="workstationCapacityCheck" binary="true"
+                      [(ngModel)]="requestScheduleJobOrdersDto.workstationCapacityCheck"></p-checkbox>
+                  </td>
+                </tr>
+                <tr *ngIf="requestScheduleJobOrdersDto.workstationCapacityCheck">
+                  <td>{{'schedule-workstation-capacity-weight' | translate}}</td>
+                  <td>
+                    <select id="workstationCapacityWeight" name="workstationCapacityWeight" class="form-control"
+                      [(ngModel)]="requestScheduleJobOrdersDto.workstationCapacityWeight">
+                      <option *ngFor="let item of weightValues" value="{{item}}">{{item}}</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr *ngIf="requestScheduleJobOrdersDto.workstationCapacityCheck">
+                  <td>{{'schedule-workstation-capacity-percentage' | translate}}</td>
+                  <td><input name="workstationCapacityPercentage" type="number" min="0" class="form-control"
+                      style="width: 100%" [(ngModel)]="requestScheduleJobOrdersDto.workstationCapacityPercentage" />
+                </tr>
+                <tr *ngIf="requestScheduleJobOrdersDto.workstationCapacityCheck">
+                  <td>{{'schedule-min-workstation-capacity-percentage' | translate}}</td>
+                  <td><input name="minWorkstationCapacityPercentage" type="number" min="0" class="form-control"
+                      style="width: 100%" [(ngModel)]="requestScheduleJobOrdersDto.minWorkstationCapacityPercentage" />
+                </tr>
+                <tr>
+                  <td>{{'tolerance' | translate}}</td>
+                  <td><input name="tolerance" type="number" min="0" class="form-control" style="width: 100%"
+                      [(ngModel)]="requestScheduleJobOrdersDto.tolerance" />
+                </tr>
+
+
+                <tr>
+                  <td>{{'schedule-max-setup-duration' | translate}}</td>
+                  <td><input name="maxSetupDuration" type="number" min="0" class="form-control" style="width: 100%"
+                      [(ngModel)]="requestScheduleJobOrdersDto.maxSetupDuration" />
+                </tr>
+                <tr>
+                  <td>{{'scheduled' | translate}}</td>
+                  <td>
+                    <p-checkbox name="scheduled" binary="true" [(ngModel)]="requestScheduleJobOrdersDto.scheduled">
+                    </p-checkbox>
+                  </td>
+                </tr>
+                <tr *ngIf="requestScheduleJobOrdersDto.scheduled">
+                  <td>{{'scheduling-period' | translate}}</td>
+                  <td><input name="schedulingPeriod" type="number" min="0" class="form-control" style="width: 100%"
+                      [(ngModel)]="requestScheduleJobOrdersDto.schedulingPeriod" />
+                </tr>
+                <tr *ngIf="requestScheduleJobOrdersDto.scheduled">
+                  <td>{{'period-unit' | translate}}</td>
+                  <td>
+                    <select id="schedulingPeriodUnit" name="schedulingPeriodUnit" class="form-control"
+                      [(ngModel)]="requestScheduleJobOrdersDto.schedulingPeriodUnit">
+                      <!--                          <option [ngValue]="null"> {{'please-select' | translate}}</option>-->
+                      <option *ngFor="let item of timeIntervalEnumList" value="{{item}}">{{item}}</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr *ngIf="requestScheduleJobOrdersDto.scheduled">
+                  <td>{{'schedule-micro-plan-auto-schedule-period' | translate}}</td>
+                  <td><input name="finishDateInWeeks" type="number" min="0" class="form-control" style="width: 100%"
+                      [(ngModel)]="requestScheduleJobOrdersDto.finishDateInWeeks" />
+                </tr>
+                <tr>
+                  <td>{{'schedule-start-from-current-time' | translate}}</td>
+                  <td>
+                    <p-checkbox name="startFromNow" binary="true"
+                      [(ngModel)]="requestScheduleJobOrdersDto.startFromNow"></p-checkbox>
+                  </td>
+                </tr>
+                <tr *ngIf="requestScheduleJobOrdersDto.startFromNow">
+                  <td>{{'schedule-auto-prod-order-delay-time' | translate}}</td>
+                  <td><input name="autoProdOrderDelayTime" type="number" min="0" class="form-control"
+                      style="width: 100%" [(ngModel)]="requestScheduleJobOrdersDto.autoProdOrderDelayTime" />
+                </tr>
+                <tr>
+                  <td>{{'schedule-use-erp-prod-order-finish-date' | translate}}</td>
+                  <td>
+                    <p-checkbox name="useErpProdOrderDate" binary="true"
+                      [(ngModel)]="requestScheduleJobOrdersDto.useErpProdOrderDate"></p-checkbox>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </p-tabPanel>
+          <p-tabPanel header="{{'objectives' |translate}}">
+            <table class="table table-bordered">
+              <tbody>
+                <tr>
+                  <td style="width: 40%">{{'schedule-iteration-count' | translate}}</td>
+                  <td><input name="iterationCount" type="number" min="0" class="form-control" style="width: 100%"
+                      [(ngModel)]="requestScheduleJobOrdersDto.iterationCount" />
+                </tr>
+
+                <tr>
+                  <td>{{'schedule-population-size' | translate}}</td>
+                  <td><input name="populationSize" type="number" min="0" class="form-control" style="width: 100%"
+                      [(ngModel)]="requestScheduleJobOrdersDto.populationSize" />
+                </tr>
+
+                <tr>
+                  <td>{{'schedule-tournament-size' | translate}}</td>
+                  <td><input name="tournamentSize" type="number" min="0" class="form-control" style="width: 100%"
+                      [(ngModel)]="requestScheduleJobOrdersDto.tournamentSize" />
+                </tr>
+
+                <tr>
+                  <td>{{'schedule-mutation-rate' | translate}}</td>
+                  <td><input name="mutationRate" type="number" min="0" class="form-control" style="width: 100%"
+                      [(ngModel)]="requestScheduleJobOrdersDto.mutationRate" />
+                </tr>
+
+                <!-- <tr>
+                  <td>{{'schedule-empty-task-count' | translate}}</td>
+                  <td><input name="emptyTaskCount" type="number" min="0" class="form-control" style="width: 100%"
+                             [(ngModel)]="requestScheduleJobOrdersDto.emptyTaskCount"/>
+                </tr>
+
+                <tr>
+                  <td>{{'schedule-empty-task-duration-list' | translate}}</td>
+                  <td>
+                    <p-chips name="emptyTaskDurationList" class="ui-fluid"
+                             [(ngModel)]="requestScheduleJobOrdersDto.emptyTaskDurationList"
+                             [allowDuplicate]="false" (onAdd)=checkInput($event)></p-chips>
+                  </td>
+                </tr> -->
+                <tr>
+                  <td>{{'schedule-prod-order-priority-check' | translate}}</td>
+                  <td>
+                    <p-checkbox name="prodOrderPriorityCheck" binary="true"
+                      [(ngModel)]="requestScheduleJobOrdersDto.prodOrderPriorityCheck"></p-checkbox>
+                  </td>
+                </tr>
+                <tr *ngIf="requestScheduleJobOrdersDto.prodOrderPriorityCheck">
+                  <td>{{'schedule-prod-order-priority-weight' | translate}}</td>
+                  <td>
+                    <select id="prodOrderPriorityWeight" name="prodOrderPriorityWeight" class="form-control"
+                      [(ngModel)]="requestScheduleJobOrdersDto.prodOrderPriorityWeight">
+                      <option *ngFor="let item of weightValues" value="{{item}}">{{item}}</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'schedule-prod-order-date-consistency-check' | translate}}</td>
+                  <td>
+                    <p-checkbox name="prodOrderDateConsistencyCheck" binary="true"
+                      [(ngModel)]="requestScheduleJobOrdersDto.prodOrderDateConsistencyCheck"></p-checkbox>
+                  </td>
+                </tr>
+                <tr *ngIf="requestScheduleJobOrdersDto.prodOrderDateConsistencyCheck">
+                  <td>{{'schedule-prod-order-date-consistency-weight' | translate}}</td>
+                  <td>
+                    <select id="prodOrderDateConsistencyWeight" name="prodOrderDateConsistencyWeight"
+                      class="form-control" [(ngModel)]="requestScheduleJobOrdersDto.prodOrderDateConsistencyWeight">
+                      <option *ngFor="let item of weightValues" value="{{item}}">{{item}}</option>
+                    </select>
+                  </td>
+                </tr>
+
+
+
+                <!-- <tr>
+                  <td>{{'continuous-line' | translate}}</td>
+                  <td>
+                    <p-checkbox name="continuousLine" binary="true"
+                                [(ngModel)]="requestScheduleJobOrdersDto.continuousLine"></p-checkbox>
+                  </td>
+                </tr> -->
+                <!-- <tr *ngIf="requestScheduleJobOrdersDto.continuousLine">
+                  <td>{{'workstation-single-operation-duration' | translate}}</td>
+                  <td><input name="workstationSingleOperationDuration" type="number" min="0" class="form-control" style="width: 100%"
+                             [(ngModel)]="requestScheduleJobOrdersDto.workstationSingleOperationDuration"/>
+                </tr> -->
+
+
+
+
+
+                <tr>
+                  <td>{{'schedule-find-employee-count' | translate}}</td>
+                  <td>
+                    <p-checkbox name="findEmployeeCount" binary="true"
+                      [(ngModel)]="requestScheduleJobOrdersDto.findEmployeeCount"></p-checkbox>
+                  </td>
+                </tr>
+                <tr *ngIf="requestScheduleJobOrdersDto.findEmployeeCount">
+                  <td>{{'schedule-find-employee-iteration-count' | translate}}</td>
+                  <td><input name="findEmployeeIterationCount" type="number" min="0" class="form-control"
+                      style="width: 100%" [(ngModel)]="requestScheduleJobOrdersDto.findEmployeeIterationCount" />
+                </tr>
+                <tr *ngIf="requestScheduleJobOrdersDto.findEmployeeCount">
+                  <td>{{'min-employee-count' | translate}}</td>
+                  <td><input name="minEmployeeCount" type="number" min="0" class="form-control" style="width: 100%"
+                      [(ngModel)]="requestScheduleJobOrdersDto.minEmployeeCount" />
+                </tr>
+                <tr *ngIf="requestScheduleJobOrdersDto.findEmployeeCount">
+                  <td>{{'max-employee-count' | translate}}</td>
+                  <td><input name="maxEmployeeCount" type="number" min="0" class="form-control" style="width: 100%"
+                      [(ngModel)]="requestScheduleJobOrdersDto.maxEmployeeCount" />
+                </tr>
+
+                <tr>
+                  <td>{{'schedule-max-change-over-count' | translate}}</td>
+                  <td><input name="maxChangeOverCount" type="number" min="0" class="form-control" style="width: 100%"
+                      [(ngModel)]="requestScheduleJobOrdersDto.maxChangeOverCount" />
+                </tr>
+              </tbody>
+            </table>
+          </p-tabPanel>
+        </p-tabView>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn rounded btn-primary" (click)="saveScheduleParameters(settingsModal)">{{'save' |
+          translate}}</button>
+        <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary"
+          (click)="settingsModal.hide()">{{'close' | translate}}</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+
+
+
+
+
+<div bsModal [config]="{backdrop: 'static', keyboard: false}" #allocationModal="bs-modal" class="modal fade"
+  tabindex="-1" role="dialog" aria-labelledby="allocationModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-success modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"> {{ allocationParams.dialog.title | translate}}</h4>
+        <button type="button" class="close" (click)="allocationModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row" *ngIf="allocationSelection=='Mixed'">
+          <div class="col-md-12 d-flex flex-row justify-content-center align-items-end">
+            <div style="width: 50px; height: 20px; background-color: lightslategrey; margin-right: 10px;"></div>MSF APS
+            <div style="width: 50px; height: 20px; background-color: lightblue; margin-right: 10px; margin-left: 10px;">
+            </div>ERP
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-2 d-flex flex-column justify-content-center">
+            <div class="field-radiobutton">
+              <p-radioButton name="erpAllocation" value="ErpAllocation" [(ngModel)]="allocationSelection"
+                inputId="erpAllocation" (ngModelChange)="onSelectErpAllocation($event)"></p-radioButton>
+              <label for="erpAllocation" class="ml-2">Erp Allocation</label>
+            </div>
+            <div class="field-radiobutton">
+              <p-radioButton name="allocation" value="Allocation" [(ngModel)]="allocationSelection" inputId="allocation"
+                (ngModelChange)="onSelectAllocation($event)"></p-radioButton>
+              <label for="allocation" class="ml-2">Allocation</label>
+            </div>
+            <div class="field-radiobutton">
+              <p-radioButton name="mixed" value="Mixed" [(ngModel)]="allocationSelection" inputId="mixed"
+                (ngModelChange)="onSelectMixed2($event)"></p-radioButton>
+              <label for="mixed" class="ml-2">Mixed</label>
+            </div>
+          </div>
+          <div class="col-md-10">
+            <div style="position: absolute; right: 5px; z-index:5;">
+              <button class="btn btn-info btn-xs" (click)="viewChart(options, barData)">{{'view' | translate}}</button>
+            </div>
+            <p-chart type="bar" [data]="barData" [options]="options" [height]="'350px'"></p-chart>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-2 d-flex flex-column justify-content-center">
+            <workcenter-auto-complete [selectedWorkCenter]="selectedWorkCenter"
+              (selectedWorkCenterEvent)="onSelectWorkcenter($event)"></workcenter-auto-complete>
+            <workstation-auto-complete [workCenterId]="selectedWorkCenter?.workCenterId"
+              [selectedWorkStation]="selectedWorkStation" (selectedWorkStationEvent)="onSelectWorkStation($event)"
+              class="mt-3"></workstation-auto-complete>
+          </div>
+          <div class="col-md-10">
+            <div style="position: absolute; right: 5px; z-index:5;">
+              <button class="btn btn-info btn-xs" (click)="viewChart(optionsWorkstation, barWorkstationData)">{{'view' |
+                translate}}</button>
+            </div>
+            <p-chart type="bar" [data]="barWorkstationData" [options]="optionsWorkstation" [height]="400+'px'">
+            </p-chart>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<p-dialog header="{{panel.title | translate}}" appendTo="body" [(visible)]="panel.visible" [autoZIndex]="true"
+  [baseZIndex]="999999" #dJoin (mousedown)="moveToJoinTop()" (onHide)="OnDivideHide()" [style]="{'width': '50%'}"
+  [contentStyle]="{'min-height':'260px'}">
+
+  <div class="col-md-12" *ngIf="panel.title==='divide-job-order'">
+    <label>{{'total-quantity' | translate}} : {{selectedReadyJobOrders[0]?.quantity}}</label>
+    <p-tabView>
+      <p-tabPanel header="{{'manual-division' | translate}}">
+        <div class="form-group row">
+          <label class="col-md-3 col-form-label" for="manual">{{'number-of-jobs' | translate }}</label>
+          <div class="col-md-6">
+            <div class="input-group">
+
+              <select id="manual" name="manual" class="form-control" [(ngModel)]="params.dialog.numberOfJobs"
+                (change)="selectDivideJobs()">
+                <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                <option *ngFor="let no of [2,3,4,5,6,7,8,9,10]" value="{{no}}">{{no}}</option>
+              </select>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group row mb-1" *ngFor="let item of params.dialog.jobList;let i=index;">
+          <label class="col-md-3 col-form-label" for="manual">{{item.name}}. {{'job' | translate}} </label>
+          <div class="col-md-6">
+            <div class="input-group">
+              <input class="form-control" type="number" name="form{{i}}" [(ngModel)]="item.value"
+                (ngModelChange)="params.dialog.error=''" />
+            </div>
+          </div>
+        </div>
+        <button [disabled]="!params.dialog.jobList || params.dialog.jobList.length==0" class="btn btn-success"
+          (click)="divideJobs('manual')">{{'save' | translate}}
+        </button>
+        <div *ngIf="params.dialog.error" class="row alert alert-dismissible alert-warning">
+          {{params.dialog.error}}
+        </div>
+
+      </p-tabPanel>
+      <p-tabPanel header="{{'auto-division' | translate}}">
+        <div class="form-group row">
+          <label class="col-md-3 col-form-label" for="auto">{{'number-of-jobs' | translate }}</label>
+          <div class="col-md-6">
+            <div class="input-group">
+
+              <select id="auto" name="auto" class="form-control" [(ngModel)]="params.dialog.numberOfJobs"
+                (change)="selectDivideJobs()">
+                <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                <option *ngFor="let no of [2,3,4,5,6,7,8,9,10]" value="{{no}}">{{no}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <button [disabled]="!params.dialog.numberOfJobs|| params.dialog.numberOfJobs==0" class="btn btn-success"
+          (click)="divideJobs('auto')">{{'save' | translate}}
+        </button>
+      </p-tabPanel>
+    </p-tabView>
+  </div>
+  <div class="col-md-12" *ngIf="panel.title==='clone-operation'">
+    <table class="table table-bordered">
+      <tbody>
+        <tr>
+          <td>{{'number-of-clonning' | translate}}</td>
+          <td>
+            <div class="input-group">
+
+              <select id="auto" name="auto" class="form-control" required [(ngModel)]="params.dialog.numberOfJobs">
+                <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                <option *ngFor="let no of [1,2,3,4,5,6,7,8,9,10]" value="{{no}}">{{no}}</option>
+              </select>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>{{'operation'| translate}}</td>
+          <td>{{this.clonedEvent?.operationName}}</td>
+        </tr>
+        <tr>
+          <td>{{'job-order-id'|translate}}</td>
+          <td>{{this.clonedEvent?.jobOrderId}}</td>
+        </tr>
+        <tr>
+          <td>{{'production-order-id' | translate}}</td>
+          <td>{{this.clonedEvent?.prodOrderId}}</td>
+        </tr>
+        <tr>
+          <td>{{'reference-id' | translate}}</td>
+          <td>{{this.clonedEvent?.nextJobOrderOperationId}}</td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <button class="btn btn-danger float-right" (click)="panel.visible=false;">{{'close' | translate}}</button>
+            <button [disabled]="!params.dialog.numberOfJobs|| params.dialog.numberOfJobs==0"
+              class="btn btn-primary float-right" (click)="cloneOperation()">{{'save' | translate}}</button>
+
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col-md-12" *ngIf="panel.title==='update-planned-task' || 
+      panel.title==='processing-to-planned' || panel.title==='processing-to-completed' || 
+      panel.title==='change-to-long-term-processing' || panel.title === 'update-long-term-processing'">
+    <table class="table table-bordered">
+      <tbody>
+        <tr>
+          <td>{{'job-order-id' | translate}}</td>
+          <td>
+            {{this.panel.data?.jobOrderId}}
+          </td>
+        </tr>
+        <tr>
+          <td>{{'job-order-operation-id'| translate}}</td>
+          <td>
+            {{this.panel.data?.jobOrderOperationId}}
+          </td>
+        </tr>
+        <tr>
+          <td>{{'start-date'|translate}}</td>
+          <td>
+            <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100" [showTime]="true"
+              [showIcon]="true" name="startDate" dateFormat="dd/mm/yy" appendTo="body" [baseZIndex]="99999999"
+              [(ngModel)]="reqChangeJobOrderOperationStatusDto.startDate" placeholder="{{'start-date'|translate}}">
+            </p-calendar>
+            <!-- <p-calendar [(ngModel)]="reqChangeJobOrderOperationStatusDto.startDate" [showIcon]="true" [showTime]="true" [style]="{'overflow': 'visible', 'z-index': '19999','opacity':'1'}" inputId="startDate"></p-calendar> -->
+          </td>
+        </tr>
+        <tr>
+          <td>{{'finish-date' | translate}}</td>
+          <td>
+            <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100" [showTime]="true"
+              [showIcon]="true" name="finishDate" dateFormat="dd/mm/yy" appendTo="body" [baseZIndex]="99999999"
+              [(ngModel)]="reqChangeJobOrderOperationStatusDto.finishDate" placeholder="{{'finish-date'|translate}}">
+            </p-calendar>
+            <!-- <p-calendar [(ngModel)]="reqChangeJobOrderOperationStatusDto.finishDate" [showIcon]="true" [showTime]="true" [style]="{'overflow': 'visible', 'z-index': '9999','opacity':'1'}" inputId="finishDate"></p-calendar> -->
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <button class="btn btn-danger float-right" (click)="panel.visible=false;">{{'close' | translate}}</button>
+            <button class="btn btn-primary float-right" (click)="jobOrderChangeStatus()">
+              {{'save' | translate}}</button>
+
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="col-md-12" *ngIf="panel.title==='plan-manually'">
+    <table class="table table-bordered">
+      <tbody>
+        <tr>
+          <td>{{'job-order-id' | translate}}</td>
+          <td>
+            {{this.panel.data?.jobOrderId}}
+          </td>
+        </tr>
+        <tr>
+          <td>{{'job-order-operation-id'| translate}}</td>
+          <td>
+            {{this.panel.data?.jobOrderOperationId}}
+          </td>
+        </tr>
+        <tr>
+          <td>{{'start-date'|translate}}</td>
+
+          <td>
+            {{this.panel.data?.startDate |date:'dd.MM.yyyy HH:mm'}}
+          </td>
+        </tr>
+        <tr>
+          <td>{{'finish-date'|translate}}</td>
+
+          <td>
+            {{this.panel.data?.endDate |date:'dd.MM.yyyy HH:mm'}}
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <button class="btn btn-danger float-right" (click)="panel.visible=false;">{{'close' | translate}}</button>
+            <button class="btn btn-primary float-right" (click)="planJobOrderManually()">
+              {{'save' | translate}}</button>
+
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+
+  <div *ngIf="panel.title==='show-relations'" class="d-flex col-lg-12 align-items-center" style="min-height: 50vh;">
+    <p-tree [value]="panel.data" layout="horizontal" selectionMode="single" [style]="{'background-color': '#f4f4f4'}"
+      id="product-tree-content">
+      <ng-template let-node pTemplate="default">
+        <div class="d-flex">
+          {{node.label}}
+        </div>
+        <!-- <input [(ngModel)]="node.label" type="text" style="width:100%"> -->
+      </ng-template>
+    </p-tree>
+  </div>
+
+  <!-- <div class="col-md-12" *ngIf="panel.title=='combine-job-orders'">
+
+    <job-order-join [selectedReadyJobOrders]="selectedReadyJobOrders" (saveAction)="joinSaved()"></job-order-join>
+  </div> -->
+
+
+</p-dialog>
+
+
+
+<ng-container *ngIf="modal.active">
+  <p-dialog [header]="dailogOptions?.title?.text" [(visible)]="modal.active" [autoZIndex]="true" [baseZIndex]="999999"
+    dismissableMask="true" (onHide)="onHide()" [style]="{'max-width': '90%','width': '90%', overflow: 'auto'}"
+    appendTo="body">
+    <div class="d-flex justify-content-center">
+      <div class="col-md-11 bg-white p-0" style="margin-left:5%;">
+        <p-chart type="bar" [data]="dialogChartData" [options]="dailogOptions" [height]="'500px'"
+          [width]="(widthSize!==1 ? widthSize+'px':'100%')"></p-chart>
+      </div>
+    </div>
+
+  </p-dialog>
+</ng-container>
+<p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>

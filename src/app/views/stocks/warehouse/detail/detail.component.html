@@ -1,0 +1,167 @@
+<div class="animated fadeIn">
+  <div class="row">
+
+    <div class="col-lg-6">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i> {{'warehouse' | translate}} {{'details' | translate}}
+        </div>
+        <div class="card-body">
+          <table class="table table-outline table-striped">
+            <tbody *ngIf="wareHouse != null">
+              <tr>
+                <td width="30%" class="text-bold">{{'warehouse-id' | translate}} <span class="float-right">:</span></td>
+                <td>{{wareHouse.wareHouseId}}</td>
+              </tr>
+              <tr>
+                <td>{{'warehouse' | translate}} {{'no' | translate}}</td>
+                <td>
+                  {{wareHouse.wareHouseNo}}
+                </td>
+              </tr>
+              <tr>
+                <td class="text-bold"> {{'warehouse-name' | translate}}<span class="float-right">:</span></td>
+                <td>{{wareHouse.wareHouseName}}</td>
+              </tr>
+              <tr>
+                <td class="text-bold">{{'plant' | translate}}<span class="float-right">:</span></td>
+                <td>
+                  <a href="javascript:;" (click)="showPlantDetail(wareHouse.plantId)"> {{wareHouse.plantName}}</a></td>
+              </tr>
+              <tr>
+                <td class="text-bold">{{'default-selected' | translate}}<span class="float-right">:</span></td>
+                <td>
+                  <p-checkbox [(ngModel)]="wareHouse.defaultSelected" binary="true" inputId="binary" name="defaultSelected" disabled></p-checkbox>
+                </td>
+              </tr>
+              <tr>
+                <td class="text-bold">{{'factory-calendar' | translate}}<span class="float-right">:</span></td>
+                <td>
+                  <a href="javascript:;" (click)="showFactoryCalenderDetailDialog(wareHouse?.factoryCalendar?.factoryCalendarId)">{{wareHouse?.factoryCalendar?.factoryCalendarId}}</a>
+                </td>
+              </tr>
+              <tr>
+                <td class="text-bold">{{'parent-warehouse-id' | translate}}<span class="float-right">:</span></td>
+                <td>
+                  <a href="javascript:;" (click)="showWarehouseDetailDialog(wareHouse?.parentId)">{{wareHouse?.parentId}}</a>
+                </td>
+              </tr>
+              <tr>
+                <td class="text-bold">{{'parent-warehouse-name' | translate}}<span class="float-right">:</span></td>
+                <td>
+                  <a href="javascript:;" (click)="showWarehouseDetailDialog(wareHouse?.parentId)">{{wareHouse?.parentName}}</a>
+                </td>
+              </tr>
+              <tr>
+                <td class="text-bold">{{'type' | translate}}<span class="float-right">:</span></td>
+                <td id="w-t">
+                  <div class="row">
+                    <div class="col-md-4" *ngIf="wareHouse.scrap || wareHouse.rework || wareHouse.process">
+                        <ul>
+                            <li  *ngIf="wareHouse.scrap">SCRAP</li>
+                            <li  *ngIf="wareHouse.rework">REWORK</li>
+                            <li  *ngIf="wareHouse.process">PROCESS</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                      <ul>
+                          <li  *ngIf="wareHouse.purchase">PURCHASE</li>
+                          <li  *ngIf="wareHouse.quality">QUALITY</li>
+                          <li  *ngIf="wareHouse.sales">SALES</li>
+                      </ul>
+                  </div>
+                  </div>
+                  <!-- <div class="row" *ngIf="wareHouse.rework">
+                    <div class="col-md">REWORK</div>
+                  </div>
+                  <div class="row" *ngIf="wareHouse.process">
+                    <div class="col-md">PROCESS</div>
+
+                  </div> -->
+                  <!-- <div class="row" *ngIf="wareHouse.purchase">
+                    <div class="col-md">PURCHASE</div>
+                  </div>
+                  <div class="row" *ngIf="wareHouse.quality">
+                    <div class="col-md">QUALITY</div>
+                  </div>
+                  <div class="row" *ngIf="wareHouse.sales">
+                    <div class="col-md">SALES</div>
+                  </div> -->
+                </td>
+              </tr>
+              <tr>
+                <td class="text-bold">{{'description' | translate}}<span class="float-right">:</span></td>
+                <td>{{wareHouse.description}}</td>
+              </tr>
+<!--
+              <tr>
+                <td class="text-bold">{{'employee-name' | translate}}<span class="float-right">:</span></td>
+                <td>{{wareHouse.employeeFirstName}}</td>
+              </tr>
+              <tr>
+                <td class="text-bold">{{'employee-surname' | translate}}<span class="float-right">:</span></td>
+                <td>{{wareHouse.employeeLastName }}</td>
+              </tr> -->
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i> {{'stock' | translate}} {{'details' | translate}}
+        </div>
+        <div class="card-body">
+          <p-table #dt [value]="wareHouse.wareHouseStockDtoList" [scrollable]="true" scrollHeight="200px">
+
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th [pSortableColumn]="'stockId'">{{'id' | translate}} <p-sortIcon [field]="'stockId'"></p-sortIcon>
+                </th>
+                <th [pSortableColumn]="'stockNo'">{{'material-no' | translate}} <p-sortIcon [field]="'stockNo'">
+                  </p-sortIcon>
+                </th>
+                <th [pSortableColumn]="'stockName'">{{'name' | translate}} <p-sortIcon [field]="'stockName'">
+                  </p-sortIcon>
+                </th>
+                <th [pSortableColumn]="'quantity'">{{'quantity' | translate}} <p-sortIcon [field]="'quantity'">
+                  </p-sortIcon>
+                </th>
+              </tr>
+              <tr>
+                <th><input style="width: 100%" pInputText type="text"
+                    (input)="dt.filter($event.target.value, 'stockId', 'contains')"></th>
+                <th><input style="width: 100%" pInputText type="text"
+                    (input)="dt.filter($event.target.value, 'stockNo', 'contains')"></th>
+                <th><input style="width: 100%" pInputText type="text"
+                    (input)="dt.filter($event.target.value, 'stockName', 'contains')"></th>
+                <th><input style="width: 100%" pInputText type="text"
+                    (input)="dt.filter($event.target.value, 'quantity', 'contains')"></th>
+              </tr>
+
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData>
+              <tr>
+                <td>
+                  <a href="javascript:;" (click)="showMaterialDetail(rowData.stockId)">{{rowData.stockId}}</a>
+                </td>
+                <td>
+                  <a href="javascript:;" (click)="showMaterialDetail(rowData.stockId)">{{rowData.stockNo}}</a>
+                </td>
+                <td>
+                  <a href="javascript:;" (click)="showMaterialDetail(rowData.stockId)">{{rowData.stockName}}</a>
+                </td>
+                <td>{{rowData.quantity}}</td>
+              </tr>
+            </ng-template>
+
+          </p-table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</div>

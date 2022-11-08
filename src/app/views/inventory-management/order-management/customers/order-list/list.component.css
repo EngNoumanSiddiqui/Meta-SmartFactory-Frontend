@@ -1,0 +1,5 @@
+
+
+.table tbody>tr.selected-border>td {
+  border: 2px solid #56bedb;
+}

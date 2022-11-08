@@ -1,0 +1,64 @@
+<!--<form #orderEdit="ngForm" >-->
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          {{'equipment-planner-group'|translate}}
+        </div>
+        <div class="card-body">
+          <form #saleForm="ngForm" class="form-horizontal ui-fluid">
+            <div class="form-group row">
+              <label class="col-md-3 col-form-label" for="equipment-category">{{'planner-group' |
+                translate}}</label>
+              <div class="col-md-9">
+                <input id="equipment-category" class="form-control" [(ngModel)]="dataModel.plannerGroup"
+                       name="plannerGroup" required/>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-3 col-form-label" for="description">{{'definition' | translate}}</label>
+              <div class="col-md-9">
+                <input type="text" id="description" name="definition" [(ngModel)]="dataModel.definition"
+                          class="form-control" placeholder="{{'definition' | translate}}"/>
+                <!--<span class="help-block">This is a help text</span>-->
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-3 col-form-label" for="mail">{{'mail' | translate}}</label>
+              <div class="col-md-9">
+                <input id="mail" class="form-control" [(ngModel)]="dataModel.mail"
+                       name="mail"/>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-3 col-form-label" for="telephone">{{'telephone' | translate}}</label>
+              <div class="col-md-9">
+                <input id="telephone" class="form-control" [(ngModel)]="dataModel.telephone"
+                       name="telephone"/>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-3 col-form-label">{{'plant' | translate}}</label>
+              <div class="col-md-9 ui-fluid">
+                <span *ngIf="dataModel.plantId && selectedPlant && dataModel.plantId=== selectedPlant.plantId">{{selectedPlant.plantName}}</span>
+                <plant-auto-complete *ngIf="!selectedPlant || !dataModel.plantId"  [selectedPlantId]="dataModel.plantId" (selectedPlantEvent)="setSelectedPlant($event)" [eventFire]="true"></plant-auto-complete>
+              </div>
+            </div>
+
+          </form>
+        </div>
+        <div class="card-footer">
+          <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+            {{'reset' | translate}}
+          </button>
+          <button type="submit" class="btn btn-sm btn-primary" [disabled]="!saleForm.form.valid"
+                  (click)="save()"><i class="fa fa-dot-circle-o"></i>
+            {{'save' | translate}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div><!--/.row-->
+</div>
+<!--</form>-->

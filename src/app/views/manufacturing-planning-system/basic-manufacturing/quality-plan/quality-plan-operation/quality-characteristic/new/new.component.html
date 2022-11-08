@@ -1,0 +1,76 @@
+<div class="card">
+  <div class="card-header">{{ 'QUALITY_PLAN_OPERATION_DETAILS'|translate }}</div>
+  <div class="card-body">
+    <form #operationForm="ngForm" class="form-horizontal ui-fluid">
+      <table class="table table-bordered">
+        <tbody>
+
+          <tr>
+            <td width="35%" class="text-bold">{{'QUALITY_CHARAC_OPERATION_CODE' | translate}}</td>
+            <td><input id="operation_code" name="operation_code" class="form-control"
+                [(ngModel)]="dataModel.productTreeDetailQualityPlanCharacOperationCode" required />
+            </td>
+          </tr>
+
+          <tr>
+            <td>{{'inspection-characteristic' | translate}}</td>
+            <td>
+              <insp-char-auto-complete [addIfMissing]="false" [selectedInspCharId]="dataModel.productTreeDetailQualityPlanCharacOperationId" (selectedInspCharEvent)="onSelectedInspChar($event)"></insp-char-auto-complete>
+            </td>
+          </tr>
+
+
+          <tr>
+            <td>{{'sampling-procedure' | translate}}</td>
+            <td>
+              <select id="samplingProcedure" name="samplingProcedure" class="form-control" [(ngModel)]="dataModel.qualitySamplingProcedureId" required>
+                <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                <option value="{{samplingProcedure.samplingProcedureId}}" *ngFor="let samplingProcedure of samplingProcedures">{{samplingProcedure.samplingProcedureName}}
+                </option>
+              </select>
+            </td>
+          </tr>
+
+          <tr>
+            <td>{{'lower-specific-limit' | translate}}</td>
+            <td>
+              <input type="number" id="lowerSpecific" name="lowerSpecific" [(ngModel)]="dataModel.lowerSpecific"
+                class="form-control" step="1" pattern="\d+" #lowerSpecific="ngModel"/>
+              <div *ngIf="(lowerSpecific.dirty || lowerSpecific.touched) && lowerSpecific.invalid"
+                class="alert alert-danger p-0 m-0" role="alert">
+                <strong>It should be only number </strong>
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <td>{{'upper-limit' | translate}}</td>
+            <td>
+              <input type="number" id="upperLimit" name="upperLimit" [(ngModel)]="dataModel.upperLimit"
+                class="form-control" step="1" pattern="\d+" #upperLimit="ngModel"/>
+              <div *ngIf="(upperLimit.dirty || upperLimit.touched) && upperLimit.invalid"
+                class="alert alert-danger p-0 m-0" role="alert">
+                <strong>It should be only number </strong>
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <td>{{'short-text' | translate}}</td>
+            <td>
+              <textarea [rows]="5" [cols]="30" pInputTextarea autoResize="autoResize" style="width: 100%;"></textarea>
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+
+    </form>
+  </div>
+  <div class="card-footer">
+    <button type="submit" class="btn btn-sm btn-primary" [disabled]="!operationForm.form.valid" (click)="save()"><i
+        class="fa fa-dot-circle-o"></i>
+      {{'save' | translate}}
+    </button>
+  </div>
+</div>

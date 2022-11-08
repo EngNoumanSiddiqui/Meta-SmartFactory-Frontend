@@ -1,0 +1,68 @@
+    <div class="ui-inputgroup  d-flex ui-fluid">
+      <p-autoComplete [disabled]="disabled" [(ngModel)]="selectedCharacteristic" [suggestions]="filteredCharacteristic"
+                      (completeMethod)="searchCharacteristic($event)" field="dataType" [required]="required"
+                      [dropdown]="dropdown" [forceSelection]="true" dataKey="maintenanceCharacteristicDataTypeId"
+                      placeholder="{{placeholder|translate}}" [minLength]="1" name="dataType"
+                      (onDropdownClick)="handleDropdownClickForCharacteristic()" (ngModelChange)="onChangeCharacteristic($event)" >
+      </p-autoComplete>
+      <button *ngIf="addIfMissing" pButton icon="fa fa-plus-circle"
+              (click)="modalShow()">
+      </button>
+    </div>
+
+
+
+    <ng-template [ngIf]="modal.active">
+
+
+      <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal" class="modal fade"   (onHidden)="modal.active=false"
+           tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+           aria-hidden="true">
+        <div class="modal-dialog modal-success" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">
+                <span>{{'data-type' | translate}}</span>
+              </h4>
+              <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+
+
+
+              <div class="form-group row">
+                <label class="col-md-3 col-form-label" for="dataType"> {{'data-type' | translate}}</label>
+                <div class="col-md-9">
+                  <input type="text" id="dataType" name="dataType" [(ngModel)]="dataModel.dataType" required
+                         class="form-control" placeholder="{{'data-type' | translate}}">
+
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-md-3 col-form-label" for="description"> {{'description' | translate}}</label>
+                <div class="col-md-9">
+                  <input type="text" id="description" name="description" [(ngModel)]="dataModel.description"
+                         class="form-control" placeholder="{{'description' | translate}}">
+
+                </div>
+              </div>
+
+
+
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" (click)="myModal.hide()">{{'close' | translate}}</button>
+              <button type="button" class="btn btn-danger"
+                      (click)="resetDataType()">{{'reset' | translate}}</button>
+              <button [disabled]="!dataModel.dataType" type="button" class="btn btn-success"
+                      (click)="addDataType(); myModal.hide()">{{'add' | translate}}</button>
+            </div>
+          </div> <!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div><!-- /.modal -->
+
+    </ng-template>
+

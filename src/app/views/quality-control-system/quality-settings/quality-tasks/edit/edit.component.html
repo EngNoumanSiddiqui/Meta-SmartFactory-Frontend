@@ -1,0 +1,57 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i> {{'task-information' | translate}}
+        </div>
+        <div class="card-body">
+          <form #inspForm="ngForm">
+            <table class="table table-bordered">
+              <tr>
+                <td>{{'task-id' | translate}}</td>
+                <td>
+                  <input type="text" id="qualityTaskTypeId" name="qualityTaskTypeId" disabled
+                    [(ngModel)]="qualitTask.qualityTaskTypeId" class="form-control" required />
+                </td>
+              </tr>
+              <tr>
+                <td>{{'code' | translate}}</td>
+                <td>
+                  <input type="text" id="taqualityTaskTypeCodeskCode" name="qualityTaskTypeCode" disabled
+                    [(ngModel)]="qualitTask.qualityTaskTypeCode" class="form-control" required />
+                </td>
+              </tr>
+              <tr>
+              <tr>
+                <td>{{'task-name' | translate}}</td>
+                <td>
+                  <input type="text" id="qualityTaskTypeName" name="qualityTaskTypeName"
+                    [(ngModel)]="qualitTask.qualityTaskTypeName" class="form-control" required />
+                </td>
+              </tr>
+              <tr>
+                <td>{{'short-text' | translate}}</td>
+                <td>
+                  <input type="text" id="qualityTaskTypeDescription" name="qualityTaskTypeDescription"
+                    [(ngModel)]="qualitTask.qualityTaskTypeDescription" class="form-control" />
+                </td>
+              </tr>
+            </table>
+          </form>
+        </div>
+      </div>
+      <div class="row col-md-12">
+        <button type="submit" class="btn btn-sm btn-danger" (click)="reset()">
+          <i class="fa fa-ban" aria-hidden="true"></i>
+          {{ "reset" | translate }}
+        </button>
+        <button type="submit" class="btn btn-sm btn-primary" [disabled]="!inspForm.form.valid" (click)="save()">
+          <i class="fa fa-dot-circle-o"></i>
+          {{ "save" | translate }}
+        </button>
+
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,31 @@
+<div class="animated fadeIn">
+      <div class="card col-md-12 p-0">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i>{{'shift-definition' | translate}}
+        </div>
+        <div class="card-body">
+          <table class="table table-bordered">
+            <tbody>
+              <tr>
+                <td>{{'isGroup'|translate}}</td>
+                <td>
+                  <p-checkbox name="isGroupName" id="isGroupId" value="val" [(ngModel)]="showGroupList" binary="true" disabled="true"></p-checkbox>
+                </td>
+              </tr>
+              <tr *ngIf="!showGroupList">
+                <td>{{'employee'|translate}}</td>
+                <td>{{employeeShift?.employeeDto?.employeeId + ' : ' + employeeShift?.employeeDto?.firstName + ' - ' + employeeShift?.employeeDto?.lastName }}</td>
+              </tr>
+              <tr *ngIf="showGroupList">
+                <td>{{'group-code'|translate}}</td>
+                <td>{{employeeShift?.employeeGroupDto?.groupName + ' - ' + employeeShift?.employeeGroupDto?.groupCode}}</td>
+              </tr>
+              <tr>
+                <td>{{'shift'|translate}}</td>
+                <td>{{employeeShift?.shiftDto?.shiftName + ' - ' + (convertTime(employeeShift?.shiftDto?.startTime))  + ' - ' + (convertTime(employeeShift?.shiftDto?.endTime)) }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+</div>

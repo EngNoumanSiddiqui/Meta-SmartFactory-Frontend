@@ -1,0 +1,24 @@
+<!--<form #orderEdit="ngForm" >-->
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12" *ngIf="dataModel">
+      <div class="card">
+        <div class="card-header">
+          {{'inspection-characteristic-method'|translate}}
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered">
+              <tbody>
+              <tr>
+                <td>{{('inspection-method'|translate)}}</td>
+                <td>{{dataModel?.inspectionCharacteristicMethodId}}
+                </td>
+              </tr>
+              </tbody>
+            </table>
+
+        </div>
+      </div>
+    </div>
+  </div><!--/.row-->
+</div>

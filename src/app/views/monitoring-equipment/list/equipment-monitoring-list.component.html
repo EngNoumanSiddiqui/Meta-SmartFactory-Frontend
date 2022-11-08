@@ -1,0 +1,45 @@
+<div class="animated fadeIn position-relative">
+  <div class="row soft-scroll">
+    <!--<pre>{{monitoringDataItem | json}}</pre>-->
+    <div class="col-lg-12">
+      <div class="row">
+        <ng-container *ngFor="let monitoringDataItem of monitoringDatas">
+          <ng-template
+
+            [ngIf]="(!selectedWorkCenterId||selectedWorkCenterId==monitoringDataItem.workCenterId)
+            &&((plant && (plant.plantId==monitoringDataItem.plantId)) || (!plant))">
+            <div class="col-lg-2 col-md-3 col-sm-4 col-6">
+              <div *ngIf="allMode" class="monitoring_block">
+                <div class="" (click)="showMonitoringDetail(monitoringDataItem)" >
+                  <div class="col-12 monitoring_span"  [ngClass]="{ 'monitoring_span_prod': 1}">
+                    {{monitoringDataItem.workStationName}}
+                  </div>
+                  <div class="col-12 bg-dark">
+                    <div class="col-12 display-6 ">
+                      <table style="margin-bottom: 0.3rem;word-break: break-word;" class=" table table-borderless table-sm text-light">
+                        <tr>
+                          <td class="display-10">{{'equipment' | translate}}</td>
+                          <td  class="display-10">{{'value' | translate }}</td>
+                        </tr>
+                        <tbody *ngIf="monitoringDataItem && monitoringDataItem.equipmentDataList">
+                        <tr *ngFor="let compt of monitoringDataItem.equipmentDataList">
+                          <td class="display-10" style="color: #ffba06;">{{compt.equipmentName}}</td>
+                          <td class="display-10" style="color: #ffba06;">{{compt.currentValue}}</td>
+                        </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<equipment-modal-content [modal]="modal" [model]="selectedItem"></equipment-modal-content>
+

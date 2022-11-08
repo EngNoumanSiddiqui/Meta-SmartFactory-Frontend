@@ -1,0 +1,36 @@
+//@media (max-width: 768px) {
+//  .col-6.col-md-auto.align-self-center {
+//    text-align: center;
+//  }
+//}
+
+.changeModal {
+  max-height: 450px;
+  min-height: 255px;
+  overflow: auto;
+  position: relative;
+
+}
+
+.mfixed {
+  display: flex;
+  position: fixed;
+  width: 90%;
+  input[type='text'] {
+    align-content: flex-start;
+    width: 80%;
+    line-height: 25px;
+    font-size: 14px;
+  }
+  z-index: 1;
+}
+
+.myTable {
+  position: relative;
+  top: 40px;
+}
+
+:host ::ng-deep .ui-treetable-scrollable-body {
+  overflow-y: auto;
+  margin-right: 5px;
+}

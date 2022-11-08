@@ -1,0 +1,35 @@
+<table class="table table-bordered ui-fluid">
+    <tr>
+        <td width="30%">{{'group-type'|translate}}</td>
+        <td>{{capRequest.skillMatrixCategory?.groupType}}</td>
+    </tr>
+    <tr>
+        <td width="30%">{{'skill-matrix-code'|translate}}</td>
+        <td>{{capRequest.skillMatrixCode}}</td>
+    </tr>
+    <tr>
+        <td>{{'skill-matrix-name'|translate}}</td>
+        <td>{{capRequest.skillMatrixName}}</td>
+    </tr>
+    <tr *ngIf="capRequest.skillMatrixCategory?.groupType!='MUDA' && capRequest.skillMatrixCategory?.groupType!='MURI'">
+        <td>{{'max-proficiency'|translate}}</td>
+        <td>{{capRequest.maxProficiency}}</td>
+    </tr>
+    <tr *ngIf="capRequest.skillMatrixCategory?.groupType!='MUDA'">
+        <td *ngIf="capRequest.skillMatrixCategory?.groupType=='MURI'">{{'proficiency'|translate}}</td>
+        <td *ngIf="capRequest.skillMatrixCategory?.groupType!='MURI'">{{'min-proficiency'|translate}}</td>
+        <td>{{capRequest.minProficiency}}</td>
+    </tr>
+    <!-- <tr>
+        <td>{{'max-interest'|translate}}</td>
+        <td>{{capRequest.maxInterest}}</td>
+    </tr> -->
+    <!-- <tr>
+        <td>{{'min-interest'|translate}}</td>
+        <td>{{capRequest.minInterest}}</td>
+    </tr> -->
+    <tr>
+        <td>{{'cap-description'|translate}}</td>
+        <td>{{capRequest.skillMatrixDescription}}</td>
+    </tr>
+</table>

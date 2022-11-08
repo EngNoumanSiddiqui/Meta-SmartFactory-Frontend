@@ -1,0 +1,536 @@
+<div class="card" id="daily-jb">
+  <div class="col-lg-12">
+    <div class="row ui-fluid  badge-light border p-2">
+      <div class="col-md-auto">
+        <prod-order-autocomplete [selectedProdOrderId]="selectedProdOrderId" [plantId]="pageFilter.plantId"
+          (selectedProdOrderEvent)="onProductionOrderChange($event)"></prod-order-autocomplete>
+      </div>
+      <div class="col-md-auto">
+        <p-calendar [showIcon]="true" dateFormat="dd.mm.yy" [monthNavigator]="true" [yearNavigator]="true"
+          yearRange="1990:2100" [(ngModel)]="pageFilter.startDate" placeholder="{{'planned-start-date'|translate}}">
+        </p-calendar>
+
+      </div>
+      <div class="col-md-auto">
+        <p-calendar [showIcon]="true" dateFormat="dd.mm.yy" [monthNavigator]="true" [yearNavigator]="true"
+          yearRange="1990:2100" [(ngModel)]="pageFilter.finishDate" placeholder="{{'planned-finish-date'|translate}}">
+        </p-calendar>
+
+      </div>
+
+      <div class="col-md-auto">
+
+        <button type="button" pButton class="ui-button-info   "
+          [disabled]="!pageFilter.prodOrderId && !pageFilter.finishDate && !pageFilter.startDate" (click)="filter()"
+          label="{{'analyze' | translate}}">
+        </button>
+      </div>
+    </div>
+
+    <ng-template [ngIf]="prodOrderReportDto">
+      <div class="row " style="margin-bottom: 20px">
+        <p-table #dt [columns]="cols" [value]="prodOrderReportDto" dataKey="prodOrderId" scrollable="true"
+          scrollHeight="55vh" [(selection)]="selectedProdOrders">
+
+          <ng-template pTemplate="caption">
+            <div class="ui-helper-clearfix" style="text-align:left">
+              <button pButton style="margin-right: 5px" class="ui-button-info float-left" type="button"
+                icon="fa fa-file-alt" iconPos="left" label="{{'export-image'|translate}}"
+                (click)="exportAsPng('daily-jb')">
+              </button>
+              <button pButton style="margin: 5px" class="ui-button-warning float-right" type="button"
+                icon="fa fa-file-alt" iconPos="left" label="{{'export-all'|translate}}" (click)="dt.exportCSV()">
+              </button>
+              <button pButton style="margin: 5px" class="ui-button-warning float-right" type="button" icon="fa fa-file"
+                iconPos="left" label="{{'export-selected'|translate}}"
+                (click)="dt.exportCSV({selectionOnly:true})"></button>
+            </div>
+            <!--<hr>-->
+
+          </ng-template>
+          <ng-template pTemplate="header" let-columns>
+
+            <tr>
+              <th style="width: 4em" rowspan="2">
+                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+              </th>
+              <ng-container *ngFor="let col of columns" [ngSwitch]="col.field">
+                <th *ngSwitchDefault>
+                  {{col.header|translate}}
+                </th>
+                <th *ngSwitchCase="'startDate'" style="width: 8em;">
+                  {{col.header|translate}}
+                </th>
+                <th *ngSwitchCase="'finishDate'" style="width: 8em;">
+                  {{col.header|translate}}
+                </th>
+              </ng-container>
+             
+              <th width="50px" rowspan="2"></th>
+            </tr>
+            <tr>
+              <th *ngFor="let col of columns" class="ui-fluid" [ngSwitch]="col.field">
+
+                <span *ngSwitchDefault style="width: 100%"></span>
+
+                <select *ngSwitchCase="'prodOrderStatus'" name="status" class="form-control"
+                  [(ngModel)]="pageFilter.prodOrderStatus" (ngModelChange)="filter(pageFilter)">
+                  <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                  <option *ngFor="let status of prodOrderStatusList" value="{{status}}">{{status|translate}}</option>
+                </select>
+
+                <input *ngSwitchCase="'prodOrderReferenceId'" style="width: 100%" pInputText type="text"
+                  [(ngModel)]="pageFilter[col.field]" placeholder="{{'reference-id'|translate}}"
+                  (input)="filterByColumn($event.target.value,col.field)">
+
+              </th>
+
+            </tr>
+
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData let-columns="columns" let-expanded="expanded">
+            <tr [pSelectableRow]="rowData">
+              <td style="width: 4em">
+                <b>
+                  <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                </b>
+                <a href="#" [pRowToggler]="rowData">
+                  <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+                </a>
+              </td>
+
+              <ng-container *ngFor="let col of columns" style="cursor: pointer;" [ngSwitch]="col.field">
+
+                <td *ngSwitchCase="'workStationName'"> {{rowData[col.field]}} </td>
+                <td *ngSwitchCase="'jobOrderActualStartDate'">
+                  <ng-container *ngIf="rowData[col.field]">
+                    {{(rowData[col.field])|date:'dd.MM.yyyy HH:mm'}}
+                  </ng-container>
+                </td>
+
+                <td *ngSwitchCase="'jobOrderActualFinishDate'">
+                  <ng-container *ngIf="rowData[col.field]">
+                    {{(rowData[col.field])|date:'dd.MM.yyyy HH:mm'}}
+                  </ng-container>
+                </td>
+
+                <td *ngSwitchCase="'prodOrderId'">
+                  <a href="javascript:;" 
+                  (click)="showProdOrderDetail(rowData[col.field])">{{rowData[col.field]}}</a>
+                </td>
+                
+
+                <td *ngSwitchCase="'materialNo'">
+                  <ng-template [ngIf]="rowData?.stock">
+                    <a href="javascript:;" *ngFor="let item of rowData?.stock"
+                    (click)="showStockDetail(item.stockId)">{{item?.stockNo}}</a>
+                  </ng-template>
+                </td>
+                <td *ngSwitchCase="'materialName'">
+                  <ng-template [ngIf]="rowData?.stock">
+                    <a href="javascript:;" *ngFor="let item of rowData?.stock"
+                    (click)="showStockDetail(item.stockId)">{{item?.stockName}}</a>
+                  </ng-template>
+                </td>
+
+                <td style="width: 8em;" *ngSwitchCase="'startDate'"> {{(rowData[col.field])|date:'dd.MM.yyyy HH:mm'}}</td>
+                <td style="width: 8em;" *ngSwitchCase="'finishDate'"> {{(rowData[col.field])|date:'dd.MM.yyyy HH:mm'}}</td>
+                <!-- <a href="javascript:;" *ngSwitchCase="'materialName'"
+                  (click)="showStockDetail(rowData?.stock?.stockId)">{{rowData?.stock?.stockName}}</a> -->
+
+                <td *ngSwitchDefault> {{rowData[col.field]}}</td>
+
+              </ng-container>
+              <td width="50px">
+                <button class="btn btn-sm btn-outline-info" type="button" (click)="openProductionOrderChart(rowData)"><i class="fa fa-line-chart "></i></button>
+              </td>
+            </tr>
+
+          </ng-template>
+
+          <ng-template pTemplate="rowexpansion" let-rowData let-columns="columns">
+            <tr>
+              <td [attr.colspan]="columns.length + 2">
+                <div class="ui-g bg-white pt-1 secondary-table">
+
+                  <p-table #dt1 [columns]="jobOrderOperationColumns" [value]="rowData.jobOrderOperationList"
+                    dataKey="jobOrderOperationId" scrollable="true" scrollHeight="55vh"
+                    [(selection)]="selectedJobOrderOperations">
+
+                    <!-- TABLE HEADER START -->
+                    <ng-template pTemplate="header" let-columns>
+            <tr>
+              <th style="width: 4em" rowspan="2">
+                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+              </th>
+              <th *ngFor="let col of columns" [ngSwitch]="col.field">
+                <span *ngSwitchDefault style="width: 100%">{{col.header|translate}}</span>
+              </th>
+              <th width="50px" rowspan="2"></th>
+            </tr>
+          </ng-template>
+
+          <!-- TABLE BODY START -->
+          <ng-template pTemplate="body" let-rowData let-columns="columns" let-expanded="expanded">
+            <tr [pSelectableRow]="rowData">
+              <td style="width: 4em">
+                <b>
+                  <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                </b>
+                <a href="#" [pRowToggler]="rowData">
+                  <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+                </a>
+              </td>
+
+              <td *ngFor="let col of columns" style="cursor: pointer;" [ngSwitch]="col.field">
+
+                <a href="javascript:;" *ngSwitchCase="'jobOrderId'"
+                  (click)="showJobOrderDetail(rowData[col.field])">{{rowData[col.field]}}</a>
+
+                  <span *ngSwitchCase="'jobOrderActualStartDate'">
+                    <ng-container *ngIf="rowData[col.field]">
+                      {{(rowData[col.field])|date:'dd.MM.yyyy HH:mm'}}
+                    </ng-container>
+                  </span>
+                  <span *ngSwitchCase="'jobOrderActualFinishDate'">
+                    <ng-container *ngIf="rowData[col.field]">
+                      {{(rowData[col.field])|date:'dd.MM.yyyy HH:mm'}}
+                    </ng-container>
+                  </span>
+                <span *ngSwitchDefault> {{rowData[col.field]}}</span>
+
+              </td>
+              <td width="50px">
+                <button class="btn btn-sm btn-outline-info" type="button" (click)="showJobOrderReportDetail(rowData)"><i
+                    class="fa fa-line-chart "></i>
+                </button>
+              </td>
+            </tr>
+
+          </ng-template>
+
+          <ng-template pTemplate="rowexpansion" let-rowData let-columns="columns">
+            <tr>
+              <td [attr.colspan]="columns.length + 2">
+                <div class="ui-g bg-white pt-1">
+
+
+                  <div class="col-6">
+                    <table class="table table-outline table-striped">
+                      <tbody class="small" style="font-size: 13px">
+                        <tr>
+                          <td><span class="float-left" (mouseenter)="opCapacityEfficiency.show($event)"
+                              (mouseleave)="opCapacityEfficiency.hide()">{{'capacity-efficiency'|translate}}<i
+                                class="text-info p-1 fa fa-question-circle"></i></span><span
+                              class="float-right">:</span></td>
+                          <td> {{rowData.capacityEfficiency}}</td>
+                        </tr>
+                        <tr>
+                          <td><span class="float-left" (mouseenter)="opQuantityEfficiency.show($event)"
+                              (mouseleave)="opQuantityEfficiency.hide()">{{'quantity-efficiency'|translate}}<i
+                                class="text-info p-1 fa fa-question-circle"></i></span><span
+                              class="float-right">:</span></td>
+                          <td> {{rowData.quantityEfficiency}}</td>
+                        </tr>
+                        <tr>
+                          <td><span class="float-left" (mouseenter)="opQualityPerformance.show($event)"
+                              (mouseleave)="opQualityPerformance.hide()">{{'quality-performance'|translate}}<i
+                                class="text-info p-1 fa fa-question-circle"></i></span><span
+                              class="float-right">:</span></td>
+                          <td> {{rowData.qualityPerformance}}</td>
+                        </tr>
+                        <tr>
+                          <td><span class="float-left" (mouseenter)="opQuantityPerformance.show($event)"
+                              (mouseleave)="opQuantityPerformance.hide()">{{'quantity-performance'|translate}}<i
+                                class="text-info p-1 fa fa-question-circle"></i></span><span
+                              class="float-right">:</span></td>
+                          <td> {{rowData.quantityPerformance}}</td>
+                        </tr>
+                        <tr>
+                          <td><span class="float-left">{{'time-efficiency'|translate}}</span><span
+                              class="float-right">:</span></td>
+                          <td> {{rowData.timeEfficiency}}</td>
+                        </tr>
+                        <tr>
+                          <td><span class="float-left" (mouseenter)="opSingleProductCycleTime.show($event)"
+                              (mouseleave)="opSingleProductCycleTime.hide()">{{'single-product-cycle-time'|translate}}<i
+                                class="text-info p-1 fa fa-question-circle"></i></span> <span
+                              class="float-right">:</span></td>
+                          <td> {{rowData.singleProductCycleTime}}</td>
+                        </tr>
+                        <tr>
+                          <td><span class="float-left" (mouseenter)="opSingleProductCycleTimeActual.show($event)"
+                              (mouseleave)="opSingleProductCycleTimeActual.hide()">{{'single-product-cycle-time-actual'|translate}}<i
+                                class="text-info p-1 fa fa-question-circle"></i></span><span
+                              class="float-right">:</span></td>
+                          <td> {{rowData.singleProductCycleTimeActual}}</td>
+                        </tr>
+                        <tr>
+                          <td><span class="float-left" (mouseenter)="opPreparingTime.show($event)"
+                              (mouseleave)="opPreparingTime.hide()">{{'preparing-time'|translate}}<i
+                                class="text-info p-1 fa fa-question-circle"></i></span> <span
+                              class="float-right">:</span></td>
+                          <td> {{rowData.preparingTime}}</td>
+                        </tr>
+
+                      </tbody>
+                    </table>
+
+                  </div>
+                  <div class="col-6 ">
+                    <table class="table table-outline table-striped">
+                      <tbody class="small" style="font-size: 13px">
+
+                        <tr>
+                          <td><span class="float-left" (mouseenter)="opNetWorkingTime.show($event)"
+                              (mouseleave)="opNetWorkingTime.hide()">{{'net-working-time'|translate}}<i
+                                class="text-info p-1 fa fa-question-circle"></i></span><span
+                              class="float-right">:</span></td>
+                          <td> {{rowData.netWorkingTime}}</td>
+                        </tr>
+                        <tr>
+                          <td><span class="float-left" (mouseenter)="opJobWaitingTime.show($event)"
+                              (mouseleave)="opJobWaitingTime.hide()">{{'job-waiting-time'|translate}}<i
+                                class="text-info p-1 fa fa-question-circle"></i></span><span
+                              class="float-right">:</span></td>
+                          <td> {{rowData.jobWaitingTime}}</td>
+                        </tr>
+                        <tr>
+                          <td>{{'power-cost'|translate}}<span class="float-right">:</span></td>
+                          <td> {{rowData.powerCost}}</td>
+                        </tr>
+                        <tr>
+                          <td><span class="float-left" (mouseenter)="opSingleProductPowerCost.show($event)"
+                              (mouseleave)="opSingleProductPowerCost.hide()">{{'single-product-power-cost'|translate}}<i
+                                class="text-info p-1 fa fa-question-circle"></i></span><span
+                              class="float-right">:</span></td>
+                          <td> {{rowData.singleProductPowerCost}}</td>
+                        </tr>
+                        <tr>
+                          <td>{{'power-consumption'|translate}}<span class="float-right">:</span></td>
+                          <td> {{rowData.powerConsumption}}</td>
+                        </tr>
+                        <tr>
+                          <td><span class="float-left" (mouseenter)="opSingleProductPowerConsumption.show($event)"
+                              (mouseleave)="opSingleProductPowerConsumption.hide()">{{'single-product-power-consumption'|translate}}<i
+                                class="text-info p-1 fa fa-question-circle"></i></span><span
+                              class="float-right">:</span></td>
+                          <td> {{rowData.singleProductPowerConsumption}}</td>
+                        </tr>
+                        <tr>
+                          <td><span class="float-left" (mouseenter)="opMinPreparingTime.show($event)"
+                              (mouseleave)="opMinPreparingTime.hide()">{{'min-preparing-time'|translate}}<i
+                                class="text-info p-1 fa fa-question-circle"></i></span> <span
+                              class="float-right">:</span></td>
+                          <td> {{rowData.minPreparingTime}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+
+                  </div>
+
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+
+        </p-table>
+      </div>
+      </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage" let-columns>
+      <tr>
+        <td [attr.colspan]="columns.length">
+          <div class="row text-center noData"
+            *ngIf="!isLoading() && (!jobOrderReportDto|| jobOrderReportDto.length==0)&&!firsLoad">
+            <strong class=""><i class="fa fa-warning "></i>{{'NO_DATA_FOUND'|translate}}!</strong>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+    </p-table>
+  </div>
+  <div class="row">
+    <app-paging [TotalElements]="pagination.totalElements" [showSearch]="false" [CurrentPage]="pagination.currentPage"
+      [PageSize]="pagination.pageSize" [rows]="pagination.rows" [TotalPageLinkButtons]="pagination.TotalPageLinkButtons"
+      [RowsPerPageOptions]="pagination.RowsPerPageOptions" (onPageChange)="myChanges($event)">
+    </app-paging>
+    <span style="margin-left:2px; padding-top: 2px " class="text-muted">{{'total-records'|translate}}:
+      {{pagination?.totalElements}}</span>
+  </div>
+  </ng-template>
+
+</div>
+<!--/.col-->
+</div>
+
+<ng-template [ngIf]="chartModal.active">
+  <div bsModal [config]="{backdrop: 'static' , show: true}" #myModal="bs-modal" (onHidden)="chartModal.active=false"
+    class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-success modal-lg" style="max-width: 83%;" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"> {{'job-order-operation-report' | translate}} <span
+              class="pl-1">#{{chartModal.data.jobOrderId}}</span></h4>
+          <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <job-report-chart [data]="chartModal.data"></job-report-chart>
+        </div>
+
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</ng-template>
+
+<ng-template [ngIf]="prodChartModal.active">
+  <div bsModal [config]="{backdrop: 'static' , show: true}" #prodChartModal1="bs-modal" (onHidden)="prodChartModal.active=false; prodChartModal.jobOrderOperationData=null;"
+    class="modal fade" tabindex="-1" role="dialog" aria-labelledby="prodChartModal1Label" aria-hidden="true">
+    <div class="modal-dialog modal-success modal-md" style="max-width: 78%;" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"> {{'production-order-report' | translate}} <span
+              class="pl-1">#{{prodChartModal.data.prodOrderId}}</span></h4>
+          <button type="button" class="close" (click)="prodChartModal1.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <prod-order-report-chart [data]="prodChartModal.data" [jobOrderOperationData]= "prodChartModal.jobOrderOperationData"></prod-order-report-chart>
+        </div>
+
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</ng-template>
+
+
+<p-overlayPanel #opNetWorkingTime [dismissable]="true" appendTo="body" baseZIndex="9999">
+  <div style="width:500px;" class="p-1">
+    <p>
+      <strong>{{'analyse.production-order.net-working-time-formula' | translate}}</strong>
+      <br>
+      <strong>{{'analyse.production-order.net-working-time-text' | translate}}</strong>:
+      {{'analyse.production-order.net-working-time-definition' | translate}}
+      <br>
+      <strong>{{'analyse.production-order.running-time-text' | translate}}</strong>:
+      {{'analyse.production-order.running-time-definition' | translate}}
+      <br>
+      <strong>{{'analyse.production-order.total-preparing-time-text' | translate}}</strong>:
+      {{'analyse.production-order.total-preparing-time-text' | translate}}
+    </p>
+  </div>
+</p-overlayPanel>
+
+<p-overlayPanel #opCapacityEfficiency [dismissable]="true" appendTo="body" baseZIndex="9999">
+  <div style="width:500px;" class="p-1">
+    <p>
+      <strong>{{'analyse.production-order.capacity-efficiency-formula' | translate}}</strong>
+      <br>
+      <strong>{{'analyse.production-order.capacity-efficiency-text' | translate}}</strong>:
+      {{'analyse.production-order.capacity-efficiency-definition' | translate}}
+      <br>
+    </p>
+  </div>
+</p-overlayPanel>
+
+
+<p-overlayPanel #opJobWaitingTime [dismissable]="true" appendTo="body" baseZIndex="9999">
+  <div style="width:500px;" class="p-1">
+    <p>
+      <strong>{{'analyse.production-order.job-waiting-time-formula' | translate}}</strong>
+      <br>
+      <strong>{{'analyse.production-order.down-time-text' | translate}}</strong>:
+      {{'analyse.production-order.down-time-definition' | translate}}
+      <br>
+      <strong>{{'analyse.production-order.setup-time-text' | translate}}</strong>:
+      {{'analyse.production-order.setup-time-definition' | translate}}
+    </p>
+  </div>
+</p-overlayPanel>
+<p-overlayPanel #opQuantityEfficiency [dismissable]="true" appendTo="body" baseZIndex="9999">
+  <div style="width:500px;" class="p-1">
+    <p>
+      <strong>{{'analyse.production-order.quantity-efficiency-formula' | translate}}</strong>
+      <br>
+      <strong>{{'analyse.production-order.quantity-efficiency-text' | translate}}</strong>:
+      {{'analyse.production-order.quantity-efficiency-definition' | translate}}
+      <br>
+    </p>
+  </div>
+</p-overlayPanel>
+
+
+<p-overlayPanel #opQualityPerformance [dismissable]="true" appendTo="body" baseZIndex="9999">
+  <div style="width:500px;" class="p-1">
+    <p>
+      <strong>{{'analyse.production-order.quality-performance-formula' | translate}}</strong>
+    </p>
+  </div>
+</p-overlayPanel>
+
+<p-overlayPanel #opQuantityPerformance [dismissable]="true" appendTo="body" baseZIndex="9999">
+  <div style="width:500px;" class="p-1">
+    <p>
+      <strong>{{'analyse.production-order.quantity-performance-formula' | translate}}</strong>
+    </p>
+  </div>
+</p-overlayPanel>
+
+
+<p-overlayPanel #opSingleProductCycleTime [dismissable]="true" appendTo="body" baseZIndex="9999">
+  <div style="width:500px;" class="p-1">
+    <p>
+      <strong>{{'analyse.production-order.single-product-cycle-time' | translate}}</strong>
+    </p>
+  </div>
+</p-overlayPanel>
+
+
+<p-overlayPanel #opSingleProductCycleTimeActual [dismissable]="true" appendTo="body" baseZIndex="9999">
+  <div style="width:500px;" class="p-1">
+    <p>
+      <strong>{{'analyse.production-order.single-product-cycle-time-actual-text' | translate}}</strong>:
+      {{'analyse.production-order.single-product-cycle-time-actual-definition' | translate}}
+    </p>
+  </div>
+</p-overlayPanel>
+
+
+<p-overlayPanel #opPreparingTime [dismissable]="true" appendTo="body" baseZIndex="9999">
+  <div style="width:500px;" class="p-1">
+    <p>
+      <strong>{{'analyse.production-order.total-preparing-time-text' | translate}}</strong>:
+      {{'analyse.production-order.total-preparing-time-text' | translate}}
+    </p>
+  </div>
+</p-overlayPanel>
+
+<p-overlayPanel #opSingleProductPowerCost [dismissable]="true" appendTo="body" baseZIndex="9999">
+  <div style="width:500px;" class="p-1">
+    <p>
+      <strong>{{'analyse.production-order.single-product-power-cost-text' | translate}}</strong>:
+      {{'analyse.production-order.single-product-power-cost-definition' | translate}}
+    </p>
+  </div>
+</p-overlayPanel>
+
+<p-overlayPanel #opSingleProductPowerConsumption [dismissable]="true" appendTo="body" baseZIndex="9999">
+  <div style="width:500px;" class="p-1">
+    <p>
+      <strong>{{'analyse.production-order.single-product-power-consumption-text' | translate}}</strong>:
+      {{'analyse.production-order.single-product-power-consumption-definition' | translate}}
+    </p>
+  </div>
+</p-overlayPanel>
+<p-overlayPanel #opMinPreparingTime [dismissable]="true" appendTo="body" baseZIndex="9999">
+  <div style="width:500px;" class="p-1">
+    <p>
+      <strong>{{'analyse.production-order.min-preparing-time-text' | translate}}</strong>:
+      {{'analyse.production-order.min-preparing-time-definition' | translate}}
+    </p>
+  </div>
+</p-overlayPanel>

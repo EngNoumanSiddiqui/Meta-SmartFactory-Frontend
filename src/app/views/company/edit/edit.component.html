@@ -1,0 +1,185 @@
+<div class="animated fadeIn">
+    <div class="row">
+      <div class="col-md-7">
+          <div class="card">
+              <div class="card-header">
+                {{'company-information' | translate}}
+              </div>
+              <div class="card-body">
+                <form #companyForm="ngForm">
+                  <!-- <div class="form-group row">
+                    <label class="col-md-3 col-form-label" for="actNo"> {{'accountNo' | translate}}</label>
+                    <div class="col-md-9">
+
+                      <div class="input-group">
+                        <input type="text" id="actNo" name="actNo" [(ngModel)]="customer.actNo"
+                               class="form-control" placeholder="{{'accountNo' | translate}}" >
+                        <span class="input-group-btn">
+                             <button type="button" class="btn btn-primary" data-toggle="modal"
+                                     (click)="op.toggle($event)"><i
+                               class="fa fa-question-circle"></i></button>
+                         </span>
+                        <p-overlayPanel #op [dismissable]="true" [showCloseIcon]="true" appendTo="body" baseZIndex="9999">
+                          <strong  class="border-bottom">{{'last-given-no'|translate}}</strong>
+                          <ng-container *ngFor="let st of lastAccountNos">
+                              <span class="d-block small border-bottom">
+                                {{st}}
+                              </span>
+                          </ng-container>
+                        </p-overlayPanel>
+                      </div>
+                    </div>
+                  </div> -->
+
+                  <div class="form-group row">
+                    <label class="col-md-3 col-form-label" for="companyaddress">{{'address' | translate}}</label>
+                    <div class="col-md-9">
+                      <textarea type="text" id="companyaddress" name="companyaddress" [(ngModel)]="company.companyAddress" required
+                             class="form-control" placeholder="{{'company' | translate}} {{'address' | translate}}"></textarea>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-md-3 col-form-label" for="address">{{'address' | translate}} 2</label>
+                    <div class="col-md-9">
+                      <textarea type="text" id="address" name="address" [(ngModel)]="company.address" required
+                              class="form-control" placeholder="{{'address' | translate}}"></textarea>
+
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                      <label class="col-md-3 col-form-label" for="countryId">{{'country' | translate }}</label>
+                      <div class="col-md-9">
+                        <select id="countryId" name="countryId" class="form-control" required (change)="countrySelection($event)"
+                                [(ngModel)]="company.countryId">
+                          <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                          <option value="{{country.countryId}}" *ngFor="let country of countries">{{country.countryName}}
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="form-group row">
+                      <label class="col-md-3 col-form-label" for="cityId">{{'city' | translate }}</label>
+                      <div class="col-md-9">
+                        <select id="cityId" name="cityId" class="form-control" required [(ngModel)]="company.cityId"
+                                [disabled]="cityDisabled">
+                          <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                          <option value="{{city.cityId}}" *ngFor="let city of cities">{{city.cityName}}</option>
+                        </select>
+                      </div>
+                    </div>
+                  <div class="form-group row">
+                    <label class="col-md-3 col-form-label" for="companyName">{{'company-name' | translate}}</label>
+                    <div class="col-md-9">
+                      <input type="text" id="companyName" name="companyName" [(ngModel)]="company.companyName" required
+                              class="form-control" placeholder="{{'company-name' | translate}}" />
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-md-3 col-form-label" for="companyCode">{{'company-code' | translate}}</label>
+                    <div class="col-md-9">
+                      <input type="text" id="companyCode" name="companyCode" [(ngModel)]="company.companyCode" required
+                              class="form-control" [readonly]="true" placeholder="{{'company-code' | translate}}" />
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-md-3 col-form-label" for="postcode">{{'post-code' | translate}}</label>
+                    <div class="col-md-9">
+                      <input type="text" id="postcode" name="postcode" [(ngModel)]="company.postcode" required
+                              class="form-control" placeholder="{{'post-code' | translate}}" />
+                    </div>
+                  </div>
+                </form>
+              </div>
+          </div>
+      </div>
+      <div class="col-md-5">
+          <div class="card">
+              <div class="card-header">
+                <i class="fa fa-align-justify"></i>{{'account-photo' | translate}}
+              </div>
+              <div class="card-body">
+                <table class="table table-bordered">
+                  <tbody>
+                  <tr align="center">
+                    <td class="text-center" colspan="2">
+                      <image-adder></image-adder>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <i class="fa fa-align-justify"></i> {{'plant-information' | translate}}
+              <button  class="btn btn-sm btn-primary float-right" (click)="modalShow(null, 'NEW')" type="button">
+                <i class="fa fa-plus-circle"></i></button>
+            </div>
+            <div class="card-body">
+              <table class="table table-striped table-outline">
+                <thead>
+                  <th>{{'plant-code' | translate}}</th>
+                  <th>{{'plant-name' | translate}}</th>
+                  <th>{{'company' | translate}} {{'address' | translate}}</th>
+                  <th>{{'post-code' | translate}}</th>
+                  <th>{{'action' | translate}}</th>
+                </thead>
+                <tbody *ngIf="company.plantList" >
+                  <tr *ngFor="let plant of company.plantList" >
+                    <td (click)="modalShow(plant, 'DETAIL')" >{{plant.plantCode}}</td>
+                    <td (click)="modalShow(plant, 'DETAIL')" >{{plant.plantName}}</td>
+                    <td (click)="modalShow(plant, 'DETAIL')" >{{plant.companyAddress}}</td>
+                    <td (click)="modalShow(plant, 'DETAIL')" >{{plant.postcode}}</td>
+                    <td>
+                      <button  class="btn btn-sm btn-outline-danger" (click)="deletePlant(plant.plantId)" type="button">
+                        <i class="fa fa-trash"></i></button>
+                      <button class="btn btn-sm btn-outline-info" (click)="modalShow(plant, 'EDIT', company)" type="button">
+                        <i class="fa fa-edit"></i></button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template [ngIf]="plantModal.active">
+    <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myPlantModal="bs-modal" (onHidden)="plantModal.active=false" class="modal fade"
+         tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+    <div class="modal-dialog modal-success modal-md"
+     role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"> {{'plant-information' | translate}}</h4>
+          <button type="button" class="close" (click)="myPlantModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <ng-template [ngIf]="plantModal.modal=='NEW'">
+            <plant-new [companyId]="company.companyId" (saveAction)="myPlantModal.hide(); retrievePlantList();"></plant-new>
+  
+          </ng-template>
+          <ng-template [ngIf]="plantModal.modal=='EDIT'">
+            <plant-edit [data]="plantModal.data" (saveAction)="myPlantModal.hide();retrievePlantList();"></plant-edit>
+          </ng-template>
+          <ng-template [ngIf]="plantModal.modal=='DETAIL'">
+            <plant-detail [data]="plantModal.data" ></plant-detail>
+          </ng-template>
+        </div>
+  
+        <div class="modal-footer">
+          <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary" (click)="myPlantModal.hide()">{{'close' | translate}}</button>
+          <button *ngIf="plantModal.modal=='DETAIL'" type="button" class="btn rounded btn-primary" (click)="plantModal.modal='NEW'">{{'new' | translate}}</button>
+  
+          <button *ngIf="plantModal.modal=='DETAIL'" type="button" class="btn rounded btn-success"
+                  (click)="plantModal.modal='EDIT'">{{'edit' | translate}}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  </ng-template>

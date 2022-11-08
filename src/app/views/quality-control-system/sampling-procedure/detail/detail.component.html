@@ -1,0 +1,52 @@
+<div class="animated fadeIn">
+  <div class="card" *ngIf="samplingProcedure">
+    <div class="card-header">
+      <i class="fa fa-align-justify"></i> {{'sampling-procedure-detail' | translate}}
+    </div>
+    <div class="card-body">
+      <form #stockForm="ngForm">
+        <table class="table table-striped table-outline">
+          <tbody>
+          <tr>
+            <td width="30%" class="text-bold">{{'sampling-procedure-id' | translate}} <span style="width: 0 !important;" class="float-right">:</span> </td>
+            <td>{{samplingProcedure.samplingProcedureId}}</td>
+          </tr>
+          <tr>
+            <td width="30%" class="text-bold">{{'sampling-procedure-code' | translate}} <span style="width: 0 !important;" class="float-right">:</span> </td>
+            <td>{{samplingProcedure.samplingProcedureCode}}</td>
+          </tr>
+          <tr>
+            <td class="text-bold">{{'sampling-procedure' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+            <td>{{samplingProcedure.samplingProcedureName}}</td>
+          </tr>
+          <tr>
+            <td class="text-bold">{{'sampling-type' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+            <td>{{samplingProcedure.samplingType?.samplingTypeCode}}</td>
+          </tr>
+          <tr>
+            <td class="text-bold">{{'valuation-mode' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+            <td>{{samplingProcedure.samplingProcedureValuationMode?.samplingProcedureValuationModeCode}}</td>
+          </tr>
+          <tr>
+            <td class="text-bold">{{'inspection-points' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+            <td>{{samplingProcedure.samplingProcedureInspectionPoint?.samplingProcedurePointCode}}</td>
+          </tr>
+          <tr>
+            <td class="text-bold">{{'usage-indicator' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+            <td>{{samplingProcedure.samplingProcedureUsageIndicator?.samplingProcedureUsageIndicatorCode}}</td>
+          </tr>
+          <tr>
+            <td class="text-bold">{{'sample-size' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+            <td>{{samplingProcedure.sampleSize}}</td>
+          </tr>
+          <tr>
+            <td class="text-bold">{{'acceptance-number' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+            <td>{{samplingProcedure.acceptanceNumber}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </form>
+    </div>
+  </div>
+</div>
+

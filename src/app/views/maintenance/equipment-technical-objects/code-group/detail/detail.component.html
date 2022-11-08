@@ -1,0 +1,42 @@
+
+<div class="animated fadeIn" >
+  <div class="row" *ngIf="data">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          {{'catalog-id' | translate}}
+        </div>
+        <div class="card-body" >
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label" >{{'short-text-of-catalog' | translate}}</label>
+            <div class="col-md-9 col-form-label">
+              {{data.shortText}}
+
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label">{{'keyword' | translate}}</label>
+            <div class="col-md-9 col-form-label">
+              {{data.category}}
+            </div>
+          </div>
+          <table class="table table-sm table-bordered" *ngIf="data.equipmentCodeGroupHeaderList">
+            <thead>
+            <th>{{'equipment-name' | translate}}</th>
+            <th>{{'equipment-no' | translate}}</th>
+            <th>{{'equipment-type-name' | translate}}</th>
+            </thead>
+            <tbody >
+            <tr *ngFor="let veri of data.equipmentCodeGroupHeaderList">
+              <td>{{veri.equipmentName}}</td>
+              <td>{{veri.equipmentNo}}</td>
+              <td>{{veri.equipmentTypeName }}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <!--[disabled]="! order.orderDetailList||order.orderDetailList.length==0 ||!order.actId||!saleForm.form.valid"-->
+  </div><!--/.row-->
+</div>

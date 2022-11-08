@@ -1,0 +1,136 @@
+
+<div class="animated fadeIn">
+
+
+
+  <div class="row p-table-small">
+    <div class="col-lg-12">
+
+          <p-table #dt [columns]="selectedColumns" [value]="operations" [rows]="pagination.rows" [totalRecords]="pagination.totalElements"
+                   dataKey="operationId"  scrollable="true"  scrollHeight="55vh"  >
+
+            <ng-template pTemplate="caption">
+              <div class="row" style="text-align:left">
+                <div class="col-md-3 col-sm-12">
+                <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header" maxSelectedLabels="0"  selectedItemsLabel="{{'columns-selected'|translate}}"
+                               [style]="{minWidth: '200px'}" defaultLabel="Choose Columns">
+                  <ng-template let-col let-i="index" pTemplate="item">
+                    {{col.label|translate}}
+                  </ng-template>
+                </p-multiSelect>
+                </div>
+                <div class="col-md-9 col-sm-12" *ngIf="!removeTopButtons">
+                <button pButton  class="col-md-2 ui-button-success float-right" (click)="modalShow(null,'NEW')" label="{{'add-new'|translate}}"> </button>
+                <button pButton style="margin-right: 5px" class="col-md-2 ui-button-warning float-right" type="button"  icon="fa fa-file-alt" iconPos="left" label="{{'export-all'|translate}}" (click)="dt.exportCSV()"></button>
+                <button pButton style="margin-right: 5px" class="col-md-3 ui-button-warning float-right" type="button"  icon="fa fa-file" iconPos="left" label="{{'export-selected'|translate}}" (click)="dt.exportCSV({selectionOnly:true})"
+                ></button>
+                </div>
+              </div>
+              <!--<hr>-->
+
+            </ng-template>
+            <ng-template pTemplate="header" let-columns>
+
+              <tr >
+                <th style="width: 3.5em" rowspan="2">
+                  {{'select'|translate}}
+                </th>
+                <th *ngFor="let col of columns let i=index" style="cursor: pointer" [ngClass]="{'bg-selected-order':pageFilter.orderByProperty ==col.field}" (click)="reOrderData(i,col.field)"><i [ngClass]="'fa fa-sort-alpha-' + classReOrder[i]"></i>
+                  {{col.header|translate}}
+                </th>
+                <th width="80px" rowspan="2">{{'action' | translate}}</th>
+              </tr>
+              <tr>
+                <th *ngFor="let col of columns" class="ui-fluid" [ngSwitch]="col.field">
+                  <select *ngSwitchCase="'operationStatus'" id="status" name="status" class="form-control" [(ngModel)]="pageFilter.operationStatus" (ngModelChange)="filter(pageFilter)">
+                    <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                    <option *ngFor="let status of listStatus" value="{{status}}">{{status}}</option>
+                  </select>
+                  <select *ngSwitchCase="'operationType'" id="operationType" name="operationType" class="form-control" [(ngModel)]="pageFilter.operationType" (ngModelChange)="filter(pageFilter)">
+                    <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                    <option *ngFor="let type of listTypes" value="{{type}}">{{type}}</option>
+                  </select>
+                  <span *ngSwitchCase="'singleDuration'"></span>
+                  <span *ngSwitchCase="'singleSetupDuration'"></span>
+                  <span *ngSwitchCase="'singleTotalDuration'"></span>
+                  <input *ngSwitchDefault style="width: 100%"  pInputText type="text" [(ngModel)]="pageFilter[col.field]" (input)="filterByColumn($event.target.value,col.field)">
+                </th>
+
+              </tr>
+
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr >
+                <td style="width: 3.5em">
+                  <button class="btn btn-sm btn-outline-secondary" type="button" (click)="onRowSelect(rowData)">
+                    <i class="fa fa-plus"></i></button>
+                </td>
+                <td *ngFor="let col of columns" style="cursor: pointer" (click)="modalShow(rowData.operationId,'DETAIL')" [ngSwitch]="col.field">
+
+
+                  <span *ngSwitchCase="'operationType'">  {{rowData[col.field]?.operationTypeName}}</span>
+                  <span *ngSwitchDefault>  {{rowData[col.field]}}</span>
+
+                </td>
+                <td width="80px" >
+                  <button class="btn btn-sm btn-outline-danger" type="button" (click)="delete(rowData.operationId)">
+                    <i class="fa fa-trash"></i></button>
+                  <button class="btn btn-sm btn-outline-info" type="button" (click)="modalShow(rowData.operationId,'EDIT')">
+                    <i class="fa fa-edit"></i></button>
+                </td>
+              </tr>
+
+            </ng-template>
+          </p-table>
+          <br/>
+
+          <div class="row">
+            <app-paging
+              [TotalElements]="pagination.totalElements"
+              [CurrentPage]="pagination.currentPage"
+              [PageSize]="pagination.pageSize"            [rows]="pagination.rows"
+              [TotalPageLinkButtons]="pagination.TotalPageLinkButtons"
+              [RowsPerPageOptions]="pagination.RowsPerPageOptions"
+              (onPageChange)="myChanges($event)"
+            ></app-paging>
+            <span style="margin-left:2px; padding-top: 2px " class="text-muted" >{{'total-records'|translate}}: {{pagination?.totalElements}}</span>
+          </div>
+        </div>
+  </div>
+</div>
+<div bsModal [config]="{backdrop: 'static', keyboard: false}" #myModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-success modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"> {{'operation-information' | translate}}</h4>
+        <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <ng-template [ngIf]="operationModal.modal=='NEW'">
+          <operation-new [isFromChoosePane]="true" [workstationId]="workstationId" (saveAction)="myModal.hide(); filter(pageFilter)"></operation-new>
+        </ng-template>
+        <ng-template [ngIf]="operationModal.modal=='EDIT'">
+          <operation-edit [isFromChoosePane]="true" [id]="operationModal.id" (saveAction)="myModal.hide(); filter(pageFilter)"></operation-edit>
+        </ng-template>
+        <ng-template [ngIf]="operationModal.modal=='DETAIL'">
+          <operation-detail [id]="operationModal.id" ></operation-detail>
+        </ng-template>
+
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary" (click)="myModal.hide()">{{'close' | translate}}</button>
+        <button *ngIf="operationModal.modal=='DETAIL'" type="button" class="btn rounded btn-primary" (click)="operationModal.modal='NEW'">{{'new' | translate}}</button>
+        <button *ngIf="operationModal.modal=='DETAIL'" type="button" class="btn rounded btn-success"
+                (click)="operationModal.modal='EDIT'">{{'edit' | translate}}</button>
+
+
+      </div>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

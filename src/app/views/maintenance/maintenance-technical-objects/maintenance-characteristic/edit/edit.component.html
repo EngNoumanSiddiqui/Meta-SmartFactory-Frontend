@@ -1,0 +1,93 @@
+<!--<form #orderEdit="ngForm" >-->
+<div class="animated fadeIn">
+  <div class="row" *ngIf="detailCharacteristic">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          {{'maintenance-characteristic'|translate}}
+        </div>
+        <div class="card-body">
+          <form #characteristicForm="ngForm" class="form-horizontal ui-fluid">
+            <table class="table table-bordered">
+              <tbody>
+              <tr>
+                <td width="35%">{{'characteristic' | translate}}</td>
+                <td><input id="equipment-category" class="form-control" [(ngModel)]="dataModel.characteristic"
+                           name="characteristic" required/></td>
+              </tr>
+
+              <tr>
+                <td>{{'valid-from' | translate}}</td>
+                <td>
+                  <p-calendar [(ngModel)]="dataModel.validFrom" name="validFrom"
+                              [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                              required [showIcon]="true" dateFormat="dd/mm/yy"></p-calendar>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'description' | translate}}</td>
+                <td><input type="text" class="form-control" name="dataModel" [(ngModel)]="dataModel.description"/>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'data-type' | translate}}</td>
+                <td><characteristic-data-type-auto-complete [plantId]="selectedPlant?.plantId" [required]="true" [addIfMissing]="true" [selectedCharacteristicDataType]="detailCharacteristic.maintenanceCharacteristicDataType"
+                                                            (selectedCharacteristicDataTypeEvent)="setSelectedDataType($event)"></characteristic-data-type-auto-complete>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'negative-values-allowed' | translate}}</td>
+                <td>
+                  <p-checkbox name="negativeValuesAllowed" binary="true" required
+                              [(ngModel)]="dataModel.negativeValuesAllowed"></p-checkbox>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'case-sensitive' | translate}}</td>
+                <td>
+                  <p-checkbox name="caseSensitive" binary="true" required
+                              [(ngModel)]="dataModel.caseSensitive"></p-checkbox>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'number-of-character' | translate}}</td>
+                <td>
+                  <input class="form-control" type="number" min="0" [(ngModel)]="dataModel.numberOfCharacters"
+                         name="numberOfCharacters" required/>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'decimal-places' | translate}}</td>
+                <td>
+                  <input id="decimalPlaces" type="number" min="0" class="form-control" [(ngModel)]="dataModel.decimalPlaces"
+                         name="decimalPlaces"/>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'unit-of-measures' | translate}}</td>
+                <td>
+                  <unit-auto-complete [selectedUnit]="dataModel.unitMeasure" [required]="true"
+                                      (unitChangeEvent)="setSelectedUnit($event)"></unit-auto-complete>
+                </td>
+              </tr>
+
+              </tbody>
+            </table>
+
+
+          </form>
+        </div>
+        <div class="card-footer">
+          <button type="reset" class="btn btn-sm btn-danger" (click)="cancel()"><i class="fa fa-ban"></i>
+            {{'cancel' | translate}}
+          </button>
+          <button type="submit" class="btn btn-sm btn-primary" [disabled]="!characteristicForm.form.valid"
+                  (click)="save()"><i class="fa fa-dot-circle-o"></i>
+            {{'save' | translate}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div><!--/.row-->
+</div>
+<!--</form>-->

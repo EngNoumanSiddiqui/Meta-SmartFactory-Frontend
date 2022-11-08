@@ -1,0 +1,106 @@
+<div class="card">
+  <div class="card-header">{{ 'QUALITY_PLAN_DETAILS'|translate }}</div>
+  <div class="card-body">
+    <form #saleForm="ngForm" class="form-horizontal ui-fluid">
+      <table class="table table-bordered">
+        <tbody>
+
+          <tr>
+            <td width="35%">{{'QUALITY_PLAN_CODE' | translate}}</td>
+            <td><input class="form-control" [(ngModel)]="dataModel.productTreeDetailQualityPlanCode" name="description"
+                required />
+            </td>
+          </tr>
+
+          <tr>
+            <td>{{'material' | translate}}</td>
+            <td>
+              <div class="ui-fluid">
+                <stock-auto-complete [dropdown]="true" sortByFilter="stockNo" (selectedStockEvent)="onMaterialChange($event)"
+                [selectedStock]="productTreeSelectedMaterial"></stock-auto-complete>
+              </div>
+            </td>
+            <td>
+          </tr>
+
+          <tr>
+            <td>{{'plant' | translate}}<span style="width: 0 !important;" class="float-right"></span></td>
+            <td>{{selectedPlant?.plantName}}</td>
+          </tr>
+
+          <tr>
+            <td>{{'usage' | translate}}</td>
+            <td>
+              <select id="usage" name="usage" class="form-control" [(ngModel)]="dataModel.qualityUsageId">
+                <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                <option value="{{usage.usageId}}" *ngFor="let usage of usageList">{{usage.usageText}}
+                </option>
+              </select>
+            </td>
+          </tr>
+
+          <tr>
+            <td>{{'planning-work-center' | translate}}</td>
+            <td>
+              <workcenter-auto-complete (selectedWorkCenterEvent)="dataModel.workCenterId=$event.workCenterId"></workcenter-auto-complete>
+            </td>
+          </tr>
+
+          <tr>
+            <td>{{'group' | translate}}</td>
+            <td><input class="form-control" [(ngModel)]="dataModel.qualityGroup" type="number" name="group" min="0" />
+            </td>
+          </tr>
+
+          <tr>
+            <td>{{'group-counter' | translate}}</td>
+            <td><input class="form-control" [(ngModel)]="dataModel.groupCounter" type="number" min="0" name="groupCounter" /></td>
+          </tr>
+
+          <tr>
+            <td>{{'from-lot-size' | translate}}</td>
+            <td>
+              <input type="number" id="fromLotSize" name="fromLotSize" [(ngModel)]="dataModel.fromLotSize"
+                class="form-control" step="1" pattern="\d+" #fromLotSize="ngModel" required />
+              <div *ngIf="(fromLotSize.dirty || fromLotSize.touched) && fromLotSize.invalid"
+                class="alert alert-danger p-0 m-0" role="alert">
+                <strong>It should be only number </strong>
+              </div>
+            </td>
+          </tr>
+          
+          <tr>
+            <td>{{'to-lot-size' | translate}}</td>
+            <td>
+              <input type="number" id="toLotSize" name="toLotSize" [(ngModel)]="dataModel.toLotSize"
+                class="form-control" #toLostSize="ngModel" step="1" pattern="\d+" required />
+              <div *ngIf="(toLostSize.dirty || toLostSize.touched) && toLostSize.invalid"
+                class="alert alert-danger p-0 m-0" role="alert">
+                <strong>It should be only number </strong>
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <td>{{'key-date' | translate}}</td>
+            <td>
+              <p-calendar class="valid-from" name="keyDate" [showIcon]="true" dateFormat="dd/mm/yy"
+                [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100" [readonlyInput]="true" required
+                [(ngModel)]="dataModel.keyDate" showTime="true"></p-calendar>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+    </form>
+  </div>
+  <div class="card-footer">
+    <!--<button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>-->
+    <!--{{'reset' | translate}}-->
+    <!--</button>-->
+    <button type="submit" class="btn btn-sm btn-primary" [disabled]="!saleForm.form.valid" (click)="save()"><i
+        class="fa fa-dot-circle-o"></i>
+      {{'save' | translate}}
+    </button>
+  </div>
+</div>

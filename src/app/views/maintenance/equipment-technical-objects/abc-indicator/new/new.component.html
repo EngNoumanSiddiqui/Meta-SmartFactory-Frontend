@@ -1,0 +1,43 @@
+<p-confirmDialog></p-confirmDialog>
+
+<!--<form #orderEdit="ngForm" >-->
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          {{'abc-indicator'|translate}}
+        </div>
+        <div class="card-body">
+          <form #saleForm="ngForm" class="form-horizontal ui-fluid">
+            <div class="form-group row">
+              <label class="col-md-3 col-form-label" for="equipmentAbcIndicatorType">{{'equipment-abc-indicator-type' | translate}}</label>
+              <div class="col-md-9">
+                <input id="equipmentAbcIndicatorType" name="equipmentAbcIndicatorType" type="text"  class="form-control" [(ngModel)]="dataModel.equipmentAbcIndicatorType"
+                       name="equipmentAbcIndicatorType"  required/>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-3 col-form-label" for="equipmentAbcIndicatorDescription">{{'abc-indicator-description' | translate}}</label>
+              <div class="col-md-9">
+                <input type="text" id="equipmentAbcIndicatorDescription" name="equipmentAbcIndicatorDescription"  required [(ngModel)]="dataModel.equipmentAbcIndicatorDescription"
+                       class="form-control" placeholder="{{'description' | translate}}"/>
+              </div>
+            </div>
+
+          </form>
+        </div>
+        <div class="card-footer">
+          <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+            {{'reset' | translate}}
+          </button>
+          <button type="submit" class="btn btn-sm btn-primary"
+                  (click)="save()"><i class="fa fa-dot-circle-o"></i>
+            {{'save' | translate}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div><!--/.row-->
+</div>
+<!--</form>-->

@@ -1,0 +1,119 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div>
+        <div class="card">
+          <div class="card-body">
+            <form #inspForm="ngForm">
+              <table class="table table-bordered">
+                <tr>
+                  <td>{{'inspection-plan' | translate}}</td>
+                  <td>
+                    <input type="text" id="inspectionPlann" name="inspectionPlann" placeholder="{{'click-to-select' | translate}}"
+                      [(ngModel)]="inspectionSpecification.inspectionPlan" class="form-control" readonly
+                      (click)="inspectionSpecificationModal.show()" required />
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'group' | translate}}</td>
+                  <!-- <td>
+                    <input type="text" id="group" name="group" [(ngModel)]="inspectionSpecification.group"
+                      class="form-control" />
+                  </td> -->
+                  <td>
+                    <input type="number" pKeyFilter="pint" id="group" name="group" [(ngModel)]="inspectionSpecification.group" 
+                    class="form-control" min="1" #inspectionSpecificationGroup="ngModel"
+                    [ngClass]="{ 'is-invalid': inspectionSpecificationGroup.touched && inspectionSpecificationGroup.invalid }" pattern="^[0-9]*$" />
+                    <div *ngIf="inspectionSpecificationGroup.invalid && inspectionSpecificationGroup.touched" class="alert alert-danger">
+                      <div *ngIf="inspectionSpecificationGroup.errors.pattern">It should be only number</div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'group-counter' | translate}}</td>
+                  <!-- <td>
+                    <input type="text" id="groupCounter" name="groupCounter"
+                      [(ngModel)]="inspectionSpecification.groupCounter" class="form-control" />
+                  </td> -->
+                  <td>
+                    <input type="number" pKeyFilter="pint" id="groupCounter" name="groupCounter" [(ngModel)]="inspectionSpecification.groupCounter" 
+                    class="form-control" min="1" #inspectionSpecificationgroupCounter="ngModel"
+                    [ngClass]="{ 'is-invalid': inspectionSpecificationgroupCounter.touched && inspectionSpecificationgroupCounter.invalid }" pattern="^[0-9]*$" />
+                    <div *ngIf="inspectionSpecificationgroupCounter.invalid && inspectionSpecificationgroupCounter.touched" class="alert alert-danger">
+                      <div *ngIf="inspectionSpecificationgroupCounter.errors.pattern">It should be only number</div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'usage' | translate}}</td>
+                  <td>
+                    <select id="usage" name="usage" class="form-control" [(ngModel)]="inspectionSpecification.usage"
+                      required>
+                      <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                      <option value="{{usage}}" *ngFor="let usage of usageList">{{usage}}
+                      </option>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'sample-size' | translate}}</td>
+                  <!-- <td>
+                    <input type="text" id="sampleSize" name="sampleSize"
+                      [(ngModel)]="inspectionSpecification.sampleSize" class="form-control" required />
+                  </td> -->
+                  <td>
+                    <input type="number" pKeyFilter="pint" id="sampleSize" name="sampleSize" [(ngModel)]="inspectionSpecification.sampleSize" 
+                    class="form-control" min="1" #inspectionSpecificationsampleSize="ngModel"
+                    [ngClass]="{ 'is-invalid': inspectionSpecificationsampleSize.touched && inspectionSpecificationsampleSize.invalid }" pattern="^[0-9]*$" />
+                    <div *ngIf="inspectionSpecificationsampleSize.invalid && inspectionSpecificationsampleSize.touched" class="alert alert-danger">
+                      <div *ngIf="inspectionSpecificationsampleSize.errors.pattern">It should be only number</div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'key-date' | translate}}</td>
+                  <td>
+                    <p-calendar class="valid-from" name="keyDate" [showIcon]="true" dateFormat="dd/mm/yy"
+                      [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                      [(ngModel)]="inspectionSpecification.keyDate"></p-calendar>
+                  </td>
+                </tr>
+              </table>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="row col-md-12">
+        <button type="submit" class="btn btn-sm btn-primary" [disabled]="!inspForm.form.valid" (click)="save()">
+          <i class="fa fa-dot-circle-o"></i>
+          {{ "save" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Inspection Specification List Modal -->
+<div bsModal [config]="{backdrop: 'static', keyboard: false}" #inspectionSpecificationModal="bs-modal" (onHidden)="modal.active=false"
+  class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-success modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{'inspection-plan' | translate}}</h4>
+        <button type="button" class="close" (click)="inspectionSpecificationModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <inspection-plan-list [fromselectItem]="true" (selectedEvent)="setSelectedInspcSpec($event);inspectionSpecificationModal.hide()">
+        </inspection-plan-list>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary"
+          (click)="inspectionSpecificationModal.hide()">{{'close' | translate}}
+        </button>
+      </div>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

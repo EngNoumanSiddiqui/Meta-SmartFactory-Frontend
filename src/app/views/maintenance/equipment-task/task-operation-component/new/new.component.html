@@ -1,0 +1,54 @@
+<!--<form #orderEdit="ngForm" >-->
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          {{'task-operation-component'|translate}}
+        </div>
+        <div class="card-body">
+          <form #saleForm="ngForm" class="form-horizontal ui-fluid">
+            <table class="table table-bordered">
+              <tbody>
+              <tr>
+                <td width="35%">{{'component' | translate}}</td>
+                <td> <stock-auto-complete [required]="true"
+                                                     (selectedStockEvent)="setSelectedStock($event)"></stock-auto-complete>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'quantity' | translate}}</td>
+                <td><input class="form-control" [(ngModel)]="dataModel.componentQuantity" type="number" min="0"
+                           name="componentQuantity" required/>
+                </td>
+              </tr>
+              <tr>
+                <td width="35%">{{'quantity-unit' | translate}}</td>
+                <td><unit-auto-complete [addIfMissing]="true" (unitChangeEvent)="dataModel.componentUnit=$event"></unit-auto-complete>
+                </td>
+              </tr>
+              <tr>
+                <td >{{'batch' | translate}}</td>
+                <td><batch-auto-complete [addIfMissing]="true" (selectedBatchEvent)="setSelectedBatch($event)"></batch-auto-complete>
+                </td>
+              </tr>
+              </tbody>
+
+            </table>
+
+          </form>
+        </div>
+        <div class="card-footer">
+          <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+            {{'reset' | translate}}
+          </button>
+          <button type="submit" class="btn btn-sm btn-primary" [disabled]="!saleForm.form.valid || !dataModel.stockId"
+                  (click)="save()"><i class="fa fa-dot-circle-o"></i>
+            {{'save' | translate}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div><!--/.row-->
+</div>
+<!--</form>-->

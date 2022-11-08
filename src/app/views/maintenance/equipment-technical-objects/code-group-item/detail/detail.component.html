@@ -1,0 +1,52 @@
+
+<div class="animated fadeIn" >
+  <div class="row">
+    <div class="col-md-10">
+      <div class="card">
+        <div class="card-header">
+          {{'catalog-profile' | translate}}
+        </div>
+        <div class="card-body" >
+          <div class="form-group row align-items-center">
+            <label class="col-md-3 col-form-label" >{{'code-group' | translate}}</label>
+            <div class="col-md-9">
+              {{data.equipmentCodeGroupheader?.shortText}}
+            </div>
+          </div> 
+          <div class="form-group row align-items-center">
+            <label class="col-md-3 col-form-label" >{{'profile-id' | translate}}</label>
+            <div class="col-md-9">
+              {{data.equipmentCodeGroupItemId}}
+            </div>
+          </div>  <div class="form-group row align-items-center">
+            <label class="col-md-3 col-form-label" >{{'profile-name' | translate}}</label>
+            <div class="col-md-9">
+              {{data.parameter}}
+            </div>
+          </div>
+          <div class="form-group row align-items-center">
+            <label class="col-md-3 col-form-label">{{'short-text' | translate}}</label>
+            <div class="col-md-9">
+             {{data.shortText}}
+            </div>
+          </div>
+          <table class="table table-sm table-bordered" *ngIf="data.equipmentlist">
+            <thead>
+            <th>{{'equipment-name' | translate}}</th>
+            <th>{{'equipment-no' | translate}}</th>
+            <th>{{'equipment-type-name' | translate}}</th>
+            </thead>
+            <tbody >
+            <tr *ngFor="let veri of data.equipmentlist">
+              <td>{{veri.equipmentName}}</td>
+              <td>{{veri.equipmentNo}}</td>
+              <td>{{veri.equipmentTypeName }}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <!--[disabled]="! order.orderDetailList||order.orderDetailList.length==0 ||!order.actId||!saleForm.form.valid"-->
+  </div><!--/.row-->
+</div>

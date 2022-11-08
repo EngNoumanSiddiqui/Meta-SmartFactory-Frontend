@@ -1,0 +1,28 @@
+<div class="animated fadeIn">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card">
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i> {{'material-group-details' | translate}}
+          </div>
+          <div class="card-body">
+            <table class="table table-bordered">
+              <tbody *ngIf="detailResult">
+              <tr>
+                <td width="30%">{{'group-code' | translate}}</td>
+                <td>{{detailResult[0].groupCode}} </td>
+              </tr>
+              <tr>
+                <td>{{'group-description' | translate}}</td>
+                <td>{{detailResult[0].groupDescription}} </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  
+  

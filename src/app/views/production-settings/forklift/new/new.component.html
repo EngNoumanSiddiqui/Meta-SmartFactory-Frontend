@@ -1,0 +1,101 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i> {{'new' | translate}} {{'vehicle' | translate}}
+        </div>
+        <div class="card-body">
+          <form #partForm="ngForm">
+            <table class="table table-bordered">
+              <tbody>
+                <tr>
+                  <td> {{'vehicle-no' | translate}}</td>
+                  <td>
+                    <input type="text" name="forkliftNo" class="form-control" [(ngModel)]="forkliftReqDto.forkliftNo" />
+                  </td>
+                </tr>
+                <tr>
+                  <td> {{'vehicle-name' | translate}}*</td>
+                  <td>
+                    <input type="text" name="forkliftName" required class="form-control" [(ngModel)]="forkliftReqDto.forkliftName" />
+                  </td>
+                </tr>
+                <tr>
+                  <td> {{'description' | translate}}</td>
+                  <td>
+                    <input type="text" name="forkliftDescription" class="form-control" [(ngModel)]="forkliftReqDto.forkliftDescription" />
+                  </td>
+                </tr>
+                <tr>
+                  <td> {{'vehicle-status' | translate}}*</td>
+                  <td>
+                    <div class="input-group">
+                      <select id="forkliftStatus" name="forkliftStatus" class="form-control"
+                        [(ngModel)]="forkliftReqDto.forkliftStatus" required>
+                        <option [value]="null"> {{'please-select' | translate}}</option>
+                        <option *ngFor="let item of forkliftTypeList" value="{{item}}">{{item}}
+                        </option>
+                      </select>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td> {{'vehicle-type' | translate}}*</td>
+                  <td>
+                    <div class="input-group">
+                      <select id="vehicleType" name="vehicleType" class="form-control"
+                        [(ngModel)]="forkliftReqDto.vehicleType" required>
+                        <option [value]="null"> {{'please-select' | translate}}</option>
+                        <option *ngFor="let item of vehicleTypeList" value="{{item}}">{{item}}
+                        </option>
+                      </select>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td width="18%">{{'plant' | translate}}</td>
+                  <td width="33%">
+                  <span *ngIf="forkliftReqDto.plantId && selectedPlant && forkliftReqDto.plantId=== selectedPlant.plantId">{{selectedPlant.plantName}}</span>
+                    <plant-auto-complete *ngIf="!forkliftReqDto.plantId && !this.selectedPlant" [addIfMissing]="false" [eventFire]="true"
+                      (selectedPlantEvent)="setSelectedPlant($event)"></plant-auto-complete>
+                  </td>
+                 
+                </tr>
+                <tr>
+                  <td>{{'warehouse' | translate}}</td>
+                  <td>
+                    <warehouse-auto-complete [required]="true" [plantId]="this.forkliftReqDto.plantId"
+                      [selectedWareHouseId]="forkliftReqDto.wareHouseId"
+                      (selectedWareHouseEvent)="setSelectedWarehouse($event)">
+                    </warehouse-auto-complete>
+                  </td>
+
+                </tr>
+                <!-- <tr>
+                  <td>{{'active' | translate}}</td>
+                  <td>
+                    <p-checkbox name="active" binary="true" 
+                    label="{{'active' | translate}}" [(ngModel)]="forkliftReqDto.active"></p-checkbox>
+                  </td>
+                </tr> -->
+                <tr>
+                  <td colspan="4">
+                    <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+                      {{'reset' | translate}}</button>
+                    <button type="submit" class="btn btn-sm btn-primary" [disabled]="!partForm.form.valid || !forkliftReqDto.wareHouseId"
+                      (click)="save()"><i class="fa fa-dot-circle-o"></i>
+                      {{'save' | translate}}</button>
+                    <!--<button type="button" class="btn btn-sm btn-secondary float-right" (click)="goPage()">
+                        <i class="icon-arrow-left-circle"></i> {{'cancel' | translate}} </button>-->
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,86 @@
+<div class="container-fluid">
+    <table class="table table-bordered table-sm table-responsive-sm table-hover table-outline mb-0">
+        <thead style="background: #f4f4f4;">
+            <th>{{'condition-code' | translate}}</th>
+            <th>{{'condition-type' | translate}}</th>
+            <th>{{'condition-class' | translate}}</th>
+            <th>{{'calculation-type' | translate}}</th>
+            <th>{{'value' | translate}}</th>
+            <th>{{'action' | translate}}</th>
+        </thead>
+    
+        <tbody>
+            <tr *ngFor="let purchaseCondition of conditionCodeSelectedList; let index = index; let last=last">
+                <td>
+                    <ng-container  *ngIf="index > 0; else noGrossPriceQty">
+                        <select class="form-control" [(ngModel)]="purchaseCondition.purchaseConditionTypeCode" 
+                        (change)="onChangePurchaseCondition($event.target.value, index)" id="purchase_condition{{index}}" name="purchase_condition{{index}}"> 
+                            <option value="">{{'please-select' | translate}}</option>
+                            <option value="{{purchaseConditionDetail}}" *ngFor="let purchaseConditionDetail of conditionCodeSelectedList[index].purchaseConditionDetails">{{purchaseConditionDetail}}</option>
+                        </select>
+                    </ng-container>
+    
+                    <ng-template #noGrossPriceQty>
+                        {{purchaseCondition.purchaseConditionTypeCode}}
+                    </ng-template>
+                   
+                </td>
+                <td>{{purchaseCondition.purchaseConditionTypeName}}</td>
+                <td>{{purchaseCondition.purchaseConditionClassName}}</td>
+                <td>{{purchaseCondition.purchaseCalculationType}}</td>
+    
+                <td>
+                    <span class="d-flex">
+                        <input type="text" style="width: 85px; margin-right: 3px;"  id="purchase_condition_value{{index}}" name="purchase_condition_value{{index}}"
+                        [(ngModel)]="purchaseCondition.conditionValue" (keyup)="calculateNetPrice(purchaseCondition, purchaseCondition.conditionValue, index)" 
+                        name="conditionValue" id="conditionValue" > 
+                        <span *ngIf="purchaseCondition.purchaseCalculationType === 'QUANTITY_BASED'">XXX</span>
+                        <span *ngIf="purchaseCondition.purchaseCalculationType === 'PERCENTAGE'">%</span>
+                    </span>
+                </td>
+                <td>
+                    <span style="display: flex;">
+    
+                        <button class="btn btn-sm btn-outline-info" type="button" (click)="addConditionCodeList(index)" *ngIf="last">
+                            <i class="fa fa-plus"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" type="button" (click)="deleteConditionCodeList(index)" *ngIf="index > 0">
+                            <i class="fa fa-trash"></i></button>
+                    </span>
+                </td>
+            </tr>
+    
+            <tr style="height: 45px;">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr style="background: #f4f4f4;" class="text-center">
+                <td colspan="2"><strong>{{'net-price' | translate}}</strong></td>
+                <td colspan="2"><strong>{{'delivery-cost' | translate}}</strong></td>
+                <td colspan="2"><strong>{{'effective-price' | translate}}</strong></td>
+            </tr>
+            <tr style="height: 30px" class="text-center">
+                <td colspan="2">{{purchaseConditionRecord.netPrice}} <span *ngIf="purchaseConditionRecord.netPrice > 0">XXX</span></td>
+                <td colspan="2">{{deliveryCost}} <span *ngIf="deliveryCost > 0">XXX</span></td>
+                <td colspan="2">{{purchaseConditionRecord.effectivePrice}} <span *ngIf="purchaseConditionRecord.effectivePrice > 0">XXX</span></td>
+            </tr>
+        </tfoot>
+    
+    </table>
+    
+    <br>
+    <div class="row" style="float: right;">
+        <div class="col-md-12 d-flex">
+            <button type="button" class="btn btn-secondary" (click)="close()" style="margin-right: 10px;">
+                {{ "close" | translate }}
+            </button>
+            <button type="button" class="btn btn-success" (click)="save()">{{ "add" | translate }}</button>
+        </div>
+    </div>
+</div>

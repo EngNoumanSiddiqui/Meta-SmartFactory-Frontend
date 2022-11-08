@@ -1,0 +1,49 @@
+<!--<form #orderEdit="ngForm" >-->
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          {{'job-order-workstation-program'|translate}}
+        </div>
+        <div class="card-body">
+          <form #saleForm="ngForm" class="form-horizontal ui-fluid">
+            <table class="table table-bordered">
+              <tbody>
+
+
+              <tr>
+                <td width="35%">{{'workstation-program' | translate}}</td>
+                <td>
+                  <workstation-program-auto-complete [addIfMissing]="true"
+                                                     (selectedWorkstationProgramEvent)="setSelectedWorkstationProgram($event)"
+                                                     [required]="true"
+                                                     [selectedWorkstationProgram]="dataModel.workstationProgram"
+                  ></workstation-program-auto-complete>
+                </td>
+              </tr>
+              <tr>
+                <td width="35%">{{'description' | translate}}</td>
+                <td><input class="form-control" [(ngModel)]="dataModel.description"
+                           name="description" required/>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+
+          </form>
+        </div>
+        <div class="card-footer">
+          <!--<button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>-->
+          <!--{{'reset' | translate}}-->
+          <!--</button>-->
+          <button type="submit" class="btn btn-sm btn-primary"  [disabled]="!saleForm.form.valid"
+                  (click)="save()"><i class="fa fa-dot-circle-o"></i>
+            {{'save' | translate}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div><!--/.row-->
+</div>
+<!--</form>-->

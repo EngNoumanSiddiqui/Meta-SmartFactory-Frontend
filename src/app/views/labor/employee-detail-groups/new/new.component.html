@@ -1,0 +1,176 @@
+<div class="modal-body">
+  <div class="d-flex align-items-center justify-content-center pb-2" style="height: 30px">
+    <div class="form-check py-2 p-r-1">
+      <p-radioButton id="general-group" name="generalGroup" value="g-group"
+        label="{{'general-group'|translate|uppercase}}" inputId="fixedTariff" [(ngModel)]="selectedGroup"
+        (click)="selectGroup('g-group')"></p-radioButton>
+    </div>
+    <div class="form-check py-2 p-l-1">
+      <p-radioButton id="shift-group" name="shiftGroup" value="s-group" label="{{'shift-group'|translate|uppercase}}"
+        inputId="fixedTariff" [(ngModel)]="selectedGroup" (click)="selectGroup('s-group')"></p-radioButton>
+    </div>
+  </div>
+  <div>
+    <table class="table table-sm table-outline bg-white justify-content-center py-10" style="height: 100px">
+      <div class="row align-items-center justify-content-center pt-3">
+        <strong>
+          <h4>{{selectedEmployeeDetails?.firstName}} {{selectedEmployeeDetails?.lastName}}</h4>
+        </strong>
+      </div>
+      <div class="align-items-center justify-content-center pt-3">
+        <div class="justify-content-center">
+          <div class="row m-15">
+            <div class="col-lg-6" *ngIf="!isRemove">
+              <table class="table table-sm table-outline bg-white justify-content-center py-10">
+                <!-- <div class="modal-header"> -->
+                <h4 class="head-sty"> {{'add-new-group' | translate}}</h4>
+                <!-- </div> -->
+                <div class="pl-2 m-30" *ngIf="!isRemove">
+                  <select id="shiftGroups" name="shiftGroups" *ngIf="selectedGroup == 's-group'" class="form-control"
+                    [(ngModel)]="newShiftGroupRequest.employeeGroupId" (ngModelChange)="shiftGroupChange($event)">
+                    <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                    <option *ngFor="let employeeGroup of employeeGroupList?.content"
+                      value="{{employeeGroup.employeeGroupId}}">
+                      <span> {{employeeGroup.shift?.shiftName}} |
+                        {{employeeGroup.groupName}}</span>
+                    </option>
+                  </select>
+                  <select *ngIf="selectedGroup == 'g-group'" id="shiftGroups" name="shiftGroups" class="form-control"
+                    [(ngModel)]="newShiftGroupRequest.employeeGroupId" (ngModelChange)="shiftGroupChange($event)">
+                    <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                    <option *ngFor="let employeeGroup of employeeGroupList?.content"
+                      value="{{employeeGroup.employeeGenericGroupId}}">
+                      <span> {{employeeGroup.groupName}} | {{employeeGroup?.groupType}} |
+                        {{employeeGroup.groupSubTypeEnum?.message}}</span>
+                    </option>
+                  </select>
+
+                  <div class="pl-3">
+                    <button *ngIf="!isRemove" type="submit" class="btn btn-primary btn-align" (click)="genericSave()"
+                      style="width: 70px">
+                      {{'save' | translate}}
+                    </button>
+                  </div>
+                </div>
+              </table>
+            </div>
+            <div [ngClass]="isRemove ? 'col-lg-12' : 'col-lg-6'">
+              <table class="table table-sm table-outline bg-white justify-content-center py-10"
+                *ngIf="selectedGroup == 's-group' && isRemove">
+                <tr *ngIf="!isRemove">
+                  <td colspan="2">
+                    <h4 class="head-sty"> {{'assigned-group' | translate}}</h4>
+                  </td>
+                </tr>
+                <tr>
+                  <th>Group Code</th>
+                  <th>Group Name</th>
+                  <th *ngIf="isRemove" class="text-right">Action</th>
+                </tr>
+                <tr *ngFor="let employeeGroup of shiftGroupList">
+                  <td>{{employeeGroup?.groupCode}}</td>
+                  <td>{{employeeGroup.groupName}}</td>
+                  <td class="text-right">
+                    <button *ngIf="isRemove" class="btn btn-sm btn-outline-danger" type="button"
+                      (click)="remove(employeeGroup?.employeeGroupId)">
+                      <i class="fa fa-trash"></i></button>
+                  </td>
+                </tr>
+              </table>
+
+              <table class="table table-sm table-outline bg-white justify-content-center py-10"
+                *ngIf="selectedGroup == 's-group' && !isRemove">
+                <tr *ngIf="!isRemove">
+                  <td colspan="2">
+                    <h4 class="head-sty"> {{'assigned-group' | translate}}</h4>
+                  </td>
+                </tr>
+                <tr>
+                  <th>Group Code</th>
+                  <th>Group Name</th>
+                  <th *ngIf="isRemove" class="text-right">Action</th>
+                </tr>
+                <tr *ngFor="let employeeGroup of shiftGroupList">
+                  <td>{{employeeGroup?.groupCode}}</td>
+                  <td>{{employeeGroup?.groupName}}</td>
+                  <td class="text-right">
+                    <button *ngIf="isRemove" class="btn btn-sm btn-outline-danger" type="button"
+                      (click)="remove(employeeGroup?.employeeGroupId)">
+                      <i class="fa fa-trash"></i></button>
+                  </td>
+                </tr>
+              </table>
+
+              <table class="table table-sm table-outline bg-white justify-content-center py-10"
+                *ngIf="selectedGroup == 'g-group' && isRemove">
+                <thead>
+                  <tr>
+                    <td colspan="6">
+                      <h4 class="head-sty" *ngIf="!isRemove"> {{'assigned-group' | translate}}</h4>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>Group Code</th>
+                    <th>Group Name</th>
+                    <th>Group Type</th>
+                    <th>Group Sub Type</th>
+                    <th>Reference Item</th>
+                    <th *ngIf="isRemove" class="text-right">Action</th>
+                  </tr>
+                </thead>
+                <tbody class="scroll">
+                  <tr *ngFor="let employeeGroup of genericGroupList">
+                    <td>{{employeeGroup?.groupCode}}</td>
+                    <td> {{employeeGroup.groupName}}</td>
+                    <td>{{employeeGroup?.groupType}}</td>
+                    <td>{{employeeGroup.groupSubType?.message}}</td>
+                    <td>{{employeeGroup?.referenceItemDto?.itemName}}</td>
+                    <td class="text-right">
+                      <button *ngIf="isRemove" class="btn btn-sm btn-outline-danger" type="button"
+                        (click)="remove(employeeGroup?.employeeGenericGroupId)">
+                        <i class="fa fa-trash"></i></button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <table class="table table-sm table-outline bg-white justify-content-center py-10"
+                *ngIf="selectedGroup == 'g-group' && !isRemove">
+
+                <thead>
+                  <tr>
+                    <td colspan="6">
+                      <h4 class="head-sty" *ngIf="!isRemove"> {{'assigned-group' | translate}}</h4>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>Group Code</th>
+                    <th>Group Name</th>
+                    <th>Group Type</th>
+                    <th>Group Sub Type</th>
+                    <th>Reference Item</th>
+                    <th *ngIf="isRemove" class="text-right">Action</th>
+                  </tr>
+                </thead>
+                <tbody class="scroll">
+                  <tr *ngFor="let employeeGroup of genericGroupList">
+                    <td>{{employeeGroup?.groupCode}}</td>
+                    <td> {{employeeGroup.groupName}}</td>
+                    <td>{{employeeGroup?.groupType}}</td>
+                    <td>{{employeeGroup.groupSubTypeEnum?.message}}</td>
+                    <td>{{employeeGroup?.referenceItemDto?.itemName}}</td>
+                    <td class="text-right">
+                      <button *ngIf="isRemove" class="btn btn-sm btn-outline-danger" type="button"
+                        (click)="remove(employeeGroup?.employeeGenericGroupId)">
+                        <i class="fa fa-trash"></i></button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </table>
+  </div>
+</div>

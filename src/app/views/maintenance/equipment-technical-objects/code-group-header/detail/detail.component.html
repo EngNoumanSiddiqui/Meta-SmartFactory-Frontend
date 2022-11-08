@@ -1,0 +1,81 @@
+
+<div class="animated fadeIn" *ngIf="data" >
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          {{'code-group' | translate}}
+        </div>
+        <div class="card-body" >
+          <table class="table table-bordered" *ngIf="data">
+            <tr>
+              <th width="30%">{{'catalog-id' | translate}}</th>
+              <td>{{data.equipmentCodeGroupHeaderId}}</td>
+            </tr>
+            <tr>
+              <th>{{'short-text-for-code' | translate}}</th>
+              <td>{{data.codeGroup}}</td>
+            </tr>
+            <tr>
+              <th>{{'status-of-code-group' | translate}}</th>
+              <td>{{data.shortText}}</td>
+            </tr>
+            <tr>
+              <th>{{'code' | translate}}</th>
+              <td>{{data.equipmentCodeGroup?.shortText}}</td>
+            </tr>
+          </table>
+          <div class="card">
+           <div class="card-header">
+              {{'code-group' | translate}}
+           </div>
+           <div class="card-body">
+              <table class="table table-bordered">
+                  <thead>
+                    <th>{{'id' | translate}}</th>
+                    <th>{{'short-text' | translate}}</th>
+                    <th>{{'parameter' | translate}}</th>
+                    <th>{{'createDate' | translate}}</th>
+                  </thead>
+                  <tbody *ngIf="data.equipmentCodeGroupItem">
+                    <tr *ngFor="let item of data.equipmentCodeGroupItem">
+                      <td>{{item.equipmentCodeGroupItemId}}</td>
+                      <td>{{item.shortText}}</td>
+                      <td>{{item.parameter}}</td>
+                      <td>{{item.createDate | date:'shortDate'}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+           </div>
+         </div>
+         <div class="card">
+            <div class="card-header">
+               {{'equipment-measuring-point-list' | translate}}
+            </div>
+            <div class="card-body">
+               <table class="table table-bordered">
+                   <thead>
+                     <th>{{'id' | translate}}</th>
+                     <th>{{'point-no' | translate}}</th>
+                     <th>{{'measurement-position' | translate}}</th>
+                     <th>{{'target-value' | translate}}</th>
+                     <th>{{'target-value-text' | translate}}</th>
+                   </thead>
+                   <tbody *ngIf="data.equipmentMeasuringPointList">
+                     <tr *ngFor="let item of data.equipmentMeasuringPointList">
+                       <td>{{item.equipmentMeasuringPointId}}</td>
+                       <td>{{item.equipmentMeasuringPointNo}}</td>
+                       <td>{{item.measurementPosition}}</td>
+                       <td>{{item.targetValue}}</td>
+                       <td>{{item.targetValueText}}</td>
+                     </tr>
+                   </tbody>
+                 </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--[disabled]="! order.orderDetailList||order.orderDetailList.length==0 ||!order.actId||!saleForm.form.valid"-->
+  </div><!--/.row-->
+</div>

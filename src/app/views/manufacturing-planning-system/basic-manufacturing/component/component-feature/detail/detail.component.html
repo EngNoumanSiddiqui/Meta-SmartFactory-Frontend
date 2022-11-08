@@ -1,0 +1,47 @@
+
+<!--<form #orderEdit="ngForm" >-->
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          {{'component-feature'|translate}}
+        </div>
+        <div class="card-body" *ngIf="dataModel">
+          <form #saleForm="ngForm" class="form-horizontal ui-fluid">
+            <table class="table table-bordered">
+              <tbody>
+
+
+              <tr>
+                <td width="35%">{{'criteria' | translate}}</td>
+                <td> {{dataModel?.productTreeCriteria?.description}}
+
+                </td>
+              </tr>
+              <tr>
+                <td width="35%">{{'criteria-min-value' | translate}}</td>
+                <td> {{dataModel.criteriaMinValue}}
+                </td>
+              </tr>
+              <tr>
+                <td>{{'criteria-max-value' | translate}}</td>
+                <td> {{dataModel.criteriaMaxValue}}
+                </td>
+              </tr>
+              <tr>
+                <td>{{'criteria-unit' | translate}}</td>
+                <td>{{dataModel.criteriaUnit}}
+                </td>
+              </tr>
+              </tbody>
+            </table>
+
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div><!--/.row-->
+</div>
+<!--</form>-->

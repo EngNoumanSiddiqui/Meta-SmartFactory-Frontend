@@ -1,0 +1,99 @@
+<!--<form #orderEdit="ngForm" >-->
+<div class="animated fadeIn">
+  <div class="row" *ngIf="detailData">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          {{'maintenance-external-service'|translate}}
+        </div>
+        <div class="card-body">
+          <form #saleForm="ngForm" class="form-horizontal ui-fluid">
+            <table class="table table-bordered">
+              <tbody>
+              <tr>
+                <td width="35%">{{'maintenance-external-service-id' | translate}}</td>
+                <td> <span class="form-control bg-readonly">{{dataModel.maintenanceExternalServicId}}</span>
+                </td>
+              </tr>
+              <tr>
+                <td >{{'external-service' | translate}}</td>
+                <td> <external-service-auto-complete [required]="true" [addIfMissing]="true" [selectedExternalService]="detailData.externalService"
+                                                     (selectedExternalServiceEvent)="setSelectedService($event)"></external-service-auto-complete>
+                </td>
+              </tr>
+              <tr>
+                <td >{{'quantity' | translate}}</td>
+                <td><input class="form-control" [(ngModel)]="dataModel.quantity" type="number" min="0"
+                           name="quantity" required/>
+                </td>
+              </tr>
+              <tr>
+                <td >{{'quantity-unit' | translate}}</td>
+                <td><unit-auto-complete [addIfMissing]="true" (unitChangeEvent)="dataModel.quantityUnit=$event" [selectedUnit]="detailData.quantityUnit"></unit-auto-complete>
+                </td>
+              </tr>
+              <tr>
+                <td >{{'gross-price' | translate}}</td>
+                <td><input class="form-control" [(ngModel)]="dataModel.grossPrice" type="number"
+                           name="grossPrice" />
+                </td>
+              </tr>
+              <tr>
+                <td >{{'currency' | translate}}</td>
+                <td><input class="form-control" [(ngModel)]="dataModel.currency"
+                           name="currency" />
+                </td>
+              </tr>
+              <tr>
+                <td>{{'planned-start-date' | translate}}</td>
+                <td><p-calendar [(ngModel)]="dataModel.plannedStartDate" name="plannedStartDate"
+                                [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                                placeholder="{{'planned-start-date'|translate}}"
+                                [showIcon]="true" dateFormat="dd/mm/yy"></p-calendar>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'planned-finish-date' | translate}}</td>
+                <td><p-calendar [(ngModel)]="dataModel.plannedFinishDate" name="plannedFinishDate"
+                                [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                                placeholder="{{'planned-finish-date'|translate}}"
+                                [showIcon]="true" dateFormat="dd/mm/yy"></p-calendar>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'actual-start-date' | translate}}</td>
+                <td><p-calendar [(ngModel)]="dataModel.actualStartDate" name="actualStartDate"
+                                [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                                placeholder="{{'actual-start-date'|translate}}"
+                                [showIcon]="true" dateFormat="dd/mm/yy"></p-calendar>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'actual-finish-date' | translate}}</td>
+                <td><p-calendar [(ngModel)]="dataModel.actualFinishDate" name="actualFinishDate"
+                                [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                                placeholder="{{'actual-finish-date'|translate}}"
+                                [showIcon]="true" dateFormat="dd/mm/yy"></p-calendar>
+                </td>
+              </tr>
+
+              </tbody>
+
+            </table>
+
+          </form>
+        </div>
+        <div class="card-footer">
+          <button type="reset" class="btn btn-sm btn-danger" (click)="cancel()"><i class="fa fa-ban"></i>
+            {{'cancel' | translate}}
+          </button>
+          <button type="submit" class="btn btn-sm btn-primary" [disabled]="!saleForm.form.valid || !dataModel.externalServiceId"
+                  (click)="save()"><i class="fa fa-dot-circle-o"></i>
+            {{'save' | translate}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div><!--/.row-->
+</div>
+<!--</form>-->

@@ -1,0 +1,87 @@
+<!--<form #orderEdit="ngForm" >-->
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <p-tabView>
+        <p-tabPanel header="Details">
+          <div class="card">
+            <div class="card-header">{{ 'QUALITY_PLAN_OPERATION_DETAILS'|translate }}</div>
+            <div class="card-body">
+              <form #operationForm="ngForm" class="form-horizontal ui-fluid">
+                <table class="table table-bordered">
+                  <tbody>
+
+                    <tr>
+                      <td width="35%" class="text-bold">{{'QUALITY_PLAN_OPERATION_CODE' | translate}}</td>
+                      <td><input id="operation_code" name="operation_code" class="form-control"
+                          [(ngModel)]="dataModel.productTreeDetailQualityPlanOperationCode" required />
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>{{'inspection-operation' | translate}}</td>
+                      <td>
+                        <quality-inspection-operation-auto-complete
+                          (selectedInspectionOperationEvent)="dataModel.qualityInspectionOperationId=$event.inspectionOperationId"
+                          [selectedInspectionOperationId]="dataModel.qualityInspectionOperationId"
+                          [addIfMissing]="false"></quality-inspection-operation-auto-complete>
+                      </td>
+                    </tr>
+
+
+                    <tr>
+                      <td>{{'planning-work-center' | translate}}</td>
+                      <td>
+                        <workcenter-auto-complete
+                        [selectedWorkCenter]="referenceItemDto?.workCenter" (selectedWorkCenterEvent)="dataModel.workCenterId=$event.workCenterId">
+                        </workcenter-auto-complete>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>{{'control-key' | translate}}</td>
+                      <td>
+                        <select id="qualityControlKeyId" name="qualityControlKeyId" class="form-control"
+                          [(ngModel)]="dataModel.qualityControlKeyId" required>
+                          <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                          <option value="{{controlKey.qmControlKeyId}}" *ngFor="let controlKey of controlKeys">
+                            {{controlKey.qmControlKeyText}}
+                        </select>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>{{'description' | translate}}</td>
+                      <td><input class="form-control" [(ngModel)]="dataModel.description" type="text" name="description"
+                          id="description" />
+                      </td>
+                    </tr>
+
+                  </tbody>
+                </table>
+
+              </form>
+            </div>
+            <div class="card-footer">
+              <!--<button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>-->
+              <!--{{'reset' | translate}}-->
+              <!--</button>-->
+              <button type="submit" class="btn btn-sm btn-primary" [disabled]="!operationForm.form.valid"
+                (click)="save()"><i class="fa fa-dot-circle-o"></i>
+                {{'save' | translate}}
+              </button>
+            </div>
+          </div>
+        </p-tabPanel>
+        <p-tabPanel header="Quality Characteristic">
+         <product-tree-quality-plan-characteristic-list></product-tree-quality-plan-characteristic-list>
+        </p-tabPanel>
+
+      </p-tabView>
+
+
+    </div>
+  </div>
+  <!--/.row-->
+</div>
+<!--</form>-->

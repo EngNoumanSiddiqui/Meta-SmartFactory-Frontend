@@ -1,0 +1,201 @@
+<p-confirmDialog *ngIf="activeTab===1"></p-confirmDialog>
+
+
+<div class="animated fadeIn" *ngIf="pageFilter.maintenanceOrderId">
+
+
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body" >
+          <!-- <div class="card border-0 mb-0 mt-0" *ngIf="!isDetail">
+            <div class="card-body">
+              <button pButton class="ui-button-warning float-right ml-1" type="button"
+              [disabled]="!selectedData || selectedData.length !== 1"
+                      label="{{'external-service'|translate}}" (click)="modalShow(null,'EXTERNAL-SERVICE',null)" ></button>
+            </div>
+          </div> -->
+          <p-table #dt [columns]="selectedColumns" [value]="tableData" [rows]="pagination.rows" [totalRecords]="pagination.totalElements"
+                   dataKey="maintenanceOperationId" [(selection)]="selectedData" scrollable="true" scrollHeight="55vh" >
+
+            <ng-template pTemplate="caption">
+              <!-- <div *ngIf="isDetail">{{'order-operation'|translate}}</div> -->
+              <div style="text-align:left" style="display: flex;">
+                <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header" maxSelectedLabels="0"  selectedItemsLabel="{{'columns-selected'|translate}}"
+                               [style]="{minWidth: '200px', flex: '3'}" defaultLabel="Choose Columns">
+                  <ng-template let-col let-i="index" pTemplate="item">
+                    {{col.label|translate}}
+                  </ng-template>
+                </p-multiSelect>
+                <div [ngStyle]="{'flex':isDetail === false ? '2' : '3'}"></div>
+                <!-- <button style="flex: 1;"  *ngIf="!isDetail" pButton  type="button" class="ui-button-warning float-right ml-1" label="{{'reset'  |translate}}" (click)="resetFilter()"></button> -->
+                <button style="flex: 1;" *ngIf="!isDetail" pButton  class="ui-button-success float-right ml-1" (click)="modalShow(null,'NEW',null)" label="{{'add-new'|translate}}"> </button>
+                <button style="flex: 1;" *ngIf="!isDetail" [disabled]="!tableData || tableData.length === 0" pButton class="ui-button-warning float-right ml-1" type="button"  icon="fa fa-file-alt" iconPos="left" label="{{'export-all'|translate}}" (click)="dt.exportCSV()"></button>
+                <button style="flex: 1;" *ngIf="!isDetail" [disabled]="!tableData || tableData.length === 0" pButton  class="ui-button-warning float-right ml-1" type="button"  icon="fa fa-file" iconPos="left" label="{{'export-selected'|translate}}" (click)="dt.exportCSV({selectionOnly:true})"
+                ></button>
+                <button pButton style="flex: 1;" class="ui-button-warning float-right ml-1" type="button" [disabled]="!selectedData || selectedData.length !== 1"
+                label="{{'external-service'|translate}}" (click)="modalShow(null,'EXTERNAL-SERVICE',null)" ></button>
+              </div>
+              <!--<hr>-->
+
+            </ng-template>
+            <ng-template pTemplate="header" let-columns >
+
+              <tr >
+                <th style="width: 3em" rowspan="2">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th *ngFor="let col of columns let i=index" style="cursor: pointer" [ngClass]="{'bg-selected-order':pageFilter.orderByProperty ==col.field}" (click)="reOrderData(i,col.field)"><i [ngClass]="'fa fa-sort-alpha-' + classReOrder[i]"></i>
+                  {{col.header|translate}}
+                </th>
+                <th *ngIf="!isDetail" width="80px" rowspan="2">{{'action' | translate}}</th>
+              </tr>
+              <tr *ngIf="!isDetail">
+
+                <th *ngFor="let col of columns" class="ui-fluid" [ngSwitch]="col.field">
+                  <!--<input *ngSwitchCase="'equipmentOperation'" style="width: 100%"  pInputText type="text"[(ngModel)]="pageFilter.equipmentOperationId"  (input)="filterByColumn($event.target.value,'equipmentOperationId')">-->
+                  <!-- <span *ngSwitchCase="'maintenanceOrder'"></span> -->
+                  <span *ngSwitchCase="'equipment'"></span>
+                  <span *ngSwitchCase="'equipmentOperation'"></span>
+                  <span *ngSwitchCase="'maintenanceActivityType'"></span>
+                  <span *ngSwitchCase="'workstation'"></span>
+                  <span *ngSwitchCase="'maintenanceEmployee'"></span>
+                  <span *ngSwitchCase="'planningPlant'"></span>
+                  <input *ngSwitchDefault style="width: 100%"  pInputText type="text"[(ngModel)]="pageFilter[col.field]"  (input)="filterByColumn($event.target.value,col.field)">
+                </th>
+
+
+
+              </tr>
+
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+              <tr [pSelectableRow]="rowData">
+                <td style="width: 3em">
+                  <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                </td>
+                <td *ngFor="let col of columns" style="cursor: pointer"  [ngSwitch]="col.field">
+                 <span *ngSwitchCase="'equipmentOperation'">
+                    
+                    <a href="javascript:;" (click)="showDetailDialog(rowData[col.field]?.equipmentOperationId, 'EQUIPMENTOPERATION')">
+                      {{rowData[col.field]?.operationDescription}}
+                    </a>
+                  </span>
+                 <span *ngSwitchCase="'equipment'">
+                   <a href="javascript:;" (click)="showDetailDialog(rowData[col.field]?.equipmentId, 'EQUIPMENT')">{{rowData[col.field]?.equipmentName}}</a>
+                 </span>
+                 <span *ngSwitchCase="'maintenanceOperationId'">
+                  <a href="javascript:;" (click)="modalShow(rowData.maintenanceOperationId,'DETAIL',rowData); ">{{rowData[col.field]}}</a>
+                </span>
+                 <!-- <span *ngSwitchCase="'maintenanceOrder'" (click)="modalShow(rowData.maintenanceOperationId,'DETAIL',rowData); "> {{rowData[col.field]?.maintenanceOrderId}}</span> -->
+                 <span *ngSwitchCase="'maintenanceActivityType'" (click)="modalShow(rowData.maintenanceOperationId,'DETAIL',rowData); "> {{rowData[col.field]}}</span>
+                 <span *ngSwitchCase="'planningPlant'">
+                  <a href="javascript:;" (click)="showDetailDialog(rowData[col.field]?.plantId, 'PLANT')">{{rowData[col.field]?.plantName}}</a>
+                </span>
+                <span *ngSwitchCase="'maintenanceEmployee'">
+                  <a href="javascript:;" (click)="showDetailDialog(rowData[col.field]?.employeeId, 'STAFF')">
+                    {{rowData[col.field]?.firstName}} {{rowData[col.field]?.lastName}}
+                  </a>
+                  
+                </span>
+                <span *ngSwitchCase="'workstation'">
+                  <a href="javascript:;" (click)="showDetailDialog(rowData[col.field]?.workStationId, 'WORKSTATION')">{{rowData[col.field]?.workStationName}}</a>
+                </span>
+                <span *ngSwitchCase="'duration'">
+                  {{getDuration(rowData[col.field])}}
+                </span>
+                <span *ngSwitchCase="'work'">
+                  {{rowData[col.field] === 0 ? '' :  rowData[col.field]}}
+                </span>
+                <span *ngSwitchCase="'actualWork'">
+                  {{rowData[col.field] === 0 ? '' :  rowData[col.field]}}
+                </span>
+                <span *ngSwitchCase="'plannedStartDate'">{{rowData[col.field] | date: "short"}}</span>
+                <span *ngSwitchCase="'plannedFinishDate'">{{rowData[col.field] | date: "short"}}</span>
+                <span *ngSwitchCase="'actualStartDate'">{{rowData[col.field] | date: "short"}}</span>
+                <span *ngSwitchCase="'actualFinishedDate'">{{rowData[col.field] | date: "short"}}</span>
+                <span *ngSwitchDefault (click)="modalShow(rowData.maintenanceOperationId,'DETAIL',rowData); "> {{rowData[col.field]}}</span>
+                </td>
+                <td width="80px" *ngIf="!isDetail" >
+                  <button class="btn btn-sm btn-outline-danger" type="button" (click)="delete(rowData.maintenanceOperationId)">
+                    <i class="fa fa-trash"></i></button>
+                  <button class="btn btn-sm btn-outline-info" type="button" (click)="modalShow(rowData.maintenanceOperationId,'EDIT',null)">
+                    <i class="fa fa-edit"></i></button>
+                </td>
+              </tr>
+
+            </ng-template>
+          </p-table>
+
+          <br/>
+          <div class="row">
+            <app-paging
+              [showSearch]="false"
+              [TotalElements]="pagination.totalElements"
+              [CurrentPage]="pagination.currentPage"
+              [PageSize]="pagination.pageSize"
+              [rows]="pagination.rows"
+              [TotalPageLinkButtons]="pagination.TotalPageLinkButtons"
+              [RowsPerPageOptions]="pagination.RowsPerPageOptions"
+              (onPageChange)="myChanges($event)"
+            ></app-paging>
+            <span style="margin-left:2px; padding-top: 2px " class="text-muted" >{{'total-records'|translate}}: {{pagination?.totalElements}}</span>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--/.col-->
+  </div>
+</div>
+<ng-template [ngIf]="modal.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal" (onHidden)="modal.active=false" class="modal fade"
+       tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog modal-success modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" *ngIf="equipmentModal.modal !=='EXTERNAL-SERVICE'"> {{'maintenance-operation' | translate}}</h4>
+          <h4 class="modal-title" *ngIf="equipmentModal.modal ==='EXTERNAL-SERVICE'"> {{'external-service' | translate}}</h4>
+          <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <!--step2-->
+        <div class="modal-body">
+          <ng-template [ngIf]="equipmentModal.modal=='NEW'">
+            <order-operation-new 
+            [maintenanceOrderId]="pageFilter.maintenanceOrderId"
+            [equipmentId]="equipmentId"
+            [equipmentName]="equipmentName"
+            [mainWorkStationId]="mainWorkStationId"
+            [mainWorkStationName]="mainWorkStationName"
+            [fromOutStandToProcess]="fromOutStandToProcess"
+            [maintenanceActivityType]="maintenanceActivityType"
+            (saveAction)="myModal.hide(); filter(pageFilter);"></order-operation-new>
+          </ng-template>
+          <!--sale-edit-component-->
+          <ng-template [ngIf]="equipmentModal.modal=='EDIT'">
+            <order-operation-edit [maintenanceStatus]="maintenanceStatus" [fromOutStandToProcess]="fromOutStandToProcess" [id]="equipmentModal.id"  (saveAction)="myModal.hide(); filter(pageFilter)"></order-operation-edit>
+          </ng-template>
+          <!--sale-edit-component-->
+          <ng-template [ngIf]="equipmentModal.modal=='DETAIL'">
+            <order-operation-detail [data]="equipmentModal.data"></order-operation-detail>
+          </ng-template>
+
+          <ng-template [ngIf]="equipmentModal.modal=='EXTERNAL-SERVICE'">
+            <maintenance-order-external-service-list [maintenanceOrderId]="pageFilter.maintenanceOrderId" [maintenanceOrderOperaionId]="maintenanceOrderOperaionId"></maintenance-order-external-service-list>
+          </ng-template>
+        </div>
+        <!--step2-->
+        <div class="modal-footer">
+          <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary" (click)="myModal.hide()">{{'close' | translate}}</button>
+          <button *ngIf="equipmentModal.modal=='DETAIL'" type="button" class="btn rounded btn-primary" (click)="equipmentModal.modal='NEW'">{{'new' | translate}}</button>
+
+          <button *ngIf="equipmentModal.modal=='DETAIL'" type="button" class="btn rounded btn-success"
+                  (click)="equipmentModal.modal='EDIT'">{{'edit' | translate}}</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</ng-template>

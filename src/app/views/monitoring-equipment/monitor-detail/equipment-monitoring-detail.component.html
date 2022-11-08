@@ -1,0 +1,74 @@
+<div class="col-lg-12  bg-gray-light border-0" id="monitoring-detail">
+  <div class="row ">
+
+    <div class="col-lg-12 py-1 px-0 d-flex flex-column">
+
+      <div class="row m-0 mb-1 bg-gray-dark ">
+        <div class="col display-9 py-3 align-self-center  text-light">
+          <div class=" row ">
+            <div class="col text-light"> {{'workstation-name' | translate}}:</div>
+            <div class="col text-warning text-bold ">{{model?.workStationName}}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row shadow-sm m-0 mb-1">
+        <div class="col-lg-12 bg-gray-dark text-light pl-0 pr-0">
+          <table style="margin-bottom: 0.3rem;word-break: break-word;" 
+          class=" table table-borderless table-sm text-light ml-3">
+            <tr>
+              <td class="display-12">{{'equipment' | translate}}</td>
+              <td  class="display-12">{{'min-value' | translate }}</td>
+              <td  class="display-12">{{'max-value' | translate }}</td>
+              <td  class="display-12">{{'min-threshold' | translate }}</td>
+              <td  class="display-12">{{'max-threshold' | translate }}</td>
+              <td  class="display-12">{{'value' | translate }}</td>
+            </tr>
+            <tbody *ngIf="model && model.equipmentDataList">
+              <tr *ngFor="let compt of model.equipmentDataList">
+                <td class="display-12" style="color: #ffba06;">{{compt.equipmentName}}</td>
+                <td class="display-12" style="color: #ffba06;">{{compt.minValue}}</td>
+                <td class="display-12" style="color: #ffba06;">{{compt.maxValue}}</td>
+                <td class="display-12" style="color: #ffba06;">{{compt.minThreshold}}</td>
+                <td class="display-12" style="color: #ffba06;">{{compt.maxThreshold}}</td>
+                <td class="display-12" style="color: #ffba06;">{{compt.currentValue}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="row bg-gray-dark m-0 mb-1  px-1 pt-3 flex-grow-1">
+
+<!--        <div class="p-0 align-self-center" [ngClass]="{'col-lg-6 ':model?.equipmentDataList && model?.equipmentDataList.length>1,'col-lg-12 ': !model?.equipmentDataList || model?.equipmentDataList.length<=1}"-->
+<!--          *ngFor="let item of model?.equipmentDataList">-->
+<!--          <equipment-monitoring-analysis [injected]="item"></equipment-monitoring-analysis>-->
+<!--        </div>-->
+
+        <div class="p-0 align-self-center" [class.col-md-12]="model?.equipmentDataList?.length<3"
+        [class.col-md-6]="model?.equipmentDataList?.length>=3"
+         *ngIf="model?.equipmentDataList?.length > 0">
+          <equipment-monitoring-analysis [height]="height" [injected]="model?.equipmentDataList[0]"></equipment-monitoring-analysis>
+        </div>
+        <div class="p-0 align-self-center" 
+        [class.col-md-12]="model?.equipmentDataList?.length<3"
+        [class.col-md-6]="model?.equipmentDataList?.length>=3"
+        *ngIf="model?.equipmentDataList?.length > 1">
+          <equipment-monitoring-analysis [height]="height" [injected]="model?.equipmentDataList[1]"></equipment-monitoring-analysis>
+        </div>
+        <div class="p-0 align-self-center"
+        [class.col-md-12]="model?.equipmentDataList?.length<=3"
+        [class.col-md-6]="model?.equipmentDataList?.length>3"
+         *ngIf="model?.equipmentDataList?.length > 2">
+          <equipment-monitoring-analysis [height]="height" [injected]="model?.equipmentDataList[2]"></equipment-monitoring-analysis>
+        </div>
+        <div class="col-md-6 p-0 align-self-center" *ngIf="model?.equipmentDataList?.length > 3">
+          <equipment-monitoring-analysis [height]="height" [injected]="model?.equipmentDataList[3]"></equipment-monitoring-analysis>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+

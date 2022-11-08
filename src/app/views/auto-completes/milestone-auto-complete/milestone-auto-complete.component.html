@@ -1,0 +1,19 @@
+<div class="ui-inputgroup  d-flex ui-fluid">
+  <p-autoComplete [disabled]="disabled" 
+  [(ngModel)]="selectedMilestone"   (ngModelChange)="onChangeMilestone($event)"
+    [suggestions]="filteredMilestone"
+    (completeMethod)="searchMilestone($event)" field="name" [dropdown]="dropdown" [required]="required"
+    [forceSelection]="true" dataKey="milestoneId" placeholder="{{placeholder|translate}}" 
+    [minLength]="1" name="milestonedropdown" 
+    (onDropdownClick)="handleDropdownClickForBatch()" 
+  >
+    <ng-template let-cur pTemplate="item">
+      <div class="ui-helper-clearfix d-flex">
+          <div class="text-bold">{{cur.code}}</div>
+          <div>| {{cur.name}}</div>
+          <!-- <div class="text-muted">| {{cur.countryName}}</div> -->
+      </div>
+  </ng-template>
+  </p-autoComplete>
+  <!-- <button [disabled]="disabled" *ngIf="addIfMissing" pButton icon="fa fa-plus-circle" (click)="modalShow()"></button> -->
+</div>

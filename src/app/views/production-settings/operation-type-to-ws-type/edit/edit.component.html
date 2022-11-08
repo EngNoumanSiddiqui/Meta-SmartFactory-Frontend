@@ -1,0 +1,45 @@
+<div class="animated fadeIn">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i>{{'operation-type-to-ws-type' | translate}} {{'information' | translate}}
+          </div>
+          <div class="card-body">
+            <form #optypetowstypeForm="ngForm">
+            <table class="table table-bordered">
+              <tbody>
+              <tr>
+                <td>{{'workstation-type' | translate}}</td>
+                <td>
+                    <workstation-type-auto-complete [required]="true" [addIfMissing]="true"
+                    [selectedWorkstationTypeId]="optypetowstypeReqDto.workStationTypeId"
+                    (selectedWorkStationTypeEvent)="selectWorkstationType($event)"
+                   ></workstation-type-auto-complete>
+                </td>
+              </tr>
+              <tr>
+                  <td>{{'operation-type' | translate}}*</td>
+                  <td>
+                    <div class="input-group">
+    
+                      <select id="operationTypeIdx" required name="operationTypeIdx" class="form-control"
+                        [(ngModel)]="optypetowstypeReqDto.operationTypeId">
+                        <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                        <option *ngFor="let type of TypeList" value="{{type.operationTypeId}}">{{type.operationTypeName}}</option>
+                      </select>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  
+  
+  

@@ -1,0 +1,208 @@
+<p-tabView>
+    <p-tabPanel header="{{ 'main' | translate }}">
+        <ng-container *ngIf="pallet">
+            <div class="row" style="margin-bottom:5px">
+                <div class="col-md-12">
+                    <button type="button" class="btn rounded btn-success" (click)="printPallet.emit(pallet)"
+                        style="float: right;">{{'print' | translate}}</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table table-striped table-outline">
+                        <tbody>
+                            <tr>
+                                <td width="30%" class="text-bold">{{'pallet-id' | translate}}<span
+                                        class="float-right">:</span>
+                                </td>
+                                <td>{{pallet.palletId}}</td>
+                                <td width="30%" class="text-bold">{{'material' | translate}}<span
+                                        class="float-right">:</span></td>
+                                <td><a href="javascript:;"
+                                        (click)="showDetailModal('stockNo', pallet)">{{pallet.stock?.stockNo}} |
+                                        {{pallet.stock?.stockName}}</a></td>
+                            </tr>
+
+                            <tr>
+                                <td width="30%" class="text-bold">{{'job-order-id' | translate}}<span
+                                        class="float-right">:</span></td>
+                                <td><a href="javascript:;"
+                                        (click)="showDetailModal('jobOrderId', pallet)">{{pallet.jobOrder?.jobOrderId}}</a>
+                                </td>
+
+                                <td width="30%" class="text-bold">{{'job-order-operation-id' | translate}}<span
+                                        class="float-right">:</span></td>
+                                <td><a href="javascript:;"
+                                        (click)="showDetailModal('jobOrderOpeartion', pallet)">{{pallet?.jobOrderOperationId}}</a>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td width="30%" class="text-bold">{{'quantity' | translate}}<span
+                                        class="float-right">:</span>
+                                </td>
+                                <td>
+                                    <span *ngIf="pallet.goodQuantity > 0;else scrapQuantity">{{ pallet.goodQuantity
+                                        }}</span>
+                                    <ng-template #scrapQuantity>
+                                        <span *ngIf="pallet.scrapQuantity > 0; else reworkQuantity">{{
+                                            pallet.scrapQuantity}}</span>
+                                    </ng-template>
+                                    <ng-template #reworkQuantity>
+                                        <span *ngIf="pallet.reworkQuantity > 0; else noQuantity">{{
+                                            pallet.reworkQuantity}}</span>
+                                    </ng-template>
+                                    <ng-template #noQuantity>
+                                        <span>0</span>
+                                    </ng-template>
+                                </td>
+                                <td width="30%" class="text-bold">{{'unit' | translate}}<span
+                                        class="float-right">:</span>
+                                </td>
+                                <td>{{pallet.stock?.baseUnit}}</td>
+                            </tr>
+
+                            <tr>
+
+                                <td width="30%" class="text-bold">{{'variety' | translate}}<span
+                                        class="float-right">:</span></td>
+                                <td>
+                                    {{pallet.variety}}
+                                </td>
+                                <td width="30%" class="text-bold">{{'max-box-quantity' | translate}}<span
+                                        class="float-right">:</span></td>
+                                <td>
+                                    {{pallet.maxBoxQuantity}}
+                                </td>
+                            </tr>
+                            <tr>
+
+                                <td width="30%" class="text-bold">{{'requirement-pallet-quantity-for-forklift' |
+                                    translate}}<span class="float-right">:</span></td>
+                                <td>
+                                    {{pallet.requirementPalletQuantityForForklift}}
+                                </td>
+                                <td width="30%" class="text-bold">{{'batch' | translate}}<span
+                                        class="float-right">:</span>
+                                </td>
+                                <td><a href="javascript:;"
+                                        (click)="showDetailModal('batch', pallet)">{{pallet.batch}}</a></td>
+                            </tr>
+                            <tr>
+                                <td width="30%" class="text-bold">{{'warehouse' | translate}}<span
+                                        class="float-right">:</span>
+                                </td>
+                                <td><a href="javascript:;"
+                                        (click)="showDetailModal('wareHouseName', pallet)">{{pallet.wareHouse?.wareHouseName}}</a>
+                                </td>
+                                <td width="30%" class="text-bold">{{'create-date' | translate}}<span
+                                        class="float-right">:</span>
+                                </td>
+                                <td>{{ pallet.createDate |date:'dd/MM/yyyy HH:mm':'-000'}}</td>
+                            </tr>
+                            <tr>
+                                <td width="30%" class="text-bold">{{'pallet-position' | translate}}<span
+                                        class="float-right">:</span>
+                                </td>
+                                <td>{{ pallet.palletPosition}}</td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </ng-container>
+
+
+    </p-tabPanel>
+    <p-tabPanel header="{{ 'pallet-logs' | translate }}">
+        <div class="row">
+            <div class="col-md-12">
+                <p-table [value]="palletLogs" [dataKey]="'palletLogId'" [paginator]="true" [rows]="10"
+                    [rowsPerPageOptions]="[10,25,50]" [scrollable]="'true'" [scrollHeight]="'50vh'">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th style="width: 3em"></th>
+                            <th>{{'pallet-log-id' | translate}}</th>
+                            <th>{{'quantity' | translate}}</th>
+                            <th>{{'unit' | translate}}</th>
+                            <th>{{'employee' | translate}}</th>
+                            <th>{{'create-date' | translate}}</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-palletLog let-expanded="expanded">
+                        <tr>
+                            <td style="width: 3em">
+                                <a *ngIf="palletLog.palletLogComponentList" href="#" [pRowToggler]="palletLog"
+                                    [pTooltip]="'show_pallet_log_components' | translate" tooltipPosition="top"
+                                    tooltipZIndex="999999">
+                                    <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+                                </a>
+                            </td>
+                            <td>{{palletLog.palletLogId}}</td>
+                            <td>{{palletLog.quantity}}</td>
+                            <td>{{palletLog.quantityUnit}}</td>
+                            <td><a href="javascript:;" (click)="showStaffDetail(palletLog?.employee?.employeeId)">
+                                    {{palletLog?.employee?.firstName}} {{palletLog?.employee?.lastName}}</a></td>
+                            <td>{{palletLog.createDate | date:'dd/MM/yyyy HH:mm'}}</td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="rowexpansion" let-rowData>
+                        <tr>
+                            <td style="width: 3em"></td>
+                            <td colspan="5">
+                                <p-table [value]="rowData.palletLogComponentList" [dataKey]="'palletLogComponentId'"
+                                    [scrollable]="'true'" [scrollHeight]="'50vh'">
+                                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>{{'pallet_log_component_id' | translate}}</th>
+                            <th>{{'stock-id' | translate}}</th>
+                            <th>{{'quantity' | translate}}</th>
+                            <th>{{'unit' | translate}}</th>
+                            <th>{{'location' | translate}}</th>
+                            <th>{{'barcode' | translate}}</th>
+                            <th>{{'batch' | translate}}</th>
+                            <th>{{'height' | translate}}</th>
+                            <th>{{'width' | translate}}</th>
+                            <th>{{'dimension-unit' | translate}}</th>
+                            <th>{{'reservation-id' | translate}}</th>
+                            <th>{{'create-date' | translate}}</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rowData>
+                        <tr>
+                            <td>{{rowData.palletLogComponentId}}</td>
+                            <td>
+                                <a href="javascript:;" (click)="showStockModal(rowData.stockId)">
+                                    {{rowData.stockId}}
+                                </a>
+                            </td>
+                            <td>{{rowData.quantity}}</td>
+                            <td>{{rowData.quantityUnit}}</td>
+                            <td>{{rowData.locationNo}}</td>
+                            <td>{{rowData.barcode}}</td>
+                            <td>
+                                <a href="javascript:;" (click)="showBatchModal(rowData.batch)">
+                                    {{rowData.batch}}
+                                </a>
+                            </td>
+                            <td>{{rowData.height}}</td>
+                            <td>{{rowData.width}}</td>
+                            <td>{{rowData.dimensionUnit}}</td>
+                            <td> <a href="javascript:;" (click)="showReservationModal(rowData.stockReservationId)">
+                                    {{rowData.stockReservationId}}
+                                </a>
+                            </td>
+                            <td>{{rowData.createDate | date: 'dd/MM/yyyy HH:mm'}}</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+                </td>
+                </tr>
+                </ng-template>
+                </p-table>
+            </div>
+        </div>
+    </p-tabPanel>
+</p-tabView>

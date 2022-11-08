@@ -1,0 +1,653 @@
+<div class="row">
+  <div class="col-lg-12">
+    <div class="">
+
+      <div class="p-table-small">
+        <div class="col-md-12 " *ngIf="!detailMode">
+          <div class="row badge-light border border-bottom-0 m-minus-10 p-2">
+            <div class="col-12 ">
+
+              <button pButton class="ui-button-success float-right ml-1" (click)="modalShow(null,'NEW',null)"
+                label="{{'add-new'|translate}}"></button>
+            </div>
+          </div>
+        </div>
+        <p-table #dt [columns]="cols" [value]="tableData" [rows]="10" [paginator]="tableData && tableData.length>10"
+          [totalRecords]="tableData.length" dataKey="operationName" [expandedRowKeys]="expandedRows"
+          scrollable="true" scrollHeight="60vh">
+
+
+          <ng-template pTemplate="header" let-columns>
+
+            <tr>
+              <th style="width: 3em;"></th>
+              <th *ngFor="let col of columns let i=index" style="cursor: pointer">
+                {{col.header|translate}}
+              </th>
+              <th width="80px" rowspan="2" *ngIf="!detailMode">{{'action' | translate}}</th>
+            </tr>
+
+
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex"
+            let-expanded="expanded">
+            <tr [pSelectableRow]="rowData">
+              <td style="width: 3em;">
+                <a href="#" [pRowToggler]="rowData">
+                  <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+                </a>
+              </td>
+              <td *ngFor="let col of columns" [ngSwitch]="col.field" [ngClass]="(col.field == 'operationName'? 'input-tooltip': '')">
+
+                <a href="javascript:;" *ngSwitchCase="'jobOrderOperationId'"
+                (click)="showJobOrderOperationDetail(rowData.jobOrderOperationId)">
+                  {{rowData.jobOrderOperationId}}</a>
+                <a href="javascript:;" *ngSwitchCase="'operationName'" data-toggle="tooltip" data-placement="top" title="{{rowData.operationName}}"
+                (click)="showOperationDetail(rowData.operationId)"> {{rowData.operationName}}</a>
+                <a href="javascript:;" *ngSwitchCase="'workStationName'" (click)="showWorkstationDetail(rowData.workStationId)" style="word-break: break-word;"> {{rowData.workStationName}}</a>
+                <span *ngSwitchCase="'parent'">{{(rowData[col.field])? 'YES': 'NO'}}</span>
+                <span *ngSwitchCase="'singleTotalDuration'">{{getReadableTime(rowData[col.field])}}</span>
+                <span *ngSwitchCase="'plannedCycleQuantity'">{{(rowData.jobOrderStockProduceList && rowData.jobOrderStockProduceList.length)? rowData.jobOrderStockProduceList[0].neededQuantity: 0 }}</span>
+                <span *ngSwitchDefault (click)="modalShow(rowData.jobOrderOperationId,'DETAIL',rowData)">{{rowData[col.field]}}</span>
+                <span *ngSwitchCase="'currentQuantity'">{{(rowData.jobOrderStockProduceList && rowData.jobOrderStockProduceList.length)? rowData.jobOrderStockProduceList[0].currentStockQuantity: 0 }}</span>
+
+              </td>
+              <td width="80px" *ngIf="!detailMode">
+                <button class="btn btn-sm btn-outline-danger" type="button"
+                  (click)="delete(rowData.jobOrderOperationId,rowIndex)">
+                  <i class="fa fa-trash"></i></button>
+                <button class="btn btn-sm btn-outline-info" type="button"
+                  (click)="modalShow(rowData.jobOrderOperationId,'NEW',rowData)">
+                  <i class="fa fa-edit"></i></button>
+              </td>
+            </tr>
+          </ng-template>
+
+
+          <ng-template pTemplate="rowexpansion" let-rowData let-columns="columns">
+            <tr>
+              <td colspan="10">
+                <p-tabView (onChange)="handleTabChange($event)">
+
+                  <p-tabPanel  header="{{'details' | translate}}">
+                    <table class="table table-bordered" style="margin-bottom: 0px; table-layout: auto;">
+
+                      <tr>
+
+                        <td class="text-bold">{{'job-order-id' | translate}}</td>
+                        <td>
+                          <a href="javascript:;" (click)="showJobOrderDetail(rowData.jobOrderId)">
+                            {{rowData.jobOrderId}}
+                          </a>
+
+                        </td>
+
+                        <td class="text-bold">{{'workstation' | translate}}</td>
+                        <td>
+                          <a href="javascript:;" (click)="showWorkstationDetail(rowData.workStationId)">
+                            {{rowData.workStationName}}
+                          </a>
+                        </td>
+
+                      </tr>
+                      <tr>
+                        <td class="text-bold">{{'job-order-operation-id' | translate}}</td>
+                        <td>{{rowData.jobOrderOperationId}}</td>
+
+
+                        <td class="text-bold">{{'operation-status' | translate}}</td>
+                        <td>{{rowData.operationStatus}}</td>
+
+                      </tr>
+                      <tr>
+
+                        <td class="text-bold">{{'operation-no' | translate}}</td>
+                        <td>
+                          <a href="javascript:;" (click)="showOperationDetail(rowData.operationId)">
+                            {{rowData.operationNo}}
+                          </a>
+                        </td>
+
+                        <td class="text-bold">{{'operation-order' | translate}}</td>
+                        <td>{{rowData.operationOrder}}</td>
+                      </tr>
+                      <tr>
+
+                        <td class="text-bold">{{'operation-name' | translate}}</td>
+                        <td>
+                          <a href="javascript:;" (click)="showOperationDetail(rowData.operationId)">
+                            {{rowData.operationName}}
+                          </a>
+                        </td>
+
+                        <td class="text-bold">{{'operation-quantity' | translate}}</td>
+                        <td>{{rowData.quantity}}</td>
+
+                      </tr>
+                      <tr>
+                        <td class="text-bold">{{'planned-cycle-quantity' | translate}}</td>
+                        <td>{{rowData.plannedCycleQuantity}}</td>
+                        <td class="text-bold">{{'process-control-frequency' | translate}}</td>
+                        <td>{{rowData.processControlFrequency}}</td>
+
+                      </tr>
+
+                      <tr>
+                        <td class="text-bold">{{'operation-repeat' | translate}}</td>
+                        <td style="width: 20%;">{{rowData.operationRepeat}}</td>
+
+                        <td class="text-bold">{{'wastage-rate' | translate}}</td>
+                        <td>{{rowData.wastageRate}}</td>
+                      </tr>
+                      <tr>
+                        <td class="text-bold">{{'batch' | translate}}</td>
+                        <td style="width: 20%;">{{rowData.batch}}</td>
+
+                        <td class="text-bold">{{'location' | translate}}</td>
+                        <td>{{rowData.locationDto?.locationName}}</td>
+                      </tr>
+
+                      <tr>
+                        <td class="text-bold">{{'job-order-operation-reference-id' | translate}}</td>
+                        <td>{{rowData?.referenceId}}</td>
+                        <td class="text-bold">{{'barcode' | translate}}</td>
+                        <td>{{rowData.barcode}}</td>
+                      </tr>
+
+                      <tr>
+                        <td class="text-bold">{{'description' | translate}}</td>
+                        <td>{{rowData.description}}</td>
+                        <td class="text-bold">{{'fixed' | translate}} {{'workstation' | translate}}</td>
+                        <td>{{(rowData.fixedWorkstation)? 'YES': 'NO'}}</td>
+                      </tr>
+                      <!-- <tr>
+                        <td class="text-bold">{{'needed-person' | translate}}</td>
+                        <td>{{rowData?.neededPerson}}</td>
+                      </tr> -->
+                    </table>
+                  </p-tabPanel>
+                  <p-tabPanel  header="{{'times' | translate}}">
+                    <table class="table table-bordered" style="margin-bottom: 0px; table-layout: auto;">
+
+
+                      <tr>
+
+                        <td class="text-bold">{{'actual-start' | translate}}</td>
+                        <td>{{rowData.actualStartTime | date:'dd-MM-yyyy HH:mm'}}</td>
+
+                        <td class="text-bold">{{'planned-single-duration' | translate}}</td>
+                        <td>{{getReadableTime(rowData.singleDuration)}}</td>
+                      </tr>
+                      <tr>
+                        <td class="text-bold">{{'actual-finish' | translate}}</td>
+                        <td>{{rowData.actualFinishTime | date:'dd-MM-yyyy HH:mm'}}</td>
+                        <td class="text-bold">{{'single-setup-duration' | translate}}</td>
+                        <td>{{getReadableTime(rowData.singleSetupDuration)}}</td>
+
+                      </tr>
+
+                      <tr>
+
+                        <td class="text-bold">{{'total-duration' | translate}}</td>
+                        <td>{{getReadableTime(rowData.singleTotalDuration)}}</td>
+
+
+                        <td class="text-bold">{{'actual'|translate}} {{'single-setup-duration' | translate}}</td>
+                        <td>{{getReadableTime(rowData.actualSetupDuration)}}</td>
+
+                      </tr>
+                      <tr>
+
+                        <td class="text-bold">{{'move-duration' | translate}}</td>
+                        <td>{{getReadableTime(rowData.moveDuration)}}</td>
+
+                        <td class="text-bold">{{'wait-duration' | translate}}</td>
+                        <td>{{getReadableTime(rowData.waitDuration)}}</td>
+                      </tr>
+                      <tr>
+                        <td class="text-bold">{{'programming-duration' | translate}}</td>
+                        <td>{{getReadableTime(rowData.programmingDuration)}}</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+
+                        <td class="text-bold">{{'actual'|translate}} {{'total-duration' | translate}}</td>
+                        <td>{{getReadableTime(rowData.actualTotalDuration)}}</td>
+
+                        <td class="text-bold">{{'max-single-standby-duration' | translate}}</td>
+                        <td>{{getReadableTime(rowData.maxSingleStandbyDuration)}}</td>
+                      </tr>
+                      <tr>
+
+                        <td class="text-bold">{{'scheduled-start-date' | translate}}</td>
+                        <td>{{rowData.scheduledStartTime | date:'dd-MM-yyyy HH:mm'}}</td>
+
+                        <td class="text-bold">{{'scheduled-finish-date' | translate}}</td>
+                        <td>{{rowData.scheduledFinishTime | date:'dd-MM-yyyy HH:mm'}}</td>
+
+
+                      </tr>
+                      <tr>
+
+                        <td class="text-bold">{{'milestone-finish-date' | translate}}</td>
+                        <td>{{rowData.milestoneFinishDate | date:'dd-MM-yyyy HH:mm'}}</td>
+
+                        <td class="text-bold">{{'planned-setup-finish-time' | translate}}</td>
+                        <td>{{rowData.plannedSetupFinishTime | date:'dd-MM-yyyy HH:mm'}}</td>
+
+
+                      </tr>
+                      <tr>
+
+                        <td class="text-bold">{{'actual-setup-start-time' | translate}}</td>
+                        <td>{{rowData.actualSetupStartTime | date:'dd-MM-yyyy HH:mm'}}</td>
+
+                        <td class="text-bold">{{'actual-setup-finish-time' | translate}}</td>
+                        <td>{{rowData.actualSetupFinishTime | date:'dd-MM-yyyy HH:mm'}}</td>
+
+
+                      </tr>
+                      <tr>
+
+                        <td class="text-bold">{{'planned-start' | translate}}</td>
+                        <td>{{rowData.startDate | date:'dd-MM-yyyy HH:mm'}}</td>
+
+                        <td class="text-bold">{{'planned-finish' | translate}}</td>
+                        <td>{{rowData.finishDate | date:'dd-MM-yyyy HH:mm'}}</td>
+
+
+                      </tr>
+                    </table>
+                  </p-tabPanel>
+                  <p-tabPanel header="{{'components' | translate}}">
+                    <job-order-component-list [tableData]="rowData?.jobOrderStockUseList" [detailMode]="true"></job-order-component-list>
+                  </p-tabPanel>
+
+                  <p-tabPanel header="{{'materials' | translate}}">
+                    <job-order-component-list [material]="true" [tableData]="rowData?.jobOrderStockProduceList" [detailMode]="true">
+                    </job-order-component-list>
+                  </p-tabPanel>
+
+                  <p-tabPanel header="{{'auxiliary-materials' | translate}}">
+                    <job-order-component-list [tableData]="rowData?.jobOrderStockAuxList" [detailMode]="true">
+                    </job-order-component-list>
+                  </p-tabPanel>
+
+                  <p-tabPanel header="{{'workstation-programs' | translate}}">
+                    <job-order-workstation-program-list [tableData]="rowData?.workstationProgramList" [detailMode]="true">
+                    </job-order-workstation-program-list>
+                  </p-tabPanel>
+
+                  <p-tabPanel header="{{'sensor-data' | translate}}">
+                    <ng-template pTemplate="content">
+                      <job-order-sensor-data-list [jobOrderOperationId]="rowData.jobOrderOperationId"></job-order-sensor-data-list>
+                    </ng-template>
+                  </p-tabPanel>
+                  <p-tabPanel header="{{'cost' | translate}}">
+                    <table class="table table-bordered table-md">
+                      <tbody>           
+              
+                        <tr>           
+                          <td class="text-bold">{{'variable-cost' | translate}}</td>
+                          <td>{{rowData?.variableCost}}
+                          </td>
+                          <td class="text-bold">{{'actual'| translate}} {{'variable-cost' | translate}}</td>
+                          <td>{{rowData?.actualVariableCost}}
+                          </td>
+                          <td class="text-bold">{{'variable-cost-rate' | translate}}</td>
+                          <td>{{rowData?.variableCostRate}}</td>
+                        </tr>
+          
+                        <tr>
+                          <td class="text-bold">{{'labor-cost' | translate}}</td>
+                          <td>{{rowData?.laborCost}}
+                          </td>
+                          <td class="text-bold">{{'actual'| translate}} {{'labor-cost' | translate}}</td>
+                          <td>{{rowData?.actualLaborCost}}
+                          </td>
+                          <td class="text-bold">{{'labor-cost-rate' | translate}}</td>
+                          <td>{{rowData?.laborCostRate}}</td>
+                        </tr>
+          
+                        <tr>                
+                          <td class="text-bold" width="25%">{{'fixed-cost' | translate}}</td>
+                          <td>
+                            {{rowData?.fixedCost}}
+                          </td>
+                          <td class="text-bold" width="25%">{{'actual'| translate}} {{'fixed-cost' | translate}}</td>
+                          <td>
+                            {{rowData?.actualFixedCost}}
+                          </td>
+                          <td class="text-bold">{{'stop-cost-rate' | translate}}</td>
+                          <td>{{rowData?.stopCostRate}}</td>
+                        </tr>
+                        
+                        
+                        <tr>                
+                          <td class="text-bold">{{'total-cost' | translate}}</td>
+                          <td>{{rowData?.totalCost}}</td>
+                          <td class="text-bold">{{'actual-total-cost' | translate}}</td>
+                          <td>{{rowData?.actualTotalCost}}</td>
+                          <td class="text-bold">{{'currency' | translate}}</td>
+                          <td>{{rowData?.currency}}</td>
+                        </tr>
+          
+          
+                      </tbody>>
+                    </table>
+                  </p-tabPanel>
+                  <p-tabPanel header="{{'stops' | translate}}">
+                    <!-- <ng-template pTemplate="content"> -->
+                      <stop-joborder-list [jobOrderOperationId]="rowData?.jobOrderOperationId"></stop-joborder-list>
+                    <!-- </ng-template> -->
+                  </p-tabPanel>
+                  <p-tabPanel header="{{'document' | translate}}">
+                    <div class="card">
+                      <div class="card-header">
+                        <i class="fa fa-align-justify"></i>{{ "documentation" | translate }}
+                      </div>
+                      <div class="card-body">
+                        <table class="table table-bordered">
+                          <tbody>
+                            <tr align="center">
+                              <td class="text-center" colspan="2">
+                                <image-adder [referenceId]="rowData.jobOrderOperationId"
+                                 [tableType]="'JOB_ORDER_OPERATION'" [isFile]="true"></image-adder>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </p-tabPanel>
+                  <p-tabPanel header="{{'ERP' | translate}}">
+                    <table class="table table-bordered table-md">
+                      <tbody>
+                        <tr>
+                          <td class="text-bold">{{'erp-planned-start-date' | translate}}</td>
+                          <td style="width: 20%;">{{rowData.erpPlannedStartDate | date:'dd-MM-yyyy HH:mm'}}</td>
+
+                          <td class="text-bold">{{'erp-planned-finish-date' | translate}}</td>
+                          <td style="width: 20%;">{{rowData.erpPlannedFinishDate | date:'dd-MM-yyyy HH:mm'}}</td>
+                        </tr>
+                        <tr>
+
+                          <td class="text-bold">{{'operation-task-code' | translate}}</td>
+                          <td>{{rowData?.operationTaskCode}}</td>
+                          
+                          <td class="text-bold">{{'milestone-finish-date' | translate}}</td>
+                          <td>{{rowData?.milestoneFinishDate | date:'dd-MM-yyyy HH:mm'}}</td>
+                         
+                        </tr>
+                         <tr>
+                            <td class="text-bold">{{'needed-person' | translate}}</td>
+                            <td>{{rowData?.neededPerson}}</td>
+                            <td class="text-bold">{{'erp-status' | translate}}</td>
+                            <td>{{rowData?.erpStatus}}</td>
+                            
+                          </tr>
+                          <tr>
+                            <td class="text-bold">{{'erp-planned-quantity' | translate}}</td>
+                            <td>{{rowData?.erpPlannedQuantity}}</td>
+                            <td class="text-bold">{{'erp-initial-planned-quantity' | translate}}</td>
+                            <td>{{rowData?.erpInitPlannedQuantity}}</td>
+                        </tr>
+
+                          <tr>
+                            <td class="text-bold">{{'erp-remaining-quantity' | translate}}</td>
+                            <td>{{rowData?.erpRemainingQuantity}}</td>
+                            <td class="text-bold">{{'no-change-by-erp' | translate}}</td>
+                            <td>{{(rowData?.noChangeByErp)? 'YES': 'NO'}}</td>
+
+                 
+                        </tr>
+
+                      </tbody>
+                    </table>
+                  </p-tabPanel>
+                  <p-tabPanel header="{{'pallets' | translate}}">
+                    <ng-template pTemplate="content">
+                      <job-order-operation-pallet-list [jobOrderOperationId]="rowData.jobOrderOperationId" [detailMode]="true"></job-order-operation-pallet-list>
+                    </ng-template> 
+                  </p-tabPanel>
+
+                  <p-tabPanel *ngIf="(rowData?.jobOrder.jobOrderStatus==='CANCELLED')" header="{{'cancelled-by' | translate}}">
+                    <table class="table table-bordered table-md">
+        
+                      <tbody *ngIf="(rowData?.cancelBy)" >
+                        <tr>
+                          <td class="text-bold">{{'employee-id' | translate}}</td>
+                          <td>{{rowData?.cancelBy.employeeId}}</td>   
+                        </tr>
+                        <tr>
+                          <td class="text-bold">{{'employee-no' | translate}}</td>
+                          <td>{{rowData?.cancelBy.employeeNo}}</td>   
+                        </tr>
+                        <tr>
+                          <td class="text-bold">{{'identity' | translate}}</td>
+                          <td>{{rowData?.cancelBy.identity}}</td>   
+                        </tr>
+                        <tr>
+                          <td class="text-bold">{{'employee' | translate}}</td>
+                          <td>{{rowData?.cancelBy.firstName}} {{rowData?.cancelBy.lastName}}</td>   
+                        </tr>
+                        <tr>
+                          <td class="text-bold">{{'group-type' | translate}}</td>
+                          <td>{{rowData?.cancelBy.groupType}}</td>   
+                        </tr>
+                        <tr>
+                          <td class="text-bold">{{'cancel' | translate}} {{'date' | translate}}</td>
+                          <td>{{rowData.cancelDate}}</td>   
+                        </tr>
+        
+                      </tbody>
+                      </table>
+                </p-tabPanel>
+
+                </p-tabView>
+                <!-- <p-tabView >
+
+                <p-tabPanel  header="{{'details' | translate}}">
+                  <table class="table table-bordered" style="margin-bottom: 0px; table-layout: auto;">
+
+                    <tr>
+
+                      <td class="text-bold">{{'operation-order' | translate}}</td>
+                      <td>{{rowData.operationOrder}}</td>
+                      <td class="text-bold">{{'operation-quantity' | translate}}</td>
+                      <td>{{rowData.quantity}}</td>
+
+                    </tr>
+                    <tr>
+                      <td class="text-bold">{{'planned-cycle-quantity' | translate}}</td>
+                      <td>{{rowData.plannedCycleQuantity}}</td>
+                      <td class="text-bold">{{'planned-single-duration' | translate}}</td>
+                      <td>{{getReadableTime(rowData.singleDuration)}}</td>
+
+
+                    </tr>
+                    <tr>
+                      <td class="text-bold">{{'process-control-frequency' | translate}}</td>
+                      <td>{{rowData.processControlFrequency}}</td>
+                      <td class="text-bold">{{'single-setup-duration' | translate}}</td>
+                      <td>{{getReadableTime(rowData.singleSetupDuration)}}</td>
+
+                    </tr>
+                    <tr>
+                      <td class="text-bold">{{'operation-repeat' | translate}}</td>
+                      <td style="width: 20%;">{{rowData.operationRepeat}}</td>
+
+                      <td class="text-bold">{{'actual'|translate}} {{'single-setup-duration' | translate}}</td>
+                      <td>{{getReadableTime(rowData.actualSetupDuration)}}</td>
+
+                    </tr>
+                    <tr>
+                      <td class="text-bold">{{'actual-start' | translate}}</td>
+                      <td>{{rowData.actualStartTime | date:'dd-MM-yyyy HH:mm'}}</td>
+
+                      <td class="text-bold">{{'total-duration' | translate}}</td>
+                      <td>{{getReadableTime(rowData.singleTotalDuration)}}</td>
+
+                    </tr>
+                    <tr>
+
+                      <td class="text-bold">{{'actual-finish' | translate}}</td>
+                      <td>{{rowData.actualFinishTime | date:'dd-MM-yyyy HH:mm'}}</td>
+
+                      <td class="text-bold">{{'actual'|translate}} {{'total-duration' | translate}}</td>
+                      <td>{{getReadableTime(rowData.actualTotalDuration)}}</td>
+
+                    </tr>
+                    <tr>
+
+                      <td class="text-bold">{{'wastage-rate' | translate}}</td>
+                      <td>{{rowData.wastageRate}}</td>
+                      <td class="text-bold">{{'max-single-standby-duration' | translate}}</td>
+                      <td>{{getReadableTime(rowData.maxSingleStandbyDuration)}}</td>
+
+
+                    </tr>
+                    <tr>
+                      <td class="text-bold">{{'reference-id' | translate}}</td>
+                      <td>{{rowData?.referenceId}}</td>
+                      <td class="text-bold">{{'description' | translate}}</td>
+                      <td>{{rowData.description}}</td>
+                    </tr>
+                  </table>
+                </p-tabPanel>
+
+                <p-tabPanel header="{{'components' | translate}}">
+                  <job-order-component-list [tableData]="rowData?.jobOrderStockUseList" [detailMode]="true"></job-order-component-list>
+                </p-tabPanel>
+
+                <p-tabPanel header="{{'materials' | translate}}">
+                  <job-order-component-list [material]="true" [tableData]="rowData?.jobOrderStockProduceList" [detailMode]="true">
+                  </job-order-component-list>
+                </p-tabPanel>
+
+                <p-tabPanel header="{{'auxiliary-materials' | translate}}">
+                  <job-order-component-list [tableData]="rowData?.jobOrderStockAuxList" [detailMode]="true">
+                  </job-order-component-list>
+                </p-tabPanel>
+
+                <p-tabPanel header="{{'workstation-programs' | translate}}">
+                  <job-order-workstation-program-list [tableData]="rowData?.workstationProgramList" [detailMode]="true">
+                  </job-order-workstation-program-list>
+                </p-tabPanel>
+
+                <p-tabPanel header="{{'sensor-data' | translate}}">
+                  <ng-template [ngIf]="selectedTabIndex === 5">
+                    <job-order-sensor-data-list [jobOrderOperationId]="rowData.jobOrderOperationId"></job-order-sensor-data-list>
+                  </ng-template>
+                </p-tabPanel>
+                <p-tabPanel header="{{'cost' | translate}}">
+                  <table class="table table-bordered table-md">
+                    <tbody>
+                      <tr>
+                        <td class="text-bold" width="25%">{{'actual'| translate}} {{'fixed-cost' | translate}}</td>
+                        <td>
+                          {{rowData?.actualFixedCost}}
+                        </td>
+                        <td class="text-bold" width="25%">{{'fixed-cost' | translate}}</td>
+                        <td>
+                          {{rowData?.fixedCost}}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="text-bold">{{'actual'| translate}} {{'labor-cost' | translate}}</td>
+                        <td>{{rowData?.actualLaborCost}}
+                        </td>
+                        <td class="text-bold">{{'labor-cost' | translate}}</td>
+                        <td>{{rowData?.laborCost}}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="text-bold">{{'actual'| translate}} {{'variable-cost' | translate}}</td>
+                        <td>{{rowData?.actualVariableCost}}
+                        </td>
+                        <td class="text-bold">{{'variable-cost' | translate}}</td>
+                        <td>{{rowData?.variableCost}}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="text-bold">{{'currency' | translate}}</td>
+                        <td>{{rowData?.currency}}</td>
+                        <td class="text-bold">{{'stop-cost-rate' | translate}}</td>
+                        <td>{{rowData?.stopCostRate}}</td>
+
+                      </tr>
+                      <tr>
+                        <td class="text-bold">{{'actual-operation-cost' | translate}}</td>
+                        <td>{{rowData?.actualOperationCost}}</td>
+                        <td class="text-bold">{{'estimated-cost' | translate}}</td>
+                        <td>{{rowData?.totalCost}}</td>
+                      </tr>
+                      <tr>
+                        <td class="text-bold">{{'actual-total-cost' | translate}}</td>
+                        <td>{{rowData?.actualTotalCost}}</td>
+
+                      </tr>
+
+                    </tbody>
+                  </table>
+                </p-tabPanel>
+                <p-tabPanel header="{{'stops' | translate}}">
+                  <ng-template pTemplate="content">
+                    <stop-joborder-list [jobOrderOperationId]="rowData?.jobOrderOperationId"></stop-joborder-list>
+                  </ng-template>
+                </p-tabPanel>
+
+              </p-tabView> -->
+
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+
+        <br />
+        <div class="row">
+         <div class="col-md-12">
+          <span style="margin-left:2px; padding-top: 2px " class="text-muted">{{'total-records'|translate}}:
+            {{tableData?.length}}</span>
+         </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--/.col-->
+</div>
+
+<ng-template [ngIf]="modal.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal" (onHidden)="modal.active=false" class="modal fade"
+       tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog modal-success modal-md " role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"> {{'operation' | translate}}</h4>
+          <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <!--step2-->
+        <div class="modal-body">
+          <ng-template [ngIf]="equipmentModal.modal=='NEW'">
+            <job-order-operation-new [data]="equipmentModal.data"
+                                     (saveAction)="myModal.hide(); addOrUpdate($event)"></job-order-operation-new>
+          </ng-template>
+          <ng-template [ngIf]="equipmentModal.modal=='DETAIL'">
+            <job-order-operation-detail [data]="equipmentModal.data"></job-order-operation-detail>
+          </ng-template>
+        </div>
+        <!--step2-->
+        <div class="modal-footer">
+          <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary"
+                  (click)="myModal.hide()">{{'close' | translate}}
+          </button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</ng-template>

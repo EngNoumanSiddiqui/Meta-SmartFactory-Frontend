@@ -1,0 +1,198 @@
+<!--<form #orderEdit="ngForm" >-->
+<div class="animated fadeIn">
+  <div class="row" *ngIf="detailData">
+    <div class="col-md-12">
+      <p-tabView>
+        <p-tabPanel header="{{'equipment-task'|translate}}">
+          <div class="card">
+            <div class="card-header">
+              {{'equipment-task'|translate}}
+            </div>
+            <div class="card-body">
+              <form #saleForm="ngForm" class="form-horizontal ui-fluid">
+                <table class="table table-bordered">
+                  <tbody>
+                  <tr>
+                    <td width="35%">{{'equipment-task-id' | translate}}</td>
+                    <td>{{detailData.equipmentTaskId}} </td>
+                  </tr>
+                  <tr>
+                    <td >{{'equipment' | translate}}</td>
+                    <td>
+                      <equipment-auto-complete [plantId]="selectedPlant?.plantId" (selectedEquipmentEvent)="setSelectedEquipment($event)"
+                          [selectedEquipment]="detailData.equipment" [required]="true">
+                      </equipment-auto-complete>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="35%">{{'equipment-task-name' | translate}}</td>
+                    <td>
+                      <input class="form-control" [(ngModel)]="dataModel.taskDescription" type="text"
+                                name="descr" required />
+                    </td>
+                  </tr>
+                  <tr>
+                      <td >{{'group' | translate}}</td>
+                      <td><input class="form-control" [(ngModel)]="dataModel.group" type="text"
+                                name="group" />
+                      </td>
+                  </tr>
+                  <tr>
+                      <td >{{'group-counter' | translate}}</td>
+                      <td><input class="form-control" [(ngModel)]="dataModel.groupCounter" type="number" min="0"
+                                name="groupCounter" />
+                      </td>
+                  </tr>
+                  <tr>
+                    <td>{{'planning-plant' | translate}}</td>
+                    <td>
+                      <span *ngIf="dataModel.planningPlantId && selectedPlant && dataModel.planningPlantId=== selectedPlant.plantId">{{selectedPlant.plantName}}</span>
+                      <plant-auto-complete *ngIf="!selectedPlant || !dataModel.planningPlantId"
+                       [selectedPlantId]="dataModel.planningPlantId" (selectedPlantEvent)="setSelectedPlanningPlant($event)" [eventFire]="true"></plant-auto-complete>
+                      <!-- <plant-auto-complete   [selectedPlant]="detailData.planningPlant" [addIfMissing]="true"
+                          (selectedPlantEvent)="setSelectedPlanningPlant($event)">
+                      </plant-auto-complete> -->
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'workstation' | translate}}</td>
+                    <td>
+                      <workstation-auto-complete   [selectedWorkStation]="detailData.workStation"
+                          (selectedWorkStationEvent)="setSelectedWorkstation($event)">
+                      </workstation-auto-complete>
+
+                    </td>
+                  </tr>
+                  <tr>
+                    <td >{{'equipment-task-type' | translate}}</td>
+                    <td>
+                      <p-dropdown
+                        name="equipmentTaskType"
+                        [options]="equipmentTaskTypes"
+                        [(ngModel)]="selectedEquipmentTaskType"
+                        placeholder="{{'select-task-type' | translate}}"
+                        optionLabel="taskType">
+                      </p-dropdown>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'equipment-planner-group' | translate}}</td>
+                    <td>
+                      <planner-group-auto-complete [plantId]="selectedPlant?.plantId" [addIfMissing]="true" [selectedPlannerGroup]="detailData.equipmentPlannerGroup"
+                          (selectedPlannerGroupEvent)="setSelectedPlannerGroup($event)">
+                      </planner-group-auto-complete>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'maintenance-system-condition' | translate}}</td>
+                    <td>
+                      <maintenance-system-condition-auto-complete   [addIfMissing]="true" [selectedMaintenanceSystemCondition]="detailData.maintenanceSystemCondition"
+                          (selectedMaintenanceSystemConditionEvent)="setSelectedSystemCondition($event)">
+                      </maintenance-system-condition-auto-complete>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'maintenance-strategy' | translate}}</td>
+                    <td>
+                      <maintenance-strategy-auto-complete   [addIfMissing]="true" [selectedMaintenanceStrategy]="detailData.maintenanceStrategy"
+                          (selectedMaintenanceStrategyEvent)="setSelectedStrategy($event)">
+                      </maintenance-strategy-auto-complete>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'functional-location' | translate}}</td>
+                    <td>
+                      <span class="bg-readonly form-control" *ngIf="dataModel.maintenanceFunctionalLocationId"
+                            (click)="modal.locationActive=true">{{dataModel.maintenanceFunctionalLocationId}}
+                      </span>
+                      <span  class="bg-readonly form-control" *ngIf="!dataModel.maintenanceFunctionalLocationId"
+                            (click)="modal.locationActive=true">{{'choose-functional-location'}}
+                      </span>
+                    </td>
+                  </tr>
+                  <!-- <tr>
+                    <td >{{'task-code' | translate}}</td>
+                    <td><input class="form-control" [(ngModel)]="dataModel.taskCode"
+                              name="taskCode" />
+                    </td>
+                  </tr> -->
+                  <!-- <tr>
+                    <td >{{'task-description' | translate}}</td>
+                    <td><input class="form-control" [(ngModel)]="dataModel.taskDescription"
+                              name="taskDescription" />
+                    </td>
+                  </tr> -->
+                  <!-- <tr>
+                      <td >{{'active' | translate}}</td>
+                      <td><input class="form-control" type="checkbox" [(ngModel)]="dataModel.active"
+                                name="taskActive" />
+                      </td>
+                  </tr> -->
+                </tbody>
+
+              </table>
+
+              </form>
+            </div>
+            <div class="card-footer">
+              <button type="reset" class="btn btn-sm btn-danger" (click)="cancel()"><i class="fa fa-ban"></i>
+                {{'cancel' | translate}}
+              </button>
+              <button type="submit" class="btn btn-sm btn-primary" [disabled]="!saleForm.form.valid||!dataModel.equipmentId"
+                      (click)="save()"><i class="fa fa-dot-circle-o"></i>
+                {{'save' | translate}}
+              </button>
+            </div>
+          </div>
+        </p-tabPanel>
+        <p-tabPanel header="{{'operation' | translate}}">
+            <task-operation-list [equipmentTaskId]="detailData.equipmentTaskId"></task-operation-list>
+        </p-tabPanel>
+        <p-tabPanel header="{{'Document'|translate}}">
+          <div class="card">
+            <div class="card-header">
+              <i class="fa fa-align-justify"></i>{{ "documentation" | translate }}
+            </div>
+            <div class="card-body">
+              <table class="table table-bordered">
+                <tbody>
+                  <tr align="center">
+                    <td class="text-center" colspan="2">
+                      <image-adder [isFile]="true"></image-adder>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </p-tabPanel>
+      </p-tabView>
+    </div>
+  </div><!--/.row-->
+</div>
+<!--</form>-->
+<ng-template [ngIf]="modal.locationActive">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal" class="modal fade" (onHidden)="modal.locationActive=false"
+       tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog modal-success modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            <span >{{'new-batch' | translate}}</span>
+          </h4>
+          <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+
+          <choose-location-pane (selectedEvent)="setSelectedFunctionalLocation($event);myModal.hide()"></choose-location-pane>
+
+
+        </div>
+      </div> <!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
+</ng-template>

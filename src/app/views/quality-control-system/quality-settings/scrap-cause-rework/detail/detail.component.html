@@ -1,0 +1,80 @@
+<div class="animated fadeIn">
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="card">
+              <div class="card-header">
+                <i class="fa fa-align-justify"></i> {{'rework-cause-details' | translate}}
+              </div>
+              <div class="card-body">
+                <table class="table table-bordered">
+                  <tbody>
+                    <tr>
+                        <td width="30%">{{'rework-cause-id' | translate}}</td>
+                        <td>
+                            {{scrapCauseReqDto.scrapCauseId}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="30%">{{'rework-cause-name' | translate}}</td>
+                        <td>
+                            {{scrapCauseReqDto.scrapCauseName}}
+                        </td>
+                    </tr>
+                  <tr>
+                    <td width="30%">{{'rework-code' | translate}}</td>
+                    <td>
+                        {{scrapCauseReqDto.scrapCode}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="30%">{{'create-auto-production-order' | translate}}</td>
+                    <td>
+                      {{scrapCauseReqDto.createAutoProdOrder ? ('yes' |translate) : ('no' |translate)}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'rework-master' | translate}}</td>
+                    <td>
+                      {{scrapCauseReqDto.scrapMaster ? ('yes' |translate) : ('no' |translate)}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'rework-description' | translate}}</td>
+                    <td>
+                        {{scrapCauseReqDto.scrapDescription}}
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+                <div class="card">
+                  <div class="card-header">
+                    <i class="fa fa-align-justify"></i> {{'rework-type' | translate}}  {{'details' | translate}}
+                  </div>
+                  <div class="card-body">
+                    <table class="table table-bordered">
+                      <tbody *ngIf="scrapCauseReqDto.scrapType">
+                        <tr>
+                            <td width="30%">{{'rework-type-id' | translate}}</td>
+                            <td>{{scrapCauseReqDto.scrapType?.scrapTypeId}}</td>
+                        </tr>
+                        <tr>
+                            <td width="30%">{{'rework-type-code' | translate}}</td>
+                            <td>{{scrapCauseReqDto.scrapType?.scrapCode}}</td>
+                        </tr>
+                        <tr>
+                            <td>{{'rework-type-description' | translate}}</td>
+                            <td>{{scrapCauseReqDto.scrapType?.scrapDescription}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+        </div>
+      </div>
+
+

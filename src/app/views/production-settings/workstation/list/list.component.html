@@ -1,0 +1,178 @@
+<p-confirmDialog *ngIf="!modal.active"></p-confirmDialog>
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body" >
+          <p-table #dt [columns]="selectedColumns" scrollable="true" scrollHeight="55vh" [value]="workstations" [rows]="pagination.rows" [totalRecords]="pagination.totalElements" dataKey="workStationId" [(selection)]="selectedWorkstations" >
+            <ng-template pTemplate="caption">
+              <div style="text-align:left">
+                <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header" maxSelectedLabels="0"  selectedItemsLabel="{{'columns-selected'|translate}}"
+                               [style]="{minWidth: '200px'}" defaultLabel="Choose Columns">
+                  <ng-template let-col let-i="index" pTemplate="item">
+                    {{col.label|translate}}
+                  </ng-template>
+                </p-multiSelect>
+                <button pButton  class="ui-button-success float-right" (click)="modalShow(null,'NEW')" label="{{'add-new'|translate}}"> </button>
+                <button pButton style="margin-right: 5px" class="ui-button-warning float-right" type="button"  icon="fa fa-file-alt" iconPos="left" label="{{'export-all'|translate}}" (click)="dt.exportCSV()"></button>
+                <button pButton style="margin-right: 5px" class="ui-button-warning float-right" type="button"  icon="fa fa-file" iconPos="left" label="{{'export-selected'|translate}}" (click)="dt.exportCSV({selectionOnly:true})"
+                ></button>
+              </div>
+              <!--<hr>-->
+            </ng-template>
+            <ng-template pTemplate="header" let-columns>
+              <tr >
+                <th style="width: 3em" rowspan="2">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th *ngFor="let col of columns let i=index" style="cursor: pointer" [ngClass]="{'bg-selected-order':pageFilter.orderByProperty ==col.field}" (click)="reOrderData(i,col.field)"><i [ngClass]="'fa fa-sort-alpha-' + classReOrder[i]"></i>
+                  {{col.header|translate}}
+                </th>
+                <th width="80px" rowspan="2">{{'action' | translate}}</th>
+              </tr>
+              <tr>
+                <th *ngFor="let col of columns" class="ui-fluid" [ngSwitch]="col.field">
+                  <select *ngSwitchCase="'workStationStatus'" id="status" name="status" class="form-control" [(ngModel)]="pageFilter.workStationStatus" 
+                  (ngModelChange)="search()">
+                    <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                    <option *ngFor="let status of listStatus" value="{{status}}">{{status}}</option>
+                  </select>
+                  <!-- <select *ngSwitchCase="'workStationTypeName'" id="workStationTypeName" name="workStationTypeName" class="form-control" [(ngModel)]="pageFilter.workStationTypeName" (ngModelChange)="filter(pageFilter)">
+                    <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                    <option *ngFor="let type of listTypes" value="{{type.workStationTypeName}}">{{type.workStationTypeName}}</option>
+                  </select> -->
+                  <select *ngSwitchCase="'panelActive'" id="panelActive" name="panelActive" class="form-control" [(ngModel)]="pageFilter.panelActive" 
+                  (ngModelChange)="search()">
+                    <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                    <option value="true">ACTIVE</option>
+                    <option value="false">INACTIVE</option>
+                  </select>
+                  <span *ngSwitchCase="'capacity'"></span>
+                  <span *ngSwitchCase="'kwhCost'"></span>
+                  <span *ngSwitchCase="'kwh'"></span>
+                  <input *ngSwitchCase="'location'" style="width: 100%"  pInputText type="text" 
+                  [(ngModel)]="pageFilter['locationName']" 
+                  (input)="filterByColumn($event.target.value,'locationName')">
+                  <input *ngSwitchDefault style="width: 100%"  pInputText type="text" [(ngModel)]="pageFilter[col.field]" (input)="filterByColumn($event.target.value,col.field)">
+                </th>
+              </tr>
+              
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr [pSelectableRow]="rowData">
+                <td style="width: 3em">
+                  <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                </td>
+                <td *ngFor="let col of columns" style="cursor: pointer" [ngSwitch]="col.field">
+
+                  <a href="javascript:;" *ngSwitchCase="'workStatparentIdionId'"  (click)="modalShow(rowData.workStationId,'DETAIL')">{{rowData.workStationId}}</a>
+                  <a href="javascript:;" *ngSwitchCase="'workCenterName'"  (click)="showWorkcenterDetail(rowData.workCenterId)">{{rowData.workCenterName}}</a>
+                  
+                  <a href="javascript:;" *ngSwitchCase="'wareHouseName'"  (click)="showwarehouseDetail(rowData.warehouse?.wareHouseId)">{{rowData.warehouse?.wareHouseName}}</a>
+                  <a href="javascript:;" *ngSwitchCase="'outputWarehouse'"  (click)="showwarehouseDetail(rowData.outputWarehouse?.wareHouseId)">{{rowData.outputWarehouse?.wareHouseName}}</a>
+
+                  <ng-template [ngSwitchCase]="'parentId'">
+                    <a href="javascript:;" *ngIf="rowData.parentId > 0"  (click)="showWorkStationDetail(rowData.parentId)">{{rowData.parentId}}</a>
+                  </ng-template>
+                  
+                  <ng-template [ngSwitchCase]="'childId'">
+                    <a href="javascript:;" *ngIf="rowData.childId > 0"  (click)="showWorkStationDetail(rowData.childId)">{{rowData.childId}}</a>
+                  </ng-template>
+
+                  <p *ngSwitchCase="'panelActive'"  (click)="modalShow(rowData.workStationId,'DETAIL')">
+                    {{rowData[col.field] ? 'ACTIVE' : 'INACTIVE'}}
+                  </p>
+
+                  <a *ngSwitchCase="'location'" href="javascript:;" 
+                    (click)="showLocationDetail(rowData[col.field]?.locationId)">
+                    {{rowData[col.field]?.locationName}}
+                  </a>
+                 
+                  <p *ngSwitchDefault  (click)="modalShow(rowData.workStationId,'DETAIL')">{{rowData[col.field]}}</p>
+                </td>
+                <td width="80px" >
+                  <button class="btn btn-sm btn-outline-danger" type="button" (click)="delete(rowData.workStationId)">
+                    <i class="fa fa-trash"></i></button>
+                  <button class="btn btn-sm btn-outline-info" type="button" (click)="modalShow(rowData.workStationId,'EDIT')">
+                    <i class="fa fa-edit"></i></button>
+                </td>
+              </tr>
+
+            </ng-template>
+          </p-table>
+          <br/>
+          <div class="row">
+            <app-paging
+              [TotalElements]="pagination.totalElements"
+              [CurrentPage]="pagination.currentPage"
+              [PageSize]="pagination.pageSize"            [rows]="pagination.rows"
+              [TotalPageLinkButtons]="pagination.TotalPageLinkButtons"
+              [RowsPerPageOptions]="pagination.RowsPerPageOptions"
+              (onPageChange)="myChanges($event)"
+            ></app-paging>
+            <span style="margin-left:2px; padding-top: 2px " class="text-muted" >{{'total-records'|translate}}: {{pagination?.totalElements}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--/.col-->
+  </div>
+</div>
+<ng-template [ngIf]="modal.active">
+<div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal" (onHidden)="modal.active=false" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-success modal-lg"
+  [ngStyle]="{'max-width': workStationModal.modal==='DETAIL' ? '950px' : ''}"
+   role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"> {{'workstation-information' | translate}}</h4>
+        <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <ng-template [ngIf]="workStationModal.modal=='NEW'">
+          <workstation-new (saveAction)="onSaveSuccessful($event, myModal)"></workstation-new>
+        </ng-template>
+        <ng-template [ngIf]="workStationModal.modal=='EDIT'">
+            <workstation-edit [id]="workStationModal.id" (saveAction)="onSaveSuccessful($event, myModal)"></workstation-edit>
+        </ng-template>
+        <ng-template [ngIf]="workStationModal.modal=='DETAIL'">
+          <workstation-detail [id]="workStationModal.id" ></workstation-detail>
+        </ng-template>
+      </div>
+      <div class="modal-footer">
+        <div class="col-md-12 d-flex justify-content-center ">
+            <button *ngIf="workStationModal.modal=='DETAIL'" type="button" class="btn rounded btn-outline-primary ml-2 mr-2"
+              (click)="workStationModal.modal='NEW'">{{'add' | translate}} {{'new' | translate}}
+            </button>
+            <button *ngIf="workStationModal.modal=='NEW' || workStationModal.modal=='CLONE' || workStationModal.modal=='EDIT'" 
+            type="button" class="btn rounded btn-outline-primary ml-2 mr-2"
+            (click)="SaveActionFire(false)">{{'save' | translate}}
+            </button>
+            <button  *ngIf="workStationModal.modal=='NEW' || workStationModal.modal=='CLONE' || workStationModal.modal=='EDIT'" 
+              type="button" class="btn rounded btn-outline-primary ml-2 mr-2"
+              (click)="SaveActionFire(true)">{{'save' | translate}} & {{'new' | translate}}
+            </button>
+            
+            <button *ngIf="workStationModal.modal=='DETAIL'" type="button" class="btn rounded btn-outline-success ml-2 mr-2"
+                    (click)="workStationModal.modal='EDIT'">{{'edit' | translate}}
+            </button>
+            <button *ngIf="workStationModal.modal=='DETAIL' || workStationModal.modal=='EDIT'" pButton class="ui-button-primary ml-2 mr-2" label="{{'Clone'|translate}}"
+            [disabled]="selectedWorkstations && selectedWorkstations.length !=1" (click)="modalClone('CLONE',selectedWorkstations)" >
+            </button>
+            <button type="button" class="btn rounded btn-outline-danger ml-2 mr-2"
+            (click)="myModal.hide()">{{'cancel' | translate}}
+          </button>
+        </div>
+  
+        <!-- <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary" (click)="myModal.hide()">{{'close' | translate}}</button>
+        <button *ngIf="workStationModal.modal=='DETAIL'" type="button" class="btn rounded btn-primary" (click)="workStationModal.modal = 'NEW'; workStationModal.id = null;">{{'new' | translate}}</button>
+        <button *ngIf="workStationModal.modal=='DETAIL'" type="button" class="btn rounded btn-success"
+                (click)="workStationModal.modal='EDIT'">{{'edit' | translate}}</button> -->
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+</ng-template>

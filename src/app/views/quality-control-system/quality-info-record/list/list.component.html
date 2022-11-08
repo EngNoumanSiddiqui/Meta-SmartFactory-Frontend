@@ -1,0 +1,216 @@
+<p-confirmDialog key="quality-info-record"></p-confirmDialog>
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <p-table
+            #dt
+            [columns]="selectedColumns"
+            scrollable="true"
+            scrollHeight="55vh"
+            [value]="qualityInfoRecords"
+            [rows]="pagination.rows"
+            [totalRecords]="pagination.totalElements"
+            dataKey="qualityInfoRecordId"
+            [(selection)]="selectedQualityInfoRecords"
+            (onHeaderCheckboxToggle)="onRecordSelectAll($event)"
+            (onRowSelect)="onRecordSelect($event)"
+            (onRowUnselect)="onRecordDeselect($event)"
+          >
+          <ng-template pTemplate="caption">
+            <div style="text-align:left">
+              <p-multiSelect
+                [options]="cols"
+                [(ngModel)]="selectedColumns"
+                optionLabel="header"
+                maxSelectedLabels="0"
+                selectedItemsLabel="{{ 'columns-selected' | translate }}"
+                [style]="{ minWidth: '200px' }"
+                defaultLabel="Choose Columns"
+                (onChange) = "filtingAreaColumns($event)"
+              >
+                <ng-template let-col let-i="index" pTemplate="item">
+                  {{ col.label | translate }}
+                </ng-template>
+              </p-multiSelect> 
+            <button
+              pButton
+              class="ui-button-success float-right ml-1"
+              (click)="modalShow(null,'NEW')"
+              label="{{ 'add-new' | translate }}"
+            ></button>
+              <button
+                pButton
+                class="ui-button-warning float-right ml-1"
+                type="button"
+                icon="fa fa-file-alt"
+                iconPos="left"
+                label="{{ 'export-all' | translate }}"
+                (click)="dt.exportCSV()"
+              ></button>
+              <button
+                pButton
+                class="ui-button-warning float-right ml-1"
+                type="button"
+                icon="fa fa-file"
+                iconPos="left"
+                label="{{ 'export-selected' | translate }}"
+                (click)="dt.exportCSV({ selectionOnly: true })"
+              ></button>
+            </div>
+          </ng-template>
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <!-- select all checkbox -->
+                <th style="width: 3em" rowspan="2">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th
+                  *ngFor="let col of columns; let i = index"
+                  style="cursor: pointer"
+                  [ngClass]="{ 
+                    'bg-selected-order': pageFilter.orderByProperty == col.field
+                  }"
+                  (click)="reOrderData(i, col.field)"
+                >
+                  <i *ngIf = "col.field != 'vendor' && col.field!='releaseDate'" [ngClass]="'fa  fa-sort-alpha-' + classReOrder[i]"></i>
+                  {{ col.header | translate }}
+                </th>
+                <th width="80px" rowspan="2">{{ "action" | translate }}</th>
+              </tr>
+              <tr>
+                <th
+                  *ngFor="let col of columns"
+                  class="ui-fluid"
+                  [ngSwitch]="col.field" 
+                >
+                  <p-calendar *ngSwitchCase="'releaseDate'" [(ngModel)]="pageFilter.releaseDate" placeholder="{{'Release Date'|translate}}" 
+                    appendTo="body" yearRange="1990:2100" showTime="true" timeFormat="HH:mm" [monthNavigator]="true" [yearNavigator]="true" (ngModelChange)="filter(pageFilter)"
+                    dateFormat="dd/mm/yy" [showIcon]="true"
+                   ></p-calendar>
+                   <select *ngSwitchCase="'blockFunction'"
+                  id="blockFunction"
+                  name="blockFunction"
+                  class="form-control"
+                  [(ngModel)]="pageFilter.blockFunction"
+                  (ngModelChange)="filter(pageFilter)"
+                >
+                  <option [ngValue]="null">
+                    {{ "please-select" | translate }}</option
+                  >
+                  <option
+                    *ngFor="let type of blockFunctionLists"
+                    value="{{ type.id }}"
+                    >{{ type.name }}</option
+                  >
+                </select>
+                <span *ngSwitchCase="'plant'"></span>
+                  <input
+                    *ngSwitchDefault
+                    style="width: 100%"
+                    [(ngModel)]="pageFilter[col.field]"
+                    pInputText
+                    type="text"
+                    (input)="filterByColumn($event.target.value, col.field)"
+                  />
+ 
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr [pSelectableRow]="rowData" class="ui-fluid cursor-pointer">
+                <td style="width: 3em">
+                  <!-- row checkbox -->
+                  <p-tableCheckbox [value]="rowData" (onChange)="onRecordSelect($event)" (onRowSelect)="onRecordSelect($event)" (change)="onRecordSelect($event)"></p-tableCheckbox>
+                </td>
+                <td
+                  *ngFor="let col of columns"
+                  (click)="modalShow(rowData.qualityInfoRecordId, 'DETAIL')"
+                  [ngSwitch]="col.field" 
+                > 
+                <span *ngSwitchCase="'releaseDate'">{{rowData.releaseDate | date:'dd/MM/yyyy, HH:mm'}}</span>
+                <span *ngSwitchCase="'plant'">{{rowData.plant?.plantName}}</span>
+                <span *ngSwitchCase="'vendor'">{{rowData.vendor?.actName}}</span>
+                <span *ngSwitchDefault> {{
+                  rowData[col.field] ? (rowData[col.field] + "" | translate) : "" }} </span>
+                </td>
+                <td width="80px">
+                  <button
+                    class="btn btn-sm btn-outline-danger"
+                    type="button"
+                    (click)="delete(rowData.qualityInfoRecordId)"
+                  >
+                    <i class="fa fa-trash"></i>
+                  </button>
+                  <button
+                    class="btn btn-sm btn-outline-info"
+                    type="button"
+                    (click)="modalShow(rowData.qualityInfoRecordId, 'EDIT')"
+                  >
+                    <i class="fa fa-edit"></i>
+                  </button>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+
+          <br />
+          <div class="row">
+            <app-paging
+              [showSearch]="false"
+              [TotalElements]="pagination.totalElements"
+              [CurrentPage]="pagination.currentPage"
+              [PageSize]="pagination.pageSize"
+              [rows]="pagination.rows"
+              [TotalPageLinkButtons]="pagination.TotalPageLinkButtons" 
+              [RowsPerPageOptions]="pagination.RowsPerPageOptions"
+              (onPageChange)="myChanges($event)"
+            ></app-paging>
+
+            <span style="margin-left:2px; padding-top: 2px " class="text-muted"
+              >{{ "total-records" | translate }}:
+              {{ pagination?.totalElements }}</span
+            >
+          </div>
+        </div>
+      </div>
+    </div> 
+  </div>
+</div>
+
+<!-- modals -->
+<ng-template [ngIf]="modal.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal" (onHidden)="modal.active=false" class="modal fade"
+       tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+       aria-hidden="true">
+  <div class="modal-dialog modal-success modal-lg" [ngStyle]="{'max-width:900px': qualityInfoRecordModal.modal!=='DETAIL'}"
+  
+   role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" *ngIf="qualityInfoRecordModal.modal=='DETAIL' || qualityInfoRecordModal.modal=='NEW' || qualityInfoRecordModal.modal=='EDIT'">
+           {{'quality-info-record' | translate}}
+        </h4>
+        <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+       <ng-template [ngIf]="qualityInfoRecordModal.modal=='DETAIL'">
+        <detail-quality-info-record [id]="qualityInfoRecordModal.id" ></detail-quality-info-record>
+       </ng-template>
+       <ng-template [ngIf]="qualityInfoRecordModal.modal=='NEW'">
+        <new-quality-info-record [plantId]="pageFilter.plantId" (saveAction)="onSaveSuccessful($event, myModal)"></new-quality-info-record>
+       </ng-template>
+       <ng-template [ngIf]="qualityInfoRecordModal.modal=='EDIT'">
+        <edit-quality-info-record [plantId]="pageFilter.plantId" [id]="qualityInfoRecordModal.id" (saveAction)="onSaveSuccessful($event, myModal)"></edit-quality-info-record>
+       </ng-template>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="myModal.hide()">{{'close' | translate}}</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+</ng-template>

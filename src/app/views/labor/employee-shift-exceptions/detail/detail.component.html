@@ -1,0 +1,43 @@
+<div class="animated fadeIn">
+    <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i>{{'employee-shift-exception-information' | translate}}
+          </div>
+          <div class="card-body">
+            <table class="table table-bordered">
+              <tbody *ngIf="empExceptionalShiftDetails">
+              <tr>
+                  <td>{{'employee-name'|translate}}</td>
+                  <td>{{empExceptionalShiftDetails?.employeeDto?.firstName}}-{{empExceptionalShiftDetails?.employeeDto?.lastName}}</td>
+              </tr>
+              <tr>
+                  <td>{{'group-code'|translate}}</td>
+                  <td>{{empExceptionalShiftDetails?.groupCode}}</td>
+              </tr>
+              <tr>
+                  <td>{{'exception-type'|translate}}</td>
+                  <td>{{empExceptionalShiftDetails?.exceptionType}}</td>
+              </tr>
+              <tr>
+                <td>{{'start-time'|translate}}</td>
+                <td>{{empExceptionalShiftDetails?.startTime|date:'MM/dd/yyyy'}}</td>
+              </tr>
+              <tr>
+                  <td>{{'end-time'|translate}}</td>
+                  <td>{{empExceptionalShiftDetails?.endTime|date:'MM/dd/yyyy'}}</td>
+              </tr>
+              <tr>
+                  <td>{{'shift'|translate}}</td>
+                  <td>{{empExceptionalShiftDetails?.shiftDto?.shiftName}}</td>
+              </tr>
+              <tr>
+                <td>{{'status'|translate}}</td>
+                <td>{{empExceptionalShiftDetails?.confirmationState}}</td>
+            </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+    </div>
+  </div>

@@ -1,0 +1,75 @@
+<div class="animated fadeIn">
+    <p-tabView class="col-md-12" (onChange)="handleChange($event)">
+      <p-tabPanel header="{{'release'|translate}}">
+          <div class="card" *ngIf="qualityInfoRecord">
+            <div class="card-header">
+              <i class="fa fa-align-justify"></i> {{'quality-info-record-detail' | translate}}
+            </div>
+            <div class="card-body">
+              <form #stockForm="ngForm">
+                <div class="ui-g">
+                  <div class="right-side ui-g-6">
+                      <table class="table table-outline">
+                      <tr>
+                        <td width="50%" class="text-bold">{{'quality-info-record-id' | translate}}  <span style="width: 0 !important;" class="float-right">:</span>  </td>
+                        <td>{{qualityInfoRecord.qualityInfoRecordId}}</td>
+                      </tr>
+                      <tr>
+                        <td width="40%" class="text-bold">{{'quality-info-record-code' | translate}}  <span style="width: 0 !important;" class="float-right">:</span>  </td>
+                        <td>{{qualityInfoRecord.qualityInfoRecordCode}}</td>
+                      </tr>
+                      <tr>
+                        <td width="30%" class="text-bold">{{'material-no' | translate}} <span style="width: 0 !important;" class="float-right">:</span> </td>
+                        <td>{{qualityInfoRecord.materialNo}}</td>
+                      </tr>
+                      <tr>
+                        <td class="text-bold">{{'material-name' | translate}}  <span style="width: 0 !important;" class="float-right">:</span> </td>
+                        <td>{{qualityInfoRecord.materialName}}</td>
+                      </tr>
+                      <tr>
+                        <td class="text-bold">{{'plant' | translate}}  <span style="width: 0 !important;" class="float-right">:</span> </td>
+                        <td>{{qualityInfoRecord.plant?.plantName}}</td>
+                      </tr>
+                      <tr>
+                        <td class="text-bold">{{'vendor' | translate}} <span style="width: 0 !important;" class="float-right">:</span> </td>
+                        <td>{{qualityInfoRecord.vendor}}</td>
+                      </tr>
+                      </table>
+                    </div>
+                    <div class="right-side ui-g-6">
+                      <table class="table table-outline">
+                        <tr>
+                          <td class="text-bold">{{'release-date' | translate}}  <span style="width: 0 !important;" class="float-right">:</span> </td>
+                          <td>{{qualityInfoRecord.relaseDate | date :'dd/MM/yyyy, HH:mm'}}</td>
+                        </tr>
+                        <tr>
+                          <td class="text-bold">{{'release-quantity' | translate}}  <span style="width: 0 !important;" class="float-right">:</span> </td>
+                          <td>{{qualityInfoRecord.releaseQuantity}}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-bold">{{'quantity-unit' | translate}}  <span style="width: 0 !important;" class="float-right">:</span> </td>
+                            <td>{{qualityInfoRecord.quantityUnit}}</td>
+                          </tr>
+                        <tr>
+                          <td class="text-bold">{{'block-function' | translate}} <span style="width: 0 !important;" class="float-right">:</span> </td>
+                          <td>{{qualityInfoRecord.blockFunction}}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-bold">{{'block-reason' | translate}} <span style="width: 0 !important;" class="float-right">:</span> </td>
+                            <td>{{qualityInfoRecord.blockReason}}</td>
+                          </tr>
+                      </table>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div> 
+      </p-tabPanel>
+  
+      <p-tabPanel header="{{'inspection-control-data'|translate}}">
+        <detail-inspection-control-data  id="{{qualityInfoRecord.inspCntrlData}}"></detail-inspection-control-data>
+      </p-tabPanel>
+    </p-tabView>
+  </div>
+  
+   

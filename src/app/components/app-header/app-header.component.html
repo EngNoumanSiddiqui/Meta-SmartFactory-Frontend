@@ -1,0 +1,35 @@
+<header class="app-header navbar">
+  <button class="navbar-toggler d-lg-none" type="button" appMobileSidebarToggler>
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <a class="navbar-brand" href="#"></a>
+  <button class="navbar-toggler d-md-down-none mr-auto" type="button" appSidebarToggler>
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <span class="user-dropdown">{{selectedPlantCompanyName}}</span>
+
+  <p-dropdown [options]="plantList" [(ngModel)]="selectedPlant" [disabled]="!hasPlantSelectPermission()"
+  (ngModelChange)="setSelectedPlant($event)" [filter]="true" placeholder="{{'select-plant'|translate}}" optionLabel="plantName"></p-dropdown>
+
+  <p-dropdown [options]="organizationList" class="ml-3" [(ngModel)]="selectedOrganization" [disabled]="!hasPlantSelectPermission()"
+  (ngModelChange)="setOrganization($event)" [filter]="true" [showClear]="true" placeholder="{{'select-organization'|translate}}" optionLabel="organizationName"></p-dropdown>
+  <app-code-lang-drop-down style="margin-left: 10px;"></app-code-lang-drop-down>
+    <div class="btn-group user-dropdown" dropdown #dropdown="bs-dropdown" [autoClose]="true" [isOpen]="status.isopen" (isOpenChange)="change($event)" placement="top" >
+      <button (click)="toggleDropdown($event)" type="button" class="btn btn-light">
+        <i dropdownToggle class="fa fa-user-circle"> </i>{{user?.fullname | pipeFunction: formatName: this}}
+      </button>
+
+      <ul *dropdownMenu class="dropdown-menu user-dropdown-menu" role="menu" >
+        <li role="menuitem"><a class="dropdown-item" (click)="showEditProfile()">{{'edit-profile'|translate }} </a></li>
+        <li role="menuitem"><a class="dropdown-item" (click)="showChangePassword()">{{'change-password'|translate }} </a>
+        </li>
+            </ul>
+    </div>
+  <!--</button>-->
+  <p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>
+</header>
+<app-edit-profile> </app-edit-profile>
+<app-change-password></app-change-password>
+
+

@@ -1,0 +1,26 @@
+<div class="animated fadeIn">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fa fa-align-justify"></i> {{'workstation-type-details' | translate}}
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <tbody *ngIf="payLoadObject">
+                            <tr>
+                                <td>{{'workstation-type-id' | translate}}</td>
+                                <td>{{payLoadObject.workStationTypeId}} </td>
+                            </tr>
+
+                            <tr>
+                                <td width="30%">{{'workstation-type-name' | translate}}</td>
+                                <td>{{payLoadObject.workStationTypeName}} </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

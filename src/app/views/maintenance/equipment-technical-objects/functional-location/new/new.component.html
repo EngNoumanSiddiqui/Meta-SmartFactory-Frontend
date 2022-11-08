@@ -1,0 +1,174 @@
+<div class="animated fadeIn">
+  <form #funcLocForm="ngForm">
+    <div class="row ui-fluid">
+      <div class="col-lg-6">
+        <div class="col-lg-12">
+          <div class="card ">
+            <div class="card-header">
+              <i class="fa fa-align-justify"></i> {{'functional-location-master' | translate}}
+            </div>
+            <div class="card-body">
+              <table class="table table-bordered">
+                <tbody>
+                <tr>
+                  <td>{{'description' | translate}}</td>
+                  <td><input type="text" required class="form-control" name="descrip" [(ngModel)]="dataModel.description"/>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-12">
+          <div class="card ">
+
+            <div class="card-header">
+              <i class="fa fa-align-justify"></i> {{'location' | translate}}
+            </div>
+            <div class="card-body">
+
+              <table class="table table-bordered">
+                <tbody>
+                  <tr>
+                    <td>{{'parent-functional-location' | translate}}</td>
+                    <td>
+                      <select id="parentFunctinalList" name="parentFunctinalList" class="form-control"
+                      [(ngModel)]="dataModel.parentId" >
+                      <option [ngValue]="null">{{'please-select' | translate}}</option>
+                      <option *ngFor="let item of parentFunctionalList" value="{{item.maintenanceFunctionalLocationId}}">{{item.description}}
+                      </option>
+                    </select>
+                    </td>
+                  </tr>
+                <tr>
+                  <td>{{'abc-indicator' | translate}}</td>
+                  <td><abc-indicator-auto-complete [required]="true" [plantId]="selectedPlant?.plantId" [addIfMissing]="true" (selectedAbcIndicatorEvent)="setSelectedAbcIndicator($event)"></abc-indicator-auto-complete></td>
+                </tr>
+                <tr>
+                  <td>{{'workstation' | translate}}</td>
+                  <td>
+
+                    <workstation-auto-complete [required]="true" [plantId]="selectedPlant?.plantId" (selectedWorkStationEvent)="setSelectedWorkstation($event)"></workstation-auto-complete>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'maintenance-workstation-plant' | translate}}</td>
+                  <td>
+                    <plant-auto-complete (selectedPlantEvent)="setSelectedMaintenancePlant($event)" [addIfMissing]="false" [eventFire]="true" ></plant-auto-complete>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'equipment-planner-group' | translate}}</td>
+                  <td><planner-group-auto-complete [required]="true" [plantId]="selectedPlant?.plantId" (selectedPlannerGroupEvent)="setSelectedPlannerGroup($event)"></planner-group-auto-complete>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'planning-plant' | translate}}</td>
+                  <td>
+                    <span *ngIf="dataModel.planningPlantId && selectedPlant && dataModel.planningPlantId=== selectedPlant.plantId">{{selectedPlant.plantName}}</span>
+                    <plant-auto-complete *ngIf="!selectedPlant"  [selectedPlantId]="dataModel.planningPlantId" (selectedPlantEvent)="setSelectedPlanningPlant($event)" [eventFire]="true"></plant-auto-complete>
+                  </td>
+                </tr>
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="card">
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i> {{'general' | translate}}
+          </div>
+          <div class="card-body">
+            <table class="table table-bordered">
+              <tbody>
+              <tr>
+                <td>{{'object-type' | translate}}</td>
+                <td>
+                  <equipment-object-type-auto-complete [plantId]="selectedPlant?.plantId" [required]="true"  [dropdown]="true"
+                                                       (selectedObjectTypeEvent)="setSelectedObjectType($event)"></equipment-object-type-auto-complete>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'weight' | translate}}</td>
+                <td><input type="number" min="0" name="weight" class="form-control" [(ngModel)]="dataModel.weight"/>
+                </td>
+              </tr>
+
+              <tr>
+                <td>{{'weight-unit' | translate}}</td>
+                <td>
+                  <unit-auto-complete (unitChangeEvent)="dataModel.weightUnit=$event"></unit-auto-complete>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'manufacturer' | translate}}</td>
+                <td>
+                  <act-auto-complete [addIfMissing]="true" [supplier]="true"
+                                     (selectedActEvent)="setSelectedManufacturer($event)"></act-auto-complete>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'model' | translate}}</td>
+                <td><input type="text" min="0" name="modelNumber" class="form-control"
+                           [(ngModel)]="dataModel.modelNumber"/></td>
+              </tr>
+              <tr>
+                <td>{{'manufacturer-part-no' | translate}}</td>
+                <td><input type="text" min="0" name="manufacturerPartNo" class="form-control"
+                           [(ngModel)]="dataModel.manufpartNo"/></td>
+              </tr>
+              <tr>
+                <td>{{'manufacturer-serial-no' | translate}}</td>
+                <td><input type="text" min="0" name="manufacturerSerialNo" class="form-control"
+                           [(ngModel)]="dataModel.manufserialNo"/></td>
+              </tr>
+              <tr>
+                <td>{{'inventory-no' | translate}}</td>
+                <td><input type="text" name="inventorNo" class="form-control"
+                           [(ngModel)]="dataModel.invertoryNo"/></td>
+              </tr>
+              <tr>
+                <td>{{'general-date' | translate}}</td>
+                <td>
+                  <p-calendar [(ngModel)]="dataModel.generalDate" name="generalDate"
+                              [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                               [showIcon]="true" dateFormat="dd/mm/yy"></p-calendar>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'manufacturer-country' | translate}}</td>
+                <td>
+                  <country-auto-complete (selectedCountryEvent)="setSelectedCountry($event)"></country-auto-complete>
+                </td>
+              </tr>
+
+              <tr>
+                <td colspan="2">
+                  <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+                    {{'reset' | translate}}
+                  </button>
+                  <button type="submit" class="btn btn-sm btn-primary"
+                          (click)="save()" [disabled]="!funcLocForm.form.valid || 
+                          !dataModel.equipmentABCIndicatorId ||
+                          !dataModel.equipmentPlannerGroupId ||
+                          !dataModel.equipmentObjectTypeId ||
+                          !dataModel.workStationId"><i class="fa fa-dot-circle-o"></i>
+                    {{'save' | translate}}
+                  </button>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+

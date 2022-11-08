@@ -1,0 +1,107 @@
+<div class="animated fadeIn">
+  <p-tabView class="col-md-12" (onChange)="handleChange($event)">
+    <p-tabPanel header="{{'inspection-lot-detail'|translate}}">
+        <div class="card" *ngIf="inspectionLot">
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i> {{'inspection-lot-detail' | translate}}
+          </div>
+          <div class="card-body">
+            <form #stockForm="ngForm">
+              <div class="ui-g">
+                <div class="right-side ui-g-6">
+                    <table class="table table-outline">
+                    <tr>
+                      <td width="30%" class="text-bold">{{'inspection-lot-id' | translate}}  <span style="width: 0 !important;" class="float-right">:</span>  </td>
+                      <td>{{inspectionLot.inspectionLotId}}</td>
+                    </tr>
+                    <tr>
+                      <td width="30%" class="text-bold">{{'inspection-lot-code' | translate}}  <span style="width: 0 !important;" class="float-right">:</span>  </td>
+                      <td>{{inspectionLot.inspectionLotCode}}</td>
+                    </tr>
+                    <tr>
+                      <td width="30%" class="text-bold">{{'material-no' | translate}} <span style="width: 0 !important;" class="float-right">:</span> </td>
+                      <td>{{inspectionLot?.stock?.stockNo}}</td>
+                    </tr>
+                    <tr>
+                      <td class="text-bold">{{'material-name' | translate}}  <span style="width: 0 !important;" class="float-right">:</span> </td>
+                      <td>{{inspectionLot?.stock?.stockName}}</td>
+                    </tr>
+                    <tr>
+                      <td class="text-bold">{{'plant' | translate}}  <span style="width: 0 !important;" class="float-right">:</span> </td>
+                      <td>{{inspectionLot.plant?.plantName}}</td>
+                    </tr>
+                    <tr>
+                      <td class="text-bold">{{'operation' | translate}}  <span style="width: 0 !important;" class="float-right">:</span> </td>
+                      <td>{{inspectionLot.operation?.operationDescription}}</td>
+                    </tr>
+                    <!-- <tr>
+                      <td class="text-bold">{{'inspection-type' | translate}}  <span style="width: 0 !important;" class="float-right">:</span> </td>
+                      <td>{{inspectionLot.inspectionType}}</td>
+                    </tr> -->
+                    <tr>
+                      <td class="text-bold">{{'production-order-ID' | translate}}  <span style="width: 0 !important;" class="float-right">:</span> </td>
+                      <td>{{inspectionLot?.productionId}}</td>
+                    </tr>
+                    <tr>
+                      <td class="text-bold">{{'job-order-ID' | translate}}  <span style="width: 0 !important;" class="float-right">:</span> </td>
+                      <td>{{inspectionLot?.jobOrder?.jobOrderId}}</td>
+                    </tr>
+                    <!-- <tr>
+                      <td class="text-bold">{{'lot-quantity' | translate}}  <span style="width: 0 !important;" class="float-right">:</span> </td>
+                      <td>{{inspectionLot.lotQuantity}}</td>
+                    </tr> -->
+                    </table>
+                  </div>
+                  <div class="right-side ui-g-6">
+                    <table class="table table-outline">
+                      <tr>
+                        <td class="text-bold">{{'sales-order-ID' | translate}}  <span style="width: 0 !important;" class="float-right">:</span> </td>
+                        <td>{{inspectionLot.order?.orderId}}</td>
+                      </tr>
+                      <tr>
+                        <td class="text-bold">{{'quantity-unit' | translate}}  <span style="width: 0 !important;" class="float-right">:</span> </td>
+                        <td>{{inspectionLot.quantityUnit}}</td>
+                      </tr>
+                      <!-- <tr>
+                        <td class="text-bold">{{'create-date' | translate}}  <span style="width: 0 !important;" class="float-right">:</span> </td>
+                        <td>{{inspectionLot.createDate | date :'dd/MM/yyyy'}}</td>
+                      </tr> -->
+                      <tr>
+                        <td class="text-bold">{{'start-date' | translate}}  <span style="width: 0 !important;" class="float-right">:</span> </td>
+                        <td>{{inspectionLot.startDate | date :'dd/MM/yyyy HH:mm'}}</td>
+                      </tr>
+                      <tr>
+                        <td class="text-bold">{{'end-date' | translate}}  <span style="width: 0 !important;" class="float-right">:</span> </td>
+                        <td>{{inspectionLot.endDate | date :'dd/MM/yyyy HH:mm'}}</td>
+                      </tr>
+                      <tr>
+                        <td class="text-bold">{{'status' | translate}} <span style="width: 0 !important;" class="float-right">:</span> </td>
+                        <td>{{inspectionLot.status}}</td>
+                      </tr>
+                      <tr>
+                        <td class="text-bold">{{'vendor' | translate}} <span style="width: 0 !important;" class="float-right">:</span> </td>
+                        <td>{{inspectionLot.vendor}}</td>
+                      </tr>
+                      <tr>
+                        <td class="text-bold">{{'batch-code' | translate}} <span style="width: 0 !important;" class="float-right">:</span> </td>
+                        <td>{{inspectionLot.batchCode}}</td>
+                      </tr>
+                      <!-- <tr>
+                        <td class="text-bold">{{'production-id' | translate}} <span style="width: 0 !important;" class="float-right">:</span> </td>
+                        <td>{{inspectionLot.productionOrder}}</td>
+                      </tr> -->
+                    </table>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+    </p-tabPanel>
+
+    <p-tabPanel header="{{'inspection-specifications'|translate}}">
+      <detail-inspection-specification  id="{{inspectionLot?.inspSpecId}}"></detail-inspection-specification>
+    </p-tabPanel>
+  </p-tabView>
+</div>
+
+ 

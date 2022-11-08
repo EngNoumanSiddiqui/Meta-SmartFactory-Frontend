@@ -1,0 +1,131 @@
+<div>
+  <!-- <div class="col-md-12 " *ngIf="!detailMode">
+    <div class="row badge-light border border-bottom-0 m-minus-10 p-2">
+      <div class="col-12 ">
+
+        <button pButton class="ui-button-success float-right ml-1" (click)="modalShow(null,'NEW',null)"
+          label="{{'add-new'|translate}}"></button>
+      </div>
+    </div>
+  </div> -->
+  <!-- [autoLayout]="true" -->
+  <p-table #dt [columns]="cols" [value]="tableData" [rows]="10" [paginator]="tableData.length>10"
+    [totalRecords]="tableData.length" dataKey="stopId"  [autoLayout]="true">
+
+
+    <ng-template pTemplate="header" let-columns>
+
+      <tr>
+        <!-- <th style="width: 3em;"></th> -->
+        <th *ngFor="let col of columns; let i=index;" style="cursor: pointer" [ngClass]="{'bg-selected-order':pageFilter.orderByProperty ==col.field}" (click)="reOrderData(i,col.field)"><i [ngClass]="'fa  fa-sort-alpha-' + classReOrder[i]"></i>
+          {{col.header|translate}}
+        </th>
+        <!-- <th *ngFor="let col of columns let i=index" style="cursor: pointer" [ngSwitch]="col.header">
+
+          
+          <span *ngSwitchCase="'component'"> {{(direction)==1? ('material'|translate) :('component'|translate)}}</span>
+          <span *ngSwitchDefault> {{col.header|translate}}</span>
+        </th> -->
+        <!-- <th width="80px" rowspan="2" *ngIf="!detailMode">{{'action' | translate}}</th> -->
+      </tr>
+
+
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex"
+    let-expanded="expanded">
+      <tr [pSelectableRow]="rowData">
+        <!-- <td style="width: 3em;">
+          <a href="#" [pRowToggler]="rowData">
+            <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+          </a>
+        </td> -->
+        <td *ngFor="let col of columns" [ngSwitch]="col.field">
+          
+          
+          <a href="javascript:;" *ngSwitchCase="'workStation'" (click)="showWorkstationDetail(rowData[col.field]?.workStationId)"
+           style="word-break: break-word;"> {{rowData[col.field]?.workStationName}}</a>
+          <span *ngSwitchCase="'actualStopTime'">{{rowData[col.field] | date:'dd-MM-yyyy HH:mm'}}</span>
+          <span *ngSwitchCase="'actualStartTime'">{{rowData[col.field] | date:'dd-MM-yyyy HH:mm'}}</span>
+          <!-- <span >{{getReadableTime(rowData[col.field])}}</span> -->
+          <span *ngSwitchCase="'duration'">{{getReadableTime(rowData[col.field])}}</span>
+          <span *ngSwitchDefault>
+            {{rowData[col.field]}}</span>
+            <span *ngSwitchCase="'employee'">{{rowData[col.field]?.firstName }} - {{rowData[col.field]?.lastName }}</span>
+
+        </td>
+        <!-- <td width="80px" *ngIf="!detailMode">
+          <button class="btn btn-sm btn-outline-danger" type="button"
+            (click)="delete(rowData.stopId,rowIndex)">
+            <i class="fa fa-trash"></i></button>
+          <button class="btn btn-sm btn-outline-info" type="button"
+            (click)="modalShow(rowData.stopId,'NEW',rowData)">
+            <i class="fa fa-edit"></i></button>
+        </td> -->
+      </tr>
+    </ng-template>
+    <!-- <ng-template pTemplate="rowexpansion" let-rowData let-columns="columns">
+      <tr>
+        <td colspan="9">
+          <table class="table table-bordered" style="margin-bottom: 0px; table-layout: auto;">
+            <tbody>
+              <tr>
+                <td class="text-bold" width="25%;">{{'material-cost' | translate}}</td>
+                <td>{{rowData.materialCost}}</td>
+                <td class="text-bold" width="25%;">{{'scrap-cost' | translate}}</td>
+                <td>{{rowData.scrapCost}}</td>
+              </tr>
+              <tr>
+                <td class="text-bold">{{'actual-material-cost' | translate}}</td>
+                <td>{{rowData.actualMaterialCost}}</td>
+                <td class="text-bold">{{'actual-scrap-cost' | translate}}</td>
+                <td>{{rowData.actualScrapCost}}</td>
+              </tr>
+              <tr>
+                <td class="text-bold">{{'currency' | translate}}</td>
+                <td>{{rowData.currency}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+    </ng-template> -->
+  </p-table>
+
+  <br />
+  <div class="col-md-12">
+    <span class="text-muted">{{'total-records'|translate}}: {{tableData?.length}}</span>
+
+  </div>
+  <!--/.col-->
+</div>
+<!-- <ng-template [ngIf]="modal.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal"
+    (onHidden)="modal.active=false" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-success modal-md" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"> {{'component' | translate}}</h4>
+          <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <ng-template [ngIf]="equipmentModal.modal=='NEW'">
+            <job-order-component-new [plantId]="plantId" [data]="equipmentModal.data" [direction]="direction"
+              (saveAction)=" addOrUpdate($event);myModal.hide();"></job-order-component-new>
+          </ng-template>
+
+          <ng-template [ngIf]="equipmentModal.modal=='DETAIL'">
+            <job-order-component-detail [data]="equipmentModal.data"></job-order-component-detail>
+          </ng-template>
+        </div>
+        <div class="modal-footer">
+          <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary"
+            (click)="myModal.hide()">{{'close' | translate}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template> -->

@@ -1,0 +1,132 @@
+<p-confirmDialog></p-confirmDialog>
+
+
+<div class="animated fadeIn">
+
+
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+
+        <div class="card-body"  >
+          <p-table #dt [columns]="selectedColumns" [value]="equipments" [rows]="pagination.rows" selectionMode="single" (onRowSelect)=onRowSelect($event)
+                   [totalRecords]="pagination.totalElements" dataKey="maintenanceFunctionalLocationId" [(selection)]="selectedEquipments" >
+
+            <ng-template pTemplate="caption">
+              <div style="text-align:left">
+                <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header" maxSelectedLabels="0"  selectedItemsLabel="{{'columns-selected'|translate}}"
+                               [style]="{minWidth: '200px'}" defaultLabel="Choose Columns">
+                  <ng-template let-col let-i="index" pTemplate="item">
+                    {{col.label|translate}}
+                  </ng-template>
+                </p-multiSelect>
+                <button pButton  class="ui-button-success float-right" (click)="modalShow(null,'NEW',null)" label="{{'add-new'|translate}}"> </button>
+                <button pButton style="margin-right: 5px" class="ui-button-warning float-right" type="button"  icon="fa fa-file-alt" iconPos="left" label="{{'export-all'|translate}}" (click)="dt.exportCSV()"></button>
+                <button pButton style="margin-right: 5px" class="ui-button-warning float-right" type="button"  icon="fa fa-file" iconPos="left" label="{{'export-selected'|translate}}" (click)="dt.exportCSV({selectionOnly:true})"
+                ></button>
+              </div>
+              <!--<hr>-->
+
+            </ng-template>
+            <ng-template pTemplate="header" let-columns>
+
+              <tr >
+                <th *ngFor="let col of columns; let i=index;" style="cursor: pointer" [ngClass]="{'bg-selected-order':pageFilter.orderByProperty ==col.field}" (click)="reOrderData(i,col.field)"><i [ngClass]="'fa  fa-sort-alpha-' + classReOrder[i]"></i>
+                  {{col.header|translate}}
+                </th>
+                <th width="120px" rowspan="2">{{'action' | translate}}</th>
+              </tr>
+              <tr>
+                <th *ngFor="let col of columns" class="ui-fluid" [ngSwitch]="col.field">
+                  <span *ngSwitchDefault></span>
+                  <input *ngSwitchCase="'maintenanceFunctionalLocationId'" style="width: 100%"  [(ngModel)]="pageFilter[col.field]" pInputText type="text" (input)="filterByColumn($event.target.value,col.field)">
+                  <input *ngSwitchCase="'invertoryNo'" style="width: 100%"  [(ngModel)]="pageFilter[col.field]" pInputText type="text" (input)="filterByColumn($event.target.value,col.field)">
+                  <input *ngSwitchCase="'manufpartNo'" style="width: 100%"  [(ngModel)]="pageFilter[col.field]" pInputText type="text" (input)="filterByColumn($event.target.value,col.field)">
+                  <input *ngSwitchCase="'manufserialNo'" style="width: 100%"  [(ngModel)]="pageFilter[col.field]" pInputText type="text" (input)="filterByColumn($event.target.value,col.field)">
+                  <input *ngSwitchCase="'modelNumber'" style="width: 100%"  [(ngModel)]="pageFilter[col.field]" pInputText type="text" (input)="filterByColumn($event.target.value,col.field)">
+                </th>
+
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr [pSelectableRow]="rowData">
+                <td *ngFor="let col of columns" style="cursor: pointer"  [ngSwitch]="col.field">
+                  <span *ngSwitchCase="'generalDate'">{{(rowData[col.field])|date:'dd-MM-yyyy'}}</span>
+                  <span *ngSwitchCase="'equipmentObjectType'">{{rowData[col.field]?.equipmentObjectType}}</span>
+                  <span *ngSwitchCase="'manufacturer'">{{rowData[col.field]?.actName}}</span>
+                  <span *ngSwitchCase="'manufacturerCountry'">{{rowData[col.field]?.countryName}}</span>
+                  <span *ngSwitchCase="'equipmentABCIndicator'">{{rowData[col.field]?.equipmentAbcIndicatorType}}</span>
+                  <span *ngSwitchCase="'planningPlant'">{{rowData[col.field]?.plantName}}</span>
+                  <span *ngSwitchCase="'equipmentPlannerGroup'">{{rowData[col.field]?.plannerGroup}}</span>
+                  <span *ngSwitchCase="'workStation'">{{rowData[col.field]?.workStationName}}</span>
+                  <span *ngSwitchCase="'mainPlant'">{{rowData[col.field]?.plantName}}</span>
+                  <span *ngSwitchDefault>{{rowData[col.field]}}</span>
+                </td>
+                <td width="120px" >
+                  <button class="btn btn-sm btn-outline-danger" type="button" (click)="delete(rowData.maintenanceFunctionalLocationId)">
+                    <i class="fa fa-trash"></i></button>
+                  <button class="btn btn-sm btn-outline-info" type="button" (click)="modalShow(rowData.maintenanceFunctionalLocationId,'EDIT',null)">
+                    <i class="fa fa-edit"></i></button>
+                  <button class="btn btn-sm btn-outline-warning" type="button" (click)="modalShow(rowData.maintenanceFunctionalLocationId,'DETAIL',rowData)">
+                    <i class="fa fa-eye"></i></button>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+
+          <br/>
+
+          <div class="row">
+            <app-paging
+              [TotalElements]="pagination.totalElements"
+              [CurrentPage]="pagination.currentPage"
+              [PageSize]="pagination.pageSize"            [rows]="pagination.rows"
+              [TotalPageLinkButtons]="pagination.TotalPageLinkButtons"
+              [RowsPerPageOptions]="pagination.RowsPerPageOptions"
+              (onPageChange)="myChanges($event)"
+            ></app-paging>
+            <span style="margin-left:2px; padding-top: 2px " class="text-muted" >{{'total-records'|translate}}: {{pagination?.totalElements}}</span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <!--/.col-->
+  </div>
+</div>
+<div bsModal [config]="{backdrop: 'static', keyboard: false}" #myModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-success modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"> {{'functional-location-information' | translate}}</h4>
+        <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <ng-template [ngIf]="equipmentModal.modal=='NEW'">
+          <functional-location-new (saveAction)="myModal.hide(); filter(pageFilter)"></functional-location-new>
+        </ng-template>
+        <ng-template [ngIf]="equipmentModal.modal=='EDIT'">
+          <functional-location-edit [id]="equipmentModal.id" (saveAction)="myModal.hide(); filter(pageFilter)"></functional-location-edit>
+        </ng-template>
+        <ng-template [ngIf]="equipmentModal.modal=='DETAIL'">
+          <functional-location-detail [id]="equipmentModal.id" [data]="equipmentModal.data" ></functional-location-detail>
+        </ng-template>
+
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary" (click)="myModal.hide()">{{'close' | translate}}</button>
+        <button *ngIf="equipmentModal.modal=='DETAIL'" type="button" class="btn rounded btn-primary" (click)="equipmentModal.modal='NEW'">{{'new' | translate}}</button>
+        <button *ngIf="equipmentModal.modal=='DETAIL'" type="button" class="btn rounded btn-success"
+                (click)="equipmentModal.modal='EDIT'">{{'edit' | translate}}</button>
+
+
+      </div>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

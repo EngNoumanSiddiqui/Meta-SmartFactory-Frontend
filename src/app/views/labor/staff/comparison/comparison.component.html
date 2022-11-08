@@ -1,0 +1,100 @@
+
+<div class="row ui-fluid  badge-light border p-2  mb-2">
+  <div class=" col-md-3 d-flex">
+    <strong class="p-1 text-muted"> {{'category'|translate}}</strong>
+    <p-multiSelect [options]="allCatList" [(ngModel)]="selectedCatList"  optionLabel="category" class="flex-grow-1"></p-multiSelect>
+<!--    <auto-complete class="flex-grow-1" (selectedEvent)="setSelectedCategory($event)" [allElements]="categories" [itemName]="'skillMatrixCategoryCode'" [dropdown]="true"></auto-complete>-->
+  </div>
+  <div class="col-md-3 d-flex">
+    <strong class="p-1 text-muted"> {{'employee'|translate}}</strong>
+    <p-multiSelect [options]="selectedEmp"  [(ngModel)]="showedEmployees" (ngModelChange)="showOnlyEmployees()" optionLabel="firstName" class="flex-grow-1"></p-multiSelect>
+
+  </div>
+
+<!--  <div class="col-auto">-->
+
+<!--    <button type="button" pButton class="ui-button-info   "-->
+<!--            (click)="filter(pageFilter)" label="{{'compare' | translate}}">-->
+<!--    </button>-->
+<!--  </div>-->
+</div>
+
+<div class="row">
+<p-table #dt [value]="datas" [rows]="pagination.rows" [totalRecords]="pagination.totalElements" scrollable="true" scrollHeight="250px">
+  <ng-template pTemplate="header">
+    <tr>
+      <th colspan="3" rowspan="2"></th>
+      <ng-container *ngFor="let cat of selectedCatList">
+        <th [attr.colspan]="cat.capabilities.length*2">
+          {{cat.category}}
+        </th>
+      </ng-container>
+    </tr>
+    <tr>
+      <ng-container *ngFor="let cat of selectedCatList">
+        <th *ngFor="let cap of cat.capabilities" colspan="2">
+          {{cap}}
+        </th>
+      </ng-container>
+
+    </tr>
+    <tr>
+      <th>{{"name"|translate}}</th>
+      <th>{{"surname"|translate}}</th>
+      <th>{{"title"|translate}}</th>
+      <ng-container *ngFor="let cat of selectedCatList">
+        <ng-container *ngFor="let cap of cat.capabilities">
+          <th>
+            {{"interest"|translate}}
+          </th>
+          <th>
+            {{"proficiency"|translate}}
+          </th>
+        </ng-container>
+
+      </ng-container>
+
+    </tr>
+
+
+  </ng-template>
+
+  <ng-template pTemplate="body" let-rowData>
+
+    <tr>
+      <td>{{rowData.employee?.firstName}}</td>
+      <td>{{rowData.employee?.lastName}}</td>
+      <td>{{rowData.employee?.employeeTitleName}}</td>
+      <ng-container *ngFor="let cat of selectedCatList">
+        <ng-container *ngFor="let cap of cat.capabilities">
+          <td>
+            {{getFieldVal(cat.category, cap, rowData, "interest")}}
+          </td>
+          <td>
+            {{getFieldVal(cat.category, cap, rowData, "proficiency")}}
+          </td>
+        </ng-container>
+
+      </ng-container>
+    </tr>
+
+  </ng-template>
+
+</p-table>
+</div>
+<br/>
+<div class="row">
+  <app-paging
+    [TotalElements]="pagination.totalElements"
+    [CurrentPage]="pagination.currentPage"
+    [PageSize]="pagination.pageSize"
+    [showSearch]="false"
+    [rows]="pagination.rows"
+    [TotalPageLinkButtons]="pagination.TotalPageLinkButtons"
+    [RowsPerPageOptions]="pagination.RowsPerPageOptions"
+    (onPageChange)="myChanges($event)"
+  ></app-paging>
+  <span style="margin-left:2px; padding-top: 2px " class="text-muted" >{{'total-records'|translate}}: {{pagination?.totalElements}}</span>
+</div>
+
+<!--<p-chart type="bar" [data]="chartData"></p-chart>-->

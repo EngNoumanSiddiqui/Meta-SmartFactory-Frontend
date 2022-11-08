@@ -1,0 +1,15 @@
+<ng-template [ngIf]="modal.active">
+
+  <div bsModal  [config]="{show: true}" #myModal="bs-modal" (onHidden)="modal.active=false" class="modal fade"
+       tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md" style="max-width: 70%;" >
+      <div class="modal-content ">
+        <div class="modal-body">
+          <equipment-monitoring-modal-detail [model]="model"></equipment-monitoring-modal-detail>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</ng-template>

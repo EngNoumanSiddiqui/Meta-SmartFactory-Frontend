@@ -1,0 +1,49 @@
+
+//machine state
+.running{
+  border: 1px solid #6ad510;
+  background-color: #76F110;
+}
+.closed{
+  border: 1px solid #262626;
+  background-color: #333333;
+}
+.standby{
+  border: 1px solid #dbb880;
+  background-color: #ffd48f;
+}
+
+
+.machineStop{
+  border: 1px solid #c93a29;
+  background-color: #EE452F;
+}
+
+.machineSetup{
+  border: 1px solid #20a8d8;
+  background-color: #5dcaef;
+
+}
+
+
+
+.span_running {
+  background-color: #76F110;
+}
+
+.span_closed {
+  background-color: #333333;
+}
+
+.span_standby {
+  background-color: #ffd48f;
+}
+
+.span_machine_setup {
+  background-color: #20a8d8;
+}
+
+.span_machine_stop {
+  background-color: #EE452F;
+}
+

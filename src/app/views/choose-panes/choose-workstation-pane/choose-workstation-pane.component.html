@@ -1,0 +1,48 @@
+
+  <div class="row col">
+                  <span class="input-group-btn">
+                    <button type="button" class="btn btn-primary">
+                      <i class="fa fa-search"></i>{{'search'  |translate}}</button>
+                  </span>
+    <input type="text" id="input1-group2" name="input1-group2" class="form-control col-md-8"
+           placeholder="{{'search' | translate}}" #searchOp
+            (keyup)="search(searchOp.value)">
+    <ng-template [ngIf]="searchingOperation">
+      <p-progressSpinner [style]="{width: '25px', height: '25px'}"
+                         strokeWidth="4"></p-progressSpinner>
+    </ng-template>
+  </div>
+
+
+  <table class=" myTable table table-responsive-sm table-hover table-outline mb-0" *ngIf="workstationList">
+    <thead class="table-secondary">
+    <tr>
+      <th width="20%">{{'id' | translate}}</th>
+      <th width="70%" >{{'name' | translate}}</th>
+      <!--<th>{{'quantity'  |translate}}</th>-->
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let item of workstationList">
+      <td>{{item.workStationId}}</td>
+      <td>{{item.workStationName}}</td>
+      <td><button (click)="sendSelectedItem(item)"><i class="fa fa-plus"></i> </button></td>
+    </tr>
+    </tbody>
+  </table>
+  <br>
+  <br>
+  <div class="row">
+    <app-paging
+      [showSearch]="false"
+      [TotalElements]="pagination.totalElements"
+      [CurrentPage]="pagination.currentPage"
+      [PageSize]="pagination.pageSize" [rows]="pagination.rows"
+      [TotalPageLinkButtons]="pagination.TotalPageLinkButtons"
+      [RowsPerPageOptions]="pagination.RowsPerPageOptions"
+      (onPageChange)="myChanges($event)"
+    ></app-paging>
+    <span style="margin-left:2px; padding-top: 2px " class="text-muted">{{'total-records'|translate}}: {{pagination?.totalElements}}</span>
+  </div>
+

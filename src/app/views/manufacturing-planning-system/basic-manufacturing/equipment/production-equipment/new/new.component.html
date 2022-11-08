@@ -1,0 +1,84 @@
+<!--<form #orderEdit="ngForm" >-->
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          {{'equipment'|translate}}
+        </div>
+        <div class="card-body">
+          <form #saleForm="ngForm" class="form-horizontal ui-fluid">
+            <table class="table table-bordered">
+              <tbody>
+
+
+              <tr>
+                <td>{{('equipment'|translate)}}</td>
+                <td><span *ngIf="dataModel.stock" class="form-control bg-readonly" (click)="myModal.show()">{{dataModel?.stock?.stockName}}</span>
+                  <span *ngIf="!dataModel.stock" class="form-control bg-readonly" (click)="myModal.show()">{{'click-to-select'|translate}}</span>
+                </td>
+              </tr>
+
+              <tr>
+                <td width="35%">{{'count' | translate}}</td>
+                <td><input type="number" min="0" class="form-control" [(ngModel)]="dataModel.count"
+                           name="quantity" required/>
+                </td>
+              </tr>
+              <tr>
+                <td width="35%">{{'capacity' | translate}}</td>
+                <td><input type="number" min="0" class="form-control" [(ngModel)]="dataModel.capacity"
+                           name="capacity" required/>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+
+          </form>
+        </div>
+        <div class="card-footer">
+          <!--<button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>-->
+          <!--{{'reset' | translate}}-->
+          <!--</button>-->
+          <button type="submit" class="btn btn-sm btn-primary"  [disabled]="!saleForm.form.valid"
+                  (click)="save()"><i class="fa fa-dot-circle-o"></i>
+            {{'save' | translate}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div><!--/.row-->
+</div>
+<!--</form>-->
+<!------------------------- Modals ---------------------------------------->
+<div bsModal [config]="{backdrop: 'static', keyboard: false}" #myModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-success modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          {{('equipment'|translate)}} {{('material'|translate)}}
+        </h4>
+        <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <!---------- MODEL #Stocks ------------->
+      <!--[(visible)]="display"-->
+      <div class="modal-body">
+        <div class="form-group row">
+          <!--keep the modal open!!!!!-->
+          <div class="col-md-12">
+            <choose-stock-pane [stockTypeName]="'Equipment Package'" (selectedEvent)="setSelectedStock($event);myModal.hide()"></choose-stock-pane>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary"  (click)="myModal.hide()">{{'close' | translate}}</button>
+      </div>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

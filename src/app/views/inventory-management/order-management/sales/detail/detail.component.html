@@ -1,0 +1,570 @@
+<div class="animated fadeIn">
+    <div class="col-12 ">
+      <div class="mb-2 p-0 ">
+        <table class="table table-md table-responsive-sm  table-striped table-outline mb-0">
+          <tbody *ngIf="saleOrder">
+          <tr>
+            <td width="20%" class="text-bold">{{'order-id' | translate}}<span class="float-right">:</span></td>
+            <td width="30%">{{id}}</td>
+            <td width="20%" class="text-bold">{{'order-confirmation' | translate}}<span class="float-right">:</span></td>
+            <td width="30%">{{saleOrder?.referenceId}}</td>
+          </tr>
+          <tr>
+            <td width="20%" class="text-bold">{{'order-no' | translate}}<span class="float-right">:</span></td>
+            <td width="30%">{{saleOrder?.orderNo}}</td>
+            <td class="text-bold">{{'customer-name' | translate}}<span class="float-right">:</span></td>
+            <td>
+              <a href="javascript:;" (click)="showDetailDialog(saleOrder?.actId, 'CUSTOMER')"> 
+                {{saleOrder?.actName}}
+              </a>
+            </td>
+           
+          </tr>
+          <tr>
+            <td width="20%" class="text-bold">{{'document-no' | translate}}<span class="float-right">:</span></td>
+            <td width="25%">{{saleOrder?.documentNo}}</td>
+            <td class="text-bold">{{'check-stock' | translate}}<span class="float-right">:</span></td>
+            <td>
+              <p-checkbox [disabled]="true" name="checkStock" [(ngModel)]="saleOrder.checkStock" binary="true" inputId="binary"></p-checkbox>
+            </td>
+           
+
+          </tr>
+          <tr>
+            <td class="text-bold">{{'order-date' | translate}}<span class="float-right">:</span></td>
+            <td>{{saleOrder?.orderDate|date:"dd/MM/yyyy HH:mm" }}</td>
+           
+            <td class="text-bold">{{'status' | translate}}<span class="float-right">:</span></td>
+            <td>{{saleOrder?.orderStatus}}</td>
+          </tr>
+          <tr *ngIf="saleOrder?.orderQuotation">
+            <td width="20%" class="text-bold">{{'quotation-id' | translate}}<span class="float-right">:</span></td>
+            <td width="30%">
+              <a href="javascript:;" (click)="showDetailDialog(saleOrder.orderQuotation.quotationId, 'ORDERQUOTATION')"> 
+                {{saleOrder.orderQuotation.quotationId}}
+              </a>
+            </td>
+            <td width="20%" class="text-bold">{{'quotation-no' | translate}}<span class="float-right">:</span></td>
+            <td width="30%">
+              <a href="javascript:;" (click)="showDetailDialog(saleOrder.orderQuotation.quotationId, 'ORDERQUOTATION')"> 
+                {{saleOrder.orderQuotation.quotationNo}}
+              </a>
+            </td>
+          </tr>
+          <tr>
+
+            <!-- <td width="20%" class="text-bold">{{'cost-center' | translate}}<span class="float-right">:</span></td>
+            <td>
+              <a href="javascript:;" (click)="showDetailDialog(saleOrder?.costCenter?.costCenterId, 'COSTCENTER')"> 
+                {{saleOrder?.costCenter?.costCenterName}}
+              </a>
+              
+            </td> -->
+            <td width="20%" class="text-bold">{{'parity' | translate}}<span class="float-right">:</span></td>
+            <td>
+              {{saleOrder?.parity}}
+            </td>
+            <td width="20%" class="text-bold">{{'customer-order-no' | translate}}<span class="float-right">:</span></td>
+            <td>
+              {{saleOrder?.customerOrderNo}}
+            </td>
+          </tr>
+          <tr>
+            <td class="text-bold">{{'description' | translate}}<span class="float-right">:</span></td>
+            <td >
+              <textarea style="background-color: #ffffff;" class="form-control" [(ngModel)]="saleOrder.description" disabled></textarea> 
+            </td>
+          </tr>
+          <tr>
+            <td colspan="4">
+              <div class="row align-items-center col-md-12 justify-content-between">
+                <div class="col-md-2 p-0 d-flex justify-content-between">
+                  <div class="text-bold">
+                    {{'total-net-price' | translate}}<span class="float-right">:</span>
+                  </div>
+                  <div>
+                    {{saleOrder?.totalNetPrice | number}}
+                  </div>
+                </div>
+                <div class="col-md-2 p-0 d-flex justify-content-between">
+                  <div class="text-bold">
+                    {{'total-vat-price' | translate}}<span class="float-right">:</span>
+                  </div>
+                  <div>
+                    {{saleOrder?.totalVatPrice | number}}
+                  </div>
+                </div>
+                <div class="col-md-2 p-0 d-flex justify-content-between">
+                  <div class="text-bold">
+                    {{'total-discount-price' | translate}}<span class="float-right">:</span>
+                  </div>
+                  <div>
+                    {{saleOrder?.totalDiscountPrice | number}}
+                  </div>
+                </div>
+                <div class="col-md-2 p-0 d-flex justify-content-between">
+                  <div class="text-bold">
+                    {{'total-sales-price' | translate}}<span class="float-right">:</span>
+                  </div>
+                  <div>
+                    {{saleOrder?.totalSalesPrice | number}}
+                  </div>
+                </div>
+                <div class="col-md-2 p-0 d-flex justify-content-between">
+                  <div class="text-bold">
+                    {{'currency' | translate}}<span class="float-right">:</span>
+                  </div>
+                  <div *ngIf="selectedCustomer$ | async as selectedCustomer">
+                    {{selectedCustomer?.contractDto?.currency ? selectedCustomer?.contractDto?.currency : '' }}
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+            <!-- <td width="20%" class="text-bold"></td>
+            <td  width="30%">
+              {{saleOrder?.totalNetPrice | number:'1.2-2'}}
+            </td>
+            <td width="20%" class="text-bold">{{'total-vat-price' | translate}}<span class="float-right">:</span></td>
+            <td  width="30%">
+              {{saleOrder?.totalVatPrice | number:'1.2-2'}}
+            </td>
+          </tr>
+          <tr>
+            <td width="20%" class="text-bold">{{'total-sales-price' | translate}}<span class="float-right">:</span></td>
+            <td  width="30%">
+              {{saleOrder?.totalSalesPrice | number:'1.2-2'}}
+            </td>
+          </tr> -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="col-md-12" *ngFor="let rowData of saleOrder?.orderDetailDtoList; let ri=index;">
+      <p-tabView>
+        <p-tabPanel header="{{'sales-order-item'|translate}}">
+          <div class="table-responsive">
+            <table class="table table-sm table-outline mb-0">
+              <thead style="background-color: rgb(242 242 242);">
+                <tr >
+                  <th>{{'order-detail-id' | translate}}</th>
+                  <th>{{'material-no' |translate}}</th>
+                  <th>{{'stock-name' |translate}}</th>
+                  <!-- <th>{{'height' |translate}}</th>
+                  <th>{{'width' |translate}}</th>
+                  <th>{{'dimension-unit' |translate}}</th> -->
+                  <th>{{'direct-production' |translate}}</th>
+                  <th>{{'prepare-production' |translate}}</th>
+                  <th>{{'stock-management' |translate}}</th>
+                  <th>{{'quantity' |translate}}</th>
+                  <th>{{'base-unit' |translate}}</th>
+                  <th>{{'cost-center' |translate}}</th>
+                  <th>{{'planned-quantity' |translate}}</th>
+                  <!-- placed produced-quantity -->
+                  <th>{{'produced-quantity' |translate}}</th>
+                  <th>{{'delivered-quantity' |translate}}</th>
+                  <th>{{'batch' |translate}}</th>
+                  <th>{{'status' |translate}}</th>
+                  <th>{{'warehouse' |translate}}</th>
+                  <th>{{'reference-id'|translate}}</th>
+                  <th>{{'delivery-date' |translate}}</th>
+                  <th>{{'delivery-complete-date'|translate}}</th>
+                  <!-- <th>{{'plant-name' |translate}}</th> -->
+                  <th>{{'priority' |translate}}</th>
+                  <th>{{'action' |translate}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr (click)="params.orderDetail=rowData" style="cursor: pointer" >
+                  <td>{{rowData.orderDetailId}}</td>
+                  <td>
+                    <a href="javascript:;" (click)="showDetailDialog(rowData.stockId, 'STOCK')">
+                      {{ rowData.stockNo }}
+                    </a>
+                  </td>
+                  <!-- <td><a href="javascript:;" (click)="showDetailDialog(rowData.stockId, 'STOCK')"> {{ (rowData.reservationList && (rowData.reservationList.length > 0)) ? rowData.reservationList[0]?.materialNo : ''}}</a></td> -->
+                  <td><a href="javascript:;" (click)="showDetailDialog(rowData.stockId, 'STOCK')">{{rowData.stockName}}</a></td>
+                  <!-- <td>{{rowData.height}}</td>
+                  <td>{{rowData.width}}</td>
+                  <td>{{rowData.dimensionUnit}}</td> -->
+                  <td>
+                    <p-checkbox name="{{'direcProd' + ri}}" [disabled]="true"  [(ngModel)]="rowData.directProduction" [binary]="true"></p-checkbox>
+                  </td>
+                  <td>
+                    <p-checkbox name="{{'prepareProd' + ri}}" [disabled]="true"  [(ngModel)]="rowData.prepareProduction" [binary]="true"></p-checkbox>
+                  </td>
+                  <td>
+                    <p-checkbox name="{{'stockManagement' + ri}}" [disabled]="true"  [(ngModel)]="rowData.stockManagement" [binary]="true"></p-checkbox>
+                  </td>
+                  <td>{{rowData.quantity}}</td>
+                  <td>{{rowData.unit }}</td>
+                  <td>
+                    <a href="javascript:;" (click)="showDetailDialog(rowData.costCenterId, 'COSTCENTER')"> 
+                      {{rowData.costCenterName }}
+                    </a>
+                  </td>
+                  <td>{{rowData.plannedQuantity}}</td>
+                  <!-- placed produced-quantity -->
+                  <td>{{rowData.completedQuantity}}</td>
+                  <td>{{rowData.deliveredQuantity}}</td>
+                  <td><a href="javascript:;" (click)="showDetailDialog(rowData.batch, 'BATCH')"> {{rowData.batch}}</a></td>
+                  <td class="font-weight-bold " style="font-size: 10px;">{{rowData.orderDetailStatus}}</td>
+                  <td><a href="javascript:;" (click)="showDetailDialog(rowData.warehouseId, 'WAREHOUSE')"> {{rowData.warehouseName}}</a></td>
+                  <td>{{rowData.referenceId}}</td>
+                  <td>{{rowData.deliveryDate |date:"dd/MM/yyyy" }}</td>
+                  <td>{{rowData.deliveryCompletionDate | date:"dd/MM/yyyy"}}</td>
+                  <!-- <td><a href="javascript:;" (click)="showDetailDialog(rowData.plantId, 'PLANT')"> {{rowData.plantName}}</a></td> -->
+                  <td>{{rowData.priority}}</td>
+    
+                  <td>
+                    <div #container style="display:inline-block;position:relative">
+                    <button *ngIf="rowData.orderDetailStatus=='COMPLETED' ||rowData.orderDetailStatus=='PARTIAL_DELIVERED'"
+                            class="btn btn-sm btn-outline-success" pTooltip="{{'transfer'|translate}}" [appendTo]="container" tooltipPosition="left"
+                            (click)="params.transferObj=saleOrder;params.title='goods-movement-information';myModal.show();"><i
+                      class="fa fa-truck"></i></button>
+    
+                    <button class="btn btn-sm btn-outline-info" pTooltip="{{'job-orders'|translate}}"
+                            (click)="params.title='job-order';myModal.show();"  [appendTo]="container" tooltipPosition="left"><i
+                      class="fa fa-leaf"></i></button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="18">
+                    <span class="text-bold">{{'description'| translate}}</span>: 
+                    <textarea rows="6" style=" background-color: #ffffff; width: 50%;" class="form-control" [(ngModel)]="rowData.description" disabled></textarea> 
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        
+        </p-tabPanel>
+        <p-tabPanel header="{{'document'| translate }}">
+          <div class="card">
+            <div class="card-header">
+              <i class="fa fa-align-justify"></i>{{'other-details' | translate}}
+            </div>
+            <div class="card-body">
+              <table class="table table-bordered">
+                <tbody>
+                <tr align="center">
+                  <td class="text-center" colspan="2">
+                    <image-viewer-v2></image-viewer-v2>
+                  </td>
+                </tr>
+  
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </p-tabPanel>
+        <p-tabPanel header="{{'notification'|translate}}">
+          <div class="row">
+            <div class="col-md-12">
+              <p-table [columns]="notificationSelectedColumns" [value]="rowData.stockTransferNotificationDetailList"
+                [dataKey]="'stockTransferNotificationDetailId'">
+                <ng-template pTemplate="header" let-columns>
+                  <tr>
+                    <th style="width: 3em"></th>
+                    <th *ngFor="let col of columns" [ngStyle]="{width: (col.field==='goodMovementDocumentType' || col.field==='goodsMovementActivityType') ? '11em' : ''}">
+                      {{col.header | translate}}
+                    </th>
+                    <th style="width: 3em"></th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-rowData let-expanded="expanded" let-columns="columns">
+                  <tr>
+                    <td>
+                      <a href="#" [pRowToggler]="rowData">
+                        <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+                      </a>
+                    </td>
+                    <td *ngFor="let col of columns" style="cursor: pointer" [ngSwitch]="col.field">
+
+                      <!-- <a href="javascript:;" *ngSwitchCase="'batch'" (click)="showBatchDetail(rowData.batch)">
+                        {{rowData.batch}}</a> -->
+
+                        <a href="javascript:;" *ngSwitchCase="'stockTransferNotificationDetailId'" 
+                          (click)="showDetailDialog(rowData?.stockTransferReceiptNotificationId, 'TRANSFERNOTIFICATION')">
+                          {{ rowData?.stockTransferNotificationDetailId }}
+                        </a>
+                        <a href="javascript:;" *ngSwitchCase="'stockTransferReceiptNotificationId'" 
+                          (click)="showDetailDialog(rowData?.stockTransferReceiptNotificationId, 'TRANSFERNOTIFICATION')">
+                          {{ rowData?.stockTransferReceiptNotificationId }}
+                        </a>
+                        <a href="javascript:;" *ngSwitchCase="'materialName'" (click)="showDetailDialog(rowData?.materialId, 'STOCK')">
+                          {{ rowData?.materialName }}
+                        </a>
+                        <a href="javascript:;" *ngSwitchCase="'materialNo'" (click)="showDetailDialog(rowData?.materialId, 'STOCK')">
+                          {{ rowData?.materialNo }}
+                        </a>
+                      <span *ngSwitchCase="'pallet'"> {{rowData[col.field]?.palletId}} </span>
+                      <span *ngSwitchCase="'postingDate'"> {{rowData[col.field] | date:'dd/MM/yyyy HH:mm'}} </span>
+                      <span *ngSwitchCase="'documentDate'"> {{rowData[col.field] | date:'dd/MM/yyyy HH:mm'}} </span>
+                      <span *ngSwitchCase="'updateDate'"> {{rowData[col.field] | date:'dd/MM/yyyy HH:mm'}} </span>
+                      <span *ngSwitchCase="'createDate'"> {{rowData[col.field] | date:'dd/MM/yyyy HH:mm'}} </span>
+                      <span *ngSwitchDefault> {{rowData[col.field]}} </span>
+                    </td>
+                    <td>
+                      <button *ngIf="rowData.goodMovementDocumentType==='SALES_ORDER'" class="btn btn-sm btn-outline-info" pTooltip="{{'delivery-note'|translate}}"
+                        (click)="showTemplate();"
+                         tooltipPosition="left"><i class="fa fa-eye"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="rowexpansion" let-rowData let-columns="columns">
+                  <tr>
+                    <td colspan="2"></td>
+                    <td colspan="4">
+                      <tr><td><strong>{{'sale-order-id' | translate}}</strong> : {{rowData.saleOrderId}}</td></tr>
+                      <tr><td><strong>{{'sale-order-no' | translate}}</strong> : {{rowData.saleOrderNo}}</td></tr>
+                      <!-- <tr><td><strong>{{'defect' | translate}}</strong> : {{rowData.defected ? 'Yes' : 'No'}}</td></tr> -->
+                      <tr><td><strong>{{'warehouse-from-name' | translate}}</strong> : 
+                        <a href="javascript:;"  (click)="showDetailDialog(rowData?.wareHouseFromId, 'WAREHOUSE')">
+                          {{ rowData?.wareHouseFromName }}
+                        </a>
+                      </td></tr>
+                      <tr><td><strong>{{'barcode-from' | translate}}</strong> : {{rowData.barcode}}</td></tr>
+                    </td>
+                    <td colspan="4">
+                      <tr><td><strong>{{'batch' | translate}}</strong> : {{rowData.batch}}</td></tr>
+                      <tr><td><strong>{{'create-date' | translate}}</strong> : {{rowData.createDate | date:'dd/MM/yyyy HH:mm'}}</td></tr>
+                      <tr><td><strong>{{'description' | translate}}</strong> : {{rowData.description}}</td></tr>
+                      <tr><td *ngIf="rowData.goodsMovementActivityType==='TRANSFER_POSTING'"><strong>{{'warehouse-to-name' | translate}}</strong> : {{rowData.wareHouseToName}}</td></tr>
+                      <tr><td><strong>{{'barcode-to' | translate}}</strong> : {{rowData.barcodeTo}}</td></tr>
+                    </td>
+                    <!-- <td [attr.colspan]="columns.length - 1">
+                      <div class="col-md-12">
+                        <table class="table table-bordered">
+                          <tr>
+                            <td>{{'notification-status' | translate}}</td>
+                            <td>{{rowData.goodsMovementStatus}}</td>
+                          </tr>
+                          <tr>
+                            <td>{{'document-type' | translate}}</td>
+                            <td>{{rowData.goodMovementDocumentType}}</td>
+                          </tr>
+                          <tr>
+                            <td>{{'activity-type' | translate}}</td>
+                            <td>{{rowData.goodsMovementActivityType}}</td>
+                          </tr>
+                          <tr>
+                            <td>{{'prod-order-id' | translate}}</td>
+                            <td>{{rowData.prodOrderId}}</td>
+                          </tr>
+                          <tr>
+                            <td>{{'material-no' | translate}}</td>
+                            <td>{{rowData.materialNo}}</td>
+                          </tr>
+                          <tr>
+                            <td>{{'material-name' | translate}}</td>
+                            <td>{{rowData.materialName}}</td>
+                          </tr>
+                          <tr>
+                            <td>{{'quantity' | translate}}</td>
+                            <td>{{rowData.quantity}}</td>
+                          </tr>
+                          <tr>
+                            <td>{{'base-unit' | translate}}</td>
+                            <td>{{rowData.baseUnit}}</td>
+                          </tr>
+                          <tr>
+                            <td>{{'warehouse-from-name' | translate}}</td>
+                            <td>{{rowData.wareHouseFromName}}</td>
+                          </tr>
+                          <tr *ngIf="rowData.goodsMovementStatus==='TRANSFER_POSTING'">
+                            <td>{{'warehouse-to-name' | translate}}</td>
+                            <td>{{rowData.wareHouseToName}}</td>
+                          </tr>
+                          <tr>
+                            <td>{{'batch' | translate}}</td>
+                            <td>{{rowData.batch}}</td>
+                          </tr>
+                          <tr>
+                            <td>{{'create-date' | translate}}</td>
+                            <td>{{rowData.createDate | date: 'dd/mm/yyyy HH:mm'}}</td>
+                          </tr>
+                          <tr>
+                            <td>{{'description' | translate}}</td>
+                            <td>{{rowData.description}}</td>
+                          </tr>
+                        </table>
+                      </div>
+                    </td> -->
+                  </tr>
+                </ng-template>
+              </p-table>
+            </div>
+          </div>
+        </p-tabPanel>
+        <p-tabPanel header="{{'reservations'|translate}}">
+          <div class="row">
+            <div class="col-md-12">
+              <p-table [columns]="salesReservationColumns" [value]="rowData.reservationList"
+                [dataKey]="'reservationId'">
+                <ng-template pTemplate="header" let-columns>
+                  <tr>
+                    <th *ngFor="let col of columns">
+                      {{col.header | translate}}
+                    </th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-rowData let-columns="columns">
+                  <tr>
+                    <td *ngFor="let col of columns" style="cursor: pointer" [ngSwitch]="col.field">
+                      
+                      <a href="javascript:;" *ngSwitchCase="'reservationId'" (click)="showDetailDialog(rowData?.reservationId, 'RESERVATION')">
+                        {{ rowData?.reservationId }}
+                      </a>
+                      <a href="javascript:;" *ngSwitchCase="'materialNo'" (click)="showDetailDialog(rowData?.materialId, 'STOCK')">
+                        {{ rowData?.materialNo }}
+                      </a>
+                      <a href="javascript:;" *ngSwitchCase="'materialName'" (click)="showDetailDialog(rowData?.materialId, 'STOCK')">
+                        {{ rowData?.materialName }}
+                      </a>
+                      <a href="javascript:;" *ngSwitchCase="'warehouseName'" (click)="showDetailDialog(rowData?.warehouseId, 'WAREHOUSE')">
+                        {{ rowData?.warehouseName }}
+                      </a>
+                      <!-- <p *ngSwitchCase="'deliveryDate'">
+                        {{ (rowData.orderDetailDtoList && rowData.orderDetailDtoList.length > 0 && rowData.orderDetailDtoList[0].deliveryDate) ?
+                          (rowData.orderDetailDtoList[0].deliveryDate |date:'dd/MM/yyyy HH:mm') : ''}}
+                      </p>
+
+                      <a href="javascript:;" *ngSwitchCase="'orderId'"  (click)="showDetailDialog(rowData.order?.orderId, 'ORDER')">{{rowData.order?.orderId}}</a>
+                      <a href="javascript:;" *ngSwitchCase="'act'"  (click)="showDetailDialog(rowData.actId, 'CUSTOMER')">{{rowData[col.field]?.actName}}</a>
+
+                      <p *ngSwitchCase="'quotationDate'">{{rowData[col.field]|date:'dd/MM/yyyy HH:mm'}}</p> -->
+
+                      <p *ngSwitchDefault >{{ (rowData && rowData[col.field])? rowData[col.field]: ''}}</p>
+                    </td>
+                  </tr>
+                </ng-template>
+
+              </p-table>
+            </div>
+          </div>
+        </p-tabPanel>
+        <p-tabPanel header="{{'pricing'|translate}}">
+          <table class="table table-sm table-responsive-lg table-responsive-sm table-responsive-md table-outline mb-0">
+            <thead style="background-color: rgb(242 242 242);">
+              <tr>
+                <th>{{'order-detail-id' | translate}}</th>
+                <th>{{'material-no' |translate}}</th>
+                <th>{{'stock-name' |translate}}</th>
+                <th>{{'quantity' |translate}}</th>
+                <th>{{'unit-net-price' |translate}}</th>
+                <th>{{'net-price' |translate}}</th>
+                <th>{{'discount' |translate}}</th>
+                <th>{{'vat' |translate}}</th>
+                <th>{{'delivery-cost' |translate}}</th>
+                <th>{{'sales-price' |translate}}</th>
+                
+                <th>{{'currency' |translate}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{{rowData.orderDetailId}}</td>
+                <td>
+                  <a href="javascript:;" (click)="showDetailDialog(rowData.stockId, 'STOCK')">
+                    {{ rowData.stockNo }}
+                  </a>
+                </td>
+                <td><a href="javascript:;" (click)="showDetailDialog(rowData.stockId, 'STOCK')">{{rowData.stockName}}</a></td>
+                <td>{{rowData.quantity}}</td>
+                <td>{{rowData.unitNetPrice}}</td>
+                <td>{{rowData.netPrice}}</td>
+                <td>{{rowData.discountPrice}}</td>
+                <td>{{rowData.vatPrice}}</td>
+                <td>{{rowData.deliveryCost}}</td>
+                <td>{{rowData.salePrice}}</td>
+                <td>{{rowData.currency}}</td>
+                  
+              </tr>
+            </tbody>
+          </table>
+        </p-tabPanel>
+        <p-tabPanel header="{{'invoices'|translate}}">
+          <ng-template pTemplate="content">
+            <invoice-list [fromTab]="true" [referenceId]="id" [invoiceType]="'SALES_ORDER'"></invoice-list>  
+          </ng-template>
+        </p-tabPanel>
+      </p-tabView>
+    </div>
+    <div class="col-md-12" *ngIf="!saleOrder.orderDetailDtoList || saleOrder.orderDetailDtoList.length==0">
+      <span class="noData text-center">
+        <strong class=""><i class="fa fa-warning "></i>{{'NO_DATA_FOUND'|translate}}!</strong>
+      </span>
+    </div>
+        <!-- <p-tabPanel header="{{'sales-quotations'|translate}}">
+          <div class="row">
+            <div class="col-md-12">
+              <p-table [columns]="salesQuotationsColumns" [value]="salesQuotationsList"
+                [dataKey]="'quotationId'">
+                <ng-template pTemplate="header" let-columns>
+                  <tr>
+                    <th *ngFor="let col of columns">
+                      {{col.header | translate}}
+                    </th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-rowData let-columns="columns">
+                  <tr>
+                    <td *ngFor="let col of columns" style="cursor: pointer" [ngSwitch]="col.field">
+                      <p *ngSwitchCase="'deliveryDate'">
+                        {{ (rowData.orderDetailDtoList && rowData.orderDetailDtoList.length > 0 && rowData.orderDetailDtoList[0].deliveryDate) ?
+                          (rowData.orderDetailDtoList[0].deliveryDate |date:'dd/MM/yyyy HH:mm') : ''}}
+                      </p>
+                      <a href="javascript:;" *ngSwitchCase="'orderId'"  (click)="showDetailDialog(rowData.order?.orderId, 'ORDER')">{{rowData.order?.orderId}}</a>
+                      <a href="javascript:;" *ngSwitchCase="'act'"  (click)="showDetailDialog(rowData.actId, 'CUSTOMER')">{{rowData[col.field]?.actName}}</a>
+
+                      <p *ngSwitchCase="'quotationDate'">{{rowData[col.field]|date:'dd/MM/yyyy HH:mm'}}</p>
+
+                      <p *ngSwitchDefault >{{rowData[col.field]}}</p>
+                    </td>
+                  </tr>
+                </ng-template>
+
+              </p-table>
+            </div>
+          </div>
+        </p-tabPanel> -->
+
+</div>
+
+<!------------------------- Modals ---------------------------------------->
+
+<div bsModal [config]="{backdrop: 'static', keyboard: false}" #myModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-success modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          <span>{{params.title |translate}}
+            </span>
+        </h4>
+        <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <ng-template [ngIf]="params.transferObj &&params.title == 'goods-movement-information'">
+          <transfer-receipts-new [data]="params.transferObj" (saveAction)="initializeAll();closeModal()"></transfer-receipts-new>
+        </ng-template>
+        <ng-template [ngIf]="params.title == 'job-order'">
+          <order-detail-plan #orderDetailPlan [orderDetailId]="params.orderDetail.orderDetailId"
+                             [stockName]="params.orderDetail.stockName"></order-detail-plan>
+        </ng-template>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeModal()">{{'close' |
+          translate}}
+        </button>
+      </div>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

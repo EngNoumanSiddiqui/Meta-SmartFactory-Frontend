@@ -1,0 +1,640 @@
+<div class="animated fadeIn">
+<div class="card">
+<div class="col-lg-12">
+    <div class="row ui-fluid  badge-light border p-2">
+        <div class="col-md-2">
+            <p-dropdown placeholder="Week" optionLabel="operationName"></p-dropdown>
+          </div>
+          <div class="col-md-2">
+            <p-dropdown placeholder="Last Week" optionLabel="operationName"></p-dropdown>
+          </div>
+          <div class="col-auto"><i class="pi pi-sliders-v" style="font-size:30px; color:grey"></i></div>
+          <div class="col-auto">
+            <button type="button" pButton class="ui-button-success" label="{{'compare-to' | translate}}"></button>
+          </div>
+          <div class="col-auto">
+            <button type="button" pButton class="ui-button-info" label="{{'analyze' | translate}}"></button>
+          </div>
+          <div class="col-auto prod">
+            <p><p-checkbox name="groupname" value="val1" label="{{'production' | translate}}"></p-checkbox></p>
+            <p><p-checkbox name="groupname" value="val1" label="{{'quality' | translate}}"></p-checkbox></p>
+          </div>
+
+          <div class="col-auto prod">
+            <p><p-checkbox name="groupname" value="val1" label="{{'maintenance' | translate}}"></p-checkbox></p>
+            <p><p-checkbox name="groupname" value="val1" label="{{'labour' | translate}}"></p-checkbox></p>
+          </div>
+
+  </div>
+</div>
+</div>
+    <div class="row p-2">
+        <div class="col-md-12 d-flex">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="t-schedule">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td colspan="2">
+                                        <span class="d-flex">
+                                            <span  style="width: 100%;"><h2 class="text-center">SPO</h2></span>
+                                            <span><i class="pi pi-cog"></i></span>
+                                        </span>
+                                        <h2 class="text-center">Time to Schedule PO</h2>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <h5 class="text-center t-range">Time Range</h5>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <h5 class="text-center">Last Week</h5>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <div class="break-line"></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <h1 class="text-center t-percentage t-blue">2h</h1>
+                                        <p class="t-average">Target Average</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <h1 class="text-center t-percentage t-green">2.1h</h1>
+                                        <p class="t-average">Actual Average</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="1">
+                                        <span style="display: inline-flex; margin: 0px 30px 0px 30px;">
+                                            <h1 class="text-center t-percentage t-blue">-10%</h1>
+                                            <i class="pi pi-arrow-down t-green" style="float: right;padding:3px"></i>
+                                        </span>
+                                        <p class="t-average">from previous Week</p>
+                                    </td>
+                                    <td colspan="1">
+                                        <span style="display: inline-flex; margin: 0px 30px 0px 30px;">
+                                            <i class="pi pi-circle-on t-green" style="float: left;padding:3px"></i>
+                                            <h1 class="text-center t-percentage t-blue">95.2%</h1>
+                                        </span>
+                                        <p class="t-average">On Target Percentage</p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="t-schedule">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td colspan="2">
+                                        <span class="d-flex">
+                                            <span  style="width: 100%;"><h2 class="text-center">MSA</h2></span>
+                                            <span><i class="pi pi-cog"></i></span>
+                                        </span>
+                                        <h2 class="text-center">PO Schedule Adherence</h2>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <h5 class="text-center t-range">Time Range</h5>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <h5 class="text-center">Last Week</h5>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <div class="break-line"></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <h1 class="text-center t-percentage t-blue">2h</h1>
+                                        <p class="t-average">Target Average</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <h1 class="text-center t-percentage t-orange">95%</h1>
+                                        <p class="t-average">Actual</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="1">
+                                        <span style="display: inline-flex; margin: 0px 30px 0px 30px;">
+                                            <h1 class="text-center t-percentage t-blue">-10%</h1>
+                                            <i class="pi pi-arrow-down t-red" style="float: right; padding:3px"></i>
+                                        </span>
+                                        <p class="t-average">from previous Week</p>
+                                    </td>
+                                    <td colspan="1">
+                                        <span style="display: inline-flex; margin: 0px 30px 0px 30px;">
+                                            <i class="pi pi-circle-on t-orange" style="float: left; padding:3px"></i>
+                                            <h1 class="text-center t-percentage t-blue">95.2%</h1>
+                                        </span>
+                                        <p class="t-average">On Target Percentage</p>
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="t-schedule">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td colspan="2">
+                                        <span class="d-flex">
+                                            <span  style="width: 100%;"><h2 class="text-center">PO COT</h2></span>
+                                            <span><i class="pi pi-cog"></i></span>
+                                        </span>
+                                        <h2 class="text-center">Number of PO Completed on Time</h2>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <h5 class="text-center t-range">Time Range</h5>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <h5 class="text-center">Last Week</h5>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <div class="break-line"></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <h1 class="text-center t-percentage t-blue">90%</h1>
+                                        <p class="t-average">Target Average</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <h1 class="text-center t-percentage t-red">71%</h1>
+                                        <p class="t-average">Actual</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="1">
+                                        <span style="display: inline-flex; margin: 0px 30px 0px 30px;">
+                                            <h1 class="text-center t-percentage t-blue">-5%</h1>
+                                            <i class="pi pi-arrow-down t-red" style="float: right; padding:3px"></i>
+                                        </span>
+                                        <p class="t-average">from previous Week</p>
+                                    </td>
+                                    <td colspan="1">
+                                        <span style="display: inline-flex; margin: 0px 30px 0px 30px;">
+                                            <i class="pi pi-circle-on t-red" style="float: left; padding:3px"></i>
+                                            <h1 class="text-center t-percentage t-blue">89.5%</h1>
+                                        </span>
+                                        <p class="t-average">On Target Percentage</p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="row p-2">
+        <div class="col-md-12 d-flex">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="t-schedule">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td colspan="2">
+                                        <span class="d-flex">
+                                            <span  style="width: 100%;"><h2 class="text-center">CU</h2></span>
+                                            <span><i class="pi pi-cog"></i></span>
+                                        </span>
+                                        <h2 class="text-center">Capacity Utilization</h2>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <h5 class="text-center t-range">Time Range</h5>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <h5 class="text-center">Last Week</h5>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <div class="break-line"></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <h1 class="text-center t-percentage t-blue">95%</h1>
+                                        <p class="t-average">Target Percentage</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <h1 class="text-center t-percentage t-red">75%</h1>
+                                        <p class="t-average">Actual Percentage</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="1">
+                                        <span style="display: inline-flex; margin: 0px 30px 0px 30px;">
+                                            <h1 class="text-center t-percentage t-blue">+6%</h1>
+                                            <i class="pi pi-arrow-up t-green" style="float: right;padding:3px"></i>
+                                        </span>
+                                        <p class="t-average">from previous Week</p>
+                                    </td>
+                                    <td colspan="1">
+                                        <span style="display: inline-flex; margin: 0px 30px 0px 30px;">
+                                            <i class="pi pi-circle-on t-red" style="float: left;padding:3px"></i>
+                                            <h1 class="text-center t-percentage t-blue">78.9%</h1>
+                                        </span>
+                                        <p class="t-average">On Target Percentage</p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="t-schedule">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td colspan="2">
+                                        <span class="d-flex">
+                                            <span  style="width: 100%;"><h2 class="text-center">OEE</h2></span>
+                                            <span><i class="pi pi-cog"></i></span>
+                                        </span>
+                                        <h2 class="text-center">Overall Equipment Efficiency</h2>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <h5 class="text-center t-range">Time Range</h5>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <h5 class="text-center">Last Week</h5>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <div class="break-line"></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <h1 class="text-center t-percentage t-blue">92%</h1>
+                                        <p class="t-average">Target Percentage</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <h1 class="text-center t-percentage t-green">87.5%</h1>
+                                        <p class="t-average">Actual Percentage</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="1">
+                                        <span style="display: inline-flex; margin: 0px 30px 0px 30px;">
+                                            <h1 class="text-center t-percentage t-blue">+1%</h1>
+                                            <i class="pi pi-arrow-down t-green" style="float: right; padding:3px"></i>
+                                        </span>
+                                        <p class="t-average">from previous Week</p>
+                                    </td>
+                                    <td colspan="1">
+                                        <span style="display: inline-flex; margin: 0px 30px 0px 30px;">
+                                            <i class="pi pi-circle-on t-green" style="float: left; padding:3px"></i>
+                                            <h1 class="text-center t-percentage t-blue">95.2%</h1>
+                                        </span>
+                                        <p class="t-average">On Target Percentage</p>
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="t-schedule">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td colspan="2">
+                                        <span class="d-flex">
+                                            <span  style="width: 100%;"><h2 class="text-center">DoT</h2></span>
+                                            <span><i class="pi pi-cog"></i></span>
+                                        </span>
+                                        <h2 class="text-center">Down Times</h2>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <h5 class="text-center t-range">Time Range</h5>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <h5 class="text-center">Last Week</h5>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <div class="break-line"></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <h1 class="text-center t-percentage t-blue">1h</h1>
+                                        <p class="t-average">Target Percentage</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <h1 class="text-center t-percentage t-red">71%</h1>
+                                        <p class="t-average">Actual Percentage</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="1">
+                                        <span style="display: inline-flex; margin: 0px 30px 0px 30px;">
+                                            <h1 class="text-center t-percentage t-blue">-3%</h1>
+                                            <i class="pi pi-arrow-down t-green" style="float: right; padding:3px"></i>
+                                        </span>
+                                        <p class="t-average">from previous Week</p>
+                                    </td>
+                                    <td colspan="1">
+                                        <span style="display: inline-flex; margin: 0px 30px 0px 30px;">
+                                            <i class="pi pi-circle-on t-red" style="float: left; padding:3px"></i>
+                                            <h1 class="text-center t-percentage t-blue">18.2%</h1>
+                                        </span>
+                                        <p class="t-average">On Target Percentage</p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="row p-2">
+        <div class="col-md-12 d-flex">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="t-schedule">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td colspan="2">
+                                        <span class="d-flex">
+                                            <span  style="width: 100%;"><h2 class="text-center">Set</h2></span>
+                                            <span><i class="pi pi-cog"></i></span>
+                                        </span>
+                                        <h2 class="text-center">Setup Time</h2>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <h5 class="text-center t-range">Time Range</h5>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <h5 class="text-center">Last Week</h5>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <div class="break-line"></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <h1 class="text-center t-percentage t-blue">15min</h1>
+                                        <p class="t-average">Target Average</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <h1 class="text-center t-percentage t-red">35min</h1>
+                                        <p class="t-average">Actual Average</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="1">
+                                        <span style="display: inline-flex; margin: 0px 30px 0px 30px;">
+                                            <h1 class="text-center t-percentage t-blue">-8%</h1>
+                                            <i class="pi pi-arrow-down t-green" style="float: right;padding:3px"></i>
+                                        </span>
+                                        <p class="t-average">from previous Week</p>
+                                    </td>
+                                    <td colspan="1">
+                                        <span style="display: inline-flex; margin: 0px 30px 0px 30px;">
+                                            <i class="pi pi-circle-on t-red" style="float: left;padding:3px"></i>
+                                            <h1 class="text-center t-percentage t-blue">95.2%</h1>
+                                        </span>
+                                        <p class="t-average">On Target Percentage</p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="t-schedule">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td colspan="2">
+                                        <h2 class="text-center">Scrap</h2>
+                                        <br>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="1">
+                                        <h5 class="text-center t-range">Time Range</h5>
+                                    </td>
+                                    <td colspan="1">
+                                        <h5 class="text-center t-range">Time Range</h5>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="1">
+                                        <h5 class="text-center">Previous Week</h5>
+                                    </td>
+                                    <td colspan="1">
+                                        <h5 class="text-center">Last Week</h5>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="1">
+                                        <div class="break-line"></div>
+                                    </td>
+                                    <td colspan="1">
+                                        <div class="break-line"></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="1">
+                                        <h1 class="text-center t-percentage t-blue">9%</h1>
+                                        <p class="t-average">Target</p>
+                                    </td>
+                                    <td colspan="1">
+                                        <h1 class="text-center t-percentage t-blue">8%</h1>
+                                        <p class="t-average">Target</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="1">
+                                        <h1 class="text-center t-percentage t-blue">9%</h1>
+                                        <p class="t-average">Average by shift</p>
+                                    </td>
+                                    <td colspan="1">
+                                        <h1 class="text-center t-percentage t-blue">8%</h1>
+                                        <p class="t-average">Average</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="1">
+                                        <h1 class="text-center t-percentage t-blue">-10%</h1>
+                                        <p class="t-average">Scrap Reduction</p>
+                                    </td>
+                                    <td colspan="1">
+                                        <h1 class="text-center t-percentage t-blue">-11%</h1>
+                                        <p class="t-average">Scrap Reduction</p>
+                                    </td>
+                                </tr>
+
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+           
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="t-schedule">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td colspan="2">
+                                        <h2 class="text-center">Rework</h2>
+                                        <br>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="1">
+                                        <h5 class="text-center t-range">Time Range</h5>
+                                    </td>
+                                    <td colspan="1">
+                                        <h5 class="text-center t-range">Time Range</h5>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="1">
+                                        <h5 class="text-center">Previous Week</h5>
+                                    </td>
+                                    <td colspan="1">
+                                        <h5 class="text-center">Last Week</h5>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="1">
+                                        <div class="break-line"></div>
+                                    </td>
+                                    <td colspan="1">
+                                        <div class="break-line"></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="1">
+                                        <h1 class="text-center t-percentage t-blue">9%</h1>
+                                        <p class="t-average">Target</p>
+                                    </td>
+                                    <td colspan="1">
+                                        <h1 class="text-center t-percentage t-blue">8%</h1>
+                                        <p class="t-average">Target</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="1">
+                                        <h1 class="text-center t-percentage t-blue">9%</h1>
+                                        <p class="t-average">Average by shift</p>
+                                    </td>
+                                    <td colspan="1">
+                                        <h1 class="text-center t-percentage t-blue">8%</h1>
+                                        <p class="t-average">Average</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="1">
+                                        <h1 class="text-center t-percentage t-blue">-10%</h1>
+                                        <p class="t-average">Scrap Reduction</p>
+                                    </td>
+                                    <td colspan="1">
+                                        <h1 class="text-center t-percentage t-blue">-11%</h1>
+                                        <p class="t-average">Scrap Reduction</p>
+                                    </td>
+                                </tr>
+
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>

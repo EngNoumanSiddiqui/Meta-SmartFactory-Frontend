@@ -1,0 +1,10 @@
+.table-md {
+  th,
+  td {
+    padding: 6px;
+  }
+}
+
+.mytable {border-collapse:collapse; table-layout:fixed; width:310px;}
+.mytable th { width:100px; word-wrap:break-word;}
+.mytable td { width:100px; word-wrap:break-word;}

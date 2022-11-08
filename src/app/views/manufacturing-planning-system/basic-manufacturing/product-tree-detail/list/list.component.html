@@ -1,0 +1,447 @@
+<div class="card">
+
+        <div class="card-body p-table-small p-0 m-0" style="position:relative;">
+
+          <div class="col-md-12 " *ngIf="!detailMode">
+            <div class="row badge-light border border-bottom-0 p-2">
+              <div class="col-12 ">
+
+                <!-- <button pButton class="ui-button-success float-right ml-1"
+                        (click)="addNewModalShow(null,'NEW')"
+                        label="{{'add-new'|translate}}"></button> -->
+              </div>
+            </div>
+          </div>
+          <div style="position: absolute;top: -25px;width: 164px;left: -7px;z-index: 10;padding: 5px">
+            <div class="field-checkbox" style="display: flex;justify-content: space-between;">
+              <label [for]="'showMaterialNo'" class="m-0">{{'show-material-no' |translate}}</label>
+              <p-checkbox [(ngModel)]="showMaterialNo" [binary]="true" [inputId]="'showMaterialNo'"></p-checkbox>
+              
+            </div>
+          </div>
+          <p-treeTable #dt [columns]="cols" [value]="tableData" [rows]="10" 
+            scrollable="true" scrollHeight="50vh"
+            [paginator]="tableData.length>10" [totalRecords]="tableData.length" dataKey="productTreeDetailId" >
+
+            <ng-template pTemplate="header" let-columns>
+
+              <tr>
+                <ng-container *ngFor="let col of columns" [ngSwitch]="col.header">
+                  <th style="cursor: pointer;" *ngSwitchCase="'step-no'" style="width: 120px;">
+                    {{col.header|translate}}
+                  </th>
+                  <th style="cursor: pointer;" *ngSwitchCase="'product-tree-detail-id'" style="width: 70px;">
+                    {{col.header|translate}}
+                  </th>
+                  <th style="cursor: pointer;" *ngSwitchCase="'parent-id'" style="width: 52px;">
+                    {{col.header|translate}}
+                  </th>
+                  <th style="cursor: pointer;" *ngSwitchCase="'material-output'" style="width: 8em;">
+                    {{col.header|translate}}
+                  </th>
+                  <th style="cursor: pointer;" *ngSwitchCase="'component-input'" style="width: 8em;">
+                    {{col.header|translate}}
+                  </th>
+                  <th style="cursor: pointer;" *ngSwitchCase="'parent'" style="width: 5em;">
+                    {{col.header|translate}}
+                  </th>
+                  <th style="cursor: pointer;" *ngSwitchCase="'needed-person'" style="width: 7.6em;">
+                    {{col.header|translate}}
+                  </th>
+                  <th style="cursor: pointer;" *ngSwitchCase="'auxiliary-material'" style="width: 7em;">
+                    {{col.header|translate}}
+                  </th>
+                  <th style="cursor: pointer;" *ngSwitchCase="'op-order'" style="width: 4.3em;">
+                    {{col.header|translate}}
+                  </th>
+                  <th style="cursor: pointer; width: 8em;" *ngSwitchCase="'operation'" >
+                    {{col.header|translate}}
+                  </th>
+                  <th style="cursor: pointer;" *ngSwitchCase="'single-total-duration'" style="width: 9em;">
+                    {{col.header|translate}}
+                  </th>
+                  <th style="cursor: pointer;" *ngSwitchCase="'workstation'" style="width: 7.6em;">
+                    {{col.header|translate}}
+                  </th>
+                  <th style="cursor: pointer;" *ngSwitchDefault>
+                    {{col.header|translate}}
+                  </th>
+                </ng-container>
+                <!-- <th *ngFor="let col of columns let i=index"  >
+                  {{col.header|translate}}
+                </th> -->
+                <th *ngIf="!detailMode" width="65px">{{'action' | translate}}</th>
+              </tr>
+
+
+            </ng-template>
+            <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-expanded="expanded" let-columns="columns" >
+              <tr>
+                <ng-container *ngFor="let col of columns, let i = index" [ngSwitch]="col.field">
+                  <td *ngSwitchCase="'stepNo'" style="width: 120px;">
+                    <a class="ui-treetable-toggler ui-unselectable-text" *ngIf="rowNode.node.leaf === false || rowNode.level !== 0 || rowNode.node.children && rowNode.node.children.length" 
+                      (click)="onToggle($event, rowNode)" 
+                      [style.visibility]="rowNode.node.leaf === false || (rowNode.node.children && rowNode.node.children.length) ? 'visible' : 'hidden'" 
+                      [style.marginLeft]="marginLeft(rowNode.level) + 'px'"> 
+                      <i [ngClass]="rowNode.node.expanded ? 'pi pi-fw pi-chevron-down' : 'pi pi-fw pi-chevron-right'"></i>
+                     </a>
+                    {{rowData.stepFNo}}
+                  </td>
+                  <td *ngSwitchCase="'equipmentList'">
+                    <span *ngFor="let item of rowData[col.field]; last as isLast">
+                      <a href="javascript:;"
+                      (click)="modalShow(rowData.productTreeDetailId, (detailMode) ? 'DETAIL' : 'EDIT',rowData, null, 1)">{{item.stock?.stockName}}</a>
+                      <span *ngIf="!isLast">,</span>
+                    </span>
+                    <span>
+                        <button  *ngIf="!detailMode" class="btn btn-sm btn-outline-primary" type="button"
+                          (click)="openChoosePaneModal(rowData,'equipment-material', i, false)">
+                          <i class="fa fa-plus"></i></button>
+                    </span>
+                  </td>
+                  <td *ngSwitchCase="'productTreeDetailId'" style="width: 70px;">
+                    <a href="javascript:;"
+                    (click)="modalShow(rowData.productTreeDetailId,'DETAIL',rowData,rowNode.node)">{{rowData[col.field]}}</a>
+                  </td>
+
+                  <ng-template *ngSwitchCase="'workstation'">
+                  </ng-template>
+                  <ng-template *ngSwitchCase="'singleTotalDuration'">
+                  </ng-template>
+                  <ng-template *ngSwitchCase="'neededPerson'">
+                  </ng-template>
+                  <ng-template *ngSwitchCase="'operationOrder'">
+                  </ng-template>
+                  <ng-template *ngSwitchCase="'auxmaterialList'">
+                  </ng-template>
+                  <ng-template *ngSwitchCase="'materialList'">
+                  </ng-template>
+                  <ng-template *ngSwitchCase="'componentList'">
+                  </ng-template>
+                  <ng-template *ngSwitchCase="'parent'">
+                  </ng-template>
+                  <!-- <td *ngSwitchCase="'auxmaterialList'" style="line-break: anywhere;">
+                        <div class="row col-md p-0 m-0" *ngFor="let item of getAuxList(rowData); last as last;">
+                            <a href="javascript:;" [pTooltip]="item.component?.stockNo" appendTo="body" [tooltipZIndex]="999999" tooltipPosition="top"
+                              (click)="modalShow(rowData.productTreeDetailId,(detailMode) ? 'DETAIL' : 'EDIT',rowData, null, 2)">{{item.component?.stockName}} </a>
+                           <span *ngIf="!last">,</span>
+                        </div>
+                      <button  *ngIf="!detailMode" class="btn btn-sm btn-outline-primary" type="button"
+                        (click)="openChoosePaneModal(rowData,'auxiliary-material', i, true)">
+                      <i class="fa fa-plus"></i></button>
+                  </td> -->
+                  
+                  
+                  <td *ngSwitchCase="'operationList'" style="width: 64.4em; padding: 0px;">
+                    <table class="table-border-inside">
+                      <tbody>
+                        <tr *ngFor="let item of rowData[col.field]; last as isLast; let operationIndex=index;">
+                          <td style="width: 7.3em; padding: 1em 0.5em;">
+                            <!-- (click)="modalShow(rowData.productTreeDetailId,(detailMode) ? 'DETAIL' : 'EDIT',rowData, null, 0) -->
+                            <a href="javascript:;" (click)="openChoosePaneModal(rowData,'operation', operationIndex, false)"
+                            >{{item.operation?.operationName}}</a>
+
+                              <button  *ngIf="!detailMode && ( !item.operation || isLast)" class="btn btn-sm btn-outline-primary" type="button"
+                              (click)="openChoosePaneModal(rowData,'operation', null, false)">
+                              <i class="fa fa-plus"></i></button>
+                             
+                          </td>
+                          <td style="width: 7.4em; padding: 1em 0.5em;">
+                            <div *ngFor="let comp of getOutputList(item) last as last; ">
+                              <a href="javascript:;" [pTooltip]="comp.component?.stockNo" appendTo="body" [tooltipZIndex]="999999" tooltipPosition="top"
+                              (click)="openOperationModal(rowData,'operation', operationIndex, false); addmodal.tabIndex=2">
+                              {{showMaterialNo ? comp.component?.stockNo: comp.component?.stockName}} 
+                              </a>
+                              <span *ngIf="!last">,</span>
+                            </div>
+                            <button  *ngIf="!detailMode" class="btn btn-sm btn-outline-primary" type="button"
+                            (click)="openChoosePaneComponentModal(rowData,'material', operationIndex, 1)">
+                            <i class="fa fa-plus"></i></button>
+                          </td>
+                          <td style="width: 7.25em; padding: 1em 0.5em;">
+                            <div *ngFor="let comp of getInputList(item) last as last; ">
+                              <a href="javascript:;" [pTooltip]="comp.component?.stockNo" appendTo="body" [tooltipZIndex]="999999" tooltipPosition="top"
+                              (click)="openOperationModal(rowData,'operation', operationIndex, false);addmodal.tabIndex=3">
+                              {{showMaterialNo ? comp.component?.stockNo: comp.component?.stockName}} 
+                            </a>
+                              <span *ngIf="!last">,</span>
+                            </div>
+                            <button  *ngIf="!detailMode" class="btn btn-sm btn-outline-primary" type="button"
+                            (click)="openChoosePaneComponentModal(rowData,'component', operationIndex, -1)">
+                            <i class="fa fa-plus"></i></button>
+                          </td>
+                          <td style="width: 6.45em; padding: 1em 0.5em;">
+                            <div *ngFor="let comp of getAuxList(item) last as last; ">
+                              <a href="javascript:;" [pTooltip]="comp.component?.stockNo" appendTo="body" [tooltipZIndex]="999999" tooltipPosition="top"
+                              (click)="openOperationModal(rowData,'operation', operationIndex, false);addmodal.tabIndex=3">{{comp.component?.stockName}} </a>
+                              <span *ngIf="!last">,</span>
+                            </div>
+
+                            <button  *ngIf="!detailMode" class="btn btn-sm btn-outline-primary" type="button"
+                            (click)="openChoosePaneComponentModal(rowData,'auxiliary-material', operationIndex, 0)">
+                            <i class="fa fa-plus"></i></button>
+                          </td>
+                          <td style="width: 8.25em; padding: 1em 0.5em;">
+                            <span (click)="openSingleDurationModal(rowData,'operation', operationIndex, 1)">{{getReadableTime(item.singleTotalDuration)}}</span>
+                           
+                            <button  *ngIf="!detailMode && !item.singleTotalDuration" class="btn btn-sm btn-outline-primary" type="button"
+                            (click)="openSingleDurationModal(rowData,'operation', operationIndex, 1)">
+                            <i class="fa fa-plus"></i></button>
+                            <!-- (click)="modalShow(rowData.productTreeDetailId,'EDIT',rowData)" -->
+                          </td>
+                          <!-- (click)="showWorkstationModal(item.workStation?.workStationId)" -->
+                          <td style="width: 6.95em; padding: 1em 0.5em;">
+                            <a href="javascript:;"
+                            (click)="openOperationModal(rowData,'operation', operationIndex, false);addmodal.tabIndex=0">
+                            {{item.workStation?.workStationName}}
+                            </a>
+                            <button  *ngIf="!detailMode && !item.workStation" class="btn btn-sm btn-outline-primary" type="button"
+                            (click)="openOperationModal(rowData,'operation', operationIndex, false);addmodal.tabIndex=0">
+                            <i class="fa fa-plus"></i></button>
+                          </td>
+                          <td style="width: 6.95em; padding: 1em 0.5em;">
+                            <!-- <div *ngFor="let comp of item.productTreeDetailWorkstationProgramList; last as last; ">
+                                <a href="javascript:;"
+                               (click)="modalShow(rowData.productTreeDetailId,(detailMode) ? 'DETAIL' : 'EDIT',rowData, null, 0)">{{comp?.description}}</a>
+                              <span *ngIf="!last">,</span>
+                            </div>
+                            <button  *ngIf="!detailMode" class="btn btn-sm btn-outline-primary" type="button"
+                            (click)="openChoosePaneComponentModal(rowData,'workstation-program', operationIndex, -1)">
+                            <i class="fa fa-plus"></i></button> -->
+                            <!-- {{item.neededPerson}} -->
+                              <span *ngIf="detailMode">{{item.neededPerson}}</span>
+                              <input *ngIf="!detailMode" type="number" step="1" pattern="\d+"  class="form-control" 
+                              name="neededPerson{{operationIndex}}" [(ngModel)]="item.neededPerson"/>
+                          </td>
+                          <td style="width: 3.95em; padding: 1em 0.5em;">
+                            {{item.operationOrder}}
+                          </td>
+                          <td style="padding: 1em 0.5em;">
+                            {{item.parent ? 'Yes': 'No'}}
+                          </td>
+                        </tr>
+                        <!-- <tr *ngIf="!detailMode">
+                          <td colspan="6">
+                              <button  *ngIf="!detailMode" class="btn btn-sm btn-outline-primary" type="button"
+                              (click)="openChoosePaneModal(rowData,'operation', i, false)">
+                              <i class="fa fa-plus"></i></button>
+                          </td>
+                        </tr> -->
+                      </tbody>
+                    </table>
+                    <!-- <span *ngFor="let item of rowData[col.field]; last as isLast">
+                      <a href="javascript:;"
+                         (click)="modalShow(rowData.productTreeDetailId,(detailMode) ? 'DETAIL' : 'EDIT',rowData, null, 3)">{{item.operation?.operationName}}</a>
+                      <span *ngIf="!isLast">, </span>
+                    </span>
+                    <button  *ngIf="!detailMode" class="btn btn-sm btn-outline-primary" type="button"
+                    (click)="openChoosePaneModal(rowData,'operation', i, false)">
+                    <i class="fa fa-plus"></i></button> -->
+                  </td>
+                 <td *ngSwitchCase="'productionType'">
+                  <select *ngIf="!detailMode" id="productionType{{rowData.stepNo}}" name="productionType{{rowData.stepNo}}" class="form-control" [(ngModel)]="rowData.productionType" 
+                  (ngModelChange)="onTableDataChange()"
+                  >
+                    <option [value]="null"> {{'please-select' | translate}}</option>
+                    <option *ngFor="let type of productionTypeList" [value]="type">{{type}}</option>
+                  </select>
+                  <span *ngIf="detailMode" >{{rowData[col.field]}}</span>
+                 </td>
+                  <td *ngSwitchCase="'parentId'" style="width: 52px;">
+                    <a href="javascript:;"
+                    (click)="modalShow(rowData.parentId,'DETAIL',rowData,rowNode.node)">{{rowData[col.field]}}</a>
+                 </td>
+                  <td *ngSwitchDefault>
+                     {{rowData[col.field]}}
+                  </td>
+                </ng-container>
+                <td  *ngIf="!detailMode" width="65px" class="p-0 pl-2">
+
+                  <!-- (click)="delete(rowData.productTreeDetailId,rowNode.node.key,rowNode.node.parent)" -->
+                  <button *ngIf="rowNode.parent===null || (!rowNode.node.children || rowNode.node.children.length === 0); else childDeleteButton" class="btn btn-sm btn-outline-danger" type="button"
+                  (click)="delete(rowData.productTreeDetailId,rowNode.node.key,rowNode.node.parent)">
+                    <i class="fa fa-trash"></i></button>
+
+                    <ng-template #childDeleteButton>
+                      <button class="btn btn-sm btn-outline-danger" type="button"
+                        (click)="selectedRowNode=rowNode;deletemenu.toggle($event)">
+                        <i class="fa fa-trash"></i></button>
+                    </ng-template>
+
+                  <button class="btn btn-sm btn-outline-info" type="button"
+                          (click)="modalShow(rowData.productTreeDetailId,'EDIT',rowData,rowNode.node.parent)">
+                    <i class="fa fa-edit"></i></button>
+                    <!-- addNewChild(rowNode.node,'NEW') -->
+                  <button *ngIf="rowNode.parent===null; else childButton" class="btn btn-sm btn-outline-success" type="button" 
+                    (click)="addNewChild(rowNode.node,'NEW')">
+                    <i class="fa fa-plus"></i></button>
+                  <ng-template #childButton>
+                    <button class="btn btn-sm btn-outline-success" type="button" 
+                    (click)="selectedRowNode=rowNode; menu.toggle($event);">
+                    <i class="fa fa-plus"></i></button>
+                  </ng-template>
+                    
+                </td>
+              </tr>
+
+              
+
+            </ng-template>
+            <!-- <ng-template pTemplate="emptymessage" let-columns>
+                <tr>
+                    <td [attr.colspan]="columns.length">
+                        No records
+                    </td>
+                  <td  [attr.colspan]="columns.length">
+                    <button style="float: right;" class="btn btn-sm btn-outline-success" type="button"
+                            (click)="addNewParent()">
+                      <i class="fa fa-plus"></i></button>
+                  </td>
+                </tr>
+            </ng-template> -->
+          </p-treeTable>
+
+          <br/>
+          <div class="col-md-12">
+            <span style="margin-left:2px; padding-top: 2px " class="text-muted">{{'total-records'|translate}}
+              : {{tableData?.length}}</span>
+
+          </div>
+        </div>
+</div>
+
+<p-menu #menu [popup]="true" appendTo="body" [baseZIndex]="99999" [model]="addButtonItems"></p-menu>
+
+<p-menu #deletemenu [popup]="true" appendTo="body" [baseZIndex]="99999" [model]="deleteButtonItems"></p-menu>
+<ng-template [ngIf]="modal.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal"
+  (onHidden)="modal.active=false; modal.index=0; modal.openModalType=null;
+  prodDetailCommunicatingService.seletedProdDTItem= null;" class="modal fade"
+       tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog modal-success modal-lg " role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"> {{'product-tree-detail' | translate}}</h4>
+          <button type="button" class="close" (click)="myModal.hide();" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <!--step2-->
+        <div class="modal-body">
+          <ng-template [ngIf]="equipmentModal.modal=='NEW'">
+            <product-tree-detail-new [plant]="plant" [index]="modal" [parentDetailId]="parent?parent.data.productTreeDetailId:null"
+              [data]="equipmentModal.data" [productTreeId]="productTreeId" [isParent]="isParent"
+                  (saveAction)="addOrUpdate($event);myModal.hide();"></product-tree-detail-new>
+          </ng-template>
+          <ng-template [ngIf]="equipmentModal.modal=='DETAIL'">
+            <product-tree-detail-detail [data]="equipmentModal.data" [index]="modal"></product-tree-detail-detail>
+          </ng-template>
+          <ng-template [ngIf]="equipmentModal.modal=='EDIT'">
+              <product-tree-detail-new [plant]="plant" [index]="modal" [parentDetailId]="equipmentModal.data.parentId"
+                [data]="equipmentModal.data" [productTreeId]="productTreeId" [isParent]="isParent"
+                    (saveAction)="addOrUpdate($event);myModal.hide();"></product-tree-detail-new>
+            </ng-template>
+        </div>
+        <!--step2-->
+        <div class="modal-footer">
+          <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary"
+                  (click)="myModal.hide()">{{'close' | translate}}
+          </button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</ng-template>
+
+<ng-template [ngIf]="addmodal.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal" class="modal fade"
+       tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog modal-success modal-md" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"> {{addmodal.title | translate}}</h4>
+          <button type="button" class="close" (click)="myModal.hide(); onhideAddModal();" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <!--step2-->
+        <div class="modal-body">
+          <ng-template [ngIf]="addmodal.mode=='component' || addmodal.mode=='material' || addmodal.mode=='auxiliary-material'">
+            <product-tree-component-new [plant]="plant" [data]="addmodal.data" [direction]="addmodal.data?.direction" [productTreeDetailId]="addmodal.prDetailId"
+                           (saveAction)="addOrUpdatecomponent($event); onhideAddModal()"></product-tree-component-new>
+          </ng-template>
+          <ng-template [ngIf]="addmodal.mode==='operation'">
+            <prod-tree-operation-new [plant]="plant" [data]="addmodal.data" [productTreeDetailId]="addmodal.prDetailId"
+            [tabIndex]="addmodal.tabIndex" [isParent]="isParent" [fromOutSideProductTree]="false"
+            [workstationId]="addmodal.rowData.workstationId" [componentList]="addmodal.rowData.componentList" 
+            (saveAction)="addOrUpdateoperation($event); onhideAddModal()"></prod-tree-operation-new>
+          </ng-template>
+          <ng-template [ngIf]="addmodal.mode==='equipment-material'">
+            <product-tree-equipment-new [data]="addmodal.data" [productTreeDetailId]="addmodal.prDetailId"
+             (saveAction)="addOrUpdatequipment($event); onhideAddModal()"></product-tree-equipment-new>
+          </ng-template>
+        </div>
+        <!--step2-->
+        <div class="modal-footer">
+          <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary"
+                  (click)="myModal.hide(); onhideAddModal();">{{'close' | translate}}
+          </button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</ng-template>
+
+<ng-template [ngIf]="choosepaneModal.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #chooseModal="bs-modal" (onHidden)="choosepaneModal={active: false, modalType: null, isAuxMaterial: false, direction: null};" class="modal fade"
+       tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog modal-success"
+     [ngClass]="{'modal-lg' : choosepaneModal.modalType!=='workstation-program',
+                  'modal-md' : choosepaneModal.modalType==='workstation-program'}" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"> {{choosepaneModal.modalType | translate}}</h4>
+          <button type="button" class="close" (click)="chooseModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <!--step2-->
+        <div class="modal-body">
+          <ng-template [ngIf]="choosepaneModal.modalType=='component' || choosepaneModal.modalType=='material' || choosepaneModal.modalType=='auxiliary-material'">
+            <div class="col-md-12">
+              <choose-stock-pane [removeTopButtons]="true" [direction]="choosepaneModal.direction" [plantId]="selectedPlant?.plantId" 
+              [modalType]="choosepaneModal.modalType" (selectedEvent)="setSelectedStock($event);chooseModal.hide()"></choose-stock-pane>
+            </div>
+          </ng-template>
+          <ng-template [ngIf]="choosepaneModal.modalType==='operation'">
+            <div class="col-md-12">
+              <!-- [workstationId]="addmodal.rowData.workstationId" -->
+              <choose-operation-pane [removeTopButtons]="true" [plantId]="selectedPlant?.plantId" 
+              (selectedEvent)="setSelectedOperation($event);chooseModal.hide()"></choose-operation-pane>
+            </div>
+          </ng-template>
+          <ng-template [ngIf]="choosepaneModal.modalType==='equipment-material'">
+            <div class="col-md-12">
+              <choose-stock-pane [stockTypeName]="'Equipment Package'" [plantId]="selectedPlant?.plantId" (selectedEvent)="setSelectedEquipment($event);chooseModal.hide()"></choose-stock-pane>
+              <!-- <choose-equipment-pane [removeTopButtons]="true" [plantId]="selectedPlant?.plantId" (selectedEvent)="setSelectedEquipment($event);chooseModal.hide()"></choose-equipment-pane> -->
+            </div>
+          </ng-template>
+          <ng-template [ngIf]="choosepaneModal.modalType=='workstation-program'">
+            <product-tree-workstation-program-new [data]="addmodal.data"
+                                                  [productTreeDetailId]="addmodal.prDetailId"
+                                                  (saveAction)="addOrUpdateWorstationProgram($event);chooseModal.hide();"></product-tree-workstation-program-new>
+          </ng-template>
+        </div>
+        <!--step2-->
+        <div class="modal-footer">
+          <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary"
+                  (click)="chooseModal.hide()">{{'close' | translate}}
+          </button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</ng-template>

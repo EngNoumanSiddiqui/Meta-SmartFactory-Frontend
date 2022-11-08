@@ -1,0 +1,157 @@
+<p-confirmDialog></p-confirmDialog>
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body" >
+          <p-table #dt [columns]="selectedColumns" scrollable="true" scrollHeight="55vh"
+           [value]="employees" [rows]="pagination.rows" [totalRecords]="pagination.totalElements" dataKey="employeShiftsExceptionId" [(selection)]="selectedEmpGroup" >
+            <ng-template pTemplate="caption">
+              <div style="text-align:left">
+                <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header" maxSelectedLabels="0"  selectedItemsLabel="{{'columns-selected'|translate}}"
+                               [style]="{minWidth: '200px'}" defaultLabel="Choose Columns">
+                  <ng-template let-col let-i="index" pTemplate="item">
+                    {{col.label|translate}}
+                  </ng-template>
+                </p-multiSelect>
+                <button pButton  class="ui-button-success float-right" (click)="modalShow(null,'NEW')" label="{{'add-new'|translate}}"> </button>
+                <button pButton style="margin-right: 5px" class="ui-button-warning float-right" type="button"  icon="fa fa-file-alt" iconPos="left" label="{{'export-all'|translate}}" (click)="dt.exportCSV()"></button>
+                <button pButton style="margin-right: 5px" class="ui-button-warning float-right" type="button"  icon="fa fa-file" iconPos="left" label="{{'export-selected'|translate}}" (click)="dt.exportCSV({selectionOnly:true})"
+                ></button>
+              </div>
+              <!--<hr>-->
+            </ng-template>
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th style="width: 3em" rowspan="2">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th *ngFor="let col of columns; let i=index;" style="cursor: pointer" [ngClass]="{'bg-selected-order':pageFilter.orderByProperty ==col.field}" (click)="reOrderData(i,col.field)">
+                <i [ngClass]="'fa  fa-sort-alpha-' + classReOrder[i]"></i>
+                  {{col.header|translate}}
+                </th>
+                <th width="80px" rowspan="2">{{'action' | translate}}</th>
+                <th width="80px" rowspan="2">{{'accept-reject'|translate}}</th>
+              </tr>
+              <tr>
+                <th *ngFor="let col of columns" class="ui-fluid" [ngSwitch]="col.field">
+                  <span *ngSwitchCase="'employeeDto'"></span>
+                  <span *ngSwitchCase="'exceptionType'"></span>
+                  <select *ngSwitchCase="'confirmationState'" id="status" name="status" class="form-control" [(ngModel)]="pageFilter.confirmationState" (ngModelChange)="filter(pageFilter)">
+                    <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                    <option *ngFor="let status of confirmationState" value="{{status}}">{{status}}</option>
+                  </select>
+                  <p-calendar *ngSwitchCase="'startDate'" [(ngModel)]="pageFilter.startTime" placeholder="{{'start-date'|translate}}"
+                              appendTo="body" yearRange="1990:2100" [monthNavigator]="true" [yearNavigator]="true" (ngModelChange)="filter(pageFilter)"
+                              dateFormat="dd-mm-yy"
+                  ></p-calendar>
+                  <p-calendar *ngSwitchCase="'finishDate'" [(ngModel)]="pageFilter.endTime" placeholder="{{'finish-date'|translate}}"
+                              appendTo="body" yearRange="1990:2100" [monthNavigator]="true" [yearNavigator]="true" (ngModelChange)="filter(pageFilter)"
+                              dateFormat="dd-mm-yy"
+                  ></p-calendar>
+                  <input *ngSwitchCase="'shiftDto'" style="width: 100%" pInputText type="text" (input)="filterByColumn($event.target.value,'shift')">
+                  <input *ngSwitchDefault style="width: 100%" [(ngModel)]="pageFilter[col.field]"  pInputText type="text" (input)="filterByColumn($event.target.value,col.field)">
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr [pSelectableRow]="rowData">
+                <td style="width: 3em">
+                  <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                </td>
+                <td *ngFor="let col of columns" style="cursor: pointer" [ngSwitch]="col.field">
+                    <!-- <span *ngSwitchCase="'startTime'" (click)="modalShow(rowData.employeShiftsExceptionId,'DETAIL')" >{{(rowData[col.field])|date:'dd/MM/yyyy':'-000'}}</span> -->
+                    <span *ngSwitchCase="'startTime'" (click)="modalShow(rowData.employeShiftsExceptionId,'DETAIL')" >{{(rowData[col.field])|date:'dd/MM/yyyy'}}</span>
+                    <span *ngSwitchCase="'endTime'" (click)="modalShow(rowData.employeShiftsExceptionId,'DETAIL')" >{{(rowData[col.field])|date:'dd/MM/yyyy'}}</span>
+                    <a *ngSwitchCase="'employeeDto'" href="javascript:;" 
+                      (click)="showStaffDetail(rowData?.employeeDto?.employeeId)">
+                      {{ rowData.employeeDto?.firstName}} {{ rowData.employeeDto?.lastName}}
+                    </a>
+                    <a *ngSwitchCase="'shiftDto'" href="javascript:;" 
+                      (click)="showShiftDetail(rowData.shiftDto?.shiftId)">
+                      {{rowData.shiftDto?.shiftNo}} {{rowData.shiftDto?.shiftName}}
+                    </a>
+                    <span *ngSwitchDefault (click)="modalShow(rowData.employeShiftsExceptionId,'DETAIL')" >{{rowData[col.field]}}</span>
+                </td>
+                <td width="80px" >
+                  <button class="btn btn-sm btn-outline-danger" type="button" (click)="delete(rowData.employeShiftsExceptionId)">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                  <button class="btn btn-sm btn-outline-info" type="button" (click)="modalShow(rowData.employeShiftsExceptionId,'EDIT')">
+                    <i class="fa fa-edit"></i>
+                  </button>
+                </td>
+                <td width="80px" >
+                  <button class="btn btn-sm btn-outline-info" type="button" (click)="accept(rowData.employeShiftsExceptionId)">
+                    <i class="fa fa-check"></i>
+                  </button>
+                  <button class="btn btn-sm btn-outline-danger" type="button" (click)="reject(rowData.employeShiftsExceptionId)">
+                    <i class="fa fa-close"></i>
+                  </button>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+          <br/>
+          <div class="row">
+            <app-paging
+              [TotalElements]="pagination.totalElements"
+              [CurrentPage]="pagination.currentPage"
+              [PageSize]="pagination.pageSize"            [rows]="pagination.rows"
+              [TotalPageLinkButtons]="pagination.TotalPageLinkButtons"
+              [RowsPerPageOptions]="pagination.RowsPerPageOptions"
+              (onPageChange)="myChanges($event)"
+            ></app-paging>
+            <span style="margin-left:2px; padding-top: 2px " class="text-muted" >{{'total-records'|translate}}: {{pagination?.totalElements}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--/.col-->
+  </div>
+</div>
+<div bsModal [config]="{backdrop: 'static', keyboard: false}" #myModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-success modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"> {{'shift-exception-information'|translate}}</h4>
+        <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <ng-template [ngIf]="employeeGroupModal.modal=='NEW'">
+        <p-tabView>
+          <!--
+            <p-tabPanel header="Shift Defination">
+                <shift-defination (saveAction)="myModal.hide(); filter(pageFilter)"></shift-defination>
+            </p-tabPanel>
+          -->
+
+            <p-tabPanel header="Shift Exception Defination">
+              <shift-exception-new (saveAction)="myModal.hide(); filter(pageFilter)"></shift-exception-new>
+            </p-tabPanel>
+        </p-tabView>
+      </ng-template>
+      <ng-template [ngIf]="employeeGroupModal.modal=='EDIT'">
+        <p-tabView>
+            <p-tabPanel header="Shift Exception Defination">
+              <edit-emp-shift-exception [id]="employeeGroupModal.id" (saveAction)="myModal.hide(); filter(pageFilter)"></edit-emp-shift-exception>
+            </p-tabPanel>
+        </p-tabView>
+      </ng-template>
+      <ng-template [ngIf]="employeeGroupModal.modal=='DETAIL'">
+        <p-tabView>
+            <p-tabPanel header="Shift Exception Defination">
+              <emp-shift-exception-detail [id]="employeeGroupModal.id"></emp-shift-exception-detail>
+            </p-tabPanel>
+        </p-tabView>
+      </ng-template>
+      <div class="modal-footer">
+        <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary" (click)="myModal.hide()">{{'close' | translate}}</button>
+        <button *ngIf="employeeGroupModal.modal=='DETAIL'" type="button" class="btn rounded btn-primary" (click)="employeeGroupModal.modal='NEW'">{{'new' | translate}}</button>
+        <button *ngIf="employeeGroupModal.modal=='DETAIL'" type="button" class="btn rounded btn-success" (click)="employeeGroupModal.modal='EDIT'">{{'edit' | translate}}</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

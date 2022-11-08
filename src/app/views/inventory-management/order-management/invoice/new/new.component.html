@@ -1,0 +1,85 @@
+<div class="animated fadeIn">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <i class="fa fa-align-justify"></i>{{'invoice-information' | translate}}
+              </div>
+              <div class="card-body">
+                <form #workCenterForm="ngForm">
+                  <table class="table table-bordered">
+                    <tbody>
+                    <tr>
+                      <td>
+                        {{'invoice-no' | translate}}
+                      </td>
+                      <td>
+                        <input type="text" class="form-control"  name="invoiceNo" 
+                        [(ngModel)]="payLoadObject.invoiceNo"/>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        {{'invoice-type' | translate}}
+                      </td>
+                      <td>
+                        <select class="form-control" name="invoiceType" [(ngModel)]="payLoadObject.invoiceType">
+                          <option *ngFor="let invoiceType of invoiceTypeList" [value]="invoiceType">{{invoiceType}}</option>
+                        </select>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        {{'reference-id' | translate}}
+                      </td>
+                      <td>
+                        <input type="text" class="form-control"  name="referenceId" required
+                        [(ngModel)]="payLoadObject.referenceId"/>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        {{'actual-amount' | translate}}
+                      </td>
+                      <td>
+                        <input type="number" class="form-control"  name="actualAmount"
+                        [(ngModel)]="payLoadObject.actualAmount"/>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        {{'posting-date' | translate}}
+                      </td>
+                      <td class="ui-fluid">
+                        <p-calendar name="postingDate" [appendTo]="'body'" [baseZIndex]="99999" [(ngModel)]="payLoadObject.postingDate" [showIcon]="true" 
+                        [dateFormat]="'dd-mm-yy'" [monthNavigator]="true" [yearNavigator]="true" [yearRange]="'2000:2050'"></p-calendar>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        {{'notes' | translate}}
+                      </td>
+                      <td>
+                        <textarea class="form-control" rows="3" name="notes" [(ngModel)]="payLoadObject.notes"></textarea>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colspan="2">
+                        <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+                          {{'reset' | translate}}
+                        </button>
+                        <button type="submit" class="btn btn-sm btn-primary" [disabled]="!workCenterForm.form.valid"
+                                (click)="save()"><i class="fa fa-dot-circle-o"></i>
+                          {{'save' | translate}}
+                        </button>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      

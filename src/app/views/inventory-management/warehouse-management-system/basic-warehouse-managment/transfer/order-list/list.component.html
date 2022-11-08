@@ -1,0 +1,72 @@
+<div class="animated fadeIn">
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i> {{'customer' | translate}} {{'orders' | translate}}
+        </div>
+      <div class="card-body p-1">
+
+        <table  class="table table-sm  table-outline  mb-0">
+          <thead class="table-secondary small">
+          <tr >
+            <th width="15px"></th>
+            <th> {{'order-id' | translate}}</th>
+            <th> {{'order-no' | translate}}</th>
+            <th> {{'order-date' | translate}}</th>
+            <th> {{'status' | translate}}</th>
+
+          </tr>
+          </thead>
+          <tbody>
+          <ng-container *ngFor="let order of saleOrders">
+            <tr  (click)="selectedOrderChanged(order)" [ngClass]="{'bg-success':selectedOrderId==order.orderId}">
+
+              <td (click)="order.open=!order.open"><i class="fa text-black-50" [ngClass]="{'fa-plus-circle':!order.open, 'fa-minus-circle':order.open }"></i>
+              </td>
+              <td>{{order.orderId}}</td>
+              <td> {{order.orderNo}}</td>
+              <td>{{order.orderDate|date:'dd-MM-yyyy'}}</td>
+              <td>{{order.orderStatus}}</td>
+
+
+            </tr>
+            <tr *ngIf="order.open">
+              <td colspan="5" class="border-top-0">
+                <table class="table table-sm table-striped table-outline mb-0 table-hover">
+                  <thead class="table-secondary small">
+                  <tr>
+                    <th>{{'order-detail-id' | translate}}</th>
+                    <th>{{'stock-name' |translate}}</th>
+                    <th>{{'quantity' |translate}}</th>
+                    <th>{{'delivered-quantity' |translate}}</th>
+                    <th>{{'status' |translate}}</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr *ngFor="let item of order.orderDetailDtoList" (click)="fireSelectedOrderDetail(item)" style="cursor: pointer">
+                    <td>{{item.orderDetailId}}</td>
+                    <td>{{item.stockName}}</td>
+                    <td>{{item.quantity}}</td>
+                    <td>{{item.deliveredQuantity}}</td>
+                    <td class="font-weight-bold small">{{item.orderDetailStatus}}</td>
+                  </tr>
+                  </tbody>
+                </table>
+
+              </td>
+            </tr>
+          </ng-container>
+          <tr *ngIf="!saleOrders|| saleOrders.length==0">
+            <td colspan="5" class="noData text-center">
+              <strong class=""><i class="fa fa-warning "></i>{{'NO_DATA_FOUND'|translate}}!</strong>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,37 @@
+.emp-class{
+    width: 40%;
+}
+// .lb-class{
+//     float: left !important;
+//     width: 30% !important;
+// }
+.dr-class{
+    float:right;
+    width:70%;
+}
+.lb-class[_ngcontent-osi-c26]{
+    float: left ;
+    width: 30% ;
+}
+.btn-class{
+height:35px;
+}
+th , td {
+    background-color: #fff;
+   text-align:center;
+    border: 1px solid #333;
+}
+.ui-multiselect-label {
+    max-width: 150px;
+    white-space: nowrap;
+}
+
+.ui-multiselect .ui-multiselect-label {
+   // padding: 0.3em;
+    width: 250px;
+}
+body{
+    .ui-multiselect .ui-multiselect-label {
+        width: 250px;
+    }
+}

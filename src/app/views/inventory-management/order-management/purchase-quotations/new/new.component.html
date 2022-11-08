@@ -1,0 +1,504 @@
+<!--<form #orderEdit="ngForm" >-->
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          {{'purchase-quotation' | translate}}
+        </div>
+        <div class="card-body">
+            <div class="form-group row">
+              <label class="col-md-3 col-form-label" for="quotationStatus">{{'quotation-status'|translate}}</label>
+              <div class="col-md-9">
+                <div class="input-group">
+                  <select id="quotationStatus" name="quotationStatus" class="form-control"
+                    [(ngModel)]="purchaseQuotationDto.purchaseQuotationStatus" (ngModelChange)="onOrderStatusChanged($event)">
+                    <option *ngFor="let item of quotationStatusList" [value]="item">{{item | translate}}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-3 col-form-label"> {{'vendor-type' | translate}}</label>
+              <div class="col-md-9">
+                <act-type-auto-complete  [supplier]="true" [addIfMissing]="true" (selectedActEvent)="purchaseQuotationDto.vendorTypeId=$event?.actTypeId;"></act-type-auto-complete>
+                <!-- <select id="actTypeId" name="actTypeId" class="form-control" [(ngModel)]="purchaseQuotationDto.vendorTypeId" >
+                  <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                  <option *ngFor="let type of listActTypes" value="{{type.actTypeId}}">{{type.actTypeName}}</option>
+                </select> -->
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-3 col-form-label"> {{'vendor' | translate}}</label>
+              <div class="col-md-9">
+                <act-auto-complete [plantId]="selectedPlant?.plantId" [supplier]="true" [actTypeId]="purchaseQuotationDto.vendorTypeId"  [required]="true" [addIfMissing]="true" (selectedActEvent)="setSelectedCustomer($event)"></act-auto-complete>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-3 col-form-label"> {{'required-date' | translate}}</label>
+              <div class="col-md-9 ui-fluid align-self-center">
+                <p-calendar [required]="true" [(ngModel)]="purchaseQuotationDto.requiredDate" placeholder="{{'required-date'|translate}}"
+                     yearRange="1990:2100" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" [showTime]="true"></p-calendar>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label class="col-md-3 col-form-label" for="description">{{'description' | translate}}</label>
+              <div class="col-md-9">
+                <textarea id="description" name="description" [(ngModel)]="purchaseQuotationDto.description" class="form-control"
+                  placeholder="{{'description' | translate}}"></textarea>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-3 col-form-label" for="costCenterId">{{'cost-center' | translate}}</label>
+              <div class="col-md-9">
+                <cost-center-auto-complete [costCenterId]="purchaseQuotationDto.costCenterId" 
+                (selectedCostCenterEvent)="purchaseQuotationDto.costCenterId=$event?.costCenterId" >
+              </cost-center-auto-complete>  
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header">
+          {{'purchase-quotation-items' | translate}}
+          <div class="card-actions">
+            <button type="button" class="btn btn-primary" data-toggle="modal" (click)="openPurchaseQuotationDetailsModal(-1)"><i
+                class="fa fa-plus"></i></button>
+          </div>
+        </div>
+        <div class="card-body" style="width: 100%; overflow-x: scroll;">
+          <p-table dataKey="purchaseQuotationDetailId" [value]="purchaseQuotationDto.purchaseQuotationDetailList">
+            <ng-template pTemplate="header">
+              <tr>
+                <th style="width: 3rem"></th>
+                <!-- <th>{{'plant'|translate}}</th> -->
+                <th>{{'material-no'|translate}}</th>
+                <th>{{'material'|translate}}</th>
+                <th style="width: 7em;">{{'requested-quantity'|translate}}</th>
+                <th style="width: 6em;">{{'quoted-quantity'|translate}}</th>
+                <th>{{'base-unit'|translate}}</th>
+                <th>{{'order-unit'|translate}}</th>
+                <th>{{'status'|translate}}</th>
+                <th>{{'batch'|translate}}</th>
+                <th>{{'delivery-date'|translate}}</th>
+                <th>{{'purchase-price'|translate}}</th>
+                <th>{{'action'|translate}}</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-item let-i="rowIndex" let-expanded="expanded">
+              <tr>
+                <td>
+                  <a href="#" [pRowToggler]="item">
+                      <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+                  </a>
+              </td>
+                <!-- <td>{{item.plantName}}</td> -->
+                <td>{{item.stockNo}}</td>
+                <td>{{item.stockName}}</td>
+                <td>{{item.requestedQuantity}}</td>
+                <td>{{item.quotedQuantity}}</td>
+                <td>{{item.baseUnit}}</td>
+                <td>{{item.orderUnit}}</td>
+                <td>{{item.purchaseQuotationDetailStatus}}</td>
+                <td>{{item.batch}}</td>
+                <td>{{item.deliveryDate | date:'dd/MM/yyyy HH:mm'}}</td>
+                <td>{{item.effectivePrice}}</td>
+                <td width="70px"><button class="btn btn-sm btn-outline-info"
+                    (click)="openPurchaseQuotationDetailsModal(i)"><i class="fa fa-edit"></i></button>
+                  <button class="btn btn-sm btn-outline-danger" (click)="deletePurchaseQuotationDetailsModal(i)"><i
+                      class="fa fa-close"></i></button></td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="rowexpansion" let-item>
+              <tr>
+                <td colspan="11">
+                  <div class="p-p-3">
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>{{'unit-price'|translate}}</th>
+                          <th>{{'net-price'|translate}}</th>
+                          <th>{{'delivery-cost'|translate}}</th>
+                          <th>{{'effective-price'|translate}}</th>
+                          <th>{{'currency'|translate}}</th>
+                          <th>{{'valid-until'|translate}}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>{{item.unitPrice}}</td>
+                          <td>{{item.netPrice}}</td>
+                          <td>{{item.deliveryCost}}</td>
+                          <td>{{item.effectivePrice}}</td>
+                          <td>{{item.currency}}</td>
+                          <td>{{item.validUntil | date:'dd/MM/yyyy HH:mm'}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </td>
+                          
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+        <div class="card-footer">
+          <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+            {{'reset' | translate}}
+          </button>
+          <!--[disabled]="!order.purchaseOrderDetailList||order.purchaseOrderDetailList.length==0||!saleForm.form.valid"-->
+          <button type="submit" class="btn btn-sm btn-primary" 
+            [disabled]="!purchaseQuotationDto.purchaseQuotationDetailList
+              ||purchaseQuotationDto.purchaseQuotationDetailList.length==0
+              ||!purchaseQuotationDto.vendorId 
+              || submitted
+              ||!purchaseQuotationDto.purchaseQuotationStatus"
+            (click)="save()">
+            <i class="fa fa-dot-circle-o"></i>
+            {{'save' | translate}}
+          </button>
+
+        </div>
+      </div>
+    </div>
+    <!--/.col-->
+
+    <!--[disabled]="! order.orderDetailList||order.orderDetailList.length==0 ||!order.actId||!saleForm.form.valid"-->
+
+  </div>
+  <!--/.row-->
+
+</div>
+<!--</form>-->
+<ng-template [ngIf]="params.dialog.visible">
+  <p-dialog class="custom-dialog" [blockScroll]="true"
+    header="{{'purchase-quotation-details' | translate}}" [(visible)]="params.dialog.visible"
+    [style]="{width: '900px'}"    [maximizable]="true" #dOrderDetails
+    [contentStyle]="{'min-height':'400px'}" [autoZIndex]="false" [focusOnShow]="false" modal="true" dismissableMask="true">
+    <!---------- MODEL #1 ------------->
+    <p-tabView>
+      <p-tabPanel header="{{'main' | translate}}">
+        <div class="col-md-12">
+          <form #transferDetailForm="ngForm">
+            <table class="table table-bordered ui-fluid">
+              <tbody>
+                <tr>
+                  <td>{{'plant' | translate}}</td>
+                  <td>
+                    <span style="width: 100%;"> {{this.purchaseQuotationDetaildto.plantName}}</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'material' | translate}}</td>
+                  <td>
+                    <span class="bg-readonly form-control" *ngIf="this.purchaseQuotationDetaildto.stockId"
+                      (click)="params.dialog.title = 'material'; myModal.show()">
+                      {{this.purchaseQuotationDetaildto.stockNo}} | {{this.purchaseQuotationDetaildto.stockName}} | {{this.purchaseQuotationDetaildto.stockName2}}
+                    </span>
+                    <span class="bg-readonly form-control" *ngIf="!this.purchaseQuotationDetaildto.stockId"
+                      (click)="params.dialog.title = 'material'; myModal.show()">Click to select</span>
+                  </td>
+                </tr>   
+                <tr>
+                  <td>{{'requested-quantity' | translate}}</td>
+                  <td>
+                    <input type="number" class="form-control" [(ngModel)]="purchaseQuotationDetaildto.requestedQuantity" name="requestedQuantity" min="1" required />
+                </tr>
+                <tr>
+                  <td>{{'quoted-quantity' | translate}}</td>
+                  <td>
+                    <input type="number" class="form-control" [(ngModel)]="purchaseQuotationDetaildto.quotedQuantity" name="quotedQuantity" min="1" required />
+                </tr>
+                <tr >
+                  <td>{{'base-unit' | translate}}</td>
+                  <td>
+                    <span>{{purchaseQuotationDetaildto.baseUnit}}</span>
+                  </td>
+                </tr>
+    
+                <tr>
+                  <td>{{'order-unit' | translate}}</td>
+                  <td>
+                    <div class="input-group">
+                      <select id="orderunit" name="orderunit" class="form-control"
+                        [(ngModel)]="purchaseQuotationDetaildto.orderUnit" required>
+                        <option [value]="null"> {{'please-select' | translate}}</option>
+                        <option *ngFor="let item of unitList" [value]="item.baseUnit">{{item.baseUnit}}
+                        </option>
+                      </select>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'status'|translate}}</td>
+                  <td>
+                    <div class="input-group">
+                      <select name="purchaseOrderStatus" required class="form-control"
+                        [(ngModel)]="purchaseQuotationDetaildto.purchaseQuotationDetailStatus">
+                        <!-- <option [value]="null"> {{'please-select' | translate}}</option> -->
+                        <option *ngFor="let item of quotationStatusList" [value]="item">{{item}}</option>
+                      </select>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'batch-code' | translate}}</td>
+                  <td class="ui-fluid">
+                    <batch-auto-complete [plantId]="purchaseQuotationDetaildto.plantId"
+                      [selectedBatchCode]="purchaseQuotationDetaildto.batch" [actId]="purchaseQuotationDto.vendorId"
+                      [stockId]="purchaseQuotationDetaildto.stockId" [batchLevel]="'PURCHASE_ORDER'"
+                      (selectedBatchEvent)="setSelectedBatch($event)" [addIfMissing]="true"></batch-auto-complete>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>{{'delivery-date'|translate}}</td>
+                  <td class="ui-fluid">
+                    <p-calendar name="deliveryDate"
+                      [(ngModel)]="purchaseQuotationDetaildto.deliveryDate" placeholder="{{'delivery-date'|translate}}"
+                      yearRange="1990:2100" [monthNavigator]="true" [yearNavigator]="true" 
+                      [showIcon]="true" showTime="true">
+                    </p-calendar>
+                  </td>
+                </tr>
+    
+                <tr>
+                  <td>{{'valid-until' | translate}}</td>
+                  <td>
+                    <p-calendar name="validuntil"
+                    [(ngModel)]="purchaseQuotationDetaildto.validUntil" placeholder="{{'valid-date'|translate}}"
+                    yearRange="1990:2100" [monthNavigator]="true" [yearNavigator]="true" 
+                    [showIcon]="true" showTime="true">
+                  </p-calendar>
+                  </td>
+                </tr>
+    
+                <!-- <tr>
+                  <td colspan="2"> -->
+                   
+                    <!--<button type="button" class="btn btn-sm btn-secondary float-right" (click)="goPage()">-->
+                    <!--<i class="icon-arrow-left-circle"></i> {{'cancel' | translate}} </button>-->
+                  <!-- </td> -->
+                <!-- </tr> -->
+              </tbody>
+            </table>
+          </form>
+        </div>
+      </p-tabPanel>
+      <p-tabPanel header="{{'pricing' | translate}}">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header" style="color: white;font-size: larger;">
+                {{'purchase_pricing_information' | translate}}
+              </div>
+              <div class="card-body">
+                <table class="table table-bordered">
+                  <tbody>
+                   <tr>
+                    <td width="35%">
+                      <div class="d-flex justify-content-between align-items-center">
+                        <div style="flex: 1;">{{'material' | translate}} : </div>
+                        <div style="flex: 1;">{{purchaseQuotationDetaildto.stockName}}</div>
+                      </div>
+                    </td>
+                    <td width="35%"> <div class="d-flex justify-content-between align-items-center">
+                      <div style="flex: 1;">{{'vendor' | translate}} : </div>
+                      <div style="flex: 1;">{{purchaseQuotationDto.vendorName}}</div>
+                      </div>
+                      </td>
+                    <td width="35%"> <div class="d-flex justify-content-between align-items-center">
+                      <div style="flex: 1;">{{'base-unit' | translate}} : </div>
+                      <div style="flex: 1;">{{purchaseQuotationDetaildto.baseUnit}}</div></div>
+                    </td>
+                   </tr>
+                   <tr>
+                    <td>
+                      <div class="d-flex justify-content-between align-items-center">
+                        <div style="flex: 1;">{{'currency' | translate}} : </div>
+                        <currency-auto-complete [addIfMissing]="false" [selectedCurrency]="purchaseQuotationDetaildto.currency"
+                        (selectedCurrencyEvent)="purchaseQuotationDetaildto.currency=$event.currencyCode"></currency-auto-complete>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="d-flex justify-content-between align-items-center">
+                        <div style="flex: 1;">{{'quantity' | translate}} : </div>
+                        <input style="flex: 2;" type="number" class="form-control" [(ngModel)]="purchaseQuotationDetaildto.requestedQuantity"
+                         name="pricingquantity"min="1" />
+                      </div>
+                    </td>
+                    <td>
+                      <div class="d-flex justify-content-between align-items-center">
+                        <div style="flex: 1;">{{'order-unit' | translate}} : </div>
+                        <div style="flex: 1;">{{purchaseQuotationDetaildto.orderUnit}}</div>
+                      </div>
+                    </td>
+                   </tr>
+                   <tr>
+                    <td>
+                      <div class="d-flex justify-content-between align-items-center">
+                      <div style="flex: 2;">{{'unit-price' | translate}} : </div>
+                      <input style="flex: 3;" type="number" class="form-control" [(ngModel)]="purchaseQuotationDetaildto.unitPrice"
+                       name="unitprice2"min="1" />
+                       <div style="flex: 1;">{{purchaseQuotationDetaildto.currency}} </div>
+                       </div>
+                     
+                    </td>
+                   </tr>
+                  </tbody>
+                </table>
+                <div class="card">
+                  <div class="card-header" style="color: white;font-size: larger; text-align: center;">
+                    {{'conditions' | translate}}
+                  </div>
+                  <div class="card-body">
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>{{'net-price' | translate}}</th>
+                          <th>{{'delivery-cost' | translate}}</th>
+                          <th>{{'purchase-price' | translate}}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>
+                            <div style="display: flex; align-items: center;">
+                              <div style="flex: 2; margin-right: 11px; display: flex;">
+                                <input  [(ngModel)]="purchaseQuotationDetaildto.netPrice" disabled
+                                type="number" class="form-control" name="netPrice" min="1" />
+                                <button type="button" class="btn btn-sm btn-outline-primary" 
+                                (click)="netPriceOp.toggle($event);"><i class="fa fa-edit"></i></button>
+
+                              </div>
+                            
+                              <div style="flex: 1;">{{purchaseQuotationDetaildto.currency}} </div>
+                            </div>
+                          </td>
+                          <td>
+                            <div style="display: flex; align-items: center;">
+                              <input style="flex: 2; margin-right: 11px;" [(ngModel)]="purchaseQuotationDetaildto.deliveryCost"
+                                (ngModelChange)="purchaseQuotationDetaildto.effectivePrice=purchaseQuotationDetaildto.netPrice
+                                + purchaseQuotationDetaildto.deliveryCost;"
+                                 type="number" class="form-control" name="deliverycostrect" min="1" />
+                              <div style="flex: 1;">{{purchaseQuotationDetaildto.currency}} </div>
+                            </div>
+                            
+                          </td>
+                          <td>
+                            <div style="display: flex; align-items: center;">
+                              <input style="flex: 2; margin-right: 11px;" [(ngModel)]="purchaseQuotationDetaildto.effectivePrice"
+                              type="number" class="form-control" name="effectivePrice" min="1" disabled />
+                           <div style="flex: 1;">{{purchaseQuotationDetaildto.currency}} </div>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+      </p-tabPanel>
+    </p-tabView>
+    <div class="row col-md-12">
+      <button class="btn btn-sm btn-danger" (click)="resetNewItemDetails()"><i class="fa fa-ban"></i>
+        {{'reset' | translate}}
+      </button>
+      <button type="submit" class="btn btn-sm btn-primary" [disabled]="!transferDetailForm.form.valid"
+        (click)="addDetails()"><i class="fa fa-dot-circle-o"></i>
+        {{'add' | translate}}
+      </button>
+    </div>
+  </p-dialog>
+</ng-template>
+
+
+<!------------------------- Modals ---------------------------------------->
+
+<div bsModal [config]="{backdrop: 'static'}" #myModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+  aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-success" role="document"
+    [ngClass]="{'modal-lg':params.dialog.title == 'new-customer' || params.dialog.title == 'material'}">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          <span *ngIf="params.dialog.title == 'new-stock'">{{'new' |translate}} {{'stock' | translate}}</span>
+          <span *ngIf="params.dialog.title == 'new-customer'">{{'new' |translate}} {{'customer' | translate}}</span>
+          <span *ngIf="params.dialog.title == 'material'">Material</span>
+        </h4>
+        <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <ng-container *ngIf="params.dialog.title == 'material'">
+          <div class="form-group row">
+            <!--keep the modal open!!!!!-->
+            <div class="col-md-12">
+              <choose-stock-pane [plantId]="selectedPlant.plantId"
+                (selectedEvent)="onSelectMaterial($event);myModal.hide()" [hideCaption]=false [onlyAddButton]="true">
+              </choose-stock-pane>
+            </div>
+          </div>
+        </ng-container>
+        <!---------- MODEL #2 ------------->
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="myModal.hide()">{{'close' | translate}}</button>
+      </div>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+<p-overlayPanel #netPriceOp appendTo="body" [baseZIndex]="99999" [showCloseIcon]="true" [style]="{width: '450px'}">
+  <ng-template pTemplate>
+    <table class="table table-bordered">
+      <tbody>
+        <tr>
+          <td>{{'gross-price' | translate}} : </td>
+          <td>
+            <input class="form-control" type="number" name="grossPrice" [(ngModel)]="purchaseQuotationDetaildto.grossPrice" 
+            (ngModelChange)="onPriceChanges($event)"/>
+          </td>
+        </tr>
+        <tr>
+          <td>{{'discount-percentage' | translate}} : </td>
+          <td>
+            <input class="form-control" type="number" name="discountPercentage" [(ngModel)]="purchaseQuotationDetaildto.discountPercentage"
+            (ngModelChange)="onPriceChanges($event)" />
+          </td>
+        </tr>
+        <tr>
+          <td>{{'discount-price' | translate}} : </td>
+          <td>
+            <input class="form-control" type="number" name="discoutPrice" disabled [(ngModel)]="purchaseQuotationDetaildto.discountPrice" />
+          </td>
+        </tr>
+        <tr>
+          <td>{{'net-price' | translate}} : </td>
+          <td>
+            <input class="form-control" type="number" name="netPriceL" disabled [(ngModel)]="purchaseQuotationDetaildto.netPrice" />
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <button class="btn btn-outline-primary" (click)="purchaseQuotationDetaildto.effectivePrice=purchaseQuotationDetaildto.netPrice
+            + purchaseQuotationDetaildto.deliveryCost; purchaseQuotationDetaildto.netPrice=purchaseQuotationDetaildto.effectivePrice
+            - purchaseQuotationDetaildto.deliveryCost; netPriceOp.hide();">
+              {{'save'| translate}}
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </ng-template>
+</p-overlayPanel>

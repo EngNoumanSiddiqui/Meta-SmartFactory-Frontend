@@ -1,0 +1,78 @@
+
+<div class="card" id="print-section">
+
+  <div class="col-lg-12">
+
+    <div class="row ui-fluid badge-light border p-2 ">
+      <div class=" col-md-3">
+        <workstation-auto-complete [plantId]="plantId" (selectedWorkStationEvent)="setSelectedWorkStation($event)"></workstation-auto-complete>
+      </div>
+      <div class="col-md-3 ">
+          <p-calendar [showIcon]="true" dateFormat="dd.mm.yy"
+                      [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                      [(ngModel)]="filterCon.startDate" placeholder="{{'start-date'|translate}}"></p-calendar>
+      </div>
+      <div class="col-md-3 ">
+        <p-calendar [showIcon]="true" dateFormat="dd.mm.yy"
+                    [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                    [(ngModel)]="filterCon.endDate" placeholder="{{'end-date'|translate}}"></p-calendar>
+      </div>
+      <div class="col-md-auto">
+        <button type="button" pButton class="ui-button-info   "
+                [disabled]="!filterCon.workStationId"
+                (click)="analyze()" label="{{'analyze' | translate}}">
+        </button>
+
+      </div>
+    </div>
+<ng-template [ngIf]="myItems">
+    <div class="row" style="margin-bottom: 20px">
+      <p-table #dt  [columns]="cols" [value]="myItems" [rows]="20" [paginator]="true"  dataKey="workStationId" [(selection)]="selectedWorkStations" >
+
+        <ng-template pTemplate="caption">
+          <div  class="ui-helper-clearfix" style="text-align:left">
+            <button pButton style="margin-right: 5px" class="ui-button-info float-left" type="button"  icon="fa fa-file-alt" iconPos="left" label="{{'export-image'|translate}}" (click)="exportAsPng('print-section')"></button>
+
+            <button pButton style="margin-right: 5px" class="ui-button-warning float-right" type="button"  icon="fa fa-file-alt" iconPos="left" label="{{'export-all'|translate}}" (click)="dt.exportCSV()"></button>
+            <button pButton style="margin-right: 5px" class="ui-button-warning float-right" type="button"  icon="fa fa-file" iconPos="left" label="{{'export-selected'|translate}}" (click)="dt.exportCSV({selectionOnly:true})"
+            ></button>
+          </div>
+          <!--<hr>-->
+
+        </ng-template>
+        <ng-template pTemplate="header" let-columns>
+
+          <tr >
+            <th style="width: 3em">
+              <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+            </th>
+            <th *ngFor="let col of columns">
+              {{col.header|translate}}
+            </th>
+          </tr>
+
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-index="rowindex" let-columns="columns">
+          <tr [pSelectableRow]="rowData">
+            <td style="width: 3em">
+              <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+            </td>
+            <td *ngFor="let col of columns" style="cursor: pointer">
+              <span *ngIf="index!=myItems.length-1"> {{rowData[col.field]}}</span>
+              <strong *ngIf="index==myItems.length-1"> {{rowData[col.field]}}</strong>
+            </td>
+          </tr>
+
+        </ng-template>
+      </p-table>
+
+    </div>
+
+</ng-template>
+
+  </div>
+
+</div>
+
+
+

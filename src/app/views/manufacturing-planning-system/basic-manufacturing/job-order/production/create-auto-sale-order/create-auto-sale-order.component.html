@@ -1,0 +1,838 @@
+<div class="animated fadeIn">
+  <!--<div class="badge-info header-dass" ><h3 class="text-white " >{{'job-order-management'|translate}}</h3></div>-->
+  <!--------- UST TABLOLAR -------------->
+  <form class="form" novalidate [formGroup]="orderFilterForm">
+    <div class="card" id="daily-jb">
+      <div class="col-lg-12">
+        <div class="row ui-fluid  badge-light border p-2 m-minus-10">
+          <div class="col-md-3">
+            <p-calendar formControlName="orderStartDate" [showIcon]="true" dateFormat="dd.mm.yy" [monthNavigator]="true"
+              [yearNavigator]="true" yearRange="1990:2100" placeholder="{{'order-start-date'|translate}}">
+            </p-calendar>
+          </div>
+          <div class="col-md-3">
+            <p-calendar formControlName="orderEndDate" [showIcon]="true" dateFormat="dd.mm.yy" [monthNavigator]="true"
+              [yearNavigator]="true" yearRange="1990:2100" placeholder="{{'order-end-date'|translate}}">
+            </p-calendar>
+          </div>
+
+          <div class="col-md-2">
+            <p-autoComplete formControlName="orderStatus" [(ngModel)]="brand" [suggestions]="filteredBrands"
+              (completeMethod)="filterBrands($event)" [size]="30" [minLength]="1" placeholder="Status"
+              [dropdown]="true">
+            </p-autoComplete>
+          </div>
+          <div class="col-md-2">
+            <p-calendar formControlName="deliverDate" [showIcon]="true" dateFormat="dd.mm.yy" [monthNavigator]="true"
+              [yearNavigator]="true" yearRange="1990:2100" placeholder="{{'delivery-date'|translate}}">
+            </p-calendar>
+          </div>
+          <div class="col-md-2">
+            <button type="button" class="btn btn-sm btn-primary btn-block active" style="margin-top: 2px"
+              (click)="filter()">{{'filter'|translate}}
+            </button>
+          </div>
+        </div>
+      </div>
+      <!--/.col-->
+    </div>
+  </form>
+  <!--UST Tool-->
+  <div class="row">
+    <div class="col-md-8" style="padding-left: 5px;padding-right: 5px;">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header">
+              <i class="fa fa-align-justify"></i> {{'create-job-order-auto' | translate}}
+            </div>
+            <div class="card-body">
+              <p-table #dr [value]="autoCreatedJobOrders" scrollable="true" [rows]="pagination.rows"
+                [totalRecords]="pagination.totalElements" scrollHeight="55vh" selectionMode="single"
+                (onRowSelect)="assignOrder($event)">
+                <ng-template pTemplate="header">
+                  <tr class="text-center">
+                    <th>{{'sales-order-id' | translate}}</th>
+                    <th>{{'sales-order-detail-id' | translate}}</th>
+                    <th>{{'stock-no' | translate}}</th>
+                    <th>{{'stock' | translate}}</th>
+                    <th>{{'reference-id' | translate}}</th>
+                    <!-- <th>{{'plant' | translate}}</th> -->
+                    <th>{{'warehouse' | translate}}</th>
+                    <th>{{'order-quantity' | translate}}</th>
+                    <th>{{'unit' | translate}}</th>
+                    <th>{{'planned-quantity' | translate}}</th>
+                    <th>{{'order-date' | translate}}</th>
+                    <th>{{'delivery-date' | translate}}</th>
+                  </tr>
+                  <tr>
+                    <th class="ui-fluid">
+                      <span><input pInputText name="orderId" [(ngModel)]="pageFilter['orderId']" (input)="filterByColumn($event.target.value,'orderId')"/></span>
+                    </th>
+                    <th class="ui-fluid">
+                      <span><input pInputText name="orderDetailId" [(ngModel)]="pageFilter['orderDetailId']" (input)="filterByColumn($event.target.value,'orderDetailId')"/></span>
+                    </th>
+                    <th class="ui-fluid">
+                      <span><input pInputText name="stockNo" [(ngModel)]="pageFilter['stockNo']" (input)="filterByColumn($event.target.value,'stockNo')"/></span>
+                    </th>
+                    <th class="ui-fluid">
+                      <span><input pInputText name="stockName" [(ngModel)]="pageFilter['stockName']" (input)="filterByColumn($event.target.value,'stockName')"/></span>
+                    </th>
+                    <th class="ui-fluid">
+                      <span><input pInputText name="referenceId" [(ngModel)]="pageFilter['referenceId']" (input)="filterByColumn($event.target.value,'referenceId')"/></span>
+                    </th>
+                    <!-- <th class="ui-fluid">
+                      <span></span>
+                    </th> -->
+                    <th class="ui-fluid">
+                      <span><input pInputText name="warehouseName" [(ngModel)]="pageFilter['warehouseName']" (input)="filterByColumn($event.target.value,'warehouseName')"/></span>
+                    </th>
+                    <th class="ui-fluid">
+                      <span><input pInputText name="orderQuantity" [(ngModel)]="pageFilter['orderQuantity']" (input)="filterByColumn($event.target.value,'orderQuantity')"/></span>
+                    </th>
+                    <th class="ui-fluid"><span></span></th>
+                    <th class="ui-fluid">
+                      <span><input pInputText name="plannedQuantity" [(ngModel)]="pageFilter['plannedQuantity']" (input)="filterByColumn($event.target.value,'plannedQuantity')"/></span>
+                    </th>
+                    <th class="ui-fluid"><span></span></th>
+                    <th class="ui-fluid"><span></span></th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-rowData>
+                  <tr [pSelectableRow]="rowData" (click)="selectProdItem(rowData)">
+                    <td>
+                      <a href="javascript:;" (click)="showSalesOrderDetail(rowData.orderId)">{{rowData.orderId}}</a>
+                    </td>
+                    <td>
+                      <a href="javascript:;"
+                        (click)="showSalesOrderItemDetail(rowData.orderDetailId)">{{rowData.orderDetailId}}</a>
+                    </td>
+                    <td>
+                      <a href="javascript:;" (click)="showMaterialDetail(rowData.stockId)">{{rowData.stockNo}}</a>
+                    </td>
+                    <td>
+                      <a href="javascript:;" (click)="showMaterialDetail(rowData.stockId)">{{rowData.stockName}}</a>
+                    </td>
+                    <td>
+                      {{rowData.referenceId}}
+                    </td>
+                    <!-- <td>
+                      <a href="javascript:;" (click)="showPlantDetail(rowData.plantId)">{{rowData.plantName}}</a>
+                    </td> -->
+                    <td>
+                      <a href="javascript:;"
+                        (click)="showWarehouseDetail(rowData.warehouseId)">{{rowData.warehouseName}}</a>
+                    </td>
+                    <td> {{rowData.quantity}}</td>
+                    <td> {{rowData.unit}}</td>
+                    <td> {{rowData.plannedQuantity}}</td>
+                    <td> {{rowData.orderDate|date:'dd/MM/yyyy HH:mm'}}</td>
+                    <td> {{rowData.deliveryDate|date:'dd/MM/yyyy HH:mm'}}</td>
+                  </tr>
+                </ng-template>
+              </p-table>
+
+              <div class="row">
+                <app-paging [TotalElements]="pagination.totalElements" [showSearch]="false"
+                  [CurrentPage]="pagination.currentPage" [PageSize]="pagination.pageSize" [rows]="pagination.rows"
+                  [TotalPageLinkButtons]="pagination.TotalPageLinkButtons"
+                  [RowsPerPageOptions]="pagination.RowsPerPageOptions" (onPageChange)="myChanges($event)">
+                </app-paging>
+                <span style="margin-left:2px; padding-top: 2px " class="text-muted">{{'total-records'|translate}}:
+                  {{pagination?.totalElements}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!---<div class="row">
+       </div>!-->
+    </div>
+    <div class="col-md-4" style="padding-left: 0px; padding-right: 5px;">
+      <div class="col-md-12" style="padding-left: 0px; padding-right: 1px;">
+        <div class="card">
+          <div class="card-header"><i class="fa fa-align-justify"></i> {{'product-tree' | translate}}</div>
+          <div class="card-body p-0">
+            <div class="col-md-12" *ngIf="isLoading">
+              <p-progressBar mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>
+            </div>
+            <table class="table table-bordered" style="margin-bottom: 0px; border-spacing: 0px;">
+              <thead>
+                <th style="max-width: 60px;">Prod Tree Id</th>
+                <th style="max-width: 70px;">{{'stock' | translate}}</th>
+                <th>{{'stock-no' | translate}}</th>
+                <th style="max-width: 63px;">{{'revision-no' | translate}}</th>
+                <th style="max-width: 70px;">{{'workstation' | translate}}</th>
+                <th>{{'plant' | translate}}</th>
+              </thead>
+              <tbody *ngIf="productTreees">
+                <ng-container *ngFor="let item of productTreees">
+                  <tr (click)="selectProductTreeItem(item)"
+                    [ngClass]="{'selectedItem' : selectedProductTreeItem === item}">
+                    <td>
+                      <a href="javascript:;"
+                        (click)="showProductTreeDetail(item.productTreeId)">{{item.productTreeId}}</a>
+                    </td>
+                    <td style="max-width: 70px;">
+                      <a href="javascript:;"
+                        (click)="showMaterialDetail(item.material?.stockId)">{{item.material?.stockName}}</a>
+                    </td>
+                    <td style="max-width: 70px;">
+                      <a href="javascript:;"
+                        (click)="showMaterialDetail(item.material?.stockId)">{{item.material?.stockNo}}</a>
+                    </td>
+                    <td style="max-width: 63px;">{{item.revisionNo}}</td>
+                    <td style="max-width: 70px;">
+                      <a href="javascript:;"
+                        (click)="showWorkStationDetail(item.workstation?.workStationId)">{{item.workstation?.workStationName}}</a>
+                    </td>
+                    <td>
+                      <a href="javascript:;"
+                        (click)="showPlantDetail(item.plant?.plantId)">{{item.plant?.plantName}}</a>
+                    </td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header"><i class="fa fa-align-justify"></i> {{'order-info' | translate}}</div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-12">
+                  <label for="jobOrderType">Job Order Type *</label>
+                  <select id="jobOrderType" name="jobOrderType" class="form-control" required
+                    [(ngModel)]="newJobOrderFromExisting.jobOrderType" placeholder="Select Job Order Type">
+                    <option [ngValue]="null"> Select Job Order Type</option>
+                    <option *ngFor="let item of jobOrderTypes" value="{{item}}">{{item}}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="form-group">
+                    <label for="orderQuantity">{{'sales-order-quantity' | translate}}</label>
+                    <input type="number" class="form-control" id="orderQuantity" placeholder="" disabled
+                      [(ngModel)]="newJobOrderFromExisting.orderQuantity">
+                  </div>
+                </div>
+              </div>
+              <!--/.row-->
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="form-group">
+                    <label for="existingInStock">{{'existing-stock' | translate}}</label>
+                    <input type="text" class="form-control" id="existingInStock" placeholder="" disabled
+                      [(ngModel)]="newJobOrderFromExisting.existingInStock">
+                  </div>
+                </div>
+              </div>
+              <!--/.row-->
+
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="form-group">
+                    <label for="neededQuantity">{{'production-order-quantity' | translate}}</label>
+                    <input type="text" class="form-control" id="neededQuantity" placeholder=""
+                      [(ngModel)]="newJobOrderFromExisting.neededQuantity" (ngModelChange)="quantityChange($event)">
+                  </div>
+                </div>
+
+              </div>
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="form-group">
+                    <label
+                      for="extraProducedQuantityPercentage">{{'extra-produced-quantity-percentage' | translate}}</label>
+                    <input type="number" class="form-control" id="extraProducedQuantityPercentage" min="0" max="100"
+                      pattern="^$|^([0-9]|[1-9][0-9]|[1][0][0])?"
+                      [(ngModel)]="newJobOrderFromExisting.extraProducedQuantityPercentage"
+                      (ngModelChange)="extraProducedQuantityPercentageChange($event)">
+                  </div>
+                </div>
+
+              </div>
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="form-group">
+                    <button type="button" class="btn btn-primary btn-block active"
+                      [disabled]="(newJobOrderFromExisting.extraProducedQuantityPercentage > 100 
+                      || !newJobOrderFromExisting.jobOrderType) || !selectedProductTreeItem"
+                      (click)="getCreateJobs(myModal);">{{'add-job-order' | translate}}
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <!--/.row-->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!---------- ALT TABLO  ------------------>
+</div>
+<!------------------------- Modals ---------------------------------------->
+<div bsModal [config]="{backdrop: 'static', keyboard: false}" #myModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+  aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-success modal-md" role="document" style="max-width: 80%;">
+    <div class="modal-content ">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          {{'sales-production-order' |translate}}
+        </h4>
+        <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <!---------- MODEL #Stocks ------------->
+      <!--production order detail modal-->
+      <div class="modal-body">
+        <!---------- MODEL #1 ------------->
+        <div class="form-group row">
+          <div class="col-md-12">
+            <p-tabView>
+              <p-tabPanel header="{{'production-order-details' | translate}}">
+                <div class="col-md-12">
+                  <div class="card">
+                    <div class="card-header">
+                      <i class="fa fa-align-justify"></i> {{'production-order-details' | translate}}
+                    </div>
+                    <div class="card-body">
+                    <form #saleForm="ngForm" class="form-horizontal ui-fluid">
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="saleOrderId">{{'sales-order-id' | translate}}</label>
+                            <div class="col-md-9">
+                              <!--[(ngModel)]="newProductionOrder.orderId"-->
+                              <input type="text" id="saleOrderId" name="saleOrderId" readonly
+                                [(ngModel)]="newProductionOrder.orderId" class="form-control"
+                                placeholder="{{'sales-order-id' | translate}}">
+                            </div>
+                          </div>
+        
+                          <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="saleOrderDetailId">{{'sales-order-detail-id' |
+                              translate}}</label>
+                            <div class="col-md-9">
+                              <input type="text" id="saleOrderDetailId" name="saleOrderDetailId" readonly
+                                [(ngModel)]="newProductionOrder.orderDetailId" class="form-control"
+                                placeholder="{{'sales-order-detail-id' | translate}}">
+                            </div>
+                          </div>
+        
+                          <div class="form-group row">
+                            <label class="col-md-3 col-form-label">{{'material' | translate}}</label>
+                            <div class="col-md-9 ui-fluid">
+                              <stock-auto-complete [dropdown]="true" [required]="true"
+                                [selectedStockId]="newProductionOrder.materialId" [disabled]="!isManual"></stock-auto-complete>
+        
+                            </div>
+                          </div>
+                          <!-- <div class="form-group row">
+                            <label class="col-md-3 col-form-label">{{'plant' | translate}}</label>
+                            <div class="col-md-9">
+                              <span class="bg-readonly form-control">{{newProductionOrder.plantName}}</span>
+                            </div>
+                          </div> -->
+        
+                          <div class="form-group row">
+                            <label class="col-md-3 col-form-label">{{'warehouse' | translate}}</label>
+                            <div class="col-md-9">
+                              <!-- <span class="bg-readonly form-control">{{newProductionOrder.wareHouseName}}</span> -->
+                              <warehouse-auto-complete [disabled]="!newProductionOrder.plantId" [selectedWareHouseId]="newProductionOrder.wareHouseId"
+                                                      [plantId]="newProductionOrder.plantId" (selectedWareHouseEvent)="setSelectedWarehouse($event)"
+                                                      [type]="'GOODS'" setDefaultSelected="true"></warehouse-auto-complete>
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label class="col-md-3 col-form-label">{{'location' | translate}}</label>
+                            <div class="col-md-9">
+                              <span class="bg-readonly form-control"
+                              *ngIf="!newProductionOrder.locationNo" (click)="warehouseLocationModal.active=true;">{{'select-location' | translate}}</span>
+                            <span class="bg-readonly form-control"
+                              *ngIf="newProductionOrder.locationNo" (click)="warehouseLocationModal.active=true;">{{ newProductionOrder.locationNo | translate}}</span>
+                              <!-- <location-auto-complete [selectedLocationNo]="newProductionOrder.locationNo" [addIfMissing]="true" 
+                              (selectedLocationEvent)="newProductionOrder.locationNo=$event?.locationNo" ></location-auto-complete> -->
+                            </div>
+                        </div>
+        
+                          <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="prodOrderTypeList">{{'production-order-type' | translate}}</label>
+                            <div class="col-md-9">
+                              <div class="input-group">
+        
+                                <select id="prodOrderTypeList" name="prodOrderTypeList" class="form-control" required
+                                  [(ngModel)]="newProductionOrder.prodOrderType">
+                                  <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                                  <option *ngFor="let item of prodOrderTypeList" value="{{item}}">{{item}}</option>
+                                </select>
+        
+                              </div>
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label class="col-md-3 col-form-label">{{'batch-code' | translate }}</label>
+                            <div class="col-md-9">
+                              <div class="ui-fluid">
+        
+                                <batch-auto-complete [PORData]="poData" [addIfMissing]="true"
+                                  [plantId]="newProductionOrder.plantId" [selectedBatchCode]="newProductionOrder.batch"
+                                  [actId]="actId" [batchLevel]="'PRODUCTION_ORDER'" [stockId]="newProductionOrder.materialId"
+                                  (selectedBatchEvent)="setSelectedBatch($event)"></batch-auto-complete>
+        
+                              </div>
+                              <!-- <input *ngIf="newProductionOrder.batchExist" type="text" id="batch" name="batch"
+                                    [(ngModel)]="newProductionOrder.batch"
+                                    class="form-control" placeholder="{{'batch' | translate}}"> -->
+                            </div>
+        
+                          </div>
+
+                          <div class="form-group row">
+                            <label class="col-md-3 col-form-label">{{'barcode' | translate }}</label>
+                            <div class="col-md-9">
+                              <input  type="text" id="barcode" name="barcode"
+                                  [(ngModel)]="newProductionOrder.barcode" class="form-control"
+                                  placeholder="{{'please-enter' | translate}}">
+                            </div>
+                        </div>
+        
+        
+                          <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="prodOrderQuantity">{{'production-order-quantity' |
+                              translate}}</label>
+                            <div class="col-md-9">
+                              <input type="text" id="prodOrderQuantity" name="prodOrderQuantity" required
+                                [(ngModel)]="newProductionOrder.quantity" [readonly]="!isManual" class="form-control"
+                                placeholder="{{'please-enter' | translate}}">
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="extraProducedQuantityPercentage">{{'extra-produced-quantity-percentage' |
+                              translate}}</label>
+                            <div class="col-md-9">
+                              <input type="number" id="extraProducedQuantityPercentage" name="extraProducedQuantityPercentage"
+                                required [(ngModel)]="newProductionOrder.extraProducedQuantityPercentage" [readonly]="!isManual"
+                                min="0" max="100" class="form-control">
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="prodOrderBaseUnit">{{'production-order-base-unit' |
+                              translate}}</label>
+                            <div class="col-md-9">
+                              <input type="text" disabled id="prodOrderBaseUnit" name="prodOrderBaseUnit"
+                                [(ngModel)]="newProductionOrder.baseUnit" class="form-control"
+                                placeholder="{{'production-order-base-unit' | translate}}">
+                            </div>
+                          </div>
+        
+        
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group row ">
+                            <label class="col-md-3 col-form-label"> {{'production-order-start-date' | translate}}</label>
+                            <div class="col-md-9 ui-g-9 ui-md-9">
+                              <p-calendar [(ngModel)]="newProductionOrder.startDate" [monthNavigator]="true"
+                                [yearNavigator]="true" yearRange="2020:2100" [minDate]="minDateValue" name="startDate" showTime="true"
+                                [showIcon]="true" dateFormat="dd/mm/yy" required></p-calendar>
+                            </div>
+                          </div>
+                          <div class="form-group row ">
+                            <label class="col-md-3 col-form-label"> {{'minimum-delay-quantity' | translate}}</label>
+                            <div class="col-md-9 ui-g-9 ui-md-9">
+                                <input type="number" id="minimumDelayQuantityBetweenOperation" name="minimumDelayQuantityBetweenOperation"
+                                 [(ngModel)]="newProductionOrder.minimumDelayQuantityBetweenOperation"  class="form-control" />
+                            </div>
+                          </div>
+                          <div class="form-group row ">
+                            <label class="col-md-3 col-form-label"> {{'production-order-finish-date' | translate}}</label>
+                            <div class="col-md-9 ui-g-9 ui-md-9">
+                              <p-calendar [(ngModel)]="newProductionOrder.finishDate" [monthNavigator]="true"
+                                [yearNavigator]="true" yearRange="2020:2100" [minDate]="minDateValue" name="finishDate" showTime="true"
+                                [showIcon]="true" dateFormat="dd/mm/yy" required></p-calendar>
+                            </div>
+                          </div>
+                        
+                          <div class="form-group row ">
+                            <label class="col-md-3 col-form-label"> {{'priority' | translate}}</label>
+                            <div class="col-md-9 ui-g-9 ui-md-9">
+                              <select [(ngModel)]="newProductionOrder.priority" id="priorityId" name="priorityId"
+                                class="form-control" (change)="prioritySelection($event)" required>
+                                <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                                <option value="{{priority}}" *ngFor="let priority of commonPriorities">{{priority}}
+                                </option>
+                              </select>
+                          </div>
+                        </div>
+                        <div class="form-group row ">
+                          <label class="col-md-3 col-form-label"> {{'reference-id' | translate}}</label>
+                          <div class="col-md-9 ui-g-9 ui-md-9">
+                              <input type="text" id="referenceId" name="referenceId"
+                               [(ngModel)]="newProductionOrder.referenceId"  class="form-control" />
+                          </div>
+                        </div>
+                        <div class="form-group row ">
+                          <label class="col-md-3 col-form-label"> {{'description' | translate}}</label>
+                          <div class="col-md-9 ui-g-9 ui-md-9">
+                            <textarea id="description" name="description"
+                            [(ngModel)]="newProductionOrder.description"  class="form-control" ></textarea>
+                          </div>
+                        </div>
+                        <div class="form-group row ">
+                          <label class="col-md-3 col-form-label"> {{'project' | translate}}</label>
+                          <div class="col-md-9 ui-g-9 ui-md-9">
+                             <project-auto-complete [projectId]="newProductionOrder.projectId" 
+                             (selectedProjectEvent)="newProductionOrder.projectId=$event?.projectId"></project-auto-complete>
+                          </div>
+                        </div>
+                        <div class="form-group row ">
+                          <label class="col-md-3 col-form-label"> {{'milestone' | translate}}</label>
+                          <div class="col-md-9 ui-g-9 ui-md-9">
+                             <milestone-auto-complete [projectId]="newProductionOrder.projectId" [milestoneId]="newProductionOrder.milestoneId" 
+                             (selectedMilestoneEvent)="newProductionOrder.milestoneId=$event?.milestoneId"></milestone-auto-complete>
+                          </div>
+                        </div>
+                        </div>
+                      </div>
+                      <!-- <div class="form-group row">
+                        <label class="col-md-3 col-form-label" for="prodOrderGrQuantity">{{'production-order-gr-quantity' |
+                          translate}}</label>
+                        <div class="col-md-9">
+                          <input type="text" id="prodOrderGrQuantity" name="prodOrderGrQuantity"
+                                [(ngModel)]="newProductionOrder.grQuantity"
+                                class="form-control" placeholder="{{'production-order-gr-quantity' | translate}}">
+    
+                        </div>
+                      </div> -->
+    
+    
+                      <!-- <div class="form-group row">
+                        <label class="col-md-3 col-form-label" for="prodOrderUnitList">{{'production-order-unit' |
+                          translate}}</label>
+                        <div class="col-md-9">
+                          <div class="input-group">
+    
+                            <select id="prodOrderUnitList" name="prodOrderUnitList"
+                              [disabled]="!unitList|| unitList.length==0" class="form-control"
+                              [(ngModel)]="newProductionOrder.orderUnit">
+                              <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                              <option *ngFor="let item of unitList" value="{{item.alternativeUnit}}">
+                                {{item.alternativeUnit}}
+                              </option>
+                            </select>
+    
+                          </div>
+                        </div>
+                      </div> -->
+                      <!--Buraya bazı alanlar gelecek???-->
+                      
+    
+                    </form>
+                    </div>
+                  </div>
+                </div>
+              </p-tabPanel>
+              <p-tabPanel header="{{'job-order-details' | translate}}">
+                <div class="card">
+                  <div class="card-header">
+                    <i class="fa fa-align-justify"></i> {{'job-order-details' | translate}}
+                  </div>
+                  <div class="card-body">
+                  <div class="col-md-12 p-table-sm" *ngIf="createdJobOrders.length > 0">
+
+                    <p-table #dr [value]="createdJobOrders" [(selection)]="selectedCreateJobOrders"
+                      [rows]="createdJobOrdersRowCount" dataKey="jIndex" scrollable="true" scrollHeight="65vh">
+        
+                      <ng-template pTemplate="header">
+                        <tr class="text-center">
+                          <!-- <th style="width: 4em">
+                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                          </th> -->
+                          <th>{{'order-no' | translate}}</th>
+                          <th>{{'job-order-quantity' | translate}}</th>
+                          <th>{{'operation' | translate}}</th>
+                          <th>{{'input' | translate}}</th>
+                          <th>{{'output' | translate}}</th>
+                          <th>{{'production-type' | translate}}</th>
+                          <!-- <th>{{'workstation' | translate}}</th> -->
+                          <!-- <th>{{'batch' | translate}}</th> -->
+                        </tr>
+        
+                      </ng-template>
+                      <ng-template pTemplate="body" let-rowData let-expanded="expanded">
+                        <tr [pSelectableRow]="rowData">
+                          <!-- <td style="width: 4em">
+                            <b>
+                              <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                            </b>
+                            <a href="#" [pRowToggler]="rowData">
+                              <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+                            </a>
+                          </td> -->
+                          <td> {{rowData.orderFNo}}</td>
+                          <td> {{rowData.expectedQuantity}}</td>
+                          <td style="padding: 0px;">
+                            <span>
+                              <table style="display: grid;">
+                                <tr *ngFor="let item of rowData?.jobOrderOperations; last as isLast"
+                                  [style.borderBottom]="!isLast ? '1px solid #c8c8c8': ''">
+                                  <td style="padding: 0.3em">
+                                    <a href="javascript:;" (click)="showOperationDetail(item.operationId)"
+                                      style="word-break: break-word;">{{item.operationName}}</a></td>
+                                </tr>
+                              </table>
+                          </span>
+                          </td>
+                          <td style="padding: 0px;">
+                            <table>
+                              <ng-container *ngFor="let operation of rowData?.jobOrderOperations; last as oLast">
+                                <tr [style.borderBottom]="!oLast ? '1px solid #c8c8c8': ''">
+                                  <td style="padding: 0.3em">
+                                    <ng-container *ngFor="let item of operation?.jobOrderStockUseList; last as isLast">
+                                      <a href="javascript:;" (click)="showMaterialDetail(item.stockId)">{{item.stockName}}</a>
+                                      <span *ngIf="!isLast">, </span>
+                                  </ng-container>
+                                  </td>
+                                </tr>
+          
+                              </ng-container>
+                            </table>
+                          </td>
+                          <td style="padding: 0px;">
+                            <span>
+                              <table>
+                                <ng-container *ngFor="let operation of rowData?.jobOrderOperations; last as oLast">
+                                  <tr [style.borderBottom]="!oLast ? '1px solid #c8c8c8': ''">
+                                    <td style="padding: 0.3em">
+                                      <ng-container *ngFor="let item of operation?.jobOrderStockProduceList; last as isLast">
+                                        <a href="javascript:;" (click)="showMaterialDetail(item.stockId)">{{item.stockName}}</a>
+                                        <span *ngIf="!isLast">, </span>
+                                    </ng-container>
+                                    </td>
+                                  </tr>
+            
+                                </ng-container>
+                              </table>
+                            </span>
+                          </td>
+                          <td>{{rowData?.productionType}}</td>
+                        </tr>
+                      </ng-template>
+                      <ng-template pTemplate="rowexpansion" let-rowData let-columns="columns">
+                        <tr>
+                          <td colspan="6">
+                            <div class="bg-white pt-1" id="JobOrderComponent">
+                              <job-order-row-detail [data]="rowData"></job-order-row-detail>
+                            </div>
+                          </td>
+                        </tr>
+                      </ng-template>
+                    </p-table>
+        
+                  </div>
+                  </div>
+                </div>
+              </p-tabPanel>
+              <p-tabPanel header="{{'production-order-material-list' | translate}}">
+                <div class="card">
+                  <div class="card-header">
+                      {{'production-order-material-list' | translate}}
+                      <div class="card-actions">
+                          <button (click)="addProdOrderMaterialList()" class="btn btn-sm btn-success" style="color: green;background: green;color: white">{{'add' | translate}}</button>
+                      </div>
+                  </div>
+                  <div class="card-body">
+                      <table class="table table-bordered">
+                          <thead>
+                              <tr>
+                                  <!-- <th>{{'combine-production-order-type' | translate}}</th> -->
+                                  <th>{{'material-name' | translate}}</th>
+                                  <th>{{'quantity' | translate}}</th>
+                                  <th>{{'unit' | translate}}</th>
+                                  <th>{{'job-order-id' | translate}}</th>
+                                  <th>{{'output-ratio' | translate}}</th>
+                                  <th>{{'action' | translate}}</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              <tr *ngFor="let materialItem of prodOrderMaterialList; let index=index">
+                                  <!-- <td>
+                                      <select class="form-control" [(ngModel)]="materialItem.combineProdOrderType" (change)="materialItem.combineProdOrderType= $event.target.value">
+                                          <option value="{{cActivityType}}" *ngFor="let cActivityType of combineActivityTypes">{{cActivityType}}
+                                          </option>
+                                      </select>
+                                  </td> -->
+                                  <td class="ui-fluid">
+                                     <ng-container *ngIf="!materialItem?.newlyAdded; else editableStock">
+                                          {{materialItem.materialName}}
+                                     </ng-container>
+                                     <ng-template #editableStock>
+                                      <select class="form-control" [(ngModel)]="materialItem.materialId" (ngModelChange)="setSelectedMaterial($event, index)">
+                                          <option [value]="material.materialId" *ngFor="let material of materialList">{{material.materialId}} | {{material.materialName}}
+                                          </option>
+                                      </select>
+                                  </ng-template>
+                                  </td>
+                                  <td><input  class="form-control" type="number" [(ngModel)]="materialItem.quantity" /></td>
+                                  <td>{{materialItem.quantiyUnit}}</td>
+                                  <td>{{materialItem.combinejobOrderId}}</td>
+                                  <td><input  class="form-control" type="text" [(ngModel)]="materialItem.outputRate" /></td>
+                                  <td>
+                                      <button class="btn btn-sm btn-outline-danger" type="button" (click)="onDeleteProdOrderMaterialList(materialItem, index)"><i class="fa fa-window-close"></i></button>
+                                  </td>
+                              </tr>
+                          </tbody>
+                      </table>
+                  </div>
+                </div>
+              </p-tabPanel>
+              <p-tabPanel header="{{'costing' | translate}}">
+                <div class="row">
+                  <div class="col-lg-12">
+                    <table class="table table-bordered">
+                      <tbody>
+                        <tr>
+                          <td width="30%">{{'estimated-cost' | translate}}</td>
+                          <td>
+                            <input class="form-control" type="number" min="1" name="estimatedCost" [(ngModel)]="newProductionOrder.estimatedCost" />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td width="30%">{{'actual-cost' | translate}}</td>
+                          <td>
+                            <input class="form-control" type="number" min="1" name="actualCost"  [(ngModel)]="newProductionOrder.actualCost" />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td width="30%">{{'final-cost' | translate}}</td>
+                          <td>
+                            <input class="form-control" readonly type="number" min="1" name="finalCost" [(ngModel)]="newProductionOrder.finalCost" />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td width="30%">{{'currency' | translate}}</td>
+                          <td>
+                            <currency-auto-complete [disabled]="true" [selectedCurrency]="newProductionOrder.currency" (selectedCurrencyEvent)="newProductionOrder.currency=$event?.currencyCode"></currency-auto-complete>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td width="30%">{{'cost-center' | translate}}</td>
+                          <td>
+                            <cost-center-auto-complete [costCenterId]="newProductionOrder.costCenterId"
+                              (selectedCostCenterEvent)="newProductionOrder.costCenterId=$event?.costCenterId" >
+                            </cost-center-auto-complete>  
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </p-tabPanel>
+              <p-tabPanel header="{{'document'| translate }}">
+                <div class="card">
+                  <div class="card-header">
+                    <i class="fa fa-align-justify"></i>{{ "documentation" | translate }}
+                  </div>
+                  <div class="card-body">
+                    <table class="table table-bordered">
+                      <tbody>
+                        <tr align="center">
+                          <td class="text-center" colspan="2">
+                            <image-adder [isFile]="true"></image-adder>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </p-tabPanel>
+            </p-tabView>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="myModal.hide()">{{'close' | translate}}</button>
+        <button type="button" class="btn btn-primary"
+        [disabled]="!saleForm.form.valid || !newProductionOrder.startDate || !newProductionOrder.finishDate"
+        (click)="saveJobs()">{{'save' | translate}}
+      </button>
+      </div>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<div bsModal [config]="{backdrop: 'static', keyboard: false}" #myWsModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+  aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-success" role="document">
+    <div class="modal-content ">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          {{wsModalParams.title |translate}}
+        </h4>
+        <button type="button" class="close" (click)="myWsModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-group row">
+          <div class="col-md-12" *ngIf="wsModalParams.title=='workstations'">
+            <choose-ws-pane [plantId]="newProductionOrder.plantId" [operationId]="operationId"
+              (selectedEvent)="closeWsPanel($event);myWsModal.hide();"></choose-ws-pane>
+          </div>
+          <div class="col-md-12 ui-fluid" *ngIf=" wsModalParams.title=='batch-code'">
+            <batch-auto-complete [addIfMissing]="true" (selectedBatchEvent)="closeBatchanel($event);myWsModal.hide()">
+            </batch-auto-complete>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="myWsModal.hide()">{{'close' | translate}}</button>
+      </div>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<ng-template [ngIf]="warehouseLocationModal.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal" 
+  (onHidden)="warehouseLocationModal.active=false"
+    class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-success modal-lg" role="document">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h4 class="modal-title"> {{'warehouse-locations' | translate}}</h4>
+          <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <choose-warehouse-location-pane  [fromChoosePane]="true"
+          [wareHouseNo]="newProductionOrder['wareHouseNo']"
+            (selectedStockEvent)="newProductionOrder.locationNo= $event?.warehouseLocationNo; warehouseLocationModal.active=false;">
+          </choose-warehouse-location-pane>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" style="background:lightslategray;"  class="btn rounded btn-outline-secondary"
+              (click)="myModal.hide()">{{'close' | translate}}
+          </button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</ng-template>

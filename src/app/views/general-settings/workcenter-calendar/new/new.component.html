@@ -1,0 +1,96 @@
+<div class="animated fadeIn row col-md-12 m-0">
+  <div class="card col-md-12 p-0">
+    <div class="card-header">
+      {{'workcenter-calendar' | translate}}
+    </div>
+    <div class="card-body">
+      <form #holidayForm="ngForm" >
+        <div class="col-md-12 p-0">
+          <table class="table table-bordered">
+            <tbody>
+              <tr>
+                <td>
+                  {{'reference-id' | translate}}
+                </td>
+                <td>
+                <input type="text" id="calendarReferenceId" name="calendarReferenceId" 
+                    [(ngModel)]="dataModel.calendarReferenceId" class="form-control" />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  {{'workcenter' | translate}}
+                </td>
+                <td>
+                  <workcenter-auto-complete [workCenterId]="dataModel.workCenterId" 
+                    (selectedWorkCenterEvent)="dataModel.workCenterId=$event?.workCenterId;" >
+                  </workcenter-auto-complete>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'workstation' | translate}}</td>
+                <td>
+                  <workstation-auto-complete [selectedWorkStationId]="dataModel.workStationId" 
+                    [workCenterId]="dataModel.workCenterId"
+                    (selectedWorkStationEvent)="dataModel.workStationId=$event?.workStationId;">
+                  </workstation-auto-complete>
+                </td>
+              </tr>
+              
+            
+              <tr>
+                <td>
+                  {{'from-erp' | translate}}
+                </td>
+                <td>
+                  <p-checkbox name="fromerp" [(ngModel)]="dataModel.fromERP"  
+                  binary="true" inputId="fromerp"></p-checkbox>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                    {{'start-time' | translate}}
+                </td>
+                <td>
+                    <p-calendar name="startTime" id="startTime" [showIcon]="true" appendTo="body" dateFormat="dd/mm/yy" [timeOnly]="false" [baseZIndex]="99999" placeholder="{{'start-time' | translate}}" [(ngModel)]="dataModel.startTime" [showTime]="true"></p-calendar>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                    {{'end-time' | translate}}
+                </td>
+                <td>
+                  <p-calendar name="endTime" id="endTime" [showIcon]="true" appendTo="body" dateFormat="dd/mm/yy" [timeOnly]="false" [baseZIndex]="99999" placeholder="{{'end-time' | translate}}" [(ngModel)]="dataModel.endTime" [showTime]="true"></p-calendar>
+                  
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  {{'no-update' | translate}}
+                </td>
+                <td>
+                  <p-checkbox name="noUpdate" [(ngModel)]="dataModel.noUpdate"  
+                  binary="true" inputId="noUpdate"></p-checkbox>
+                </td>
+              </tr>
+
+            
+              <tr>
+               <td colspan="2">
+                <button class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+                  {{'reset' | translate}}
+                </button>
+                <button type="submit" class="btn btn-sm btn-primary"
+                        [disabled]="!holidayForm.form.valid"
+                        (click)="saveWorkcenterCalendar()"><i class="fa fa-dot-circle-o"></i>
+                    {{'save' | translate}}
+                </button>
+               </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

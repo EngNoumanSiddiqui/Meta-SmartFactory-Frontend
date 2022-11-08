@@ -1,0 +1,98 @@
+<p-tabView *ngIf="rowData" class="col-md-12">
+    <p-tabPanel header="{{'operations'|translate}}" [style]="{'width':'100%'}">
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                        <th>{{'operation-name' | translate}}</th>
+                        <th>{{'operation-quantity' | translate}}</th>
+                        <th>{{'single-duration' | translate}}</th>
+                        <th>{{'parent' | translate}}</th>
+                        <th>{{'workstation' | translate}}</th>
+                        <th>{{'individual-capacity' | translate}}</th>
+                        <th>{{'operation-order' | translate}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{rowData.operationName}}</td>
+                            <td>{{rowData.quantity}}</td>
+                            <td>{{rowData.singleDuration}}</td>
+                            <td>{{rowData.parent ? 'Yes' : 'No'}}</td>
+                            <td>{{rowData.workStationName}}</td>
+                            <td>{{rowData.individualCapacity}}</td>
+                            <td>{{rowData.operationOrder}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col-md-12">
+              <p-tabView>
+                <p-tabPanel  header="{{'details' | translate}}">
+                  <table class="table table-bordered" style="margin-bottom: 0px; table-layout: auto;">
+                    <tr>
+                      <td>{{'operation-repeat' | translate}}</td>
+                      <td style="width: 20%;">{{rowData.operationRepeat}}</td>
+                      <td>{{'single-duration' | translate}}</td>
+                      <td>{{getReadableTime(rowData.singleDuration)}}</td>
+                    </tr>
+                    <tr>
+                      <td>{{'process-control-frequency' | translate}}</td>
+                      <td>{{rowData.processControlFrequency}}</td>
+                      <td>{{'single-setup-duration' | translate}}</td>
+                      <td>{{getReadableTime(rowData.singleSetupDuration)}}</td>
+                    </tr>
+                    <tr>
+                      <td>{{'planned-cycle-quantity' | translate}}</td>
+                      <td>{{rowData.plannedCycleQuantity}}</td>
+                      <td>{{'single-total-duration' | translate}}</td>
+                      <td>{{getReadableTime(rowData.singleTotalDuration)}}</td>
+                    </tr>
+                    <tr>
+                      <td>{{'operation-order' | translate}}</td>
+                      <td>{{rowData.operationOrder}}</td>
+                      <td>{{'max-single-standby-duration' | translate}}</td>
+                      <td>{{getReadableTime(rowData.maxSingleStandbyDuration)}}</td>
+                    </tr>
+                  </table>
+                </p-tabPanel>
+                
+                <p-tabPanel header="{{'components' | translate}}">
+                  <job-order-component-list [tableData]="rowData?.jobOrderStockUseList" [detailMode]="true"></job-order-component-list>
+                </p-tabPanel>
+                
+                <p-tabPanel header="{{'materials' | translate}}">
+                  <job-order-component-list [tableData]="rowData?.jobOrderStockProduceList" [detailMode]="true">
+                  </job-order-component-list>
+                </p-tabPanel>
+                
+                <p-tabPanel header="{{'auxiliary-materials' | translate}}">
+                  <job-order-component-list [tableData]="rowData?.jobOrderStockAuxList" [detailMode]="true">
+                  </job-order-component-list>
+                </p-tabPanel>
+              </p-tabView>
+            </div>
+        </div>
+    </p-tabPanel>
+    <p-tabPanel header="{{'equipments'|translate}}" [style]="{'width':'100%'}">
+        <div class="row">
+          <div class="col-md-12">
+            <!-- <span class="caption ">{{'equipments'|translate}}</span> -->
+            <job-order-equipment-list [tableData]="rowData.jobOrderEquipmentList"
+            [detailMode]="true"></job-order-equipment-list>
+          </div>
+        </div>
+      </p-tabPanel>
+      <p-tabPanel header="{{'workstation-program'|translate}}" [style]="{'width':'100%'}">
+        <div class="row">
+          <div class="col-md-12">
+            <!-- <span class="caption">{{'workstation-program'|translate}}</span> -->
+            <job-order-workstation-program-list [tableData]="rowData.workstationProgramList" 
+            [detailMode]="true"></job-order-workstation-program-list>
+          </div>
+        </div>
+      </p-tabPanel>
+  </p-tabView>
+  

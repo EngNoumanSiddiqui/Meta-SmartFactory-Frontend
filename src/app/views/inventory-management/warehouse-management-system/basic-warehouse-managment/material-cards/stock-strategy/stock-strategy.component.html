@@ -1,0 +1,653 @@
+<div class="card">
+  <div class="card-header">
+    <i class="fa fa-align-justify"></i>
+    {{ "stock-strategy" | translate }}
+  </div>
+  <div class="card-body">
+    <table class="table table-bordered ui-fluid">
+      <tbody>
+        <tr>
+          <td>{{'stock-strategy-type'|translate}}</td>
+          <td>
+            <div class="d-flex">
+              <select [disabled]="readonly" class="form-control" [(ngModel)]="selectedStockStrategyEnum">
+                <option [ngValue]="null">{{'please-select'|translate}}</option>
+                <option *ngFor="let item of stockStrategyEnum| async" [value]="item">{{item}}</option>
+              </select>
+              <button [disabled]="readonly" class="btn btn-sm btn-outline-primary" type="button" pTooltip="Add Strategy" tooltipPosition="top"
+                placeholder="Top" (click)="addStrategyTypeList()">
+                <i class="fa fa-plus"></i></button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+<div class="card" *ngIf="(yearlyTargetList|async) && (yearlyTargetList | async).length ">
+  <div class="card-header">
+    <i class="fa fa-align-justify"></i>
+    {{ "yearly-target" | translate }}
+
+    <!-- <button style="float: right; padding: 1px 5px;" type="button" class="btn btn-primary"
+      (click)="addStrategyTypeList('YEARLY_TARGET')">
+        <i class="fa fa-plus-circle"></i>
+    </button> -->
+    <button [disabled]="readonly" style="float: right; padding: 1px 5px;" type="button" class="btn btn-primary"
+      (click)="nextTitle='years';nextCount=1;selectedStockStrategyEnum='YEARLY_TARGET'; openModalForNextSelection.show($event);">
+      <i class="fa fa-plus-circle"></i>
+    </button>
+  </div>
+  <div class="card-body">
+    <table class="table table-bordered ui-fluid">
+      <thead>
+        <tr>
+          <th>{{'strategy-type' |translate}}</th>
+          <th>{{'year' |translate}}</th>
+          <th>{{'warehouse' |translate}}</th>
+          <th>{{'target-quantity' |translate}}</th>
+          <th>{{'shift-target-quantity' |translate}}</th>
+          <th>{{'max-planned-quantity' |translate}}</th>
+          <th>{{'min-planned-quantity' |translate}}</th>
+          <th>{{'action' |translate}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let strategyItem of yearlyTargetList| async; let i=index;">
+          <td>
+            {{strategyItem.stockStrategy}}
+          </td>
+          <td>
+            <select name="yearly-year{{i}}" class="form-control" [(ngModel)]="strategyItem.year">
+              <option *ngFor="let item of yearList" [value]="item">{{item}}</option>
+            </select>
+          </td>
+          <td>
+            <warehouse-auto-complete [disabled]="readonly" [selectedWareHouseId]="strategyItem.wareHouseId" (selectedWareHouseEvent)="strategyItem.wareHouseId=$event?.wareHouseId;"></warehouse-auto-complete>
+           </td>
+          <td>
+            <input [disabled]="readonly" type="number" name="yearly-targetQuantity{{i}}" class="form-control"
+              [(ngModel)]="strategyItem.targetQuantity" />
+          </td>
+          <td>
+            <input [disabled]="readonly" type="number" name="yearly-shiftTargetQuantity{{i}}" class="form-control"
+              [(ngModel)]="strategyItem.shiftTargetQuantity" />
+          </td>
+          <td>
+            <input [disabled]="readonly" type="number" name="yearly-maxPlannedQuantity{{i}}" class="form-control"
+              [(ngModel)]="strategyItem.maxPlannedQuantity" />
+          </td>
+          <td>
+            <input [disabled]="readonly" type="number" name="yearly-minPlannedQuantity{{i}}" class="form-control"
+              [(ngModel)]="strategyItem.minPlannedQuantity" />
+          </td>
+          <td>
+            <button [disabled]="readonly" class="btn btn-sm btn-outline-danger" type="button" (click)="delete(strategyItem, i)">
+              <i class="fa fa-trash"></i></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="card" *ngIf="(monthlyTargetList|async) && (monthlyTargetList|async).length">
+  <div class="card-header">
+    <i class="fa fa-align-justify"></i>
+    {{ "monthly-target" | translate }}
+    <!-- <button style="float: right; padding: 1px 5px;" type="button" class="btn btn-primary"
+    (click)="addStrategyTypeList('MONTHLY_TARGET')">
+      <i class="fa fa-plus-circle"></i>
+  </button> -->
+    <button style="float: right; padding: 1px 5px;" type="button" class="btn btn-primary"
+      (click)="nextTitle='months';nextCount=1;selectedStockStrategyEnum='MONTHLY_TARGET'; openModalForNextSelection.show($event);">
+      <i class="fa fa-plus-circle"></i>
+    </button>
+  </div>
+  <div class="card-body">
+    <table class="table table-bordered ui-fluid">
+      <thead>
+        <tr>
+          <th>{{'strategy-type' |translate}}</th>
+          <th>{{'year' |translate}}</th>
+          <th>{{'month' |translate}}</th>
+          <th>{{'warehouse' |translate}}</th>
+          <th>{{'target-quantity' |translate}}</th>
+          <th>{{'shift-target-quantity' |translate}}</th>
+          <th>{{'max-planned-quantity' |translate}}</th>
+          <th>{{'min-planned-quantity' |translate}}</th>
+          <th>{{'action' |translate}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let strategyItem of monthlyTargetList| async; let i=index;">
+          <td>
+            {{strategyItem.stockStrategy}}
+          </td>
+          <td>
+            <select [disabled]="readonly" name="monthly-year{{i}}" class="form-control" [(ngModel)]="strategyItem.year">
+              <option *ngFor="let item of yearList" [value]="item">{{item}}</option>
+            </select>
+          </td>
+          <td>
+            <select [disabled]="readonly" name="monthly-month{{i}}" class="form-control" [(ngModel)]="strategyItem.month">
+              <option *ngFor="let item of monthList" [value]="item.id">{{item.value}}</option>
+            </select>
+          </td>
+          <td>
+            <warehouse-auto-complete [disabled]="readonly" [selectedWareHouseId]="strategyItem.wareHouseId" (selectedWareHouseEvent)="strategyItem.wareHouseId=$event?.wareHouseId;"></warehouse-auto-complete>
+           </td>
+          <td>
+            <input [disabled]="readonly" type="number" name="monthly-targetQuantity{{i}}" class="form-control"
+              [(ngModel)]="strategyItem.targetQuantity" />
+          </td>
+          <td>
+            <input [disabled]="readonly" type="number" name="monthly-shiftTargetQuantity{{i}}" class="form-control"
+              [(ngModel)]="strategyItem.shiftTargetQuantity" />
+          </td>
+          <td>
+            <input [disabled]="readonly" type="number" name="monthly-maxPlannedQuantity{{i}}" class="form-control"
+              [(ngModel)]="strategyItem.maxPlannedQuantity" />
+          </td>
+          <td>
+            <input [disabled]="readonly" type="number" name="monthly-minPlannedQuantity{{i}}" class="form-control"
+              [(ngModel)]="strategyItem.minPlannedQuantity" />
+          </td>
+          <td>
+            <button [disabled]="readonly" class="btn btn-sm btn-outline-danger" type="button" (click)="delete(strategyItem, i)">
+              <i class="fa fa-trash"></i></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="card" *ngIf="(weeklyTargetList|async) && (weeklyTargetList|async).length">
+  <div class="card-header">
+    <i class="fa fa-align-justify"></i>
+    {{ "weekly-target" | translate }}
+    <!-- <button style="float: right; padding: 1px 5px;" type="button" class="btn btn-primary"
+    (click)="addStrategyTypeList('WEEKLY_TARGET')">
+      <i class="fa fa-plus-circle"></i>
+  </button> -->
+    <button [disabled]="readonly" style="float: right; padding: 1px 5px;" type="button" class="btn btn-primary"
+      (click)="nextTitle='weeks';nextCount=1;selectedStockStrategyEnum='WEEKLY_TARGET'; openModalForNextSelection.show($event);">
+      <i class="fa fa-plus-circle"></i>
+    </button>
+  </div>
+  <div class="card-body">
+    <table class="table table-bordered ui-fluid">
+      <thead>
+        <tr>
+          <th>{{'strategy-type' |translate}}</th>
+          <th>{{'year' |translate}}</th>
+          <th>{{'month' |translate}}</th>
+          <th>{{'week' |translate}}</th>
+          <th>{{'warehouse' |translate}}</th>
+          <th>{{'target-quantity' |translate}}</th>
+          <th>{{'shift-target-quantity' |translate}}</th>
+          <th>{{'max-planned-quantity' |translate}}</th>
+          <th>{{'min-planned-quantity' |translate}}</th>
+          <th>{{'action' |translate}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let strategyItem of weeklyTargetList| async; let i=index;">
+          <td>
+            {{strategyItem.stockStrategy}}
+          </td>
+          <td>
+            <select [disabled]="readonly" name="weekly-year{{i}}" class="form-control" [(ngModel)]="strategyItem.year">
+              <option *ngFor="let item of yearList" [value]="item">{{item}}</option>
+            </select>
+          </td>
+          <td>
+            <select [disabled]="readonly" name="weekly-month{{i}}" class="form-control" [(ngModel)]="strategyItem.month">
+              <option *ngFor="let item of monthList" [value]="item.id">{{item.value}}</option>
+            </select>
+          </td>
+          <td>
+            <select [disabled]="readonly" name="weekly-week{{i}}" class="form-control" [(ngModel)]="strategyItem.week">
+              <ng-container *ngFor="let item of weekList;">
+                <option [value]="item.id">{{item.value}}</option>
+              </ng-container>
+            </select>
+          </td>
+          <td>
+            <warehouse-auto-complete [disabled]="readonly" [selectedWareHouseId]="strategyItem.wareHouseId" (selectedWareHouseEvent)="strategyItem.wareHouseId=$event?.wareHouseId;"></warehouse-auto-complete>
+           </td>
+          <td>
+            <input [disabled]="readonly" type="number" name="weekly-targetQuantity{{i}}" class="form-control"
+              [(ngModel)]="strategyItem.targetQuantity" />
+          </td>
+          <td>
+            <input [disabled]="readonly" type="number" name="weekly-shiftTargetQuantity{{i}}" class="form-control"
+              [(ngModel)]="strategyItem.shiftTargetQuantity" />
+          </td>
+          <td>
+            <input [disabled]="readonly" type="number" name="weekly-maxPlannedQuantity{{i}}" class="form-control"
+              [(ngModel)]="strategyItem.maxPlannedQuantity" />
+          </td>
+          <td>
+            <input [disabled]="readonly" type="number" name="weekly-minPlannedQuantity{{i}}" class="form-control"
+              [(ngModel)]="strategyItem.minPlannedQuantity" />
+          </td>
+          <td>
+            <button [disabled]="readonly" class="btn btn-sm btn-outline-danger" type="button" (click)="delete(strategyItem, i)">
+              <i class="fa fa-trash"></i></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="card" *ngIf="(dailyTargetList|async) && (dailyTargetList|async).length">
+  <div class="card-header">
+    <i class="fa fa-align-justify"></i>
+    {{ "daily-target" | translate }}
+    <!-- <button style="float: right; padding: 1px 5px;" type="button" class="btn btn-primary"
+      (click)="addStrategyTypeList('DAILY_TARGET')">
+      <i class="fa fa-plus-circle"></i>
+    </button> -->
+    <button style="float: right; padding: 1px 5px;" type="button" class="btn btn-primary"
+      (click)="nextTitle='days';nextCount=30;selectedStockStrategyEnum='DAILY_TARGET'; openModalForNextSelection.show($event);">
+      <i class="fa fa-plus-circle"></i>
+    </button>
+  </div>
+  <div class="card-body">
+    <table class="table table-bordered ui-fluid">
+      <thead>
+        <tr>
+          <th>{{'strategy-type' |translate}}</th>
+          <th>{{'year' |translate}}</th>
+          <th>{{'month' |translate}}</th>
+          <th>{{'week' |translate}}</th>
+          <th>{{'day' |translate}}</th>
+          <th>{{'warehouse' |translate}}</th>
+          <th>{{'target-quantity' |translate}}</th>
+          <th>{{'shift-target-quantity' |translate}}</th>
+          <th>{{'max-planned-quantity' |translate}}</th>
+          <th>{{'min-planned-quantity' |translate}}</th>
+          <th>{{'action' |translate}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let strategyItem of dailyTargetList| async; let i=index;">
+          <td>
+            {{strategyItem.stockStrategy}}
+          </td>
+          <td>
+            <select [disabled]="readonly" name="daily-year{{i}}" class="form-control" [(ngModel)]="strategyItem.year">
+              <option *ngFor="let item of yearList" [value]="item">{{item}}</option>
+            </select>
+          </td>
+          <td>
+            <select [disabled]="readonly" name="daily-month{{i}}" class="form-control" [(ngModel)]="strategyItem.month">
+              <option *ngFor="let item of monthList" [value]="item.id">{{item.value}}</option>
+            </select>
+          </td>
+          <td>
+            <select [disabled]="readonly" name="daily-weekly{{i}}" class="form-control" [(ngModel)]="strategyItem.week">
+              <option *ngFor="let item of weekList" [value]="item.id">
+                {{item.value}}
+              </option>
+            </select>
+          </td>
+          <td>
+            <select [disabled]="readonly" name="daily-day{{i}}" class="form-control" [(ngModel)]="strategyItem.day">
+              <option *ngFor="let item of dayList" [value]="item.id">{{item.value}}</option>
+            </select>
+          </td>
+          <td>
+            <warehouse-auto-complete [disabled]="readonly" [selectedWareHouseId]="strategyItem.wareHouseId" (selectedWareHouseEvent)="strategyItem.wareHouseId=$event?.wareHouseId;"></warehouse-auto-complete>
+           </td>
+          <td>
+            <input [disabled]="readonly" type="number" name="daily-targetQuantity{{i}}" class="form-control"
+              [(ngModel)]="strategyItem.targetQuantity" />
+          </td>
+          <td>
+            <input [disabled]="readonly" type="number" name="daily-shiftTargetQuantity{{i}}" class="form-control"
+              [(ngModel)]="strategyItem.shiftTargetQuantity" />
+          </td>
+          <td>
+            <input [disabled]="readonly" type="number" name="daily-maxPlannedQuantity{{i}}" class="form-control"
+              [(ngModel)]="strategyItem.maxPlannedQuantity" />
+          </td>
+          <td>
+            <input [disabled]="readonly" type="number" name="daily-minPlannedQuantity{{i}}" class="form-control"
+              [(ngModel)]="strategyItem.minPlannedQuantity" />
+          </td>
+          <td>
+            <button [disabled]="readonly" class="btn btn-sm btn-outline-danger" type="button" (click)="delete(strategyItem, i)">
+              <i class="fa fa-trash"></i></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="card" *ngIf="(shiftTargetList|async) && (shiftTargetList|async).length">
+  <div class="card-header">
+    <i class="fa fa-align-justify"></i>
+    {{ "shift-target" | translate }}
+    <!-- <button style="float: right; padding: 1px 5px;" type="button" class="btn btn-primary"
+      (click)="addStrategyTypeList('SHIFT_TARGET')">
+      <i class="fa fa-plus-circle"></i>
+    </button> -->
+    <button [disabled]="readonly" style="float: right; padding: 1px 5px;" type="button" class="btn btn-primary"
+      (click)="nextTitle='days';nextCount=30;selectedStockStrategyEnum='SHIFT_TARGET'; openModalForNextSelection.show($event);">
+      <i class="fa fa-plus-circle"></i>
+    </button>
+  </div>
+  <div class="card-body">
+    <table class="table table-bordered ui-fluid">
+      <thead>
+        <tr>
+          <th>{{'strategy-type' |translate}}</th>
+          <th>{{'year' |translate}}</th>
+          <th>{{'month' |translate}}</th>
+          <th>{{'week' |translate}}</th>
+          <th>{{'day' |translate}}</th>
+          <th>{{'shift' |translate}}</th>
+          <th>{{'warehouse' |translate}}</th>
+          <th>{{'target-quantity' |translate}}</th>
+          <th>{{'shift-target-quantity' |translate}}</th>
+          <th>{{'max-planned-quantity' |translate}}</th>
+          <th>{{'min-planned-quantity' |translate}}</th>
+          <th>{{'action' |translate}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let strategyItem of shiftTargetList| async; let i=index;">
+          <td>
+            {{strategyItem.stockStrategy}}
+          </td>
+          <td>
+            <select [disabled]="readonly" name="shift-year{{i}}" class="form-control" [(ngModel)]="strategyItem.year">
+              <option *ngFor="let item of yearList" [value]="item">{{item}}</option>
+            </select>
+          </td>
+          <td>
+            <select [disabled]="readonly" name="shift-month{{i}}" class="form-control" [(ngModel)]="strategyItem.month">
+              <option *ngFor="let item of monthList" [value]="item.id">{{item.value}}</option>
+            </select>
+          </td>
+          <td>
+            <select [disabled]="readonly" name="shift-weekly{{i}}" class="form-control" [(ngModel)]="strategyItem.week">
+              <option *ngFor="let item of weekList" [value]="item.id">
+                {{item.value}}
+              </option>
+            </select>
+          </td>
+          <td>
+            <select [disabled]="readonly" name="shift-day{{i}}" class="form-control" [(ngModel)]="strategyItem.day">
+              <option *ngFor="let item of dayList" [value]="item.id">{{item.value}}</option>
+            </select>
+          </td>
+          <td>
+            <select [disabled]="readonly" name="shift-day{{i}}" class="form-control" [(ngModel)]="strategyItem.shiftId">
+              <option *ngFor="let item of shiftList|async" [value]="item?.shiftId">{{item?.shiftName}}</option>
+            </select>
+          </td>
+          <td>
+            <warehouse-auto-complete [disabled]="readonly" [selectedWareHouseId]="strategyItem.wareHouseId" (selectedWareHouseEvent)="strategyItem.wareHouseId=$event?.wareHouseId;"></warehouse-auto-complete>
+           </td>
+          <td>
+            <input [disabled]="readonly" type="number" name="shift-targetQuantity{{i}}" class="form-control"
+              [(ngModel)]="strategyItem.targetQuantity" />
+          </td>
+          <td>
+            <input [disabled]="readonly" type="number" name="shift-shiftTargetQuantity{{i}}" class="form-control"
+              [(ngModel)]="strategyItem.shiftTargetQuantity" />
+          </td>
+          <td>
+            <input [disabled]="readonly" type="number" name="shift-maxPlannedQuantity{{i}}" class="form-control"
+              [(ngModel)]="strategyItem.maxPlannedQuantity" />
+          </td>
+          <td>
+            <input [disabled]="readonly" type="number" name="shift-minPlannedQuantity{{i}}" class="form-control"
+              [(ngModel)]="strategyItem.minPlannedQuantity" />
+          </td>
+          <td>
+            <button [disabled]="readonly" class="btn btn-sm btn-outline-danger" type="button" (click)="delete(strategyItem, i)">
+              <i class="fa fa-trash"></i></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="card" *ngIf="(basicTargetList|async) && (basicTargetList | async).length ">
+  <div class="card-header">
+    <i class="fa fa-align-justify"></i>
+    {{ "basic-strategy" | translate }}
+    <button [disabled]="readonly" style="float: right; padding: 1px 5px;" type="button" class="btn btn-primary"
+      (click)="nextTitle='basic';nextCount=1;selectedStockStrategyEnum='BASIC_STRATEGY'; openModalForNextSelection.show($event);">
+      <i class="fa fa-plus-circle"></i>
+    </button>
+  </div>
+  <div class="card-body">
+    <table class="table table-bordered ui-fluid">
+      <thead>
+        <tr>
+          <th>{{'strategy-type' |translate}}</th>
+          <th>{{'warehouse' |translate}}</th>
+          <th>{{'safety-stock' |translate}}</th>
+          <th>{{'reorder-point' |translate}}</th>
+          <th>{{'max-stock-level' |translate}}</th>
+          <th>{{'target-quantity' |translate}}</th>
+          <th>{{'shift-target-quantity' |translate}}</th>
+          <th>{{'max-planned-quantity' |translate}}</th>
+          <th>{{'min-planned-quantity' |translate}}</th>
+          <th>{{'action' |translate}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let strategyItem of basicTargetList| async; let i=index;">
+          <td>
+            {{strategyItem.stockStrategy}}
+          </td>
+          <td>
+           <warehouse-auto-complete [disabled]="readonly" [selectedWareHouseId]="strategyItem.wareHouseId" (selectedWareHouseEvent)="strategyItem.wareHouseId=$event?.wareHouseId;"></warehouse-auto-complete>
+          </td>
+          <td>
+            <input [disabled]="readonly" type="number" name="basic-safetyStock{{i}}" class="form-control"
+              [(ngModel)]="strategyItem.safetyStock" />
+          </td>
+          <td>
+            <input [disabled]="readonly" type="number" name="basic-reorderPoint{{i}}" class="form-control"
+              [(ngModel)]="strategyItem.reorderPoint" />
+          </td>
+          <td>
+            <input [disabled]="readonly" type="number" name="basic-maxStockLevel{{i}}" class="form-control"
+              [(ngModel)]="strategyItem.maxStockLevel" />
+          </td>
+          <td>
+            <input [disabled]="readonly" type="number" name="basic-targetQuantity{{i}}" class="form-control"
+              [(ngModel)]="strategyItem.targetQuantity" />
+          </td>
+          <td>
+            <input [disabled]="readonly" type="number" name="basic-shiftTargetQuantity{{i}}" class="form-control"
+              [(ngModel)]="strategyItem.shiftTargetQuantity" />
+          </td>
+          <td>
+            <input [disabled]="readonly" type="number" name="basic-maxPlannedQuantity{{i}}" class="form-control"
+              [(ngModel)]="strategyItem.maxPlannedQuantity" />
+          </td>
+          <td>
+            <input [disabled]="readonly" type="number" name="basic-minPlannedQuantity{{i}}" class="form-control"
+              [(ngModel)]="strategyItem.minPlannedQuantity" />
+          </td>
+          <td>
+            <button [disabled]="readonly" class="btn btn-sm btn-outline-danger" type="button" (click)="delete(strategyItem, i)">
+              <i class="fa fa-trash"></i></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="card" *ngIf="(timeTargetList|async) && (timeTargetList | async).length ">
+  <div class="card-header">
+    <i class="fa fa-align-justify"></i>
+    {{ "time-dependent" | translate }}
+    <button [disabled]="readonly" style="float: right; padding: 1px 5px;" type="button" class="btn btn-primary"
+      (click)="nextTitle='basic';nextCount=1;selectedStockStrategyEnum='TIME_DEPENDENT'; openModalForNextSelection.show($event);">
+      <i class="fa fa-plus-circle"></i>
+    </button>
+  </div>
+  <div class="card-body">
+    <table class="table table-bordered ui-fluid">
+      <thead>
+        <tr>
+          <th>{{'strategy-type' |translate}}</th>
+          <th>{{'warehouse' |translate}}</th>
+          <th>{{'safety-stock' |translate}}</th>
+          <th>{{'reorder-point' |translate}}</th>
+          <th>{{'max-stock-level' |translate}}</th>
+          <th>{{'target-quantity' |translate}}</th>
+          <th>{{'shift-target-quantity' |translate}}</th>
+          <th>{{'max-planned-quantity' |translate}}</th>
+          <th>{{'min-planned-quantity' |translate}}</th>
+          <th>{{'action' |translate}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let strategyItem of timeTargetList| async; let i=index;">
+          <td>
+            {{strategyItem.stockStrategy}}
+          </td>
+          <td>
+           <warehouse-auto-complete [disabled]="readonly" [selectedWareHouseId]="strategyItem.wareHouseId" (selectedWareHouseEvent)="strategyItem.wareHouseId=$event?.wareHouseId;"></warehouse-auto-complete>
+          </td>
+          <td>
+            <input [disabled]="readonly" type="number" name="time-dependent-safetyStock{{i}}" class="form-control"
+              [(ngModel)]="strategyItem.safetyStock" />
+          </td>
+          <td>
+            <input [disabled]="readonly" type="number" name="time-dependent-reorderPoint{{i}}" class="form-control"
+              [(ngModel)]="strategyItem.reorderPoint" />
+          </td>
+          <td>
+            <input [disabled]="readonly" type="number" name="time-dependent-maxStockLevel{{i}}" class="form-control"
+              [(ngModel)]="strategyItem.maxStockLevel" />
+          </td>
+          <td>
+            <input [disabled]="readonly" type="number" name="time-dependent-targetQuantity{{i}}" class="form-control"
+              [(ngModel)]="strategyItem.targetQuantity" />
+          </td>
+          <td>
+            <input [disabled]="readonly" type="number" name="time-dependent-shiftTargetQuantity{{i}}" class="form-control"
+              [(ngModel)]="strategyItem.shiftTargetQuantity" />
+          </td>
+          <td>
+            <input [disabled]="readonly" type="number" name="time-dependent-maxPlannedQuantity{{i}}" class="form-control"
+              [(ngModel)]="strategyItem.maxPlannedQuantity" />
+          </td>
+          <td>
+            <input [disabled]="readonly" type="number" name="time-dependent-minPlannedQuantity{{i}}" class="form-control"
+              [(ngModel)]="strategyItem.minPlannedQuantity" />
+          </td>
+          <td>
+            <button [disabled]="readonly" class="btn btn-sm btn-outline-danger" type="button" (click)="delete(strategyItem, i)">
+              <i class="fa fa-trash"></i></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="card" *ngIf="(supplyChainTargetList|async) && (supplyChainTargetList | async).length ">
+  <div class="card-header">
+    <i class="fa fa-align-justify"></i>
+    {{ "supply-chain-strategy" | translate }}
+    <button [disabled]="readonly" style="float: right; padding: 1px 5px;" type="button" class="btn btn-primary"
+      (click)="nextTitle='basic';nextCount=1;selectedStockStrategyEnum='SUPPLY_CHAIN_STRATEGY'; openModalForNextSelection.show($event);">
+      <i class="fa fa-plus-circle"></i>
+    </button>
+  </div>
+  <div class="card-body">
+    <table class="table table-bordered ui-fluid">
+      <thead>
+        <tr>
+          <th>{{'strategy-type' |translate}}</th>
+          <th>{{'warehouse' |translate}}</th>
+          <th>{{'safety-stock' |translate}}</th>
+          <th>{{'reorder-point' |translate}}</th>
+          <th>{{'max-stock-level' |translate}}</th>
+          <th>{{'target-quantity' |translate}}</th>
+          <th>{{'shift-target-quantity' |translate}}</th>
+          <th>{{'max-planned-quantity' |translate}}</th>
+          <th>{{'min-planned-quantity' |translate}}</th>
+          <th>{{'action' |translate}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let strategyItem of supplyChainTargetList| async; let i=index;">
+          <td>
+            {{strategyItem.stockStrategy}}
+          </td>
+          <td>
+           <warehouse-auto-complete [disabled]="readonly" [selectedWareHouseId]="strategyItem.wareHouseId" (selectedWareHouseEvent)="strategyItem.wareHouseId=$event?.wareHouseId;"></warehouse-auto-complete>
+          </td>
+          <td>
+            <input [disabled]="readonly" type="number" name="supply-chain-strategy-safetyStock{{i}}" class="form-control"
+              [(ngModel)]="strategyItem.safetyStock" />
+          </td>
+          <td>
+            <input [disabled]="readonly" type="number" name="supply-chain-strategy-reorderPoint{{i}}" class="form-control"
+              [(ngModel)]="strategyItem.reorderPoint" />
+          </td>
+          <td>
+            <input [disabled]="readonly" type="number" name="supply-chain-strategy-maxStockLevel{{i}}" class="form-control"
+              [(ngModel)]="strategyItem.maxStockLevel" />
+          </td>
+          <td>
+            <input [disabled]="readonly" type="number" name="supply-chain-strategy-targetQuantity{{i}}" class="form-control"
+              [(ngModel)]="strategyItem.targetQuantity" />
+          </td>
+          <td>
+            <input [disabled]="readonly" type="number" name="supply-chain-strategy-shiftTargetQuantity{{i}}" class="form-control"
+              [(ngModel)]="strategyItem.shiftTargetQuantity" />
+          </td>
+          <td>
+            <input [disabled]="readonly" type="number" name="supply-chain-strategy-maxPlannedQuantity{{i}}" class="form-control"
+              [(ngModel)]="strategyItem.maxPlannedQuantity" />
+          </td>
+          <td>
+            <input [disabled]="readonly" type="number" name="supply-chain-strategy-minPlannedQuantity{{i}}" class="form-control"
+              [(ngModel)]="strategyItem.minPlannedQuantity" />
+          </td>
+          <td>
+            <button [disabled]="readonly" class="btn btn-sm btn-outline-danger" type="button" (click)="delete(strategyItem, i)">
+              <i class="fa fa-trash"></i></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+
+<p-overlayPanel #openModalForNextSelection [dismissable]="true" [style]="{width: '450px'}" [baseZIndex]="99999"
+  [appendTo]="'body'">
+  <table class="table table-bordered ui-fluid">
+    <tbody>
+      <tr>
+        <td>{{nextTitle | translate}}</td>
+        <td>
+          <input [disabled]="readonly" type="text" class="form-control" name="nextCount" [(ngModel)]="nextCount" />
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <button [disabled]="readonly" type="button" pButton class="col-md-3 float-right"
+            (click)="openModalForNextSelection.hide(); onCreateForNextSelection();"
+            label="{{'create' | translate}}"></button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</p-overlayPanel>

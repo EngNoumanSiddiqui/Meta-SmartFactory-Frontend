@@ -1,0 +1,230 @@
+<div class="animated fadeIn">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fa fa-align-justify"></i> {{'edit' | translate}} {{'scrap' | translate}}
+                </div>
+                <div class="card-body">
+                    <form #partForm="ngForm">
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <td width="18%">{{'plant' | translate}}*</td>
+                                    <td width="33%">
+                                    <span *ngIf="scrapReqDto.plantId && selectedPlant && scrapReqDto.plantId=== selectedPlant.plantId">{{selectedPlant.plantName}}</span>
+                                        <plant-auto-complete *ngIf="!scrapReqDto.plantId && !this.selectedPlant" [addIfMissing]="false"
+                                            [selectedPlantId]="scrapReqDto.plantId"
+                                            (selectedPlantEvent)="setSelectedPlant($event)" [eventFire]="true">
+                                        </plant-auto-complete>
+                                    </td>
+                                    <td>{{'material-name' | translate}}</td>
+                                    <td>
+                                        <span *ngIf="scrapReqDto.material" class="form-control bg-readonly" 
+                                        (click)="myModal.show();">{{scrapReqDto.material?.stockNo}} | {{scrapReqDto.material?.stockName}}
+                                        </span>
+                                        <span *ngIf="!scrapReqDto.material" class="form-control bg-readonly" (click)="myModal.show()">
+                                          {{'click-to-select'|translate}}
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>{{'warehouse' | translate}}</td>
+                                    <td>
+                                        <warehouse-auto-complete [required]="true"
+                                            [selectedWareHouseId]="scrapReqDto.wareHouseId"
+                                            [type]="'SCRAP'"
+                                            (selectedWareHouseEvent)="setSelectedWarehouse($event)">
+                                        </warehouse-auto-complete>
+                                    </td>
+
+                                    <td>{{'quantity' | translate}}</td>
+                                    <td>
+                                        <input type="number" class="form-control" [(ngModel)]="scrapReqDto.quantity"
+                                            name="quantity" min="1" required />
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>{{ 'workstation' | translate }}</td>
+                                    <td>
+                                        <workstation-auto-complete [plantId]="this.scrapReqDto.plantId"
+                                        [selectedWorkStation] = "selectedWorkStation" 
+                                            (selectedWorkStationEvent)="setSelectedWorkStation($event)" required>
+                                        </workstation-auto-complete>
+
+                                    </td>
+                                    <td>{{'production-order' | translate}}*</td>
+                                    <td>
+                                    <prod-order-autocomplete [plantId]="scrapReqDto.plantId"  [selectedProdOrderId]="selectedProductionItemId"
+                                        (selectedProdOrderEvent)="onProductionOrderSelected($event)"
+                                      ></prod-order-autocomplete>
+                                        
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>{{'quantity' | translate}} {{'unit' | translate}}</td>
+                                    <td>
+                                        <div class="input-group">
+                                            <select id="baseUnitList" name="baseUnitList" class="form-control"
+                                                [(ngModel)]="scrapReqDto.quantityUnit" required>
+                                                <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                                                <option *ngFor="let item of unitList" value="{{item.unit}}">
+                                                    {{item.unit}}</option>
+                                            </select>
+
+                                        </div>
+                                    </td>
+
+                                    <td>{{'batch' | translate}}</td>
+                                    <td>
+                                        <batch-auto-complete [addIfMissing]="true"
+                                            [selectedBatchCode]="scrapReqDto.batch" [plantId]="scrapReqDto.plantId"
+                                            [actId]= "actId" [batchLevel]="'JOB_ORDER'" [stockId]="scrapReqDto.materialId" 
+                                            (selectedBatchEvent)="setSelectedBatch($event)"></batch-auto-complete>
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>{{'job-order-scrap' | translate}}*</td>
+                                    <td>
+                                      <job-order-autocomplete
+                                        [plantId]="scrapReqDto.plantId"
+                                        [selectedJobOrderId]="scrapReqDto.jobOrderId"
+                                        [prodOrderId]="selectedProductionItemId"
+                                        (selectedJobOrderEvent)="onSelectJobOrder($event)"
+                                      ></job-order-autocomplete>
+                                    </td>
+                                    <td>{{'job-order-operation' | translate}}</td>
+                                    <td>
+                                        <div class="input-group">
+                                            <select id="jobOrderOperation" name="jobOrderOperation" class="form-control"
+                                                    [(ngModel)]="scrapReqDto.jobOrderOperationId" (ngModelChange)="onJobOrderOperationSelected($event)" required>
+                                                <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                                                <option *ngFor="let item of jobOrderOperationList"
+                                                        [value]="item.jobOrderOperationId">{{item.jobOrderOperationId}}-{{item.operationName}}</option>
+                                            </select>
+                            
+                                        </div>
+                                    </td>
+                                  </tr> 
+                                
+                                <tr>
+                                   
+
+                                    <td>{{'scrap' | translate }} {{'type' | translate}}*</td>
+                                    <td>
+                                        <div class="input-group">
+                                            <select id="scraptypelist" name="scraptypelist" class="form-control"
+                                                [(ngModel)]="scrapReqDto.scrapTypeId"
+                                                (ngModelChange)="onScrapTypeChange($event)" required>
+                                                <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                                                <option *ngFor="let item of scrapTypeList" value="{{item.scrapTypeId}}">
+                                                    {{item.scrapCode}}</option>
+                                            </select>
+                                        </div>
+                                    </td>
+                                    <td>{{'scrap' | translate }} {{'cause' | translate}}*</td>
+                                    <td>
+                                        <div class="input-group">
+                                            <select id="scrapcauseList" name="scrapcauseList" class="form-control"
+                                                [(ngModel)]="scrapReqDto.scrapCauseId" required>
+                                                <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                                                <option *ngFor="let item of scrapCauseList"
+                                                    value="{{item.scrapCauseId}}">{{item.scrapCauseName}}</option>
+                                            </select>
+                                        </div>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    
+
+
+                                    <td>{{'operator' | translate}}*</td>
+                                    <td>
+                                        <div class="input-group">
+
+                                            <select id="workerId" name="workerId" class="form-control"
+                                                [(ngModel)]="scrapReqDto.operatorId" required>
+                                                <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                                                <option *ngFor="let item of workers" value="{{item.employeeId}}">
+                                                    {{item.firstName}} {{item.lastName}}
+                                                </option>
+                                            </select>
+
+                                        </div>
+                                    </td>
+                                    <td>{{'reference-id' | translate }}</td>
+                                    <td>
+                                      {{scrapReqDto.referenceId}}
+                                    </td>
+                                </tr>
+                                
+                                <tr>
+                                    <td>{{'description' | translate}}</td>
+                                    <td>
+                                      <textarea class="form-control" [(ngModel)]="scrapReqDto.description" name="description"
+                                        rows="3"></textarea>
+                                    </td>
+                                  </tr>
+                                <tr>
+                                    <td colspan="4">
+                                        <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i
+                                                class="fa fa-ban"></i>
+                                            {{'reset' | translate}}</button>
+                                        <button type="submit" class="btn btn-sm btn-primary"
+                                            [disabled]="!partForm.form.valid" (click)="save()"><i
+                                                class="fa fa-dot-circle-o"></i>
+                                            {{'save' | translate}}</button>
+                                        <!--<button type="button" class="btn btn-sm btn-secondary float-right" (click)="goPage()">
+                        <i class="icon-arrow-left-circle"></i> {{'cancel' | translate}} </button>-->
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<!------------------------- Modals ---------------------------------------->
+<div bsModal [config]="{backdrop: 'static', keyboard: false}" #myModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-success modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          {{'material'|translate}}
+        </h4>
+        <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <!---------- MODEL #Stocks ------------->
+      <!--[(visible)]="display"-->
+      <div class="modal-body" *ngIf="myModal.isShown">
+        <div class="form-group row">
+          <!--keep the modal open!!!!!-->
+          <div class="col-md-12">
+            <choose-stock-pane [plantId]="scrapReqDto?.plantId" [removeTopButtons]="true"
+             (selectedEvent)="selectMaterialChanged($event);myModal.hide()"></choose-stock-pane>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="myModal.hide()">{{'close' | translate}}</button>
+      </div>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

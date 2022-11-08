@@ -1,0 +1,83 @@
+<div class="animated fadeIn">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <i class="fa fa-align-justify"></i> {{'rework-cause' | translate}}  {{'details' | translate}}
+              </div>
+              <div class="card-body">
+                <form #partForm="ngForm">
+                <table class="table table-bordered">
+                  <tbody>
+                    <tr>
+                        <td width="30%">{{'rework-cause-name' | translate}}*</td>
+                        <td><input type="text" name="scrapcausename" required class="form-control" [(ngModel)]="scrapCauseReqDto.scrapCauseName"/> </td>
+                    </tr>
+                  <tr>
+                    <td width="30%">{{'rework-code' | translate}}</td>
+                    <td><input type="text" name="scrapCode" class="form-control" [(ngModel)]="scrapCauseReqDto.scrapCode"/> </td>
+                  </tr>
+                  <tr>
+                    <td>{{'rework-type' | translate}}*</td>
+                    <td>
+                        <select id="scrapTypeList" required name="scrapTypeList" class="form-control" [(ngModel)]="scrapCauseReqDto.scrapTypeId">
+                            <option value="null"> {{'please-select' | translate}}</option>
+                            <option *ngFor="let item of scrapTypeList" value="{{item.scrapTypeId}}">{{item.scrapCode}}</option>
+                        </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'rework-cause-for'| translate}}</td>
+                    <td>
+                      <span class="d-flex">
+                        <div class="p-field-checkbox">
+                          <label for="binary" class="pr-3">{{'output' | translate}}</label>
+                          <p-checkbox [(ngModel)]="scrapCauseReqDto.scrapMaterial" binary="true" inputId="scrapMaterial" name="scrapMaterial" ></p-checkbox>
+                        </div>
+
+                        <div class="p-field-checkbox">
+                          <label for="binary" class="pr-3 pl-5">{{'input' | translate}}</label>
+                          <p-checkbox [(ngModel)]="scrapCauseReqDto.scrapRawMaterial" binary="true" inputId="scrapRawMaterial" name="scrapRawMaterial"></p-checkbox>
+                        </div>
+                      </span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'create-auto-production-order' | translate}}</td>
+                    <td>
+                      <p-checkbox [name]="'createAutoProdOrder'" [(ngModel)]="scrapCauseReqDto.createAutoProdOrder"
+                      binary="true" inputId="createAutoProdOrder"></p-checkbox>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'rework-master' | translate}}</td>
+                    <td>
+                      <p-checkbox [name]="'scrapMaster'" [(ngModel)]="scrapCauseReqDto.scrapMaster"
+                      binary="true" inputId="scrapMaster"></p-checkbox>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'scrap-description' | translate}}</td>
+                    <td><textarea type="text"  class="form-control" name="scrapDescription" [(ngModel)]="scrapCauseReqDto.scrapDescription"></textarea>  </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2">
+                      <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+                        {{'reset' | translate}}</button>
+                      <button type="submit" class="btn btn-sm btn-primary" [disabled]="!partForm.form.valid" (click)="save()"><i class="fa fa-dot-circle-o"></i>
+                        {{'save' | translate}}</button>
+                      <!--<button type="button" class="btn btn-sm btn-secondary float-right" (click)="goPage()">
+                        <i class="icon-arrow-left-circle"></i> {{'cancel' | translate}} </button>-->
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+

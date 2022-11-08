@@ -1,0 +1,157 @@
+<!--<form #orderEdit="ngForm" >-->
+    <div class="animated fadeIn">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-header">
+                {{'purchase-quotation' | translate}}
+              </div>
+              <div class="card-body">
+                <div class="form-group row">
+                  <label class="col-md-3 col-form-label" for="purchasequotationId">{{'purchase-quotation-id'|translate}}</label>
+                  <div class="col-md-9">
+                    <input name="purchasequotationId" class="form-control" disabled [(ngModel)]="purchaseQuotationDto.purchaseQuotationId" />
+                  </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-md-3 col-form-label" for="quotationStatus">{{'quotation-status'|translate}}</label>
+                    <div class="col-md-9">
+                      {{purchaseQuotationDto.purchaseQuotationStatus}}
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-md-3 col-form-label"> {{'vendor' | translate}}</label>
+                    <div class="col-md-9">
+                      {{purchaseQuotationDto.vendorName}}
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-md-3 col-form-label"> {{'required-date' | translate}}</label>
+                    <div class="col-md-9 ui-fluid align-self-center">
+                      <p-calendar [(ngModel)]="purchaseQuotationDto.requiredDate" placeholder="{{'required-date'|translate}}"
+                           yearRange="1990:2100" [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true"></p-calendar>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-md-3 col-form-label" for="description">{{'description' | translate}}</label>
+                    <div class="col-md-9">
+                      <textarea id="description" name="description" [(ngModel)]="purchaseQuotationDto.description" class="form-control"
+                        placeholder="{{'description' | translate}}"></textarea>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-md-3 col-form-label" for="costcenter">{{'cost-center' | translate}}</label>
+                    <div class="col-md-9">
+                      <a href="javascript:;" (click)="showCostCenterDetailDialog(purchaseQuotationDto?.costCenter?.costCenterId)"> 
+                        {{purchaseQuotationDto?.costCenter?.costCenterName}}
+                      </a>
+                      <!-- {{purchaseQuotationDto.costCenter?.costCenterName}} -->
+                    </div>
+                  </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="card">
+              <div class="card-header">
+                {{'purchase-quotation-items' | translate}}
+              </div>
+              <div class="card-body" style="width: 100%; overflow-x: scroll;">
+                <p-table dataKey="purchaseQuotationDetailId" [value]="purchaseQuotationDto.purchaseQuotationDetailList">
+                  <ng-template pTemplate="header">
+                    <tr>
+                      <th style="width: 3rem"></th>
+                      <th>{{'plant'|translate}}</th>
+                      <th>{{'material-no'|translate}}</th>
+                      <th>{{'material'|translate}}</th>
+                      <th style="width: 7em;">{{'requested-quantity'|translate}}</th>
+                      <th style="width: 6em;">{{'quoted-quantity'|translate}}</th>
+                      <th>{{'base-unit'|translate}}</th>
+                      <th>{{'order-unit'|translate}}</th>
+                      <th>{{'status'|translate}}</th>
+                      <th>{{'batch'|translate}}</th>
+                      <th>{{'delivery-date'|translate}}</th>
+                      <th>{{'purchase-price'|translate}}</th>
+                      <!-- <th>{{'action'|translate}}</th> -->
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-item let-i="rowIndex" let-expanded="expanded">
+                    <tr>
+                      <td>
+                        <a href="#" [pRowToggler]="item">
+                            <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+                        </a>
+                    </td>
+                      <td>{{item.plantName}}</td>
+                      <td>{{item.stockNo}}</td>
+                      <td>{{item.stockName}}</td>
+                      <td>{{item.requestedQuantity}}</td>
+                      <td>{{item.quotedQuantity}}</td>
+                      <td>{{item.baseUnit}}</td>
+                      <td>{{item.orderUnit}}</td>
+                      <td>{{item.purchaseQuotationDetailStatus}}</td>
+                      <td>{{item.batch}}</td>
+                      <td>{{item.deliveryDate | date:'dd/MM/yyyy'}}</td>
+                      <td>{{item.effectivePrice}}</td>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="rowexpansion" let-item>
+                    <tr>
+                      <td colspan="12">
+                        <div class="p-p-3">
+                          <table class="table table-bordered">
+                            <thead>
+                              <tr>
+                                <th>{{'unit-price'|translate}}</th>
+                                <th>{{'net-price'|translate}}</th>
+                                <th>{{'delivery-cost'|translate}}</th>
+                                <th>{{'effective-price'|translate}}</th>
+                                <th>{{'currency'|translate}}</th>
+                                <th>{{'valid-until'|translate}}</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td>{{item.unitPrice}}</td>
+                                <td>{{item.netPrice}}</td>
+                                <td>{{item.deliveryCost}}</td>
+                                <td>{{item.effectivePrice}}</td>
+                                <td>{{item.currency}}</td>
+                                <td>{{item.validUntil | date:'short'}}</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </td>
+                                
+                    </tr>
+                  </ng-template>
+                </p-table>
+              </div>
+              <div class="card-footer">
+                <!-- <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+                  {{'reset' | translate}}
+                </button> -->
+                <!--[disabled]="!order.purchaseOrderDetailList||order.purchaseOrderDetailList.length==0||!saleForm.form.valid"-->
+                <!-- <button type="submit" class="btn btn-sm btn-primary" 
+                  [disabled]="!purchaseQuotationDto.purchaseQuotationDetailList
+                    ||purchaseQuotationDto.purchaseQuotationDetailList.length==0
+                    ||!purchaseQuotationDto.vendorId
+                    ||!purchaseQuotationDto.purchaseQuotationStatus"
+                  (click)="save()">
+                  <i class="fa fa-dot-circle-o"></i>
+                  {{'save' | translate}}
+                </button> -->
+      
+              </div>
+            </div>
+          </div>
+          <!--/.col-->
+      
+          <!--[disabled]="! order.orderDetailList||order.orderDetailList.length==0 ||!order.actId||!saleForm.form.valid"-->
+      
+        </div>
+        <!--/.row-->
+      
+      </div>
+      <!--</form>-->

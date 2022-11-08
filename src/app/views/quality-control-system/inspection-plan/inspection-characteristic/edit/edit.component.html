@@ -1,0 +1,140 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i> {{'inspection-characteristic-operation' | translate}}
+        </div>
+        <div class="card-body">
+          <form #inspForm="ngForm">
+            <table class="table table-bordered">
+              <tr>
+                <td>{{'inspection-characteristic-operation-id' | translate}}</td>
+                <td>
+                  <input
+                    type="text"
+                    id="inspectionCharOpId"
+                    name="inspectionCharOpId"
+                    [(ngModel)]="inspectionCharOp.inspectionCharacteristicOperationId"
+                    class="form-control"
+                    disabled
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>{{'inspection-characteristic-operation-code' | translate}}</td>
+                <td>
+                  <input
+                    type="text"
+                    id="inspectionCharOpCode"
+                    name="inspectionCharOpCode"
+                    [(ngModel)]="inspectionCharOp.inspectionCharacteristicOperationCode"
+                    class="form-control" disabled
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>{{'inspection-operation' | translate}}</td>
+                <td>
+                  <input
+                    type="text"
+                    id="inspectionOperation"
+                    name="inspectionOperation"
+                    [(ngModel)]="inspectionCharOp.qualityInspectionPlanOperationId"
+                    class="form-control"
+                    disabled
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>{{'inspection-characteristic' | translate}}</td>
+                <td>
+                  <select id="inspectionChar" name="inspectionChar" class="form-control"
+                    [(ngModel)]="inspectionCharOp.qualityInspectionCharacteristicId" required>
+                    <option [value]="null"> {{'please-select' | translate}}</option>
+                    <option [value]="inspectionCharacteristic.inspectionCharacteristicId"
+                      *ngFor="let inspectionCharacteristic of inspectionCharList">
+                      {{inspectionCharacteristic.inspectionCharacteristicName}}
+                    </option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'inspection-method' | translate}}</td>
+                <td>
+                  <select id="inspectionMethod" name="inspectionMethod" class="form-control"
+                    [(ngModel)]="inspectionCharOp.qualityInspectionMethodId" required>
+                    <option [value]="null"> {{'please-select' | translate}}</option>
+                    <option *ngFor="let method of inspectionMethods" [value]="method.inspectionMethodId">
+                      {{method.inspectionMethodName}}
+                    </option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'sampling-procedure' | translate}}</td>
+                <td>
+                  <select id="samplingProcedure" name="samplingProcedure" class="form-control"
+                    [(ngModel)]="inspectionCharOp.qualitySamplingProcedureId" required>
+                    <option [value]="null"> {{'please-select' | translate}}</option>
+                    <option [value]="samplingProcedure.samplingProcedureId"
+                      *ngFor="let samplingProcedure of samplingProcedures">{{samplingProcedure.samplingProcedureName}}
+                    </option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'lower-specific-limit' | translate}}</td>
+                <td>
+                  <input
+                    type="text"
+                    id="lowerSpecific"
+                    name="lowerSpecific"
+                    [(ngModel)]="inspectionCharOp.lowerSpecificLimit"
+                    class="form-control"
+                    disabled
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>{{'upper-limit' | translate}}</td>
+                <td>
+                  <input
+                    type="text"
+                    id="upperLimit"
+                    name="upperLimit"
+                    [(ngModel)]="inspectionCharOp.upperLimit"
+                    class="form-control"
+                    disabled
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>{{'short-text' | translate}}</td>
+                <td>
+                  <textarea
+                    type="text"
+                    id="shortText"
+                    name="shortText"
+                    [(ngModel)]="inspectionCharOp.shortText"
+                    class="form-control"></textarea>
+                </td>
+              </tr>
+            </table>
+          </form>
+        </div>
+      </div>
+      <div class="row col-md-12">
+        <button
+          type="submit"
+          class="btn btn-sm btn-primary"
+          [disabled]="!inspForm.form.valid"
+          (click)="save()"
+        >
+          <i class="fa fa-dot-circle-o"></i>
+          {{ "save" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

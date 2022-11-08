@@ -1,0 +1,51 @@
+<!-- <div class="animated fadeIn">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fa fa-align-justify"></i> {{'employee-title-detail' | translate}}
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <tbody *ngIf="detailResult">
+                            <tr>
+                                <td width="30%">{{'title-name' | translate}}</td>
+                                <td>{{detailResult.employeeTitleName}} </td>
+                            </tr>
+                            <tr>
+                                <td>{{'title-code' | translate}}</td>
+                                <td>{{detailResult.employeeTitleCode}} </td>
+                            </tr>
+                            <tr>
+                                <td>{{'title-description' | translate}}</td>
+                                <td>{{detailResult.employeeTitleDescription}} </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->
+<p-treeTable #dt [columns]="cols" [value]="treeData" [rows]="10" [paginator]="treeData.length>10"
+        [totalRecords]="treeData.length"
+        dataKey="key" scrollable="true" scrollHeight="50vh">
+
+<ng-template pTemplate="header" let-columns>
+
+<tr>
+ <th *ngFor="let col of columns let i=index" style="cursor: pointer">
+   {{col.header|translate}}
+ </th>
+</tr>
+</ng-template>
+<ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
+<tr>
+ <td *ngFor="let col of columns; let i = index" [ngSwitch]="col.field">
+   <p-treeTableToggler [rowNode]="rowNode" *ngIf="i == 0"></p-treeTableToggler>
+<!--        <span *ngSwitchCase="'singleDuration'"> {{getReadableTime(rowData[col.field])}}</span>-->
+   <span *ngSwitchDefault> {{rowData[col.field]}}</span>
+ </td>
+</tr>
+</ng-template>
+</p-treeTable>

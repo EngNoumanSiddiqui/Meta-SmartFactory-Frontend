@@ -1,0 +1,32 @@
+/**
+ * Created by reis on 29.07.2019.
+ */
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {TooltipModule} from 'primeng';
+import {FormsModule} from '@angular/forms';
+import {DassSharedModule} from '../../../../shared/dass-shared.module';
+import {NewMaintenanceCategoryComponent} from './new/new.component';
+import {MaintenanceCategoryService} from '../../../../services/dto-services/maintenance-equipment/maintenance-category.service';
+import { MaintenanceCategoryDetailComponent } from './detail/detail.component';
+
+
+@NgModule({
+  imports: [
+    CommonModule,
+    DassSharedModule,
+    FormsModule,
+    TooltipModule,
+  ],
+  declarations: [
+    NewMaintenanceCategoryComponent,
+    MaintenanceCategoryDetailComponent
+  ],
+  exports: [
+    NewMaintenanceCategoryComponent,
+    MaintenanceCategoryDetailComponent
+  ],
+  providers: [MaintenanceCategoryService]
+})
+export class SharedMaintenanceCategoryModule {
+}

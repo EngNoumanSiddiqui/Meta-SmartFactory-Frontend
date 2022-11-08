@@ -1,0 +1,24 @@
+.myCalendar{
+  width: 30px;
+}
+.tbl-ws-list td:first-child {
+  border-right: 1px solid #c8c8c8;
+}
+
+.tbl-ws-list td:nth-child(4){
+  border-right: 1px solid #c8c8c8;
+}
+
+.tbl-ws-list td:nth-child(7){
+  border-right: 1px solid #c8c8c8;
+}
+
+.calculate-checkbox {
+  display: inline-flex;
+  align-items: center;
+  flex-direction: row-reverse;
+  gap: 10px;
+  margin-top: 10px;
+  margin-left: -7px;
+  justify-content: start;
+}

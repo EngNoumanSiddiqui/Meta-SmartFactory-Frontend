@@ -1,0 +1,32 @@
+<!--<form #orderEdit="ngForm" >-->
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12" *ngIf="dataModel">
+      <div class="card">
+        <div class="card-header">
+          {{'equipment'|translate}}
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered">
+              <tbody>
+
+
+              <tr>
+                <td>{{('equipment'|translate)}}</td>
+                <td>{{dataModel?.equipment?.equipmentName}}
+                </td>
+              </tr>
+
+              <tr>
+                <td width="35%">{{'count' | translate}}</td>
+                <td>{{dataModel.count}}
+                </td>
+              </tr>
+              </tbody>
+            </table>
+
+        </div>
+      </div>
+    </div>
+  </div><!--/.row-->
+</div>

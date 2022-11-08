@@ -1,0 +1,153 @@
+<div class="animated fadeIn">
+  <div class="row" *ngIf="batch">
+
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i> {{'batch-information' | translate}}
+        </div>
+        <div class="card-body ui-fluid">
+          <form #batchForm="ngForm">
+            <table class="table table-bordered">
+              <tbody *ngIf="batch">
+              <tr>
+                <td>{{'material' | translate}}</td>
+                <td>
+                  <div class="input-group">
+                 <span class="bg-readonly form-control"> {{material}}</span>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td width="40%">{{'internal-batch-prefix'| translate}}</td>
+                <td>
+                  <div class="input-group">
+                    <input type="text" class="form-control" name="batchCode"
+                           [(ngModel)]="batch.batchCode"  readonly/>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'plant' | translate}}</td>
+                <td>
+                  <div class="input-group">
+                    <span class="bg-readonly form-control"> {{plant}}</span>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'batch-level' | translate}}</td>
+                <td>
+                  <select id="batchLevel" name="batchLevel" class="form-control" [(ngModel)]="batch.batchLevel">
+                    <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                    <option *ngFor="let batchLevel of listbatchLevel" value="{{batchLevel}}">{{batchLevel}}</option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'requested-by' | translate}}</td>
+                <td>
+                  <select id="workerId" name="workerId" class="form-control" [(ngModel)]="batch.requestedBy"
+                      required>
+                      <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                      <option *ngFor="let item of employees" [value]="item.employeeId">{{item.firstName}}
+                        {{item.lastName}}
+                      </option>
+                    </select>
+                </td>
+              </tr>
+              <tr *ngIf="noBatchRecords">
+                <td width="40%">{{'type'| translate}}</td>
+                <td>
+                    <p-radioButton id="fixedRadioBut" name="group1" value="1"
+                      label="{{'customer'|translate|uppercase}}" inputId="fixedTariff"
+                      [(ngModel)]="SelectedBatchtype" (ngModelChange)="callCustomer(1)"></p-radioButton>
+                    <p-radioButton  class="ml-3" id="fixedRadioBut1" name="group1" value="2"
+                      label="{{'suplier'|translate|uppercase}}" inputId="fixedTariff" 
+                      [(ngModel)]="SelectedBatchtype" (ngModelChange)="callCustomer(2)"></p-radioButton>
+                    <p-dropdown *ngIf="SelectedBatchtype && SelectedBatchtype==='2'" class="mt-2 ui-dropdown" [options]="vendorList" [(ngModel)]="selectedVendor"
+                      optionLabel="actName" [required]="true" placeholder="{{'select-supplier'|translate}}" name="vendor" >
+                    </p-dropdown>
+                  <p-dropdown *ngIf="SelectedBatchtype && SelectedBatchtype==='1'" class="mt-2 ui-dropdown" [options]="vendorList" [(ngModel)]="selectedVendor"
+                    optionLabel="actName" [required]="true" placeholder="{{'select-customer'|translate}}" name="vendor" >
+                  </p-dropdown>
+                </td>
+              </tr>
+              <tr *ngIf="noBatchRecords">
+                <td *ngIf="SelectedBatchtype==='1'" width="40%">{{'customer-batch'| translate}}</td>
+                <td *ngIf="SelectedBatchtype==='2'" width="40%">{{'supplier-batch'| translate}}</td>
+                <td>
+                  <div class="input-group">
+                    <input type="text" class="form-control" name="vendorBatch"
+                          required [(ngModel)]="batch.vendorBatch" />
+                  </div>
+                </td>
+              </tr>
+              <tr *ngIf="noBatchRecords">
+                <td>{{'country-of-origin' | translate}}</td>
+                <td>
+                  <div class="">
+                    <p-dropdown class="ui-dropdown" placeholder="{{'select-country'|translate}}"
+                                [options]="countries"
+                                [(ngModel)]="selectedCountry" optionLabel="countryName"
+                                 name="country"> </p-dropdown>
+                  </div>
+                </td>
+              </tr>
+              <tr *ngIf="noBatchRecords">
+                <td width="40%">{{'manufacture-date'| translate}}</td>
+                <td>
+                  <p-calendar [(ngModel)]="batch.manufactureDate" placeholder="{{'select-date'|translate}}"
+                              [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                              name="manufactureDate" [showIcon]="true" dateFormat="dd/mm/yy"
+                              ></p-calendar>
+                </td>
+              </tr>
+              <tr *ngIf="noBatchRecords">
+                <td width="40%">{{'available-from'| translate}}</td>
+                <td>
+                  <p-calendar [(ngModel)]="batch.availableFrom" placeholder="{{'select-date'|translate}}"
+                              [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                              name="availableFrom" [showIcon]="true" dateFormat="dd/mm/yy"
+                              ></p-calendar>
+
+                </td>
+              </tr>
+              <tr *ngIf="noBatchRecords">
+                <td width="40%">{{'last-goods-receipt'| translate}}</td>
+                <td>
+                  <p-calendar [(ngModel)]="batch.lastGoodsReceipt" name="lastGoodsReceipt"
+                              [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                              placeholder="{{'select-date'|translate}}" [maxDate]="disableDates" [showIcon]="true" dateFormat="dd/mm/yy"
+                              ></p-calendar>
+
+                </td>
+              </tr>
+              <tr>
+                <td width="40%">{{'description'| translate}}</td>
+                <td>
+                  <div class="input-group">
+                    <textarea class="form-control" name="note" [(ngModel)]="batch.note" ></textarea>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                  <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+                    {{'reset' | translate}}
+                  </button>
+                  <button type="submit" class="btn btn-sm btn-primary" [disabled]="!batchForm.form.valid"
+                          (click)="save()"><i class="fa fa-dot-circle-o"></i>
+                    {{'save' | translate}}
+                  </button>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

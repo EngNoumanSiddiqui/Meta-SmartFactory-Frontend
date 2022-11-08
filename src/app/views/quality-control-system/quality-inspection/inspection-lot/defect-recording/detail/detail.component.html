@@ -1,0 +1,46 @@
+<div class="animated fadeIn">
+    <div class="col-md-12">
+      <div>
+        <div class="card" *ngIf="defectRecording">
+        <div class="card-header">
+            <i class="fa fa-align-justify"></i> {{'defect-recording-details' | translate}}
+        </div>
+        <div class="card-body">
+            <form #stockForm="ngForm">
+            <table class="table table-striped table-outline">
+                <tbody>
+                  <tr>
+                    <td width="30%" class="text-bold">{{'defect-recording-id' | translate}} <span style="width: 0 !important;" class="float-right">:</span> </td>
+                    <td>{{defectRecording.defectRecordingId}}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'defect-recording-code' | translate}} <span style="width: 0 !important;" class="float-right">:</span> </td>
+                    <td>{{defectRecording.defectRecordingCode}}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'material' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                    <td>{{defectRecording.stock?.stockName}}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'inspection-operation' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                    <td>{{defectRecording.qualityInspectionOperation?.inspectionOperationName}}</td>
+                  </tr>
+                  <tr>
+                    <td width="30%" class="text-bold">{{'inspection-characteristic' | translate}} <span style="width: 0 !important;" class="float-right">:</span> </td>
+                    <td>{{defectRecording.qualityInspectionCharacteristic?.inspectionCharacteristicName}}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'defect-type' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                    <td>{{defectRecording.qualityDefectType?.defectTypeText}}</td>
+                  </tr>
+                
+                </tbody>
+            </table>
+            </form>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  

@@ -1,0 +1,41 @@
+
+    <div class="ui-inputgroup  d-flex ui-fluid">
+
+      <p-autoComplete [disabled]="disabled" [(ngModel)]="selectedCharacteristic" [suggestions]="filteredCharacteristic"
+                      (completeMethod)="searchCharacteristic($event)" field="characteristic" [required]="required"
+                      [dropdown]="dropdown" [forceSelection]="true" dataKey="maintenanceCharacteristicId"
+                      placeholder="{{placeholder|translate}}" [minLength]="1" name="characteristic"
+                      (onDropdownClick)="handleDropdownClickForCharacteristic()" (ngModelChange)="onChangeCharacteristic($event)" >
+      </p-autoComplete>
+      <button *ngIf="addIfMissing" pButton icon="fa fa-plus-circle"
+              (click)="modalShow()">
+      </button>
+    </div>
+
+
+    <ng-template [ngIf]="modal.active">
+
+      <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal" class="modal fade"   (onHidden)="modal.active=false"
+           tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+           aria-hidden="true">
+        <div class="modal-dialog modal-success modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">
+                <span >{{'new-characteristic' | translate}}</span>
+              </h4>
+              <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+
+              <characteristic-new  (saveAction)="setCharacteristic($event);myModal.hide()"></characteristic-new>
+
+
+            </div>
+          </div> <!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div><!-- /.modal -->
+
+    </ng-template>

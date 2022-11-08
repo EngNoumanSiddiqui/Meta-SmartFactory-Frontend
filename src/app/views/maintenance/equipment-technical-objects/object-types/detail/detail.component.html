@@ -1,0 +1,45 @@
+
+<div class="animated fadeIn" >
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          {{'object-types' | translate}}
+        </div>
+        <div class="card-body" >
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label" for="equipment-category">{{'equipment-object-type' | translate}}</label>
+            <div class="col-md-9">
+              <input id="equipment-category"  style="width: 100%" [(ngModel)]="veriler.equipmentObjectType"
+                     [ngModelOptions]="{standalone: true}"  disabled="true"/>
+              <!--<span class="help-block">This is a help text</span>-->
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label" for="description">{{'description' | translate}}</label>
+            <div class="col-md-9">
+                <textarea type="text" id="description" name="description" [(ngModel)]="veriler.equipmentObjectTypeDescription"
+                          class="form-control" placeholder="{{'description' | translate}}" [ngModelOptions]="{standalone: true}" disabled></textarea>
+              <!--<span class="help-block">This is a help text</span>-->
+            </div>
+          </div>
+          <table class="table table-sm table-bordered" *ngIf="veriler.equipmentlist">
+            <thead>
+            <th>{{'equipment-name' | translate}}</th>
+            <th>{{'equipment-no' | translate}}</th>
+            <th>{{'equipment-type-name' | translate}}</th>
+            </thead>
+            <tbody >
+            <tr *ngFor="let veri of veriler.equipmentlist">
+              <td>{{veri.equipmentName}}</td>
+              <td>{{veri.equipmentNo}}</td>
+              <td>{{veri.equipmentTypeName }}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <!--[disabled]="! order.orderDetailList||order.orderDetailList.length==0 ||!order.actId||!saleForm.form.valid"-->
+  </div><!--/.row-->
+</div>

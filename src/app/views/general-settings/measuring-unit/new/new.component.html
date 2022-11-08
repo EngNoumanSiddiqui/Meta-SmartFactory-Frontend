@@ -1,0 +1,88 @@
+
+<div class="animated fadeIn">
+  <div class="row">
+
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i> {{'new-measuring-unit' | translate}}
+        </div>
+        <div class="card-body">
+          <form #measuringUnitForm="ngForm">
+          <table class="table table-bordered">
+            <tbody>
+              <tr>
+
+                <td>{{'STOCK'|translate}}</td>
+                <td>
+                  <stock-auto-complete [plantId]="selectedPlant?.plantId" (selectedStockEvent)="measuringUnitDto.stockId=$event.stockId"></stock-auto-complete>
+
+              </tr>
+              <tr>
+                  <td>{{'workstation' | translate}}</td>
+                  <td>
+                   <workstation-auto-complete [plantId]="selectedPlant?.plantId" (selectedWorkStationEvent)="measuringUnitDto.workStationId=$event.workStationId"></workstation-auto-complete>
+                  </td>
+                </tr>
+            <tr>
+              <td>{{'equipment' | translate}} {{'no' | translate}}</td>
+              <td>
+                <equipment-auto-complete [plantId]="selectedPlant?.plantId" (selectedEquipmentEvent)="measuringUnitDto.equipmentId=$event.equipmentId"></equipment-auto-complete>
+              </td>
+            </tr>
+            <tr>
+              <td>{{'unit-type' | translate}}</td>
+              <td>
+                <select id="unit" name="unit" required class="form-control" [(ngModel)]="measuringUnitDto.unitType" (ngModelChange)="onmeasuringUnitSelected($event)">
+                  <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                  <option *ngFor="let unit of measuringUnitList" value="{{unit}}">{{unit}}</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td>{{'base-unit' | translate}}</td>
+              <td>
+                <unit-auto-complete [required]="true" [selectedUnit]="measuringUnitDto.baseUnit" (unitChangeEvent)="measuringUnitDto.baseUnit=$event"></unit-auto-complete>
+              </td>
+            </tr>
+
+            <tr>
+              <td>{{'numerator' | translate}}</td>
+              <td><input type="number" required class="form-control" name="numerator"  [(ngModel)]="measuringUnitDto.numerator" /></td>
+            </tr>
+            <tr>
+              <td>{{'denominator' | translate}}</td>
+              <td><input type="number" required class="form-control" name="description"  [(ngModel)]="measuringUnitDto.denominator" /></td>
+            </tr>
+            <tr>
+              <td>{{'alternative-unit' | translate}}</td>
+              <td>
+                <unit-auto-complete [required]="true" [selectedUnit]="measuringUnitDto.alternativeUnit" (unitChangeEvent)="measuringUnitDto.alternativeUnit=$event"></unit-auto-complete>
+              </td>
+            </tr>
+
+
+
+
+            <tr>
+              <td colspan="2">
+                <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+                  {{'reset' | translate}}</button>
+                <button type="submit" class="btn btn-sm btn-primary" [disabled]="!measuringUnitForm.form.valid" (click)="save()"><i class="fa fa-dot-circle-o"></i>
+                  {{'save' | translate}}</button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+

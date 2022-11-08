@@ -1,0 +1,95 @@
+<div class="animated fadeIn">
+  <div class="row">
+      <p-tabView class="col-md-12">
+          <p-tabPanel header="{{'main-informations' | translate}}">
+              <div class="card">
+                  <div class="card-header">
+                    <i class="fa fa-align-justify"></i>{{'workcenter' | translate}} - {{'details' | translate}}
+                  </div>
+                  <div class="card-body">
+                    <table class="table table-bordered">
+                      <tbody *ngIf="workcenter != null">
+                      <tr>
+                        <td width="30%" >{{'workcenter' | translate}} - {{'no' | translate}}</td>
+                        <td>{{workcenter.workCenterNo}}</td>
+                      </tr>
+                      <tr>
+                        <td >{{'workcenter' | translate}} - {{'name' | translate}} </td>
+                        <td>{{workcenter.workCenterName}}</td>
+                      </tr>
+                      <tr>
+                        <td >{{'workcenter' | translate}} -{{'type' | translate}}</td>
+                        <td>
+                            <a href="javascript:;" (click)="showWorkCenterTypeDetail(workcenter)">{{workcenter.workCenterTypeName}}</a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td >{{'status' | translate}}</td>
+                        <td>{{workcenter.workCenterStatus}}</td>
+                      </tr>
+                      <tr>
+                        <td >{{'schedule-max-change-over-count' | translate}}</td>
+                        <td>{{workcenter.maxChangeOverCount}}</td>
+                      </tr>
+                      <tr>
+                        <td >{{'description' | translate}}</td>
+                        <td>{{workcenter.description}}</td>
+                      </tr>
+
+              
+          
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+          </p-tabPanel>
+          <p-tabPanel header="{{'workstation-list' | translate}}">
+              <div class="card">
+
+                  <div class="card-header">
+                    <i class="fa fa-align-justify"></i>{{ 'workstations' | translate}}
+                  </div>
+        
+                  <div class="card-body">
+                    <table class="table table-responsive-sm table-hover table-outline mb-0">
+                      <thead class="table-secondary">
+                      <tr style="text-align: center;">
+                        <th>{{'id' | translate}}</th>
+                        <th>{{'no' | translate}}</th>
+                        <th>{{'name'  |translate}}</th>
+                      </tr>
+                      </thead>
+        
+                      <tbody>
+                      <tr *ngFor="let workStation of workcenter.workStations" >
+                        <td>
+                            <a href="javascript:;" (click)="showWorkStationDetail(workStation?.workStationId)">{{workStation?.workStationId}}</a>
+                          </td>
+                          <td>
+                            <a href="javascript:;" (click)="showWorkStationDetail(workStation?.workStationId)">{{workStation?.workStationNo}}</a>
+                          </td>
+                          <td>
+                            <a href="javascript:;" (click)="showWorkStationDetail(workStation?.workStationId)">{{workStation?.workStationName}}</a>
+                          </td>
+                      </tr>
+                      <tr *ngIf="!workcenter.workStations ||workcenter.workStations.length == 0"><td colspan="3">{{'no-item-defined' | translate}}</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+          </p-tabPanel>
+          <p-tabPanel header="{{'documentation' | translate}}">
+              <div class="card">
+                  <div class="card-header">
+                    <i class="fa fa-align-justify"></i>{{'picture' | translate}}
+                  </div>
+                  <div class="card-body">
+                    <image-viewer></image-viewer>
+                  </div>
+                </div>
+          </p-tabPanel>
+          <p-tabPanel header="{{'analysis' | translate}}">
+          </p-tabPanel>
+      </p-tabView>
+  </div>
+</div>

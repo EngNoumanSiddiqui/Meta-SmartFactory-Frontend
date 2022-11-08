@@ -1,0 +1,157 @@
+export interface PalletFilterRequestDto {
+    jobOrderId: number,
+    orderByDirection: string,
+    orderByProperty: string,
+    pageNumber: number,
+    pageSize: number,
+    palletId: number,
+    palletStatus: string,
+    palletStatusList: [],
+    query: string,
+    stockId: number,
+    wareHouseId: number,
+    palletPosition: string,
+    plantId?: number
+}
+
+export interface PalletListResponse {
+    batch: string,
+    createDate: string | Date,
+    cycleQuantity: number,
+    palletPosition: null,
+    goodQuantity: number,
+    palletId: number,
+    palletStatus: string,
+    reworkQuantity: number,
+    scrapQuantity: number,
+    jobOrder: any,
+    stock: {
+        auxfeature: string,
+        baseUnit: string,
+        batchActive: boolean,
+        buy: boolean,
+        description: string,
+        dimensionUnit: string,
+        grossWeight: number,
+        height: number,
+        industryId: number,
+        industryName: string,
+        isBatchActive: boolean,
+        length: number,
+        make: boolean,
+        minSchReadyReservationPercentage: number,
+        maxStockLevel: number,
+        netWeight: number,
+        numberOfEdge: number,
+        outSource: boolean,
+        plantId: number,
+        plantName: string,
+        productTreeId: number,
+        productTreeList: [],
+        purchaseOrderWarehouseId: {
+            description: string,
+            employeeFirstName: string,
+            employeeLastName: string,
+            plantId: number,
+            plantName: string,
+            rework: boolean,
+            scrap: boolean,
+            wareHouseId: number,
+            wareHouseName: string,
+            wareHouseNo: string,
+            wareHouseStockDtoList: WareHouseStockListDto[],
+            workStationName: string
+        },
+        reorderPoint: number,
+        reorderStrategy: {
+            id: number
+        },
+        safetyStock: number,
+        salesOrderWarehouseId: {
+            description: string,
+            employeeFirstName: string,
+            employeeLastName: string,
+            plantId: number,
+            plantName: string,
+            rework: boolean,
+            scrap: boolean,
+            wareHouseId: number,
+            wareHouseName: string,
+            wareHouseNo: string,
+            wareHouseStockDtoList: WareHouseStockListDto[],
+            workStationName: string
+        },
+        stockGroupId: number,
+        stockGroupName: string,
+        stockId: number,
+        stockName: string,
+        stockNo: string,
+        stockPurchasing: {
+            batchManagement: boolean,
+            orderUnit: string,
+            plantId: number,
+            plantName: string,
+            stockId: number,
+            stockName: string,
+            stockPurchasingId: number,
+            supplierLeadTimeDay: number,
+            maxOrderSizePerWeek: number
+        },
+        stockStatus: string,
+        stockTypeCode: string,
+        stockTypeId: number,
+        stockTypeName: string,
+        stockUnitMeasureList: StockUnitMeasureListDto[],
+        techScrapPercentage: number,
+        thickness: number,
+        volume: number,
+        volumeUnit: string,
+        warehouseList: WarehouseListDto[],
+        weightUnit: string,
+        ytdScrapPercentage: number
+    },
+    updateDate: string | Date,
+    wareHouse: {
+        description: string,
+        employeeFirstName: string,
+        employeeLastName: string,
+        plantId: number,
+        plantName: string,
+        rework: boolean,
+        scrap: boolean,
+        wareHouseId: number,
+        wareHouseName: string,
+        wareHouseNo: string,
+        wareHouseStockDtoList: WareHouseStockListDto[],
+        workStationName: string
+    }
+}
+
+export interface WareHouseStockListDto {
+    batch: string,
+    blocked: number,
+    defected: boolean,
+    incoming: number,
+    outgoing: number,
+    quantity: number,
+    reservation: number,
+    stockId: number,
+    stockName: string,
+    stockNo: string,
+    unrestricted: number
+}
+export interface StockUnitMeasureListDto {
+    alternativeUnit: string,
+    baseUnit: string,
+    denominator: number,
+    numerator: number,
+    stockId: number,
+    stockName: string,
+    stockUnitMeasureId: number
+}
+
+export interface WarehouseListDto {
+    stockQuantity: number,
+    wareHouseId: number,
+    wareHouseName: string
+}

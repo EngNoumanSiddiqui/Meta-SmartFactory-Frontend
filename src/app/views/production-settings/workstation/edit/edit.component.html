@@ -1,0 +1,622 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <p-tabView class="col-md-12">
+      <p-tabPanel header="{{'Workstation' | translate}}">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                <i class="fa fa-align-justify"></i>{{'picture' | translate}}
+              </div>
+              <div class="card-body">
+                <table class="table table-bordered">
+                  <tbody>
+                    <tr align="center">
+                      <td colspan="2" style="height: 350px; " align="center">
+                        <image-adder [tableType]="tableTypeForImg" [referenceId]="workStation.workStationId"></image-adder>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header">
+                <i class="fa fa-align-justify"></i>{{'workstation-information' | translate}}
+              </div>
+              <div class="card-body">
+                <form #workstationForm="ngForm">
+                <table class="table table-bordered">
+                  <tbody>
+                    <tr>
+                      <td>{{'parent-workstation' | translate}} </td>
+                      <td>
+                        <workstation-auto-complete [selectedWorkStationId]="workStation.parentId"
+                        [plantId]="workStation.plantId" 
+                        (selectedWorkStationEvent)="workStation.parentId=$event?.workStationId">
+                      </workstation-auto-complete>
+                        <!-- <div class="input-group">
+                          <select id="workStationIdx" name="workStationIdx" class="form-control" [(ngModel)]="workStation.parentId">
+                            <option [value]="null"> {{'please-select' | translate}}</option>
+                            <option *ngFor="let wl of workstations" value="{{wl.workStationId}}">{{wl.workStationName}}</option>
+                          </select>
+                        </div> -->
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>{{'child-workstation' | translate}} </td>
+                      <td>
+                        <workstation-auto-complete [selectedWorkStationId]="workStation.childId"
+                        [plantId]="workStation.plantId"
+                        (selectedWorkStationEvent)="workStation.childId=$event?.workStationId">
+                      </workstation-auto-complete>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>{{'output-warehouse' | translate}} </td>
+                      <td>
+                        <warehouse-auto-complete [selectedWareHouseId]="workStation.outputWarehouseId"
+                        [plantId]="workStation.plantId"
+                        (selectedWareHouseEvent)="workStation.outputWarehouseId=$event?.wareHouseId">
+                        </warehouse-auto-complete>
+                      </td>
+                    </tr>
+                    
+                  <tr>
+                    <td>{{'workstation-no' | translate}}</td>
+                    <td><input type="text" class="form-control" name="workStationNo" [(ngModel)]="workStation.workStationNo"/> </td>
+                  </tr>
+      
+                  <tr>
+                    <td>{{'workstation-name' | translate}}* </td>
+                    <td><input type="text" class="form-control"  required name="workStationName" [(ngModel)]="workStation.workStationName"/> </td>
+                  </tr>
+      
+                  <tr>
+                    <td>{{'workstation-type' | translate}}</td>
+                    <td>
+                      <!-- <div class="input-group">
+      
+                        <select id="workStationTypeIdx" name="workStationTypeIdx" class="form-control" [(ngModel)]="workStation.workStationTypeId">
+                          <option [ngValue]="null">{{'please-select' | translate}}</option>
+                          <option *ngFor="let wt of workstationTypeList" value="{{wt.workStationTypeId}}">{{wt.workStationTypeName}}</option>
+                        </select>
+                      </div> -->
+                      <workstation-type-auto-complete [selectedWorkstationTypeId]="workStation.workStationTypeId" [addIfMissing]="true"
+                  (selectedWorkStationTypeEvent)="workStation.workStationTypeId=$event.workStationTypeId"></workstation-type-auto-complete>
+                    </td>
+                  </tr>
+                  <!--
+                    
+                  -->
+                  <tr>
+                    <td>{{'plant' | translate}}</td>
+                    <td>
+                        <!-- <div class="input-group">
+                          <select id="plantList" name="plantList" class="form-control" 
+                                      [(ngModel)]="workStation.plantId">
+                                <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                                <option *ngFor="let plant of plantList" value="{{plant.plantId}}">{{plant.plantName}}</option>
+                          </select>
+                        </div>  -->
+                      
+                        <span
+                        *ngIf="workStation.plantId && selectedPlant && workStation.plantId=== selectedPlant.plantId">{{selectedPlant.plantName}}</span>
+                      <plant-auto-complete *ngIf="!workStation.plantId && !selectedPlant"
+                        [selectedPlantId]="workStation.plantId" (selectedPlantEvent)="setSelectedPlant($event)"
+                        [eventFire]="true"></plant-auto-complete>
+                      </td>
+                  </tr>
+                  <!--add warehouse controller here-->
+                  <tr>
+                    <td>{{'wareHouse' | translate}}</td>
+                    <td>
+                        <!-- <div class="input-group">
+                          <select id="plantList" name="plantList" class="form-control" 
+                                      [(ngModel)]="
+                              <warehouse-auto-complete [disabled]="!newProductionOrder.plantId" [required]="true" [selectedWareHouse]="newProductionOrder.wareHouse"
+                                                       [plantId]="newProductionOrder.plantId" (selectedWareHouseEvent)="setSelectedWarehouse($event)"></warehouse-auto-complete>.plantId">
+                                <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                                <option *ngFor="let plant of plantList" value="{{plant.plantId}}">{{plant.plantName}}</option>
+                          </select>
+                        </div> -->
+                        <warehouse-auto-complete [disabled]="!workStation.plantId" [required]="true" [selectedWareHouseId]="workStation.warehouseId"
+                        [plantId]="workStation.plantId" [addIfMissing]="true" (selectedWareHouseEvent)="setSelectedWarehouse($event)"></warehouse-auto-complete>
+                    
+                      </td>
+                  </tr>
+      
+                  <!--add warehouse controller here-->
+                  <tr>
+                    <td>{{'work-station-category'|translate}}</td>
+                    <td>
+                        <!-- <div class="input-group">
+                          <select id="workCenterIdx" name="workCenterIdx"  class="form-control" [(ngModel)]="workStation.workstationCategoryCode">
+                            <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                            <option *ngFor="let wl of workStationCategoryList" value="{{wl.wsCatCode}}">{{wl.wsCatName}}</option>
+                          </select>
+                        </div> -->
+                        <workstation-category-auto-complete [required]="true" [selectedWorkstationCategoryCode]="workStation.workstationCategoryCode"
+                        (selectedWorkStationCategoryEvent)="selectWorkstationCategory($event)"></workstation-category-auto-complete>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'work-center' | translate}} </td>
+                    <td>
+                      <workcenter-auto-complete [addIfMissing]="true" [workCenterId]="workStation.workCenterId" [required]="true" (selectedWorkCenterEvent)="selectWorkCenter($event)" [plantId]="workStation.plantId"></workcenter-auto-complete>
+                      <!-- <div class="input-group">
+                        <select id="workCenterIdx" name="workCenterIdx" class="form-control" [(ngModel)]="workStation.workCenterId">
+                          <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                          <option *ngFor="let wl of workcenterList" value="{{wl.workCenterId}}">{{wl.workCenterName}}</option>
+                        </select>
+                      </div> -->
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td>{{'input-location' | translate}}</td>
+                    <td>
+                      <location-auto-complete  [selectedLocationNo]="workStation.inputWarehouseLocationNo"
+                      (selectedLocationEvent)="selectInputLocation($event)" [plantId]="workStation.plantId"></location-auto-complete>
+                     
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'output-location' | translate}}</td>
+                    <td>
+                      <location-auto-complete  [selectedLocationNo]="workStation.outputWarehouseLocationNo"
+                      (selectedLocationEvent)="selectOutputLocation($event)" [plantId]="workStation.plantId"></location-auto-complete>
+                     
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'use-msf-calendar' |translate}}</td>
+                    <td>
+                      <p-checkbox name="useMsfCalendar" binary="true" [(ngModel)]="workStation.useMsfCalendar">
+                      </p-checkbox>
+                    </td>
+                  </tr>
+      
+                  <tr>
+                      <td>{{'description' | translate}}</td>
+                      <td><textarea class="form-control" name="desc" [(ngModel)]="workStation.description"></textarea> </td>
+                  </tr>  
+                  <!-- <tr>
+                    <td colspan="2">
+                      <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+                        {{'reset' | translate}}</button>
+                      <button type="submit" class="btn btn-sm btn-primary" [disabled]="!workstationForm.form.valid" (click)="save()"><i class="fa fa-dot-circle-o"></i>
+                        {{'save' | translate}}</button>
+                      <button type="button" class="btn btn-sm btn-secondary float-right" (click)="goPage()">
+                        <i class="icon-arrow-left-circle"></i> {{'cancel' | translate}} </button>
+                    </td>
+                  </tr> -->
+                  </tbody>
+                </table>
+                </form>
+              </div>
+            </div>
+          </div>
+      
+          <div class="col-md-6 ui-fluid">
+            <div class="card">
+              <div class="card-header">
+                <i class="fa fa-align-justify"></i>{{'targets' | translate}}
+              </div>
+              <div class="card-body">
+                <table class="table table-bordered">
+                  <tbody >
+                  <tr>
+                    <td>{{'target-availability'  | translate}} %</td>
+                    <td>
+                      <input class="form-control" type="number" [(ngModel)]="workStation.targetAvailability" 
+                      (ngModelChange)="targetChanged($event)"
+                      name="targetAvailability" />
+                    </td>
+                  </tr>
+                  
+                  <tr>
+                    <td>{{'target-performance' | translate}} %</td>
+                    <td>
+                      <input class="form-control" type="number" [(ngModel)]="workStation.targetPerformance" (ngModelChange)="targetChanged($event)" name="targetPerformance" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'target-quality' | translate}} %</td>
+                    <td>
+                      <input class="form-control" type="number" [(ngModel)]="workStation.targetQuality" (ngModelChange)="targetChanged($event)" name="targetQuality" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'target-oee' | translate}} %</td>
+                    <td>
+                      <input class="form-control" type="number" [(ngModel)]="workStation.targetOee" name="targetOee" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'target-teep' | translate}} %</td>
+                    <td>
+                      <input class="form-control" type="number" [max]="workStation.targetOee" [(ngModel)]="workStation.targetTeep" name="targetTeep" #targetTeep="ngModel"
+                      (change)="workStation.targetTeep > workStation.targetOee ? workStation.targetTeep = workStation.targetOee : workStation.targetTeep;"
+                      />
+                     
+                    </td>
+                  </tr>
+                 
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+            <div class="card">
+              
+              <div class="card-header">
+                <i class="fa fa-align-justify"></i>{{'line-information' | translate}}
+              </div>
+
+              <div class="card-body">
+                <table class="table table-bordered">
+                  <tbody>
+                    <tr>
+                      <td>{{'max-buffer-quantity'  | translate}}</td>
+                      <td>
+                        <input type="number" step="1" pattern="\d+" class="form-control" [(ngModel)]="workStation.maxBufferQuantity"/> 
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="card">
+              
+              <div class="card-header">
+                <i class="fa fa-align-justify"></i>{{'dimension-information' | translate}}
+              </div>
+
+              <div class="card-body">
+                <table class="table table-bordered">
+                  <tbody>
+                    <tr>
+                      <td>{{'max-input-space'  | translate}}</td>
+                      <td>
+                        <input type="number" step="1" pattern="\d+" class="form-control" [(ngModel)]="workStation.maxInputSpace"/> 
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="card">
+              
+              <div class="card-header">
+                <i class="fa fa-align-justify"></i>{{'wastage-information' | translate}}
+              </div>
+
+              <div class="card-body">
+                <table class="table table-bordered">
+                  <tbody>
+                    <tr>
+                      <td>{{'wastage-calculation'  | translate}}</td>
+                      <td>
+                        <p-checkbox name="wastage" binary="true" [(ngModel)]="workStation.wastageCalculation">
+                        </p-checkbox>
+                        
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'workstation-unit'  | translate}}</td>
+                      <td>
+                        <unit-auto-complete [addIfMissing]="true"  [selectedUnit]="workStation.workStationUnit" (unitChangeEvent)="worstationUnitChanged($event)" ></unit-auto-complete>
+                        
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="card">
+              
+              <div class="card-header">
+                <i class="fa fa-align-justify"></i>{{'schedule-information' | translate}}
+              </div>
+
+              <div class="card-body">
+                <table class="table table-bordered">
+                  <tbody>
+                    <tr>
+                      <td>{{'skip-changeover-control'  | translate}}</td>
+                      <td>
+                        <p-checkbox name="skipChangeoverControl" binary="true" [(ngModel)]="workStation.skipChangeoverControl">
+                        </p-checkbox>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </p-tabPanel>
+      <p-tabPanel header="{{'timing' | translate}}" >
+        <div class="col-md-6 ui-fluid">
+          <div class="card">
+            <div class="card-header">
+              <i class="fa fa-align-justify"></i>{{'production-timing' | translate}}
+            </div>
+            <div class="card-body">
+              <table class="table table-bordered">
+                <tbody >
+                <tr>
+                  <td>{{'max-standby-duration'  | translate}}</td>
+                  <td>
+                    <app-time [name]="'max-standby'" [timeInMills]="workStation.maxStandbyDuration"
+                        (timeChanged)="workStation.maxStandbyDuration=$event;"></app-time>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'max-running-duration' | translate}}</td>
+                  <td>
+                    <app-time [name]="'max-running'" [timeInMills]="workStation.maxRunningDuration"
+                        (timeChanged)="workStation.maxRunningDuration=$event;"></app-time>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'max-stop-duration' | translate}}</td>
+                  <td>
+                    <app-time [name]="'max-stop'" [timeInMills]="workStation.maxStopDuration"
+                        (timeChanged)="workStation.maxStopDuration=$event;"></app-time>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'max-setup-duration' | translate}}</td>
+                  <td>
+                    <app-time [name]="'max-setup'" [timeInMills]="workStation.maxSetupDuration"
+                        (timeChanged)="workStation.maxSetupDuration=$event;"></app-time>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+      </p-tabPanel>
+      <p-tabPanel header="{{'producer-info' | translate}}">
+        <div class="row d-flex pl-0 pr-0">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                <i class="fa fa-align-justify"></i>{{'producer-info' | translate}}
+              </div>
+              <div class="card-body">
+                <table class="table table-bordered">
+                  <tbody >
+                  <tr>
+                    <td>{{'serial-no'  | translate}}</td>
+                    <td><input type="text" class="form-control" [(ngModel)]="workStation.serialNo"/> </td>
+                  </tr>
+                  <tr>
+                    <td>{{'producer' | translate}}</td>
+                    <td><input type="text" class="form-control" [(ngModel)]="workStation.producer"/> </td>
+                  </tr>
+                  <tr>
+                    <td>{{'trade-mark' | translate}}</td>
+                    <td><input type="text" class="form-control" [(ngModel)]="workStation.mark"/> </td>
+                  </tr>
+                  <tr>
+                    <td>{{ 'model' | translate}}</td>
+                    <td><input type="text" class="form-control" [(ngModel)]="workStation.model"/> </td>
+                  </tr>
+                  <tr>
+                    <td>{{'production' | translate}} {{'date' | translate}}</td>
+                    <td class="ui-fluid">
+                      <p-calendar [(ngModel)]="workStation.productDate"
+                                  [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                                  [showIcon]="true" name="workStation.productDate" dateFormat="dd/mm/yy">
+                      </p-calendar>
+                  </tr>
+                  <tr>
+                    <td>{{'purchase-date'| translate}}</td>
+                    <td class="ui-fluid">
+                      <p-calendar [(ngModel)]="workStation.purchaseDate" [showIcon]="true"
+                                  [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                                  dateFormat="dd/mm/yy"  name="workStation.purchaseDate"></p-calendar>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div> 
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                <i class="fa fa-align-justify"></i>{{'technical-info' | translate}}
+              </div>
+              <div class="card-body">
+                <table class="table table-bordered">
+                  <tbody >
+                  <tr>
+                    <td>{{'number-of-scissors' | translate}}</td>
+                    <td>
+                      <input type="number" step="1" pattern="\d+" class="form-control" name="numberOfScissors"
+                      [(ngModel)]="workStation.numberOfScissors"/> 
+                      
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'capacity' | translate}}</td>
+                    <td>
+                      <input type="number" step="1" pattern="\d+" class="form-control" name="capacity"
+                      [(ngModel)]="workStation.capacity"/> 
+                      
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'min-capacity' | translate}}</td>
+                    <td><input type="number"  step="1" pattern="\d+" class="form-control" name="minCapacity"
+                      [(ngModel)]="workStation.minCapacity"/> </td>
+                  </tr>
+                  <tr>
+                    <td>{{'cycle-period'|translate}}</td>
+                    <td><input type="number"  step="1" pattern="\d+" class="form-control"  name="cyclePeriod"
+                      [(ngModel)]="workStation.cyclePeriod"/> </td>
+                  </tr>
+                  <tr>
+                    <td>KWh</td>
+                    <td><input type="number"  step="1" pattern="\d+" class="form-control"  name="kwh"
+                      [(ngModel)]="workStation.kwh"/> </td>
+                  </tr>
+                  <tr>
+                    <td>KWh {{'cost' | translate}}</td>
+                    <td><input type="number"  step="1" pattern="\d+" class="form-control" name="kwhCost"
+                      [(ngModel)]="workStation.kwhCost"/> </td>
+                  </tr>
+                  <tr>
+                    <td>{{'base-unit' | translate}}</td>
+                    <td>
+                      <unit-auto-complete [addIfMissing]="true" [selectedUnit]="workStation.baseUnit" (unitChangeEvent)="baseUnitChanged($event)" ></unit-auto-complete>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </p-tabPanel>
+      <p-tabPanel header="{{'costing' | translate}}">
+        <div class="row">
+          <div class="col-lg-12">
+            <table class="table table-bordered">
+              <tbody>
+                <tr>
+                  <td width="30%">{{'cost-rate' | translate}}</td>
+                  <td>
+                    <input class="form-control" type="number" min="1" name="workstationCostRate" [(ngModel)]="workStation.workstationCostRate" />
+                  </td>
+                </tr>
+                <tr>
+                  <td width="30%">{{'currency' | translate}}</td>
+                  <td>
+                    <currency-auto-complete [selectedCurrency]="workStation.currency" (selectedCurrencyEvent)="workStation.currency=$event?.currencyCode"></currency-auto-complete>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </p-tabPanel>
+      <p-tabPanel header="{{'material-groups' | translate}}">
+        <ng-template pTemplate="content">
+          <app-workstation-groups [workstationId]="workStation.workStationId" 
+          [workstationNo]="workStation.workStationNo" 
+          [workstationName]="workStation.workStationName" 
+          [data]="workStation.workstationMaterialGroupList"></app-workstation-groups>
+        </ng-template>
+      </p-tabPanel>
+      <p-tabPanel header="{{'material-dimensions' | translate}}">
+        <div class="row d-flex pl-0 pr-0">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                <i class="fa fa-align-justify"></i>{{'material-dimensions' | translate}}
+              </div>
+              <div class="card-body">
+                <table class="table table-bordered">
+                  <tbody >
+                    <tr>
+                      <td>{{'outer-diameter'|translate}}</td>
+                      <td><input type="number"  step="1" pattern="\d+" class="form-control"  name="outerDiameter"
+                        [(ngModel)]="workStation.outerDiameter"/> </td>
+                    </tr>
+                  <tr>
+                    <td>{{'inner-diameter' | translate}}</td>
+                    <td>
+                      <input type="number" step="1" pattern="\d+" class="form-control" name="innerDiameter"
+                      [(ngModel)]="workStation.innerDiameter"/> 
+                      
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'height' | translate}}</td>
+                    <td>
+                      <input type="number" step="1" pattern="\d+" class="form-control" name="avarageDiameter"
+                      [(ngModel)]="workStation.avarageDiameter"/> 
+                      
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'length' | translate}}</td>
+                    <td><input type="number"  step="1" pattern="\d+" class="form-control" name="length"
+                      [(ngModel)]="workStation.length"/> </td>
+                  </tr>
+                  <tr>
+                    <td>{{'density'|translate}}</td>
+                    <td><input type="number"  step="1" pattern="\d+" class="form-control"  name="density"
+                      [(ngModel)]="workStation.density"/> </td>
+                  </tr>
+                  <tr>
+                    <td>{{'weight' | translate}}</td>
+                    <td><input type="number"  step="1" pattern="\d+" class="form-control" name="weight"
+                      [(ngModel)]="workStation.weight"/> </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </p-tabPanel>
+    <p-tabPanel header="{{'basic-data-screen' | translate}}" [disabled]="!workStation.workStationId">
+      <app-basic-screen [workstationId]="workStation.workStationId"></app-basic-screen>
+    </p-tabPanel>
+    <p-tabPanel header="{{'capacities' | translate}}" [disabled]="!workStation.workStationId">
+      <app-add-capacity [id]="workStation.workStationId"></app-add-capacity>
+    </p-tabPanel>
+
+  </p-tabView>
+  </div>
+</div>
+
+<!------------------------- Modals ---------------------------------------->
+<div bsModal [config]="{backdrop: 'static', keyboard: false}" #myModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-success" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          <span *ngIf="params.dialog.title == 'workstation-type'">{{'new' |translate}} {{'workstation' | translate}} {{'type' | translate}}</span>
+        </h4>
+        <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!---------- MODEL # ------------->
+        <span >
+           <div class="form-group row">
+          <label class="col-md-3 col-form-label" for="dialogInput"> {{'name' | translate}}</label>
+          <div class="col-md-9">
+            <input type="text" id="dialogInput" name="dialogInput" [(ngModel)]="params.dialog.inputValue"
+                   class="form-control" placeholder="{{'name' | translate}}">
+            <!--<span class="help-block">This is a help text</span>-->
+          </div>
+        </div>
+        </span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="myModal.hide()">{{'close' | translate}}</button>
+        <span *ngIf="params.dialog.title == 'workstation-type'">
+          <button type="button" class="btn btn-success" (click)="saveWorkStationType(); myModal.hide()">{{'save' | translate}}</button>
+        </span>
+      </div>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+

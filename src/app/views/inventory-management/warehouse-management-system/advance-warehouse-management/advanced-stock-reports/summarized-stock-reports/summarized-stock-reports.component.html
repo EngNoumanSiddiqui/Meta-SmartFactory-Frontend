@@ -1,0 +1,361 @@
+<p-confirmDialog></p-confirmDialog>
+
+
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-lg-12">
+
+          <div class="card">
+            <div class="card-body"  >
+              <div  class="d-flex">
+                <div class="d-flex col-md-12 badge-light border border-bottom-0 m-minus-10 p-2">
+                  <div class="col-md-2 px-1 ui-fluid ">
+                    <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header" maxSelectedLabels="0"  selectedItemsLabel="{{'columns-selected'|translate}}"
+                                   defaultLabel="Choose Columns">
+                      <ng-template let-col let-i="index" pTemplate="item">
+                        {{col.label|translate}}
+                      </ng-template>
+                    </p-multiSelect>
+                  </div>
+                  <!-- <div class="col-md-2 px-1 ui-fluid ">
+                    <p-calendar appendTo="body" [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                      [(ngModel)]="pageFilter.startDate" (ngModelChange)="pageFilter.startDate=$event;filter(pageFilter)"
+                      placeholder="{{'start-date'|translate}}" [showIcon]="true" dateFormat="dd/mm/yy"></p-calendar>
+                  </div>
+                  <div class="col-md-2 px-1 ui-fluid ">
+                    <p-calendar appendTo="body" [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                      [(ngModel)]="pageFilter.endDate" (ngModelChange)="pageFilter.endDate=$event; filter(pageFilter)"
+                      placeholder="{{'end-date'|translate}}" [showIcon]="true" dateFormat="dd/mm/yy"></p-calendar>
+                  </div> -->
+                  <div class="col-md-2 px-1 ui-fluid ">
+                    <select name="filterZeroQuantity" class="form-control" [(ngModel)]="pageFilter.unRestrictedBiggerThanZero" (ngModelChange)="filter(pageFilter)">
+                      <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                      <option [ngValue]="true">{{'non-zero' | translate}}</option>
+                      <option [ngValue]="false">{{'with-zero' | translate}}</option>
+                    </select>
+                  </div>
+                  <div class="col-md-2 px-1 ui-fluid">
+                    <select   name="stockManagement" class="form-control"
+                          [(ngModel)]="pageFilter.stockManagement" (ngModelChange)="filter(pageFilter)">
+                    <option [ngValue]="null"> {{'stock-management' | translate}}</option>
+                    <option [value]="true"> {{'Stock Management-yes' | translate}}</option>
+                    <option [value]="false"> {{'Stock Management-no' | translate}}</option>
+                  </select>
+                  </div>
+                  <div class="col-md-6 p-0">
+                    <button pButton type="button" style="margin-left: 5px; margin-top: 1px;" class="float-right" icon="fa fa-refresh" name="refresh" (click)="filter(pageFilter)"></button>
+                    <button pButton  style="margin-left: 4px" type="button" class="ui-button-warning float-right" label="{{'reset'  |translate}}" (click)="resetFilter()"></button>
+                    <!-- <button pButton style="margin-left: 4px" class="ui-button-warning float-right" type="button"  icon="fa fa-file-alt" iconPos="left" label="{{'export-all'|translate}}" (click)="dt.exportCSV()"></button> -->
+                    <!-- <button pButton  style="margin-left: 4px" class="ui-button-warning float-right" type="button"  icon="fa fa-file" iconPos="left" label="{{'export-selected'|translate}}" (click)="dt.exportCSV({selectionOnly:true})" -->
+                    <!-- ></button> -->
+                    <p-splitButton [style]="{'margin-right' : '5px'}"  label="{{'export-all'|translate}}"
+                      icon="fa fa-file-alt" [model]="menuItems"
+                      styleClass="ui-button-warning float-right">
+                    </p-splitButton>
+                    <p-splitButton [style]="{'margin-right' : '5px'}"  label="{{'export-selected'|translate}}"
+                      icon="fa fa-file" [model]="selecteMenuItems"
+                      styleClass="ui-button-warning float-right">
+                    </p-splitButton>
+
+                   
+                  </div>
+                </div>
+              </div>
+              <p-table #dt [autoLayout]="true" [columns]="selectedColumns"
+                  scrollable="true" scrollDirection="both" scrollHeight="55vh"
+                  [value]="stockReports"  [rows]="pagination.rows"
+                  [totalRecords]="pagination.totalElements" dataKey=""
+                  [(selection)]="selectedStockReports" >
+
+                <ng-template pTemplate="header" let-columns>
+
+                  <tr >
+                    <th style="width: 3em" rowspan="2" *ngIf="!isFilterMaterial">
+                      <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                    </th>
+                    <th style="width: 3.5em" rowspan="2"  *ngIf="isFilterMaterial">
+                      {{'select'|translate}}
+                    </th>
+                   
+                    <!-- <ng-template ngFor let-i="index" let-col [ngForOf]="columns"> -->
+                        <ng-container *ngFor="let col of columns; let i=index;" [ngSwitch]="col.field">
+                            <th *ngSwitchCase="'plantName'" style="cursor: pointer; width:100px;" [ngClass]="{'bg-selected-order':pageFilter.orderByProperty ==col.field}" (click)="reOrderData(i,col.field)"><i [ngClass]="'fa  fa-sort-alpha-' + classReOrder[i]"></i>
+                              {{col.header|translate}}
+                            </th>
+                            <th *ngSwitchCase="'warehouseName'" style="cursor: pointer; width:100px;" [ngClass]="{'bg-selected-order':pageFilter.orderByProperty ==col.field}" (click)="reOrderData(i,col.field)"><i [ngClass]="'fa  fa-sort-alpha-' + classReOrder[i]"></i>
+                              {{col.header|translate}}
+                            </th>
+                            <th *ngSwitchCase="'materialName'" style="cursor: pointer; width:100px;" [ngClass]="{'bg-selected-order':pageFilter.orderByProperty ==col.field}" (click)="reOrderData(i,col.field)"><i [ngClass]="'fa  fa-sort-alpha-' + classReOrder[i]"></i>
+                              {{col.header|translate}}
+                            </th>
+                            <th *ngSwitchCase="'materialNo'" style="cursor: pointer; width:100px;" [ngClass]="{'bg-selected-order':pageFilter.orderByProperty ==col.field}" (click)="reOrderData(i,col.field)"><i [ngClass]="'fa  fa-sort-alpha-' + classReOrder[i]"></i>
+                              {{col.header|translate}}
+                            </th>
+                            <th *ngSwitchCase="'materialType'" style="cursor: pointer; width:100px;" [ngClass]="{'bg-selected-order':pageFilter.orderByProperty ==col.field}" (click)="reOrderData(i,col.field)"><i [ngClass]="'fa  fa-sort-alpha-' + classReOrder[i]"></i>
+                              {{col.header|translate}}
+                            </th>
+                            <th *ngSwitchCase="'batch'" style="cursor: pointer; width:100px;" [ngClass]="{'bg-selected-order':pageFilter.orderByProperty ==col.field}" (click)="reOrderData(i,col.field)"><i [ngClass]="'fa  fa-sort-alpha-' + classReOrder[i]"></i>
+                              {{col.header|translate}}
+                            </th>
+
+
+                            <th *ngSwitchCase="'reservation'" style="cursor: pointer; width:100px;">{{col.header|translate}}</th>
+                            <th *ngSwitchCase="'incoming'" style="cursor: pointer; width:100px;">{{col.header|translate}}</th>
+                            <th *ngSwitchCase="'outgoing'" style="cursor: pointer; width:100px;">{{col.header|translate}}</th>
+                            <th *ngSwitchCase="'unRestricted'" style="cursor: pointer; width:100px;">{{col.header|translate}}</th>
+                            <th *ngSwitchCase="'waitingNotificationTransferTo'" style="cursor: pointer; width:100px;">{{col.header|translate}}</th>
+                            <th *ngSwitchCase="'waitingNotificationTransferFrom'" style="cursor: pointer; width:100px;">{{col.header|translate}}</th>
+
+                            <th *ngSwitchDefault style="cursor: pointer; width:100px" >
+                              {{col.header|translate}}
+                            </th>
+                        </ng-container>
+                    <!-- </ng-template> -->
+
+
+                  </tr>
+
+                  <tr>
+                    <th *ngFor="let col of columns" class="ui-fluid" [ngSwitch]="col.field">
+                      <span  *ngSwitchDefault  ></span>
+                      <input *ngSwitchCase="'plantName'"   pInputText type="text" [(ngModel)]="pageFilter[col.field]" (input)="filterByColumn($event.target.value,col.field)">
+                      <input *ngSwitchCase="'locationNo'"   pInputText type="text" [(ngModel)]="pageFilter[col.field]" (input)="filterByColumn($event.target.value,col.field)">
+                      <input *ngSwitchCase="'barcode'" name="barcode"  pInputText type="text" [(ngModel)]="pageFilter.barcode" (input)="filterByColumn($event.target.value,col.field)">
+                      <input *ngSwitchCase="'warehouseName'"   pInputText type="text" [(ngModel)]="pageFilter.warehouseName" (input)="filterByColumn($event.target.value,'warehouseName')">
+                      <input *ngSwitchCase="'materialName'"   pInputText type="text" [(ngModel)]="pageFilter[col.field]" (input)="filterByColumn($event.target.value,col.field)">
+                      <input *ngSwitchCase="'materialName2'"   pInputText type="text" [(ngModel)]="pageFilter[col.field]" (input)="filterByColumn($event.target.value,col.field)">
+                      <input *ngSwitchCase="'materialName3'"   pInputText type="text" [(ngModel)]="pageFilter[col.field]" (input)="filterByColumn($event.target.value,col.field)">
+                      <input *ngSwitchCase="'reorderPoint'"   pInputText type="text" [(ngModel)]="pageFilter[col.field]" (input)="filterByColumn($event.target.value,col.field)">
+                      <input *ngSwitchCase="'materialNo'"   pInputText type="text" [(ngModel)]="pageFilter[col.field]" (input)="filterByColumn($event.target.value,col.field)">
+                      <select *ngSwitchCase="'materialType'"  name="materialType" class="form-control"
+                              [(ngModel)]="pageFilter[col.field]" (ngModelChange)="filter(pageFilter)">
+                        <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                        <option *ngFor="let mt of materialTypes" value="{{mt.stockTypeName}}">{{mt.stockTypeName}}
+                        </option>
+                      </select>
+                      <span *ngSwitchCase="'stockManagement'"></span>
+
+                      <input *ngSwitchCase="'wareHouseStockId'"   pInputText type="text" [(ngModel)]="pageFilter.warehousestockId" (input)="filterByColumn($event.target.value,col.field)">
+                      <input *ngSwitchCase="'batch'"   pInputText type="text" [(ngModel)]="pageFilter[col.field]" (input)="filterByColumn($event.target.value,col.field)">
+                    </th>
+
+                  </tr>
+
+                </ng-template>
+                <ng-template pTemplate="body" let-rowData let-columns="columns">
+                  <tr [pSelectableRow]="rowData">
+                    <td style="width: 3em" *ngIf="!isFilterMaterial">
+                      <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                    </td>
+                    <td style="width: 3.5em" *ngIf="isFilterMaterial">
+                      <button class="btn btn-sm btn-outline-secondary" type="button"
+                      (click)="selectedStockEvent.emit(rowData)">
+                        <i class="fa fa-plus"></i></button>
+                    </td>
+                    
+                    <!-- [style.width]="getStyle(col.field)" -->
+                    <td *ngFor="let col of columns" style="cursor: pointer; width:100px;" [ngSwitch]="col.field">
+
+                      <a href="javascript:;" *ngSwitchCase="'batch'" (click)="showBatchDetail(rowData.batch)" > {{rowData.batch}}</a>
+
+                      <a href="javascript:;" *ngSwitchCase="'plantName'" (click)="showPlantDetailDialog(rowData.plantId)">{{ rowData.plantName }}</a>
+
+                      <a href="javascript:;" *ngSwitchCase="'materialName'" (click)="showMaterialDetailDialog(rowData.materialId)">{{ rowData.materialName }}</a>
+                      <a href="javascript:;" *ngSwitchCase="'materialName2'" (click)="showMaterialDetailDialog(rowData.materialId)">{{ rowData.materialName2 }}</a>
+                      <a href="javascript:;" *ngSwitchCase="'materialNo'" (click)="showMaterialDetailDialog(rowData.materialId)">{{ rowData.materialNo }}</a>
+
+                      <a href="javascript:;" *ngSwitchCase="'warehouseName'" (click)="showWareHouseDialog(rowData.warehouseId)">{{ rowData.warehouseName }}</a>
+
+
+
+                      <!-- <a href="javascript:;" *ngSwitchCase="'reservation'" [routerLink]="['/stocks/reservations']" [queryParams]="{ plantName: rowData.plantName, materialName: rowData.materialName, warehouseName: rowData.warehouseName }">{{ rowData.reservation != 0 ?rowData.reservation : ''}}</a> -->
+                      <a href="javascript:;" *ngSwitchCase="'reservation'" (click)="showReservationDialog(rowData)">{{ rowData.reservation != 0 ?rowData.reservation : ''}}</a>
+                      <a href="javascript:;" *ngSwitchCase="'waitingNotificationTransferTo'"
+                      (click)="onWaitingTransferToClicked(rowData)">
+                          {{ rowData.waitingNotificationTransferTo != 0 ?rowData.waitingNotificationTransferTo : ''}}
+                      </a>
+                      <a href="javascript:;" *ngSwitchCase="'waitingNotificationTransferFrom'" (click)="onWaitingTransferFromClicked(rowData)">
+                           {{ rowData.waitingNotificationTransferFrom != 0 ?rowData.waitingNotificationTransferFrom : ''}}
+                      </a>
+                      <a  *ngSwitchCase="'outgoing'" (click)="showOutgoingDialog(rowData)">{{ rowData.outgoing != 0 ?rowData.outgoing : ''  }}</a>
+
+                      <a href="javascript:;" *ngSwitchCase="'incoming'" (click)="showIncomingDialog(rowData)">{{ rowData.incoming != 0 ?rowData.incoming : ''  }}</a>
+
+                      <a *ngSwitchCase="'status'">{{ rowData.incoming == 0 ?'LATE' : 'WAITING'  }}</a>
+
+                      <span *ngSwitchCase="'dimensionUnit'">{{(rowData[col.field] && rowData[col.field] !== '0') ? rowData[col.field] : ''}}</span>
+                      <span *ngSwitchCase="'height'">{{rowData[col.field]}}</span>
+                      <span *ngSwitchCase="'width'">{{rowData[col.field]}}</span>
+                      <span *ngSwitchCase="'stockManagement'">{{rowData[col.field]===true ? 'Yes' : (rowData[col.field]===false ? 'No' : '')}}</span>
+
+                      <a href="javascript:;" *ngSwitchCase="'blocked'" (click)="showAutoMaticDispatchingModal(rowData)">
+                        <span *ngIf="rowData[col.field] !== 0">{{ rowData[col.field]}}</span>
+                      </a>
+
+                      <span *ngSwitchDefault> {{(rowData[col.field]) ? rowData[col.field] : ''}} </span>
+
+                    </td>
+
+
+
+                  </tr>
+
+                </ng-template>
+                <ng-template pTemplate="footer" let-columns>
+                  <tr *ngIf="pagination.totalElements > 0">
+                    <td style="width: 3.0em" *ngIf="!isFilterMaterial"></td>
+                    <td style="width: 3.5em" *ngIf="isFilterMaterial"></td>
+                   
+                    <td width="103px" *ngFor="let col of columns" [ngSwitch]="col.field">
+                      <span *ngSwitchDefault></span>
+                     
+                      <span *ngSwitchCase="'quantity'">{{geTotalQuantity() | number :'1.2-2'}}</span>
+                      <span *ngSwitchCase="'reservation'">{{geTotalReservation()}}</span>
+                      <span *ngSwitchCase="'incoming'">{{geTotalIncoming()}}</span>
+                      <span *ngSwitchCase="'outgoing'">{{geTotalOutgoing()}}</span>
+                      <span *ngSwitchCase="'unRestricted'">{{geTotalUnRestricted() | number :'1.2-2'}}</span>
+                    </td>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="summary">
+                  <div class="row p-0 m-0">
+                      <app-paging
+                      [showSearch]="false"
+                      [TotalElements]="pagination.totalElements"
+                      [CurrentPage]="pagination.currentPage"
+                      [PageSize]="pagination.pageSize"            [rows]="pagination.rows"
+                      [TotalPageLinkButtons]="pagination.TotalPageLinkButtons"
+                      [RowsPerPageOptions]="pagination.RowsPerPageOptions"
+                      (onPageChange)="myChanges($event)"
+                    ></app-paging>
+                    <span style="margin-left:5px; margin-left: 3px; padding-top: 8px " class="text-muted" >{{'total-records'|translate}}: {{pagination?.totalElements}}</span>
+                   </div>
+                </ng-template>
+              </p-table>
+              <br/>
+            </div>
+          </div>
+
+
+    </div>
+    <!--/.col-->
+  </div>
+</div>
+<ng-template [ngIf]="modal.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal" (onHidden)="selectedRow=null;stockReportModal.modal=null;modal.active=false;"
+    class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-success" [ngStyle]="{'max-width': (stockReportModal.modal=='warehousestock'?'50%':'100%')}" role="document">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h4 class="modal-title" *ngIf="stockReportModal.modal=='good-movement-notification'"> {{'goods-movement-notification' | translate}}</h4>
+          <h4 class="modal-title" *ngIf="stockReportModal.modal=='stock-reservation'"> {{'reservation' | translate}}</h4>
+          <h4 class="modal-title" *ngIf="stockReportModal.modal=='incoming'"> {{'incoming' | translate}}</h4>
+          <h4 class="modal-title" *ngIf="stockReportModal.modal=='outgoing'"> {{'outgoing' | translate}}</h4>
+          <h4 class="modal-title" *ngIf="stockReportModal.modal=='warehousestock'"> {{'warehouse-stock' | translate}}</h4>
+          <h4 class="modal-title" *ngIf="stockReportModal.modal=='warehouse-location'"> {{'warehouse-locations' | translate}}</h4>
+          <h4 class="modal-title" *ngIf="stockReportModal.modal=='blocked'"> {{'automatic_dispatching_management' | translate}}</h4>
+          <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+
+          <ng-template [ngIf]="stockReportModal.modal=='good-movement-notification'">
+            <app-transfer-notification-list [filterData]="{ warehouseName: selectedRow.warehouseName,
+               materialNo: selectedRow.materialNo,
+               barcode: selectedRow.barcode,
+                waitingNotificationTransferTo: selectedRow.waitingNotificationTransferTo,
+                 waitingNotificationTransferFrom: selectedRow.waitingNotificationTransferFrom,
+                batch: selectedRow.batch  }"></app-transfer-notification-list>
+          </ng-template>
+          <ng-template [ngIf]="stockReportModal.modal=='warehousestock'">
+            <app-new-advance-stock-report (saveAction)="this.filter(pageFilter); this.modal.active=false;"></app-new-advance-stock-report>
+          </ng-template>
+          <ng-template [ngIf]="stockReportModal.modal=='warehouse-location'">
+            <warehouse-location-list [filterData]="selectedRow"></warehouse-location-list>
+          </ng-template>
+          <ng-template [ngIf]="stockReportModal.modal=='stock-reservation'">
+            <app-list-reservation [filterData]="selectedRow"></app-list-reservation>
+          </ng-template>
+
+          <ng-template [ngIf]="stockReportModal.modal=='incoming'">
+            <porder-items-list [filterData]="selectedRow"></porder-items-list>
+          </ng-template>
+
+          <ng-template [ngIf]="stockReportModal.modal=='outgoing'">
+            <sale-order-items [filterData]="selectedRow"></sale-order-items>
+          </ng-template>
+
+          <ng-template [ngIf]="stockReportModal.modal=='blocked'">
+            <app-transfer-notification-list [filteredData] = "selectedRow"></app-transfer-notification-list>
+          </ng-template>
+
+        </div>
+
+        <div class="modal-footer">
+
+          <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary"
+            (click)="myModal.hide()">{{'close' | translate}}
+          </button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</ng-template>
+
+
+<ng-template [ngIf]="modal2.active">
+  <p-dialog class="custom-dialog" [blockScroll]="true"
+    header="{{'update' | translate}} {{'stock-quantity' | translate}}"
+    [(visible)]="modal2.active" (onHide)="modal2.active=false;"
+    [style]="{'width': '40%'}"    [maximizable]="true" #dOrderDetails
+    [contentStyle]="{'min-height':'200px'}" [focusOnShow]="false" [baseZIndex]="999999" modal="true"
+    dismissableMask="true">
+
+    <div class="col-md-12">
+      <form #transferDetailForm="ngForm">
+        <table class="table table-bordered ui-fluid">
+          <tbody>
+            <tr>
+              <td>{{'material'|translate}}</td>
+              <td>
+                {{modal2.data?.materialName}}
+              </td>
+            </tr>
+            <tr>
+              <td>{{'warehouse'|translate}}</td>
+              <td>
+                {{modal2.data?.warehouseName}}
+              </td>
+            </tr>
+            <tr>
+              <td>{{'actual-quantity'|translate}}</td>
+              <td>
+                {{modal2.data?.quantity}}
+              </td>
+            </tr>
+            <tr>
+              <td>{{'update-quantity'|translate}}</td>
+              <td>
+                <!-- <div class="p-field p-col-12 p-md-3"> -->
+                  <!-- <label for="horizontal">Horizontal with Step</label> -->
+                  <input class="form-control" type="number" [(ngModel)]="modal2.quantity" [step]="1"
+                  [min]="modal2.data.quantity"/>
+                <!-- </div> -->
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                <p-button class="float-right" label="{{'save'| translate}}" icon="pi pi-save" styleClass="p-button"
+                (click)="onStockQuantitySubmitted()"
+                ></p-button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </form>
+    </div>
+  </p-dialog>
+</ng-template>

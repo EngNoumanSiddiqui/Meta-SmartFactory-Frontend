@@ -1,0 +1,123 @@
+
+  <form #measuringPointForm="ngForm" class="row">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">
+        <i class="fa fa-align-justify"></i>{{'measuring-point' | translate}}
+      </div>
+      <div class="card-body">
+        <table class="table table-bordered">
+          <tbody >
+            <tr>
+              <td>{{'functional-location' | translate}}</td>
+              <td class="ui-fluid">
+                <p-dropdown name="functionalLocations" required [options]="functionalLocations" [(ngModel)]="selectedFunctionalLocation"
+                (ngModelChange)="onFunctionalLocationSelected($event)"
+                 placeholder="Select Functional Location" optionLabel="description" ></p-dropdown>
+              </td>
+          </tr>
+          <tr>
+            <td>{{'equipment' | translate}}</td>
+            <td><equipment-auto-complete [plantId]="selectedPlant?.plantId" (selectedEquipmentEvent)="setSelectedEquipment($event)" [required]="true"></equipment-auto-complete> </td>
+          </tr>
+
+          <tr>
+            <td>{{'measuring-point-counter' | translate}} </td>
+            <td><p-checkbox name="counter" binary="true" [(ngModel)]="dataModel.measuringPointIsCounter"></p-checkbox> </td>
+          </tr>
+          <tr>
+            <td>{{'measuring-point-no' | translate}}</td>
+            <td>
+              <input type="text" required name="equipmentMeasuringPointNo" class="form-control" [(ngModel)]="dataModel.equipmentMeasuringPointNo"/>
+            </td>
+          </tr>
+          <tr>
+            <td>{{'measuring-position' | translate}}</td>
+            <td>
+              <input type="text" name="measurementPosition" class="form-control" [(ngModel)]="dataModel.measurementPosition"/>
+            </td>
+          </tr>
+
+          <tr>
+            <td>{{'characteristic' | translate}}</td>
+            <td><characteristic-auto-complete [plantId]="selectedPlant?.plantId" [required]="true" [addIfMissing]="true" (selectedCharacteristicEvent)="setSelectedCharacteristic($event)"></characteristic-auto-complete>  </td>
+          </tr>
+          <tr>
+            <td>{{'characteristic-unit' | translate}}</td>
+            <td><input type="text" name="description" class="form-control" disabled  [(ngModel)]="characteristicUnit"/>  </td>
+          </tr>
+            <tr>
+            <td>{{'decimal-places' | translate}}</td>
+            <td><input type="number" name="decimalPlaces" class="form-control"  [(ngModel)]="dataModel.decimalPlaces"/>  </td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+                {{'reset' | translate}}</button>
+              <button type="submit" class="btn btn-sm btn-primary" [disabled]="!measuringPointForm.form.valid || !this.dataModel.equipmentId || !this.dataModel.characteristicId" (click)="save()"><i class="fa fa-dot-circle-o"></i>
+                {{'save' | translate}}</button>
+              <!-- <button type="button" class="btn btn-sm btn-secondary float-right" (click)="goPage()">
+                <i class="icon-arrow-left-circle"></i> {{'cancel' | translate}} </button>-->
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">
+        <i class="fa fa-align-justify"></i>{{'measuring-point' | translate}}
+      </div>
+      <div class="card-body">
+
+        <table class="table table-bordered">
+          <tbody >
+            <tr>
+            <td>{{'code-group' | translate}}</td>
+            <td><equipment-code-group-auto-complete [plantId]="selectedPlant?.plantId" (selectedCodeGroupEvent)="setSelectedEquipmentCodeGroup($event)"></equipment-code-group-auto-complete>  </td>
+          </tr>
+          <tr *ngIf="selectedCodeGroup">
+            <td>{{'code-group-header' | translate}}</td>
+            <td class="ui-fluid">
+              <auto-complete [allElements]="codeGroupHeaderList" [dropdown]="true"
+                                [selectedEl]="dataModel.equipmentCodeGroupHeader" [itemName]="'shortText'"
+                                (selectedEvent)="setSelectedEquipmentCodeGroupHeader($event)"
+            ></auto-complete>  </td>
+          </tr>
+          <tr>
+            <td>{{'counter-overflow-reading' | translate}}</td>
+            <td><input type="number" name="counterOverflowReading" min="0" class="form-control"  [(ngModel)]="dataModel.counterOverflowReading"/>  </td>
+          </tr>
+          <tr>
+            <td>{{'target-value' | translate}}</td>
+            <td><input type="number" name="targetValue" min="0" class="form-control"  [(ngModel)]="dataModel.targetValue"/>  </td>
+          </tr>    <tr>
+            <td>{{'target-value-text' | translate}}</td>
+            <td><input type="text" name="targetValueText" class="form-control"  [(ngModel)]="dataModel.targetValueText"/>  </td>
+          </tr>
+          <tr>
+            <td>{{'count-backwards' | translate}}</td>
+            <!--<td><input type="text" name="countBackwards" class="form-control"  [(ngModel)]="dataModel.countBackwards"/>  </td>-->
+            <td><p-checkbox name="countBackwards" binary="true" [(ngModel)]="dataModel.countBackwards"></p-checkbox> </td>
+          </tr>
+          <tr>
+            <td>{{'annual-estimate' | translate}}</td>
+            <td><input type="number" name="annualEstimate" class="form-control"  [(ngModel)]="dataModel.annualEstimate"/>  </td>
+          </tr>
+          <tr>
+            <td>{{'annual-estimate-unit' | translate}}</td>
+            <td>
+              <unit-auto-complete (unitChangeEvent)="dataModel.annualEstimateUnit=$event"></unit-auto-complete>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+  </div>
+  </form>
+
+

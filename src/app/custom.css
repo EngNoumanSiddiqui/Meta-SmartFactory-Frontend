@@ -1,0 +1,10 @@
+:host ::ng-deep .ng-valid[required],
+:host ::ng-deep .ng-valid.required  {
+  border-left: 3px solid #42A948; /* green */
+}
+:host ::ng-deep .ng-invalid:not(form)  {
+  border-left: 3px solid #d87426; /* red */
+}
+.sidebar{
+  width:300px;
+}

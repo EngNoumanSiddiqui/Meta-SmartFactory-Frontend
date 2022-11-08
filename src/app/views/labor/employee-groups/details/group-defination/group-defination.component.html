@@ -1,0 +1,37 @@
+<div class="animated fadeIn">
+  <div class="row">
+      <div class="col-md-12">
+        <!-- <div class="card-header">
+          <i class="fa fa-align-justify"></i>{{'group-definition-information' | translate}}
+        </div> -->
+        <div class="card-body p-2">
+          <table class="table table-bordered">
+            <tbody *ngIf="groupCodeDetail">
+            <tr>
+                <td width="30%">{{'group-code'|translate}}</td>
+                <td>{{groupCodeDetail?.groupCode}}</td>
+              </tr>
+            <tr>
+              <td>{{'group-name'|translate}}</td>
+              <td>{{groupCodeDetail?.groupName}}</td>
+            </tr>
+                <tr *ngIf="groupCodeDetail.members.length>0">
+                    <td>{{'employee-list'|translate}}</td>
+                    <ng-container *ngFor="let item of groupCodeDetail.members">
+                      <tr>
+                          <ul>
+                            <li> 
+                              <a href="javascript:;" (click)="showEmployeeDetails(item.employeeId)">
+                                {{item.firstName}}-{{item.lastName}}
+                              </a>
+                              </li>
+                          </ul>
+                      </tr>
+                    </ng-container>
+                </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+  </div>
+</div>

@@ -1,0 +1,287 @@
+<p-confirmDialog *ngIf="!modal.active"></p-confirmDialog>
+
+
+<div class="animated fadeIn">
+
+
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+
+        <div class="card-body">
+          <p-table #dt [columns]="selectedColumns" [value]="tableData" [rows]="pagination.rows"
+            [totalRecords]="pagination.totalElements" dataKey="maintenanceId" [(selection)]="selectedData"
+            scrollable="true" scrollHeight="55vh">
+
+            <ng-template pTemplate="caption">
+              <div style="text-align:left">
+                <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header" maxSelectedLabels="0"
+                  selectedItemsLabel="{{'columns-selected'|translate}}" [style]="{minWidth: '200px'}"
+                  defaultLabel="Choose Columns">
+                  <ng-template let-col let-i="index" pTemplate="item">
+                    {{col.label|translate}}
+                  </ng-template>
+                </p-multiSelect>
+                <button pButton type="button" class="float-right" icon="fa fa-refresh" name="refresh"
+                  (click)="filter(pageFilter);"></button>
+                <button pButton type="button" class="ui-button-warning float-right ml-1" label="{{'reset'  |translate}}"
+                  (click)="resetFilter()"></button>
+                <button pButton class="ui-button-success float-right ml-1" (click)="modalShow(null,'NEW',null)"
+                  label="{{'add-new'|translate}}"></button>
+                <button pButton class="ui-button-warning float-right ml-1" type="button" icon="fa fa-file-alt"
+                  iconPos="left" label="{{'export-all'|translate}}" (click)="dt.exportCSV()"></button>
+                <button pButton class="ui-button-warning float-right ml-1" type="button" icon="fa fa-file"
+                  iconPos="left" label="{{'export-selected'|translate}}"
+                  (click)="dt.exportCSV({selectionOnly:true})"></button>
+                <button pButton class="ui-button-success float-right ml-1" (click)="modalShowGraph(null,'NEW',null)"
+                  label="{{'Overview'|translate}}"></button>
+              </div>
+              <!--<hr>-->
+
+            </ng-template>
+            <ng-template pTemplate="header" let-columns>
+
+              <tr>
+                <th style="width: 3em" rowspan="2">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th *ngFor="let col of columns let i=index" style="cursor: pointer"
+                  [ngClass]="{'bg-selected-order':pageFilter.orderByProperty ==col.field}"
+                  (click)="reOrderData(i,col.field)"><i [ngClass]="'fa fa-sort-alpha-' + classReOrder[i]"></i>
+                  {{col.header|translate}}
+                </th>
+                <th width="80px" rowspan="2">{{'action' | translate}}</th>
+              </tr>
+              <tr>
+
+                <th *ngFor="let col of columns" class="ui-fluid" [ngSwitch]="col.field">
+                  <input *ngSwitchDefault style="width: 100%" pInputText type="text" [(ngModel)]="pageFilter[col.field]"
+                    (input)="filterByColumn($event.target.value,col.field)">
+                  <input *ngSwitchCase="'equipmentNo'" style="width: 100%" pInputText type="text"
+                    [(ngModel)]="pageFilter.equipmentNo" (input)="filterByColumn($event.target.value,'equipmentNo')">
+                  <input *ngSwitchCase="'equipment'" style="width: 100%" pInputText type="text"
+                    [(ngModel)]="pageFilter.equipmentName"
+                    (input)="filterByColumn($event.target.value,'equipmentName')">
+
+
+                  <select *ngSwitchCase="'maintenanceOrderType'" id="maintenanceOrderType" name="maintenanceOrderType"
+                    class="form-control" [(ngModel)]="pageFilter.maintenanceNotificationType"
+                    (ngModelChange)="filter(pageFilter)">
+                    <option [ngValue]="null">{{ "please-select" | translate }}</option>
+                    <option *ngFor="let maintenanceOrderType of maintenanceOrderTypes" value="{{maintenanceOrderType}}">
+                      {{maintenanceOrderType}}</option>
+                  </select>
+
+
+                  <input *ngSwitchCase="'maintenanceFunctionalLocation'" style="width: 100%" pInputText type="text"
+                    [(ngModel)]="pageFilter.maintenanceFunctionalLocationId"
+                    (input)="filterByColumn($event.target.value,'maintenanceFunctionalLocationId')">
+                  <input *ngSwitchCase="'maintenanceSystemCondition'" style="width: 100%" pInputText type="text"
+                    [(ngModel)]="pageFilter.maintenanceSystemConditionId"
+                    (input)="filterByColumn($event.target.value,'maintenanceSystemConditionId')">
+
+                  <select *ngSwitchCase="'maintenanceActivityType'" id="maintenanceActivityType"
+                    name="maintenanceActivityType" class="form-control" [(ngModel)]="pageFilter.maintenanceActivityType"
+                    (ngModelChange)="filter(pageFilter)">
+                    <option [ngValue]="null">{{ "please-select" | translate }}</option>
+                    <option *ngFor="let maintenanceActivityType of maintenanceActivityTypes"
+                      value="{{maintenanceActivityType}}">
+                      {{maintenanceActivityType}}</option>
+                  </select>
+
+
+                  <input *ngSwitchCase="'maintenanceCategory'" style="width: 100%" pInputText type="text"
+                    [(ngModel)]="pageFilter.maintenanceCategoryId"
+                    (input)="filterByColumn($event.target.value,'maintenanceCategoryId')">
+                  <input *ngSwitchCase="'maintenanceNotification'" style="width: 100%" pInputText type="text"
+                    [(ngModel)]="pageFilter.maintenanceNotificationId"
+                    (input)="filterByColumn($event.target.value,'maintenanceNotificationId')">
+                  <input *ngSwitchCase="'maintenanceReason'" style="width: 100%" pInputText type="text"
+                    [(ngModel)]="pageFilter.maintenanceReasonId"
+                    (input)="filterByColumn($event.target.value,'maintenanceReasonId')">
+                  <input *ngSwitchCase="'responseby'" style="width: 100%" pInputText type="text"
+                    [(ngModel)]="pageFilter.responsebyId" (input)="filterByColumn($event.target.value,'responsebyId')">
+                  <input *ngSwitchCase="'planningPlant'" disabled style="width: 100%" pInputText type="text"
+                    [(ngModel)]="pageFilter.planningPlantName"
+                    (input)="filterByColumn($event.target.value,'planningPlantName')">
+                  <input *ngSwitchCase="'mainWorkStation'" style="width: 100%" pInputText type="text"
+                    [(ngModel)]="pageFilter.workStationName"
+                    (input)="filterByColumn($event.target.value,'workStationName')">
+
+                  <!-- <span *ngSwitchCase="'dateBasicStart'"></span>
+                  <span *ngSwitchCase="'datebasicFinish'"></span> -->
+                  <select *ngSwitchCase="'priority'" name="priority" class="form-control"
+                    (ngModelChange)="filter(pageFilter)" [(ngModel)]="pageFilter.priority">
+                    <option [ngValue]="null"> {{'priority' | translate}}</option>
+                    <option value="VERY_HIGH">{{'VERY_HIGH'|translate}}</option>
+                    <option value="HIGH">{{'HIGH'|translate}}</option>
+                    <option value="MEDIUM">{{'MEDIUM'|translate}}</option>
+                    <option value="LOW">{{'LOW'|translate}}</option>
+                  </select>
+
+                  <select *ngSwitchCase="'datePriority'" name="priority" class="form-control"
+                    (ngModelChange)="filter(pageFilter)" [(ngModel)]="pageFilter.datePriority">
+                    <option [ngValue]="null"> {{'date-priority' | translate}}</option>
+                    <option value="VERY_HIGH">{{'VERY_HIGH'|translate}}</option>
+                    <option value="HIGH">{{'HIGH'|translate}}</option>
+                    <option value="MEDIUM">{{'MEDIUM'|translate}}</option>
+                    <option value="LOW">{{'LOW'|translate}}</option>
+                  </select>
+
+                  <p-calendar *ngSwitchCase="'dateBasicStart'" [(ngModel)]="pageFilter.dateBasicStart"
+                    [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100" [showIcon]="true"
+                    dateFormat="dd/mm/yy" (ngModelChange)="filter(pageFilter)"
+                    placeholder="{{'date-basic-start'|translate}}" appendTo="body">
+                  </p-calendar>
+
+                  <p-calendar *ngSwitchCase="'datebasicFinish'" [(ngModel)]="pageFilter.datebasicFinish"
+                    [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100" [showIcon]="true"
+                    dateFormat="dd/mm/yy" (ngModelChange)="filter(pageFilter)"
+                    placeholder="{{'date-basic-finish'|translate}}" appendTo="body">
+                  </p-calendar>
+
+                  <select *ngSwitchCase="'maintenanceStatus'" name="maintenanceStatus" class="form-control"
+                    (ngModelChange)="filter(pageFilter)" [(ngModel)]="pageFilter.maintenanceStatus">
+                    <option [ngValue]="null"> {{'select-status' | translate}}</option>
+                    <option *ngFor="let status of maintenanceStatusList" [value]="status">{{status|translate}}</option>
+                  </select>
+                </th>
+
+              </tr>
+
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+              <tr [pSelectableRow]="rowData">
+                <td style="width: 3em">
+                  <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                </td>
+                <td *ngFor="let col of columns" style="cursor: pointer" [ngSwitch]="col.field" >
+                  <span *ngSwitchDefault (click)="modalShow(rowData.maintenanceId,'DETAIL',rowData);" > {{rowData[col.field]}}</span>
+                  <a *ngSwitchCase="'equipment'" href="javascript:;" (click)="showEquipmentDetail(rowData.equipment?.equipmentId)">
+                  {{rowData.equipment?.equipmentNo}} - {{rowData.equipment?.equipmentName}}</a>
+                  <!-- <a *ngSwitchCase="'equipmentNo'" href="javascript:;" (click)="showEquipmentDetail(rowData.equipment?.equipmentId)">{{rowData.equipment?.equipmentNo}}</a> -->
+                  <a *ngSwitchCase="'maintenanceId'" href="javascript:;" (click)="modalShow(rowData.maintenanceId,'DETAIL',rowData);">{{rowData[col.field]}}</a>
+                  
+                  <span *ngSwitchCase="'plannerGroup'" (click)="modalShow(rowData.maintenanceId,'DETAIL',rowData);"> {{rowData[col.field]?.plannerGroup}}</span>
+                  <a *ngSwitchCase="'mainWorkStation'" href="javascript:;" (click)="showWorkStationDetail(rowData[col.field]?.workStationId)">{{rowData[col.field]?.workStationName}}</a>
+                  <a *ngSwitchCase="'planningPlant'" href="javascript:;" (click)="showPlantDetail(rowData[col.field]?.plantId)">{{rowData[col.field]?.plantName}}</a>
+                  <a *ngSwitchCase="'maintenanceFunctionalLocation'"  href="javascript:;" (click)="showfunctionalModal(rowData[col.field]?.maintenanceFunctionalLocationId);"> {{rowData[col.field]?.description}}</a>
+                  <a *ngSwitchCase="'maintenanceSystemCondition'" href="javascript:;" (click)="showMaintenanceSystemConditionDetail(rowData[col.field])">{{rowData[col.field]?.description}}</a>
+                
+                  <a *ngSwitchCase="'maintenanceCategory'" href="javascript:;" (click)="showMaintenanceCategoryTypeDetail(rowData[col.field])">{{rowData[col.field]?.description}}</a>
+                  <a *ngSwitchCase="'maintenanceReason'" href="javascript:;" (click)="showMaintenanceReasonDetail(rowData[col.field])">{{rowData[col.field]?.description}}</a>
+                  <span *ngSwitchCase="'dateBasicStart'" (click)="modalShow(rowData.maintenanceId,'DETAIL',rowData);"> {{rowData.dateBasicStart|date:'dd/MM/yyyy'}}</span>
+                  <span *ngSwitchCase="'datebasicFinish'"(click)="modalShow(rowData.maintenanceId,'DETAIL',rowData);"> {{rowData.datebasicFinish|date:'dd/MM/yyyy'}}</span>
+                  <span *ngSwitchCase="'responseby'" (click)="modalShow(rowData.maintenanceId,'DETAIL',rowData);"> {{rowData?.responseby?.firstName+' '+(rowData?.responseby?.lastName||'')}}</span>
+                </td>
+                <td width="80px">
+                  <button *ngIf="rowData.maintenanceStatus !== 'COMPLETED'" class="btn btn-sm btn-outline-danger"
+                    type="button" pTooltip="Delete Maintenance Order" (click)="delete(rowData.maintenanceId)">
+                    <i class="fa fa-trash"></i></button>
+                  <!-- <button *ngIf="rowData.maintenanceStatus === 'COMPLETED'" class="btn btn-sm btn-outline-danger" type="button" pTooltip="Completed Order Couldn't Be Deleted">
+                      <i class="fa fa-trash"></i></button> -->
+                  <button class="btn btn-sm btn-outline-info" type="button"
+                    (click)="modalShow(rowData.maintenanceId,'EDIT', rowData)">
+                    <i class="fa fa-edit"></i></button>
+                  <!-- <button *ngIf="rowData.maintenanceStatus === 'COMPLETED'" class="btn btn-sm btn-outline-info" type="button" pTooltip="Completed Order Couldn't Be Modified"
+                          (click)="modalShow(rowData.maintenanceId,'DETAIL', rowData)">
+                    <i class="fa fa-edit"></i></button> -->
+                  <button *ngIf="rowData.maintenanceStatus === 'OUTSTANDING'" class="btn btn-sm btn-outline-info"
+                    type="button" (click)="modalShow(rowData.maintenanceId,'INPROCESS', rowData)"
+                    pTooltip="change status to INPROCESS"><i class="fa fa-flag-o"></i></button>
+                  <button *ngIf="rowData.maintenanceStatus === 'INPROCESS'" class="btn btn-sm btn-outline-info"
+                    type="button" (click)="save(rowData.maintenanceId)" pTooltip="change status to COMPLETED">
+                    <i class="fa fa-flag-checkered fa-edit"></i></button>
+                  <!-- <button *ngIf="rowData.maintenanceStatus === 'COMPLETED'" class="btn btn-sm btn-outline-info" type="button" pTooltip="COMPLETED status couldn't change">
+                    <i class="fa fa-flag"></i></button> -->
+                </td>
+              </tr>
+
+            </ng-template>
+          </p-table>
+
+          <br />
+          <div class="row">
+            <app-paging [showSearch]="false" [TotalElements]="pagination.totalElements"
+              [CurrentPage]="pagination.currentPage" [PageSize]="pagination.pageSize" [rows]="pagination.rows"
+              [TotalPageLinkButtons]="pagination.TotalPageLinkButtons"
+              [RowsPerPageOptions]="pagination.RowsPerPageOptions" (onPageChange)="myChanges($event)"></app-paging>
+            <span style="margin-left:2px; padding-top: 2px " class="text-muted">{{'total-records'|translate}}:
+              {{pagination?.totalElements}}</span>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--/.col-->
+  </div>
+</div>
+<ng-template [ngIf]="modal.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal"
+    (onHidden)="modal.active=false" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-success modal-lg" style="max-width: 90%;" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"> {{'maintenance-order' | translate}}</h4>
+          <button type="button" class="close" (click)="myModal.hide();" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <!--step2-->
+        <div class="modal-body">
+          <ng-template [ngIf]="equipmentModal.modal=='NEW'">
+            <maintenance-order-new (saveAction)="myModal.hide(); filter(pageFilter);"></maintenance-order-new>
+          </ng-template>
+          <!--sale-edit-component-->
+          <ng-template [ngIf]="equipmentModal.modal=='INPROCESS'">
+            <maintenance-order-edit [data]="equipmentModal.data" [actionType]="equipmentModal.modal"
+              (saveAction)="myModal.hide(); filter(pageFilter)"></maintenance-order-edit>
+          </ng-template>
+          <ng-template [ngIf]="equipmentModal.modal=='EDIT'">
+            <maintenance-order-edit [data]="equipmentModal.data" (saveAction)="myModal.hide(); filter(pageFilter)">
+            </maintenance-order-edit>
+          </ng-template>
+          <!--sale-edit-component-->
+          <ng-template [ngIf]="equipmentModal.modal=='DETAIL'">
+            <maintenance-order-detail [data]="equipmentModal.data"></maintenance-order-detail>
+          </ng-template>
+        </div>
+        <!--step2-->
+        <div class="modal-footer">
+          <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary"
+            (click)="myModal.hide(); filter(pageFilter)">{{'close' | translate}}
+          </button>
+          <button *ngIf="equipmentModal.modal=='DETAIL'" type="button" class="btn rounded btn-primary"
+            (click)="equipmentModal.modal='NEW'">{{'new' | translate}}
+          </button>
+
+          <button *ngIf="equipmentModal.modal=='DETAIL'" type="button" class="btn rounded btn-success"
+            (click)="equipmentModal.modal='EDIT'">{{'edit' | translate}}
+          </button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</ng-template>
+
+
+<ng-template [ngIf]="jobGantViewModal.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myGantModal="bs-modal"
+    (onHidden)="jobGantViewModal.active=false;" class="modal fade" style="z-index:99999;" tabindex="-1" role="dialog"
+    aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-success" style="max-width: 98%;" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"> {{'production-sschedule' | translate}}</h4>
+          <button type="button" class="close" (click)="myGantModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <app-job-order-gantt-view [allocationReport]="false" [filterDto]="filterGantDto"></app-job-order-gantt-view>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</ng-template>

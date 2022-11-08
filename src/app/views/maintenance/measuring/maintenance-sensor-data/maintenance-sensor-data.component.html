@@ -1,0 +1,63 @@
+<div class="col-lg-12">
+  <div class="row ui-fluid  badge-light border p-2 mb-2">
+<!--    <div class=" col-md d-flex">-->
+<!--      <strong class="p-1 text-muted" style="align-self: center;"> {{'plant'|translate}}</strong>-->
+<!--      &lt;!&ndash; <plant-auto-complete class="flex-grow-1" [addIfMissing]="false" [eventFire]="true"-->
+<!--                           (selectedPlantEvent)="setSelectedPlant($event)"></plant-auto-complete> &ndash;&gt;-->
+<!--      <plant-auto-complete *ngIf="!filterModel.plantId" class="flex-grow-1" [addIfMissing]="false" [eventFire]="true"-->
+<!--            (selectedPlantEvent)="setSelectedPlant($event)"></plant-auto-complete>-->
+<!--      <strong *ngIf="filterModel.plantId" class="flex-grow-1 text-muted" style="align-self: center; margin-left: 30px;"> {{selectedPlant.plantName}} </strong>-->
+<!--    </div>-->
+
+    <div class="col-md d-flex">
+<!--      <strong class="p-1 text-muted"> {{'workstation'|translate}}</strong>-->
+      <workstation-auto-complete class="flex-grow-1" [plantId]="filterModel.plantId"
+                                 (selectedWorkStationEvent)="setSelectedWorkstation($event)">
+      </workstation-auto-complete>
+    </div>
+
+    <div class="col-md d-flex">
+<!--      <strong class="p-1 text-muted"> {{'equipment'|translate}}</strong>-->
+      <equipment-auto-complete class="flex-grow-1" [plantId]="filterModel.plantId"
+                               [workstationId]="filterModel.workstationId"
+                               (selectedEquipmentEvent)="setSelectedEquipment($event)">
+      </equipment-auto-complete>
+    </div>
+    <div class="col-md d-flex">
+      <strong class="p-1 text-muted"> {{'point-size'|translate}}</strong>
+      <input name="pointNumber" type="number" min="0" class="form-control"
+             [(ngModel)]="filterModel.pointSize"/>
+    </div>
+    <div class="col-md-2 ">
+      <p-calendar [showIcon]="true" dateFormat="dd.mm.yy" [monthNavigator]="true" [yearNavigator]="true"
+                  yearRange="1990:2100" [(ngModel)]="filterModel.startDate" placeholder="{{'start-date'|translate}}">
+      </p-calendar>
+    </div>
+    <div class="col-md-2 ">
+      <p-calendar [showIcon]="true" dateFormat="dd.mm.yy" [monthNavigator]="true" [yearNavigator]="true"
+                  yearRange="1990:2100" [(ngModel)]="filterModel.finishDate" placeholder="{{'end-date'|translate}}"></p-calendar>
+    </div>
+
+    <div class="col-auto">
+      <button type="button" pButton class="ui-button-info   "
+              [disabled]="(!filterModel.workstationId&&!filterModel.equipmentId)||!filterModel.startDate||!filterModel.finishDate"
+              (click)="analyze()" label="{{'analyze' | translate}}">
+      </button>
+    </div>
+  </div>
+
+  <div class="row mb-2" *ngIf="tableData&&tableData.length<1">
+    <div class="row text-center noData">
+      <strong class=""><i class="fa fa-warning "></i>{{'NO_DATA_FOUND'|translate}}!</strong>
+    </div>
+  </div>
+
+  <div class="row mb-2" *ngFor="let sensorDataList of tableData">
+    <div class="col-12 bg-white" *ngIf="sensorDataList&&sensorDataList.length>0">
+      <equipment-sensor-data [injected]="sensorDataList"></equipment-sensor-data>
+    </div>
+  </div>
+
+</div>
+
+

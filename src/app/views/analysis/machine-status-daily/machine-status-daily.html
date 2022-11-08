@@ -1,0 +1,250 @@
+<div class="card">
+  <div class="col-lg-12">
+    <div class="row ui-fluid  badge-light border p-2 ">
+      <div class=" col-md-3">
+        <workstation-auto-complete [plantId]="plantId" (selectedWorkStationEvent)="setSelectedWorkStation($event)">
+        </workstation-auto-complete>
+      </div>
+
+
+      <div class="col-md-2">
+        <p-dropdown [options]="shiftListDto" [style]="{'width':'100%'}" [(ngModel)]="selectedShift"
+          optionLabel="shiftName" (ngModelChange)="setSelectedShift($event)"></p-dropdown>
+      </div>
+
+      <div class="col-md-3 ">
+        <p-calendar [showIcon]="true" dateFormat="dd.mm.yy" [monthNavigator]="true" [yearNavigator]="true"
+          yearRange="1990:2100" [(ngModel)]="filterCon.date" placeholder="{{'display-term'|translate}}">
+        </p-calendar>
+      </div>
+
+      <div class="col-md-auto">
+
+        <button type="button" pButton class="ui-button-info   "
+          [disabled]="!filterCon.workstationId || !filterCon.date" (click)="analyze()"
+          label="{{'analyze' | translate}}">
+        </button>
+
+      </div>
+    </div>
+    <br>
+    <!--legend area-->
+    <div class="row d-flex justify-content-around ">
+      <div class=""><span class="legend-box closed"></span> {{'Closed'|translate}}</div>
+      <div class=""><span class="legend-box running"></span> {{'Running'|translate}}</div>
+      <div class=""><span class="legend-box standby"></span> {{'StandBy'|translate}}</div>
+      <div class=""><span class="legend-box machineSetup"></span> {{'Setup'|translate}}</div>
+      <div class=""><span class="legend-box machineStop"></span> {{'Stopped'|translate}}</div>
+    </div>
+    <!--endof legend area-->
+    <hr>
+    <!--chart drawing begin-->
+    <!--chart drawing begin-->
+    <div class="row  status-container" (resized)="onResizeContainer($event)" [style.minHeight]="vLHeight" [style.height]="vLHeight+'px'">
+      <!--here we draw shiftArray.length vertical lines for hour 00:00 to 24:00-->
+      <!--on left side we left leftVlOffset px, this leftVlOffset px will be used to draw days label-->
+
+      <ng-container *ngFor="let item of shiftArray; let index=index;">
+        <div class="vl vl-bolder" [style.minHeight]="vLHeight+'px'" [ngStyle]="{'left':((chartWidth/(shiftArray.length-1))*index+leftVlOffset)+'px'}"
+          [ngClass]="{'vl-bolder':(index%2)==0}"></div>
+
+      </ng-container>
+      <!--        <div class="vl vl-bolder" [ngStyle]="{'left':((chartWidth/6)*0+leftVlOffset)+'px'}"></div>-->
+      <!--        <div class="vl" [ngStyle]="{'left':((chartWidth/6)*1+leftVlOffset)+'px'}"></div>-->
+
+      <!--end of vertical lines-->
+
+      <!--horizontal line begin-->
+      <div class="hl" [ngStyle]="{'width':(chartWidth+2)+'px'}" [style.minHeight]="vLHeight+'px'"></div>
+      <!--horizontal line end-->
+
+      <!--here we draw x axes horizontal label that defined in hourArray -->
+
+      <ng-container *ngFor="let item of shiftArray; let index=index;">
+        <span class="position-absolute hour-span hour-bold" [ngClass]="{'hour-bold':(index%2)==0}"
+          [style.top]="(vLHeight)? vLHeight+'px': '220px'"
+          [ngStyle]="{'left':((chartWidth/(shiftArray.length-1))*index+leftHourOffset)+'px'}">{{item}}</span>
+      </ng-container>
+       <!-- JOB ORDER & MAINTENANCE PLANNING -->
+       <span class="position-absolute" [ngStyle]="{'top':(barMargin*2)+'px','left':'5px', 'width': '150px', 'font-weight': '500'}"
+       *ngIf="isLoading">
+           {{'job-order-and-maintenance-planning'|translate}}
+       </span>
+       <div class="position-absolute" [ngStyle]="{'top':(barMargin*2)+'px'}">
+
+         <!-- rest of the bar  -->
+         <ng-container *ngIf="isLoading">
+           <span [style.height]="barHeight+'px'" [style.left]="(leftVlOffset+1)+'px'"
+             [style.width]="chartWidth + 'px'"
+             class="position-absolute span_opacity span_default_job_order">
+           </span>
+         </ng-container>
+
+         <!-- planned job order list bar -->
+         <ng-container  *ngIf="dateStatusArray?.plannedJobOrderList.length > 0">
+           <ng-container *ngFor="let jobOrder of dateStatusArray?.plannedJobOrderList">
+             <span [style.height]="barHeight+'px'" 
+             [pTooltip]="showJobOrderToolTip(jobOrder)" [escape]="false"
+               tooltipPosition="top" 
+               [style.left]="getLeft(jobOrder)"
+                [style.width]="getWidth(jobOrder)"
+               class="position-absolute span_opacity span_planned">
+             </span>
+           </ng-container>
+         </ng-container>
+
+         <!-- planned stop list bar -->
+         <ng-container *ngFor="let plannedStop of dateStatusArray?.plannedStopList">
+           <span [style.height]="barHeight+'px'" 
+           [pTooltip]="showPlannedStopsToolTip(plannedStop)" 
+           [escape]="false"
+             tooltipPosition="top" 
+             [style.left]="getLeft(plannedStop)"
+                [style.width]="getWidth(plannedStop)"
+             class="position-absolute span_opacity span_stop">
+           </span>
+         </ng-container>
+
+         <!-- planned maintenance list bar -->
+         <ng-container *ngFor="let maintenanceOrder of dateStatusArray?.plannedMaintenanceList">
+           <span [style.height]="barHeight+'px'"
+           [style.left]="getLeft(maintenanceOrder)"
+           [style.width]="getWidth(maintenanceOrder)"
+             class="position-absolute span_opacity span_maintenance">
+           </span>
+         </ng-container>
+
+       </div>
+       <!-- END JOB ORDER & MAINTENANCE PLANNING -->
+       <!-- MACHINE STATUS  -->
+       <ng-container *ngIf="isLoading">
+        <span class="position-absolute" [ngStyle]="{'top':((1*barRowHeight)+(barMargin*2))+'px','left':'5px', 'width': '140px', 'font-weight': '500'}">
+          {{'machine-status'|translate}}</span>
+          <!-- rest of the bar  -->
+          <ng-container *ngIf="isLoading">
+            <span [style.height]="barHeight+'px'" [style.left]="(leftVlOffset+1)+'px'"
+              [style.width]="chartWidth + 'px'" [style.top]="((1*barRowHeight)+(barMargin*2))+'px'"
+              class="position-absolute span_opacity span_default_job_order">
+            </span>
+          </ng-container>
+        <div class="position-absolute" [ngStyle]="{'top':((1*barRowHeight)+(barMargin*2))+'px'}">
+          <ng-container *ngFor="let aItem of dateStatusArray?.machineStateList">
+            <span [style.height]="barHeight+'px'"
+            [pTooltip]="showWorkStationStatusToolTip(aItem, 's')" [escape]="false"
+                tooltipPosition="top"
+                [style.left]="getLeft(aItem)"
+                [style.width]="getWidth(aItem)"
+                  class="position-absolute span_opacity" [ngClass]="{
+                   'span_standby': aItem.s=='StandBy',
+                   'span_running': aItem.s=='Running',
+                   'span_closed': aItem.s=='Closed',
+                   'span_machine_stop': aItem.s=='Stopped',
+                   'span_machine_setup': aItem.s=='Setup'}"></span>
+
+      </ng-container>
+
+        </div>
+      </ng-container>
+      <!-- End MACHINE STATUS -->
+
+      <!-- WORKSTATION STATUS -->
+      <ng-container *ngIf="isLoading">
+        <span class="position-absolute" [ngStyle]="{'top':((2*barRowHeight)+(barMargin*2))+'px','left':'5px', 'width': '150px', 'font-weight': '500'}">
+          {{'production-state'|translate}}
+        </span>
+        <!-- rest of the bar  -->
+        <ng-container *ngIf="isLoading">
+          <span [style.height]="barHeight+'px'" [style.left]="(leftVlOffset+1)+'px'"
+            [style.width]="chartWidth + 'px'" [style.top]="((2*barRowHeight)+(barMargin*2))+'px'"
+            class="position-absolute span_opacity span_default_job_order">
+          </span>
+        </ng-container>
+        <div class="position-absolute" [ngStyle]="{'top':((2*barRowHeight)+(barMargin*2))+'px'}">
+
+          <ng-container *ngFor="let workstation of dateStatusArray?.workstationStateList">
+            <span [style.height]="barHeight+'px'"
+              [pTooltip]="showWorkStationStatusToolTip(workstation, 's')" [escape]="false" tooltipPosition="top"
+              [style.left]="getLeft(workstation)"
+                [style.width]="getWidth(workstation)"
+              class="position-absolute span_opacity" [ngClass]="{
+                               'span_waiting': workstation.s=='WAITING_FOR_JOB',
+                               'waiting_for_labor': workstation.s=='WAITING_FOR_LABOR',
+                               'waiting_for_maintenance': workstation.s=='WAITING_FOR_MAINTENANCE',
+                               'waiting_for_quality': workstation.s=='WAITING_FOR_QUALITY',
+                               'span_production': workstation.s=='PRODUCTION',
+                               'span_setup': workstation.s=='SETUP',
+                               'span_setup_overtime': workstation.s=='SETUP_OVERTIME',
+                               'span_stop': workstation.s=='STOPPED',
+                               'closed_black': workstation.s=='CLOSED'}"></span>
+          </ng-container>
+        </div>
+      </ng-container>
+
+      <!-- END WORKSTATION STATUS -->
+
+
+
+
+
+      <ng-container *ngFor="let item of dateStatusArray?.stopCauseGroupList; let index=index;">
+        <span class="position-absolute"
+              [ngStyle]="{'top':(((index + 3)*barRowHeight)+(barMargin*2))+'px', 'left':'5px', 'width': '150px', 'font-weight': '500'}">
+          {{item.name}}
+        </span>
+        <!-- rest of the bar  -->
+        <ng-container *ngIf="isLoading">
+          <span [style.height]="barHeight+'px'" [style.left]="(leftVlOffset+1)+'px'"
+            [style.width]="chartWidth + 'px'" [style.top]="(((index + 3)*barRowHeight)+(barMargin*2))+'px'"
+            class="position-absolute span_opacity span_default_job_order">
+          </span>
+        </ng-container>
+        <div class="position-absolute" [ngStyle]="{'top':(((index + 3)*barRowHeight)+barMargin)+'px'}">
+          <ng-container *ngFor="let aItem of item?.stateList">
+            <span [style.height]="barHeight+'px'"
+                  [pTooltip]="showWorkStationStatusToolTip(aItem, 'scn')" [escape]="false" tooltipPosition="top"
+                  [style.left]="getLeft(aItem)"
+                [style.width]="getWidth(aItem)"
+                  class="position-absolute span_opacity"
+                  [ngClass]="((aItem.scn =='Breakdown' || aItem.scn == 'Planned Maintenance' || aItem.s == 'MAINTENANCE'))? 'span_maintenance' : 'span_stop'"></span>
+
+          </ng-container>
+        </div>
+      </ng-container>
+
+    </div>
+    <br><br>
+    <!--legend area-->
+    <div class="row d-flex justify-content-around ">
+      <div class=""><span class="legend-box"></span> <strong>{{'production-state-label'|translate}}</strong></div>
+      <div class=""><span class="legend-box production"></span> {{'PRODUCTION'|translate}}</div>
+      <div class=""><span class="legend-box stop"></span> {{'STOP'|translate}}</div>
+      <div class=""><span class="legend-box unknown_stopped"></span> {{'UNKNOWN_STOPPED'|translate}}</div>
+      <div class=""><span class="legend-box setup"></span> {{'SETUP'|translate}}</div>
+      <div class=""><span class="legend-box setup_overtime"></span> {{'SETUP_OVERTIME'|translate}}</div>
+      <div class=""><span class="legend-box closed_black"></span> {{'CLOSED'|translate}}</div>
+    </div>
+
+    <div class="row d-flex pt-4 justify-content-around">
+      <div style="width:100px"></div>
+      <div class=""><span class="legend-box waiting_for_job"></span> {{'WAITING_FOR_JOB'|translate}}</div>
+      <div class=""><span class="legend-box waiting_for_labor"></span> {{'WAITING_FOR_LABOR'|translate}}</div>
+      <div class=""><span class="legend-box waiting_for_maintenance"></span> {{'WAITING_FOR_MAINTENANCE'|translate}}</div>
+      <div class=""><span class="legend-box waiting_for_quality"></span> {{'WAITING_FOR_QUALITY'|translate}}</div>
+    </div>
+    <!--endof legend area-->
+  </div>
+  <br><br>
+  <div class="col-lg-12" *ngIf="dateStatusArray">
+    <div class="row">
+      <div class="col-md-6">
+        <workstation-status-graph [machineStatus]="dateStatusArray.workstationStatesTotalDurationList"></workstation-status-graph>
+        <div class="text-center"><strong>{{'production-state'|translate}}</strong></div>
+      </div>
+      <div class="col-md-6">
+        <machine-state-graph [machineState]="dateStatusArray.machineStatesTotalDurationList"></machine-state-graph>
+        <div class="text-center"><strong>{{'machine-status'|translate}}</strong></div>
+      </div>
+    </div>
+  </div>
+  <br><br>
+</div>

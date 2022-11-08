@@ -1,0 +1,381 @@
+<p-confirmDialog></p-confirmDialog>
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <p-table #dt [value]="preferences" [columns]="selectedColumns" expandableRows="true" scrollable="true"
+            scrollHeight="55vh" [rows]="pagination.rows" [totalRecords]="pagination.totalElements"
+            dataKey="generalSettingCategoryId" [(selection)]="selectedpreferences">
+            <ng-template pTemplate="caption">
+              <div style="text-align:left">
+                <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header" maxSelectedLabels="0"
+                  selectedItemsLabel="{{'columns-selected'|translate}}" [style]="{minWidth: '200px'}"
+                  defaultLabel="Choose Columns">
+
+                  <ng-template let-col let-i="index" pTemplate="item">
+                    {{col.label|translate}}
+                  </ng-template>
+                </p-multiSelect>
+                <button pButton style="margin-left: 4px" type="button" class="ui-button-warning float-right"
+                  label="{{'reset'  |translate}}" (click)="resetFilter()"></button>
+                <button pButton style="margin-right: 5px" class="ui-button-warning float-right" type="button"
+                  icon="fa fa-file-alt" iconPos="left" label="{{'export-all'|translate}}"
+                  (click)="dt.exportCSV()"></button>
+                <button pButton style="margin-right: 5px" class="ui-button-warning float-right" type="button"
+                  icon="fa fa-file" iconPos="left" label="{{'export-selected'|translate}}"
+                  (click)="dt.exportCSV({selectionOnly:true})"></button>
+              </div>
+            </ng-template>
+            <ng-template pTemplate="header" let-rowNode let-columns>
+              <tr>
+                <th style="width: 4%"></th>
+                <ng-container *ngFor="let col of columns" [ngSwitch]="col.field">
+                  <th *ngSwitchDefault> {{col.header | translate}}</th>
+                  <th width="25%" *ngSwitchCase="'generalSettingCategoryName'">
+                    {{col.header | translate}}</th>
+                  <th width="25%" *ngSwitchCase="'generalSettingCategoryType'">
+                    {{col.header | translate}}</th>
+                  <th *ngSwitchCase="'generalSettingCategoryDescription'">
+                    {{col.header | translate}}</th>
+                </ng-container>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-ri="rowIndex" let-expanded="expanded" let-columns="columns">
+              <tr>
+                <td style="width: 4%">
+                  <a href="#" [pRowToggler]="rowData" *ngIf="rowData.children">
+                    <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+                  </a>
+                </td>
+                <ng-container *ngFor="let col of columns" [ngSwitch]="col.field">
+                  <td width="25%" pEditableColumn *ngSwitchCase="'generalSettingCategoryName'">
+                    <p-cellEditor>
+                      <ng-template pTemplate="input">
+                        <input class="form-control" type="text" name="generalSettingCategoryName{{ri}}" 
+                        [(ngModel)]="rowData[col.field]" (ngModelChange)="generalCategoryChanged.next(rowData)" />
+                      </ng-template>
+                      <ng-template pTemplate="output">
+                        {{rowData[col.field]}}
+                      </ng-template>
+                    </p-cellEditor>
+                   
+                  </td>
+                  <td width="25%" pEditableColumn *ngSwitchCase="'generalSettingCategoryType'">
+                    <p-cellEditor>
+                      <ng-template pTemplate="input">
+                        <select id="catagoryType{{ri}}" name="catagoryType{{ri}}" class="form-control" 
+                      [(ngModel)]="rowData[col.field]" (ngModelChange)="generalCategoryChanged.next(rowData)">
+                        <option [value]="null"> {{'please-select' | translate}}</option>
+                        <option *ngFor="let status of catagoryType" value="{{status}}">{{status}}</option>
+                      </select>
+                      </ng-template>
+                      <ng-template pTemplate="output">
+                        {{rowData[col.field]}}
+                      </ng-template>
+                    </p-cellEditor>
+                   
+                  </td>
+                  <td *ngSwitchCase="'generalSettingCategoryMultiple'">
+                    <p-inputSwitch [(ngModel)]="rowData[col.field]"
+                      (ngModelChange)="onGeneralCategoryChanged($event,'generalSettingCategoryMultiple', rowData)">
+                    </p-inputSwitch>
+                  </td>
+                  <td *ngSwitchCase="'plant'">
+                    {{rowData[col.field]?.plantName}}
+                  </td>
+                  <td pEditableColumn *ngSwitchCase="'generalSettingCategoryDescription'">
+                    <p-cellEditor>
+                      <ng-template pTemplate="input">
+                        <textarea pInputTextarea style="width: 100%;" [(ngModel)]="rowData[col.field]"
+                        (ngModelChange)="generalCategoryChanged.next(rowData)"></textarea>
+                      </ng-template>
+                      <ng-template pTemplate="output">
+                        {{rowData[col.field]}}
+                      </ng-template>
+                    </p-cellEditor>
+                  </td>
+                  <td *ngSwitchDefault>
+                    {{rowData[col.field]}}
+                  </td>
+                </ng-container>
+
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="rowexpansion" let-rowData let-columns="columns">
+              <tr>
+                <td style="width: 3em;"></td>
+                <td style="padding: 1px;" [attr.colspan]="columns.length">
+                  <p-table #dtthird [columns]="selectedColumns" [rowExpandMode]="true" [value]="rowData.children"
+                    [rows]="10" scrollable="true" scrollHeight="50vh" [paginator]="rowData.children.length>10"
+                    [totalRecords]="rowData.children.length" dataKey="generalSettingCategoryId">
+                    <ng-template pTemplate="header" let-rowNode let-columns>
+                      <tr>
+                        <th style="width: 4%"></th>
+                        <th width="22%">{{'category-name' | translate}}</th>
+                        <th width="26.2%">{{'category-type' | translate}}</th>
+                        <th>{{'category-multiple' | translate}}</th>
+                        <th>{{'category-description' | translate}}</th>
+                      </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rowData let-ri="rowIndex" let-expanded="expanded" let-columns="columns">
+                      <tr>
+                        <td style="width: 4%;">
+                          <a href="#" [pRowToggler]="rowData" *ngIf="rowData.generalSettingItemList">
+                            <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+                          </a>
+                        </td>
+                        <!-- <ng-container *ngFor="let col of columns" [ngSwitch]="col.field"> -->
+                          <td width="22%" pEditableColumn>
+                            <p-cellEditor>
+                              <ng-template pTemplate="input">
+                                <input class="form-control" type="text" name="generalSettingCategoryName{{ri}}" 
+                                [(ngModel)]="rowData.generalSettingCategoryName" (ngModelChange)="generalCategoryChanged.next(rowData)" />
+                              </ng-template>
+                              <ng-template pTemplate="output">
+                                {{rowData.generalSettingCategoryName}}
+                              </ng-template>
+                            </p-cellEditor>
+                           
+                          </td>
+                          <td width="26.2%" pEditableColumn>
+                            <p-cellEditor>
+                              <ng-template pTemplate="input">
+                                <select id="catagoryType{{ri}}" name="catagoryType{{ri}}" class="form-control" 
+                              [(ngModel)]="rowData.generalSettingCategoryType" (ngModelChange)="generalCategoryChanged.next(rowData)">
+                                <option [value]="null"> {{'please-select' | translate}}</option>
+                                <option *ngFor="let status of catagoryType" value="{{status}}">{{status}}</option>
+                              </select>
+                              </ng-template>
+                              <ng-template pTemplate="output">
+                                {{rowData.generalSettingCategoryType}}
+                              </ng-template>
+                            </p-cellEditor>
+                           
+                          </td>
+                          <td>
+                            <p-inputSwitch [(ngModel)]="rowData.generalSettingCategoryMultiple"
+                              (ngModelChange)="onGeneralCategoryChanged($event,'generalSettingCategoryMultiple', rowData, ri)">
+                            </p-inputSwitch>
+                          </td>
+                          <td pEditableColumn>
+                            <p-cellEditor>
+                              <ng-template pTemplate="input">
+                                <input class="form-control" type="text" name="generalSettingCategoryDescription{{ri}}" 
+                                [(ngModel)]="rowData.generalSettingCategoryDescription" (ngModelChange)="generalCategoryChanged.next(rowData)" />
+                              </ng-template>
+                              <ng-template pTemplate="output">
+                                {{rowData.generalSettingCategoryDescription}}
+                              </ng-template>
+                            </p-cellEditor>
+                           
+                          </td>
+                          <!-- <td *ngSwitchCase="'plant'">
+                            {{rowData[col.field]?.plantName}}
+                          </td> -->
+                          <!-- <td pEditableColumn style="width: 25em" *ngSwitchCase="'generalSettingCategoryDescription'">
+                            <p-cellEditor>
+                              <ng-template pTemplate="input">
+                                <textarea pInputTextarea style="width: 100%;" [(ngModel)]="rowData[col.field]"
+                                  (ngModelChange)="onGeneralCategoryChanged($event,'generalSettingCategoryMultiple', rowData)"></textarea>
+                              </ng-template>
+                              <ng-template pTemplate="output">
+                                {{rowData[col.field]}}
+                              </ng-template>
+                            </p-cellEditor>
+                          </td> -->
+                          <!-- <td *ngSwitchDefault>
+                            {{rowData[col.field]}}
+                          </td>
+                        </ng-container> -->
+                      </tr>
+                    </ng-template>
+                    <ng-template pTemplate="rowexpansion" let-rowmainData let-columns="columns">
+                      <tr>
+                        <td style="width: 4%;"></td>
+                        <td style="padding: 1px;" colspan="4">
+                          <p-table #dttwo [rowExpandMode]="true" [value]="rowmainData.generalSettingItemList" [rows]="10"
+                            scrollable="true" scrollHeight="50vh" [paginator]="rowmainData.generalSettingItemList.length>10"
+                            [expandedRowKeys]="generalSettingItemExpandedRows"
+                            [totalRecords]="rowmainData.generalSettingItemList.length" dataKey="generalSettingItemId">
+                            <ng-template pTemplate="header">
+                              <tr>
+                                <th style="width: 4%;"></th>
+                                <th width="46.5%">{{'item-key' | translate}}</th>
+                                <th width="25.2%">{{'setting-value' | translate}}</th>
+                                <th>{{'value-type' | translate}}</th>
+                              </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-rowData let-ri="rowIndex" let-expanded="expanded">
+                              <tr>
+                                <td style="width: 4%;">
+                                  <a href="#" [pRowToggler]="rowData" *ngIf="rowData.generalSettingItemValueList && rowData.generalSettingItemValueList.length > 0">
+                                    <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+                                  </a>
+                                </td>
+                                <td width="46.5%" pEditableColumn>
+                                  <p-cellEditor>
+                                    <ng-template pTemplate="input">
+                                      <input class="form-control" type="text" name="generalSettingItemKey{{ri}}" 
+                                      [(ngModel)]="rowData.generalSettingItemKey" 
+                                      (ngModelChange)="generalCategoryItemChanged.next(rowData)" />
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                      {{rowData.generalSettingItemKey}}
+                                    </ng-template>
+                                  </p-cellEditor>
+                                 
+                                </td>
+                                <td width="25.2%">
+                                  <p-inputSwitch [ngModel]="rowData.generalSettingValue==='1'"
+                                    (ngModelChange)="onGeneralSettingValueChanged($event,'generalSettingValue', rowData, rowmainData)">
+                                  </p-inputSwitch>
+                                  <!-- {{rowData.generalSettingValue}} -->
+                                </td>
+                                <td pEditableColumn>
+                                  <p-cellEditor>
+                                    <ng-template pTemplate="input">
+                                      <select id="itemValue{{ri}}" name="itemValue{{ri}}" class="form-control" 
+                                      [(ngModel)]="rowData.generalSettingValueTypeEnum" (ngModelChange)="generalCategoryItemChanged.next(rowData)">
+                                      <option [value]="null"> {{'please-select' | translate}}</option>
+                                      <option *ngFor="let status of typeEnum" value="{{status}}">{{status}}</option>
+                                    </select>
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                      {{rowData.generalSettingValueTypeEnum}}
+
+                                      <button *ngIf="rowData.generalSettingItemValueList.length == 0" class="btn btn-sm btn-primary float-right" 
+                                      (click)="addItemValueList(rowData);"><i class="fa fa-plus"></i></button>
+                                    </ng-template>
+                                  </p-cellEditor>
+                                 
+                                </td>
+                              </tr>
+                            </ng-template>
+                            <ng-template pTemplate="rowexpansion" let-mainrowData let-columns="columns">
+                              <tr *ngIf="mainrowData.generalSettingItemValueList && mainrowData.generalSettingItemValueList.length > 0">
+                                <td style="width: 4%;"></td>
+                                <td style="padding: 1px;" colspan="3">
+                                  <p-table #dtfourth [rowExpandMode]="true" [value]="mainrowData.generalSettingItemValueList" [rows]="10"
+                                    scrollable="true" scrollHeight="50vh" [paginator]="mainrowData.generalSettingItemValueList.length>10"
+                                    [totalRecords]="mainrowData.generalSettingItemValueList.length" dataKey="generalSettingItemId">
+                                    <ng-template pTemplate="header">
+                                      <tr>
+                                        <th width="48.7%">{{'reference' | translate}}</th>
+                                        <th width="26.4%">{{'item-value' | translate}}</th>
+                                        <th>{{'value-active' | translate}}</th>
+                                        <th width="100px">{{'action' | translate}}</th>
+                                      </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="body" let-rowData let-ri="rowIndex" let-expanded="expanded">
+                                      <tr>
+                                        <td width="48.7%" pEditableColumn>
+                                          <p-cellEditor>
+                                            <ng-template pTemplate="input">
+                                             <workstation-auto-complete [appendToBody]="true" [selectedWorkStationId]="rowData.referenceId" 
+                                             (selectedWorkStationEvent)="rowData.referenceId=$event.workStationId; (rowData.generalSettingItemValueId!==null ? generalCategoryItemValueChanged.next(rowData) : null)">
+                                            </workstation-auto-complete>
+                                            </ng-template>
+                                            <ng-template pTemplate="output">
+                                              <workstation-auto-complete [selectedWorkStationId]="rowData.referenceId" [disabled]="true">
+                                              </workstation-auto-complete>
+                                            </ng-template>
+                                          </p-cellEditor>
+                                         
+                                        </td>
+                                        <td width="26.4%" pEditableColumn>
+                                          <p-cellEditor>
+                                            <ng-template pTemplate="input">
+                                              <input class="form-control" type="text" name="generalSettingItemValue{{ri}}" 
+                                              [(ngModel)]="rowData.generalSettingItemValue" (ngModelChange)="rowData.generalSettingItemValueId!==null ? generalCategoryItemValueChanged.next(rowData) : null" />
+                                            </ng-template>
+                                            <ng-template pTemplate="output">
+                                              {{rowData.generalSettingItemValue}}
+                                            </ng-template>
+                                          </p-cellEditor>
+                                         
+                                        </td>
+                                        <td>
+                                          <p-inputSwitch [(ngModel)]="rowData.generalSettingValueActive"
+                                            (ngModelChange)="onGeneralSettingItemValueChanged($event,'generalSettingValueActive', rowData)">
+                                          </p-inputSwitch>
+                                          <!-- {{rowData.generalSettingValueActive}} -->
+                                        </td>
+                                        <td width="100px" >
+                                          <button *ngIf="rowData.generalSettingItemValueId" class="btn btn-sm btn-primary" (click)="addItemValue(mainrowData, rowData)"><i class="fa fa-plus"></i></button>
+                                          <button *ngIf="rowData.generalSettingItemValueId" class="btn btn-sm btn-danger" (click)="deleteItemValue(mainrowData, rowData, ri)"><i class="fa fa-trash"></i></button>
+                                          <button *ngIf="!rowData.generalSettingItemValueId" class="btn btn-sm btn-success" style="width: 4.4em;" (click)="saveItemValue(mainrowData, rowData, ri)">{{'save' | translate}}</button>
+                                          <button *ngIf="!rowData.generalSettingItemValueId" class="btn btn-sm btn-danger" (click)="cancelSaveItemValue(mainrowData, rowData, ri)">{{'cancel' | translate}}</button>
+                                        </td>
+                                      </tr>
+                                    </ng-template>
+                                    </p-table>
+                                </td>
+                              </tr>
+                            </ng-template>
+                          </p-table>
+                        </td>
+                      </tr>
+                    </ng-template>
+                  </p-table>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+          <br />
+          <div class="row">
+            <app-paging [TotalElements]="pagination.totalElements" [CurrentPage]="pagination.currentPage"
+              [PageSize]="pagination.pageSize" [rows]="pagination.rows"
+              [TotalPageLinkButtons]="pagination.TotalPageLinkButtons"
+              [RowsPerPageOptions]="pagination.RowsPerPageOptions" (onPageChange)="myChanges($event)"></app-paging>
+            <span style="margin-left:2px; padding-top: 2px " class="text-muted">{{'total-records'|translate}}:
+              {{pagination?.totalElements}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--/.col-->
+  </div>
+</div>
+<div bsModal #myModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-success modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"> {{'country' | translate}}</h4>
+        <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <ng-template [ngIf]="countryModal.modal=='NEW'">
+        <p-tabView>
+          <p-tabPanel header="New Country">
+            <!-- <country-new (saveAction)="myModal.hide(); filter()"></country-new> -->
+          </p-tabPanel>
+        </p-tabView>
+      </ng-template>
+      <ng-template [ngIf]="countryModal.modal=='EDIT'">
+        <p-tabView>
+          <p-tabPanel header="Edit Country">
+            <!-- <country-edit [data]="countryModal.data" (saveAction)="myModal.hide(); filter()"></country-edit> -->
+          </p-tabPanel>
+        </p-tabView>
+      </ng-template>
+      <ng-template [ngIf]="countryModal.modal=='DETAIL'">
+        <p-tabView>
+          <p-tabPanel header="Country Detail">
+            <!-- <country-detail [data]="countryModal.data" (saveAction)="myModal.hide();"></country-detail> -->
+          </p-tabPanel>
+        </p-tabView>
+      </ng-template>
+      <div class="modal-footer">
+        <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary"
+          (click)="myModal.hide()">{{'close' | translate}}</button>
+        <button *ngIf="countryModal.modal=='DETAIL'" type="button" class="btn rounded btn-primary"
+          (click)="countryModal.modal='NEW'">{{'new' | translate}}</button>
+        <button *ngIf="countryModal.modal=='DETAIL'" type="button" class="btn rounded btn-success"
+          (click)="countryModal.modal='EDIT'">{{'edit' | translate}}</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

@@ -1,0 +1,101 @@
+<div class="animated fadeIn">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fa fa-align-justify"></i> {{'add-title' | translate}}
+                </div>
+                <div class="card-body">
+                    <form #partForm="ngForm">
+                        <table class="table table-bordered">
+                            <tbody>
+                                <!-- <tr>
+                                    <td>{{'title' | translate}}</td>
+                                    <td>
+                                        <div class="input-group">
+                                            <select id="employeTitleIdx" name="employeTitleIdx" class="form-control"
+                                                [(ngModel)]="employeeTitle.employeeTitleParentId">
+                                                <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                                                <option *ngFor="let emp of employeeTitleList"
+                                                    value="{{emp.employeeTitleId}}">
+                                                    {{emp.employeeTitleName}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </td>
+                                </tr> -->
+
+                                <tr>
+                                    <td>{{'title-name' | translate}}</td>
+                                    <td><input type="text" class="form-control" name="employeeTitleName"
+                                            [(ngModel)]="employeeTitle.employeeTitleName" /> </td>
+                                </tr>
+                                <tr>
+                                    <td>{{'title-code' | translate}}</td>
+                                    <td><input type="text" class="form-control" name="employeeTitleCode"
+                                            [(ngModel)]="employeeTitle.employeeTitleCode" /> </td>
+                                </tr>
+                                <tr>
+                                    <td>{{'panel-master' | translate}}</td>
+                                    <td>
+                                        <p-checkbox name="panelMaster" binary="true"  [(ngModel)]="employeeTitle.panelMaster"></p-checkbox>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>{{'stop-master' | translate}}</td>
+                                    <td>
+                                        <p-checkbox name="stopMaster" binary="true"  [(ngModel)]="employeeTitle.stopMaster"></p-checkbox>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>{{'scrap-master' | translate}}</td>
+                                    <td>
+                                        <p-checkbox name="scrapMaster" binary="true"  [(ngModel)]="employeeTitle.scrapMaster"></p-checkbox>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>{{'rework-master' | translate}}</td>
+                                    <td>
+                                        <p-checkbox name="reworkMaster" binary="true"  [(ngModel)]="employeeTitle.reworkMaster"></p-checkbox>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>{{'maintenance-master' | translate}}</td>
+                                    <td>
+                                        <p-checkbox name="maintenanceMaster" binary="true"  [(ngModel)]="employeeTitle.maintenanceMaster"></p-checkbox>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>{{'setup-master' | translate}}</td>
+                                    <td>
+                                        <p-checkbox name="setupMaster" binary="true"  [(ngModel)]="employeeTitle.setupMaster"></p-checkbox>
+                                    </td>
+                                </tr>
+                               
+                                <tr>
+                                    <td width="50%">{{'title-description' | translate}}</td>
+                                    <td>
+                                        <textarea id="description" name="description" type="text" class="form-control"
+                                            [(ngModel)]="employeeTitle.employeeTitleDescription"
+                                            pInputTextarea></textarea>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i
+                                                class="fa fa-ban"></i>
+                                            {{'reset' | translate}}</button>
+                                        <button type="submit" class="btn btn-sm btn-primary"
+                                            [disabled]="!partForm.form.valid" (click)="save()"><i
+                                                class="fa fa-dot-circle-o"></i>
+                                            {{'save' | translate}}</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,102 @@
+<!--<form #orderEdit="ngForm" >-->
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12" *ngIf="data">
+
+          <div class="card">
+            <div class="card-header">
+              {{'scheduled-calls'|translate}}
+            </div>
+            <div class="card-body">
+              <form #saleForm="ngForm" class="form-horizontal ui-fluid">
+                <table class="table table-bordered">
+                  <tbody>
+                  <tr>
+                    <td width="35%">{{'maintenance-operation-id' | translate}}</td>
+                    <td>{{data.maintenanceOperationId}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'equipment-operation' | translate}}</td>
+                    <td>{{data?.equipmentOperation?.operationCode}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'equipment' | translate}}</td>
+                    <td> {{data.equipment?.equipmentName}}
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td>{{'planning-plant' | translate}}</td>
+                    <td> {{data.planningPlant?.plantName}}</td>
+                  </tr>
+                  <tr>
+                    <td>{{'workstation' | translate}}</td>
+                    <td> {{data.workstation?.workStationName}}</td>
+                  </tr>
+                  <tr>
+                    <td>{{'maintenance-activity-type' | translate}}</td>
+                    <td> {{data.maintenanceActivityType?.description}}</td>
+                  </tr>
+                  <tr>
+                    <td>{{'work' | translate}}</td>
+                    <td> {{data.work}}</td>
+                  </tr>
+                  <tr>
+                    <td>{{'work-unit' | translate}}</td>
+                    <td> {{data.workUnit}}</td>
+                  </tr>
+                  <tr>
+                    <td>{{'actual-work' | translate}}</td>
+                    <td> {{data.actualWork}}</td>
+                  </tr>
+                  <tr>
+                    <td>{{'actual-work-unit' | translate}}</td>
+                    <td> {{data.actualWorkUnit}}</td>
+                  </tr>
+                  <!-- <tr>
+                    <td>{{'no-of-person' | translate}}</td>
+                    <td> {{data.numberOfperson}}</td>
+                  </tr> -->
+                  <tr>
+                    <td>{{'duration' | translate}}</td>
+                    <td> {{data.duration}}</td>
+                  </tr>
+                  <tr>
+                    <td>{{'duration-unit' | translate}}</td>
+                    <td> {{data.durationUnit}}</td>
+                  </tr>
+                  <tr>
+                    <td>{{'index-no' | translate}}</td>
+                    <td> {{data.indexNo}}</td>
+                  </tr>
+                  <tr>
+                    <td>{{'planned-start-date' | translate}}</td>
+                    <td> {{data.plannedStartDate|date:'dd-MM-yyyy'}}</td>
+                  </tr>
+                  <tr>
+                    <td>{{'planned-finish-date' | translate}}</td>
+                    <td> {{data.plannedFinishDate|date:'dd-MM-yyyy'}}</td>
+                  </tr>
+                  <tr>
+                    <td>{{'actual-start-date' | translate}}</td>
+                    <td> {{data.actualStartDate|date:'dd-MM-yyyy'}}</td>
+                  </tr>
+                  <tr>
+                    <td>{{'actual-finish-date' | translate}}</td>
+                    <td> {{data.actualFinishDate|date:'dd-MM-yyyy'}}</td>
+                  </tr>
+
+                  </tbody>
+
+                </table>
+
+              </form>
+            </div>
+          </div>
+
+    </div>
+  </div><!--/.row-->
+</div>
+<!--</form>-->

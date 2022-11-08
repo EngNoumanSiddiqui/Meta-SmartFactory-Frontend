@@ -1,0 +1,208 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-lg-12 ">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i> {{'new' | translate}} - {{'stop-cause' | translate}}
+        </div>
+        <div class="card-body">
+          <form #causeForm="ngForm">
+            <div class="row col-md-12 p-0 m-0">
+              <div class="col-md-6">
+                <table class="table table-bordered">
+                  <tbody>
+                    <tr>
+                      <td> {{'plant' | translate}}</td>
+                      <td>
+                        <span
+                        *ngIf="stopCause.plantId && selectedPlant && stopCause.plantId=== selectedPlant.plantId">{{selectedPlant.plantName}}</span>
+                      <plant-auto-complete *ngIf="!stopCause.plantId && !selectedPlant"
+                        [selectedPlantId]="stopCause.plantId" (selectedPlantEvent)="stopCause.plantId=$event?.plantId"
+                        [eventFire]="true"></plant-auto-complete>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td> {{'no' | translate}}</td>
+                      <td><input type="text" name="stopCauseNo" class="form-control" [(ngModel)]="stopCause.stopCauseNo" />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td> {{'name' | translate}}* </td>
+                      <td><input type="text" class="form-control" name="stopCauseName" required
+                          [(ngModel)]="stopCause.stopCauseName" /> </td>
+                    </tr>
+                    <tr>
+                      <td> {{'planned' | translate}}* </td>
+                      <td>
+                        <label class="switch switch-3d switch-success">
+                          <input [checked]="stopCause.planned" class="switch-input" name="planned" type="checkbox"
+                            [(ngModel)]="stopCause.planned" (ngModelChange)="onSelectPlanned($event)">
+                          <span class="switch-label"></span>
+                          <span class="switch-handle"></span>
+                        </label>
+                        {{stopCause.planned?('PLANNED'|translate):('UNPLANNED'|translate)}}
+                      </td>
+                    </tr>
+                    <tr *ngIf="stopCause.planned">
+                      <td>{{'start-time'  | translate}}</td>
+                      <td class="ui-fluid">
+                        <p-calendar name="starttime" placeholder="{{'start-time' | translate}}" required [(ngModel)]="stopCause.startTime" [timeOnly]="true"></p-calendar>
+                      </td>
+                    </tr>
+                    <ng-container *ngIf="stopCause.planned">
+                      <tr>
+                        <td>{{'duration' | translate}}</td>
+                        <td>
+                          <div class="row" style="padding-top: 5px">
+                            <span class="ui-float-label " style="margin-left: 10px;">
+                              <input id="float-input" type="number" name="daysDuration" style="width: 60px"
+                                [(ngModel)]="daysDuration" min="0" pInputText />
+                              <label for="float-input">{{'days'|translate}}</label>
+                            </span>
+                            <span class="ui-float-label " style="margin-left: 10px;">
+                              <input id="float-hour" type="number" name="hoursDuration" style="width: 60px"
+                                [(ngModel)]="hoursDuration" min="0" max="23" pInputText />
+                              <label for="float-hour">{{'hours'|translate}}</label>
+                            </span>
+                            <span class="ui-float-label " style="margin-left: 10px;">
+                              <input id="float-minutes" name="minutesDuration" type="number" style="width: 60px"
+                                [(ngModel)]="minutesDuration" min="0" max="59" pInputText />
+                              <label for="float-minutes">{{'minutes'|translate}}</label>
+                            </span>
+                            <span class="ui-float-label " style="margin-left: 10px;">
+                              <input id="float-seconds" name="secondsDuration" type="number" style="width: 60px"
+                                [(ngModel)]="secondsDuration" min="0" max="59" pInputText />
+                              <label for="float-seconds">{{'seconds'|translate}}</label>
+                            </span>
+                            <span class="ui-float-label  " style="margin-left: 10px;">
+                              <input id="float-mills" name="millsDuration" type="number" style="width: 60px"
+                                [(ngModel)]="millsDuration" min="0" max="999" pInputText />
+                              <label for="float-mills">{{'mills'|translate}}</label>
+                            </span>
+                          </div>
+                        </td>
+                      </tr>
+                    </ng-container>
+                    <tr *ngIf="stopCause.planned">
+                      <td style="width: 30%">{{'shift' | translate}}</td>
+                      <td>
+                        <div class="input-group">
+                          <select id="shiftid" required name="shiftId" class="form-control"
+                            [(ngModel)]="stopCause.shiftId">
+                            <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                            <option *ngFor="let type of shiftList" value="{{type.shiftId}}">
+                              {{type.shiftName}}</option>
+                          </select>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr *ngIf="stopCause.planned">
+                      <td style="width: 30%">{{'no-of-occurences-per-shift' | translate}}</td>
+                      <td><input name="noofoccurences" type="number" class="col-md-4 form-control" [(ngModel)]="stopCause.numberOfOccurancePerShift" />
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td colspan="2">
+                        <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+                          {{'reset' | translate}}</button>
+                        <button type="submit" class="btn btn-sm btn-primary" [disabled]="!causeForm.form.valid"
+                          (click)="save()"><i class="fa fa-dot-circle-o"></i>
+                          {{'save' | translate}}</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="col-md-6">
+                <table class="table table-bordered">
+                  <tbody>
+                    <tr>
+                      <td>{{'stop-cause-type'  | translate}}*</td>
+                      <td>
+                        <div class="input-group">
+                          <select id="stopCauseTypeId" required name="stopCauseTypeId" class="form-control"
+                            [(ngModel)]="stopCause.stopCauseTypeId">
+                            <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                            <option *ngFor="let type of stopCauseTypeList" value="{{type.stopCauseTypeId}}">
+                              {{type.stopCauseTypeName}}</option>
+                          </select>
+                        </div>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>{{'color' | translate}}</td>
+                      <td>
+                        <p-colorPicker name="color" [(ngModel)]="stopCause.color"></p-colorPicker>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'affect-job-order-performance' | translate}}</td>
+                      <td>
+                        <p-checkbox [(ngModel)]="stopCause.affectJobOrderPerformance" name="affectJobOrderPerformance" binary="true" inputId="affectJobOrderPerformance"></p-checkbox>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'affect-employee-performance' | translate}}</td>
+                      <td>
+                        <p-checkbox [(ngModel)]="stopCause.affectEmployeePerformance" name="affectEmployeePerformance" binary="true" inputId="affectEmployeePerformance"></p-checkbox>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>{{'affect-oee-availability' | translate}}</td>
+                      <td>
+                        <p-checkbox [(ngModel)]="stopCause.affectOeeAvilability" binary="true" inputId="affectOeeAvilability" name="affectOeeAvilability"></p-checkbox>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>{{'affect-oee-performance' | translate}}</td>
+                      <td>
+                        <p-checkbox [(ngModel)]="stopCause.affectOeePerformance" binary="true" inputId="affectOeePerformance" name="affectOeePerformance"></p-checkbox>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>{{'auto-active' | translate}}</td>
+                      <td>
+                        <p-checkbox [disabled]="!stopCause.planned" [(ngModel)]="stopCause.autoActive" binary="true" name="autoActive" inputId="autoActive"></p-checkbox>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'stop-master' | translate}}</td>
+                      <td>
+                        <p-checkbox [(ngModel)]="stopCause.stopMaster" name="stopMaster" binary="true" inputId="stopMaster"></p-checkbox>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'work-center' | translate}} </td>
+                      <td>
+                        <workcenter-auto-complete [addIfMissing]="true" [workCenterId]="stopCause.workCenterId" (selectedWorkCenterEvent)="selectWorkCenter($event)" [plantId]="this.selectedPlant.plantId"></workcenter-auto-complete>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td style="width: 30%">{{'cost-rate' | translate}}</td>
+                      <td>
+                        <input type="number" min="0" max="100" step="1" pattern="^$|^([0-9]|[1-9][0-9]|[1][0][0])?"
+                        name="costRate" class="form-control" [(ngModel)]="stopCause.costRate" #costRate="ngModel" />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="width: 30%">{{'description' | translate}}</td>
+                      <td><textarea name="description" class="form-control" [(ngModel)]="stopCause.description" ></textarea>
+                      </td>
+                    </tr>
+                  </tbody>
+
+                </table>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

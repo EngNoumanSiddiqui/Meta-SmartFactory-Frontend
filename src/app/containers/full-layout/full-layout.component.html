@@ -1,0 +1,27 @@
+<app-header></app-header>
+<div class="app-body">
+  <app-sidebar></app-sidebar>
+  <!-- Main content -->
+  <main class="main">
+    <!-- Breadcrumb -->
+
+    <!--<ol class="breadcrumb">-->
+      <!--<app-breadcrumbs></app-breadcrumbs>-->
+      <!--<li class="breadcrumb-menu d-md-down-none">-->
+        <!--<div class="btn-group" role="group" aria-label="Button group with nested dropdown">-->
+          <!--<a class="btn" [routerLink]="['/home']"><i class="icon-graph"></i> &nbsp;{{'home' |translate}}</a>-->
+          <!--<a class="btn" href="" style="cursor: pointer;" (click)="back()"><i class="icon-arrow-left-circle"></i> &nbsp;{{'back' | translate}}</a>-->
+          <!--&lt;!&ndash;<a class="btn" href="#"><i class="icon-settings"></i> &nbsp;Settings</a>&ndash;&gt;-->
+        <!--</div>-->
+      <!--</li>-->
+    <!--</ol>-->
+    <!-- <br> -->
+    <div class="container-fluid">
+      <div class="badge-info header-dass"><app-breadcrumbs></app-breadcrumbs></div>
+      <router-outlet (isLastEmitter)="isLastEmitter($event)"></router-outlet>
+    </div><!-- /.container-fluid -->
+  </main>
+  <app-aside></app-aside>
+</div>
+<app-footer></app-footer>
+

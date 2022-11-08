@@ -1,0 +1,256 @@
+<div class="ui-inputgroup  d-flex ui-fluid">
+    <p-autoComplete [disabled]="disabled" [(ngModel)]="selectedSamplingProcInspPoint" [suggestions]="filteredSamplingProcInspPoint"
+                    (completeMethod)="searchSamplingProcInspPoint($event)" field="samplingProcedurePointText" [required]="required"
+                     [dropdown]="dropdown" [forceSelection]="true" dataKey="samplingProcedurePointId"
+                     placeholder="{{placeholder|translate}}" [minLength]="1" name="samplingProcedurePointText"
+                     (onDropdownClick)="handleDropdownClickForSamplingProcInspPoint()" (ngModelChange)="onChangeSamplingProcInspPoint($event)" >
+    </p-autoComplete>
+
+    <button *ngIf="addIfMissing" pButton icon="fa fa-plus-circle"
+        (click)="modalShow()">
+    </button>
+
+</div>
+
+<ng-template [ngIf]="modal.active">
+    <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myqualitysamplingProcedurePointModal="bs-modal" class="modal fade"   (onHidden)="modal.active=false"
+         tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+      <div class="modal-dialog modal-success modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">
+              <span >{{'new-quality-sampling-procedure-inspection-point' | translate}}</span>
+            </h4>
+            <button type="button" class="close" (click)="myqualitysamplingProcedurePointModal.hide()" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="animated fadeIn">
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="card">
+                    <div class="card-header">
+                      <i class="fa fa-align-justify"></i> {{'quality-sampling-procedure-inspection-point-information' | translate}}
+                    </div>
+                    <div class="card-body">   
+                      <form #inspForm="ngForm">
+                        <table class="table table-bordered">
+                          <tr>
+                            <td width="40%">{{'procedure-point-code' | translate}}</td>
+                            <td>
+                              <input
+                                type="text"
+                                id="samplingProcedurePointCode"
+                                name="samplingProcedurePointCode"
+                                [(ngModel)]="samplingProcInspPointDto.samplingProcedurePointCode"
+                                class="form-control"
+                                required
+                              />
+                            </td>
+                          </tr>
+                          <tr>
+                          <tr>
+                            <td>{{'procedure-point-text' | translate}}</td>
+                            <td>
+                              <input
+                                type="text" 
+                                id="samplingProcedurePointText"
+                                name="samplingProcedurePointText"
+                                [(ngModel)]="samplingProcInspPointDto.samplingProcedurePointText"
+                                class="form-control"
+                                required
+                              />
+                            </td>
+                          </tr>
+                          <!-- <tr>
+                            <div class="row col-md-12">
+                              <button
+                                type="submit"
+                                class="btn btn-sm btn-primary"
+                                [disabled]="!inspForm.form.valid"
+                                (click)="save(myqualitysamplingProcedurePointModal)"
+                              >
+                                <i class="fa fa-dot-circle-o"></i>
+                                {{ "save" | translate }}
+                              </button>
+                              
+                            </div>
+
+                          </tr> -->
+                        </table>
+                      </form>
+                    </div>
+                  </div>
+                  
+                </div>
+
+                <div class="col-md-8">
+                  <div class="card">
+                    <div class="card-header">
+                      {{'sampling-procedure-add-item' | translate}}
+                      <div class="card-actions">
+                        <button type="button" class="btn btn-primary" data-toggle="modal"
+                                (click)="openSampleProcedureDetailsModal(-1)"><i class="fa fa-plus"></i></button>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <form action="" method="post" class="form-horizontal">
+                        <table class="table table-sm table-responsive-sm table-hover table-outline mb-0">
+                               <!--*ngIf="order.orderDetailList.length > 0">-->
+                          <thead class="table-secondary">
+                          <tr>
+                            <th>{{'sampling-procedure-id' |translate}}</th>
+                            <th>{{'sampling-procedure-code' |translate}}</th>
+                            <th>{{'sampling-procedure-name' | translate}}</th>
+                            <th>{{'sampling-type' | translate}}</th>
+            
+                            <th>{{'sampling-procedure-valuation-mode' |translate}}</th>
+                            <th>{{'sample-size' |translate}}</th>
+                            <th>{{'acceptance' |translate}}</th>
+                            <th></th>
+                          </tr>
+                          </thead>
+                          <tbody>
+                          <tr *ngFor="let item of samplingProcInspPointDto.samplingProcedureList; let i = index">
+                            <td>{{item.samplingProcedureId}}</td>
+                            <td>{{item.samplingProcedureCode}}</td>
+                            <td>{{item.samplingProcedureName}}</td>
+                            <td>{{item.samplingTypeName}}</td>
+                            <td>{{item.samplingProcedureValuationModeName}}</td>
+                            
+                            <td>{{item.sampleSize}}</td>
+                            <td>{{item.acceptance}}</td>
+                            <td width="70px" ><button class="btn btn-sm btn-outline-info float-left" (click)="openSampleProcedureDetailsModal(i)"><i class="fa fa-edit"></i></button>
+                              <button class="btn btn-sm btn-outline-danger float-right" (click)="deleteSampleProcedureDetailsFromList(i)"><i class="fa fa-close"></i></button></td>
+                          </tr>
+                          </tbody>
+                          <tr *ngIf="!samplingProcInspPointDto.samplingProcedureList || samplingProcInspPointDto.samplingProcedureList.length==0">
+                            <td colspan="10" class="noData text-center">
+                              <strong class=""><i class="fa fa-warning "></i>{{'NO_DATA_FOUND'|translate}}!</strong>
+                            </td>
+                          </tr>
+                        </table>
+                      </form>
+                    </div>
+                    <div class="card-footer">
+                      <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+                        {{'reset' | translate}}
+                      </button>
+                      <button type="submit" class="btn btn-sm btn-primary"
+                              [disabled]="!samplingProcInspPointDto.samplingProcedureList||samplingProcInspPointDto.samplingProcedureList.length==0 ||!samplingProcInspPointDto.samplingProcedurePointCode||!samplingProcInspPointDto.samplingProcedurePointText"
+                              (click)="save()"><i class="fa fa-dot-circle-o"></i>
+                        {{'save' | translate}}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-container *ngIf="params.dialog.visible">
+    <p-dialog class="custom-dialog remove-scroll" header="{{'sampling-procedure-details' | translate}}" [(visible)]="params.dialog.visible"  [style]="{'min-width': '800px',width: '900px'}"   
+    [maximizable]="true" #dial
+    [baseZIndex]="999999999999"
+      [contentStyle]="{'min-height':'400px'}" modal="true" dismissableMask="true">
+      <div class="col-md-12">
+        <form #inspprocedureSampleForm="ngForm">
+          <table class="table table-bordered">
+            <tr>
+              <td>{{'sampling-procedure-code' | translate}}</td>
+              <td>
+                <input
+                  type="text"
+                  id="samplingProcedureCode"
+                  name="samplingProcedureCode"
+                  [(ngModel)]="samplingProcedureListItem.samplingProcedureCode"
+                  class="form-control"
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>{{'sampling-procedure' | translate}}</td>
+              <td>
+                <input
+                  type="text"
+                  id="samplingProcedureName"
+                  name="samplingProcedureName"
+                  [(ngModel)]="samplingProcedureListItem.samplingProcedureName"
+                  class="form-control"
+                  required
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>{{'sampling-type' | translate}}</td>
+              <td>
+               <quality-sampling-type-auto-complete [selectedSamplingTypeId]="samplingProcedureListItem.samplingTypeId" [addIfMissing]="true" (selectedSamplingTypeEvent)="onselectSamplingType($event)"></quality-sampling-type-auto-complete>
+              </td>
+            </tr>
+            <tr>
+              <td>{{'valuation-mode' | translate}}</td>
+              <td>
+                <quality-sampling-proc-value-mode-auto-complete [selectedSamplingProcValueModeId]="samplingProcedureListItem.samplingProcedureValuationModeId" [addIfMissing]="true" (selectedSamplingProcValueModeEvent)="onselectSamplingProcValueMode($event)"></quality-sampling-proc-value-mode-auto-complete>
+               
+              </td>
+            </tr>
+            <!-- <tr>
+              <td>{{'inspection-points' | translate}}</td>
+              <td style="display: flex;">
+                <select style="width: 92%;" id="samplingProcedureInspectionPointId" name="samplingProcedureInspectionPointId" class="form-control" [(ngModel)]="samplingProcedure.samplingProcedureInspectionPointId" >
+                  <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                  <option value="{{inspectionPoints.samplingProcedurePointId}}" *ngFor="let inspectionPoints of inspectionPoints">{{inspectionPoints.samplingProcedurePointCode}}
+                  </option>
+                </select>
+                <button pButton icon="fa fa-plus-circle"></button>
+              </td>
+            </tr> -->
+            <tr>
+              <td>{{'sampling-size' | translate}}</td>
+              <td>
+                <input
+                  type="number"
+                  id="sampleSize"
+                  name="sampleSize"
+                  [(ngModel)]="samplingProcedureListItem.sampleSize"
+                  class="form-control"
+                  required
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>{{'acceptance-number' | translate}}</td>
+              <td>
+                <input
+                  type="number"
+                  id="acceptance"
+                  name="acceptance"
+                  [(ngModel)]="samplingProcedureListItem.acceptance"
+                  class="form-control"
+                />
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                <button
+                type="submit"
+                class="btn btn-sm btn-primary"
+                [disabled]="!inspprocedureSampleForm.form.valid"
+                (click)="AddInsprocedureSampleItem()"
+              >
+                <i class="fa fa-dot-circle-o"></i>
+                {{ "save" | translate }}
+              </button>
+              </td>
+            </tr>
+          </table>
+        </form>
+      </div>
+    </p-dialog>
+  </ng-container>

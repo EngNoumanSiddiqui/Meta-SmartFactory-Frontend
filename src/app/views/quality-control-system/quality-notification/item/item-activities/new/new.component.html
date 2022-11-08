@@ -1,0 +1,61 @@
+<div class="animated fadeIn">
+    <div class="row">
+        <div class="col-md-12">
+        <div class="card"> 
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i> {{'item-activity' | translate}}
+          </div>
+          <div class="card-body">   
+            <form #inspForm="ngForm">
+              <table class="table table-bordered">
+                <tr>
+                  <td>{{'item-activity-name' | translate}}</td>
+                  <td>
+                    <select id="itemActivityName" name="itemActivityName" class="form-control" [(ngModel)]="itemActivityType.itemActivityName" required>
+                      <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                      <option value="{{itemActivityName}}" *ngFor="let itemActivityName of itemActivityNameList">{{itemActivityName}}
+                      </option>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                <tr>
+                  <td>{{'short-text' | translate}}</td>
+                  <td>
+                    <input
+                      type="text" 
+                      id="shortText"
+                      name="shortText"
+                      [(ngModel)]="itemActivityType.shortText"
+                      class="form-control"
+                    />
+                  </td>
+                </tr>
+              </table>
+            </form>
+          </div>
+        </div>
+        <div class="row col-md-12">
+            <button
+            type="submit"
+            class="btn btn-sm btn-danger"
+            [disabled]="!inspForm.form.valid" 
+            (click)="reset()"
+          >
+          <i class="fa fa-ban" aria-hidden="true"></i>
+            {{ "reset" | translate }}
+          </button>
+          <button
+            type="submit"
+            class="btn btn-sm btn-primary"
+            [disabled]="!inspForm.form.valid"
+            (click)="save()"
+          >
+            <i class="fa fa-dot-circle-o"></i>
+            {{ "save" | translate }}
+          </button>
+        </div>
+        </div>
+      </div>
+  </div>
+   

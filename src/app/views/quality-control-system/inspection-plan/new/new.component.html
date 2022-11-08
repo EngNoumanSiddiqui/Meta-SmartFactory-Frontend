@@ -1,0 +1,166 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <p-tabView class="col-md-12" [activeIndex]="activeIndex">
+      <p-tabPanel header="{{ 'details' | translate }}">
+        <div class="card">
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i> {{'inspection-plan-details' | translate}}
+          </div>
+          <div class="card-body">
+            <form #inspForm="ngForm">
+              <table class="table table-bordered">
+                <tr>
+                  <td>{{'inspection-plan-code' | translate}}</td>
+                  <td>
+                    <input
+                      type="text"
+                      id="inspectionPlanCode"
+                      name="inspectionPlanCode"
+                      [(ngModel)]="inspectionPlan.inspectionPlanCode"
+                      class="form-control"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'material' | translate}}</td>
+                  <td>
+                    <stock-auto-complete [dropdown]="true" [required]="false" [plantId]="selectedPlant.plantId"
+                      (selectedStockEvent)="inspectionPlan.stockId=$event.stockId" ></stock-auto-complete>
+                  </td>
+                </tr> 
+                <tr>
+                  <td>{{'plant' | translate}}</td>
+                  <td class="display-flex">
+                    <span style="width: 100%;" *ngIf="selectedPlant"> {{selectedPlant.plantName}}</span>
+                    <plant-auto-complete *ngIf="!selectedPlant" [addIfMissing]="false" [selectedPlantId]="inspectionPlan.plantId"
+                      (selectedPlantEvent)="inspectionPlan.plantId = $event.plantId" [selectedPlant]="inspectionPlan.plantId"></plant-auto-complete>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'usage' | translate}}</td>
+                  <td>
+                    <select id="usage" name="usage" class="form-control" [(ngModel)]="inspectionPlan.qualityUsageId">
+                      <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                      <option value="{{usage.usageId}}" *ngFor="let usage of usageList">{{usage.usageText}}
+                      </option>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'planning-work-center' | translate}}</td>
+                  <td>
+                    <workcenter-auto-complete (selectedWorkCenterEvent)="inspectionPlan.planningWorkcenterId=$event.workCenterId"></workcenter-auto-complete>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'group' | translate}}</td>
+                  <td>
+                    <input
+                      type="number"
+                      id="group"
+                      name="group"
+                      [(ngModel)]="inspectionPlan.group"
+                      class="form-control"
+                       pattern="\d+"
+                      #group="ngModel"
+                      required
+                    />
+                    <div *ngIf="group.dirty && group.hasError('pattern')" class="alert alert-danger p-0 m-0" role="alert">
+                      <strong>It should be only number </strong>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'group-counter' | translate}}</td>
+                  <td>
+                    <input
+                      type="number"
+                      id="groupCounter"
+                      name="groupCounter"
+                      [(ngModel)]="inspectionPlan.groupCounter"
+                      class="form-control"
+                      pattern="\d+"
+                     #groupCounter="ngModel"
+                      required
+                    />
+                    <div *ngIf="groupCounter.dirty && groupCounter.hasError('pattern')" class="alert alert-danger p-0 m-0" role="alert">
+                      <strong>It should be only number </strong>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'from-lot-size' | translate}}</td>
+                  <td>
+                    <input
+                      type="number"
+                      id="fromLotSize"
+                      name="fromLotSize"
+                      [(ngModel)]="inspectionPlan.fromLotSize"
+                      class="form-control"
+                      pattern="\d+"
+                     #fromLotSize="ngModel"
+                      required
+                    />
+                    <div *ngIf="fromLotSize.dirty && fromLotSize.hasError('pattern')" class="alert alert-danger p-0 m-0" role="alert">
+                      <strong>It should be only number </strong>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'to-lot-size' | translate}}</td>
+                  <td>
+                    <input
+                      type="number"
+                      id="toLotSize"
+                      name="toLotSize"
+                      [(ngModel)]="inspectionPlan.toLotSize"
+                      class="form-control"
+                      #toLostSize="ngModel"
+                      pattern="\d+"
+                      required
+                    />
+                    <div *ngIf="toLostSize.dirty && toLostSize.hasError('pattern')" class="alert alert-danger p-0 m-0" role="alert">
+                      <strong>It should be only number </strong>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'key-date' | translate}}</td>
+                  <td>
+                    <p-calendar class="valid-from" name="keyDate" [showIcon]="true" dateFormat="dd/mm/yy"
+                      [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                      [readonlyInput]="true" [showTime]="true"
+                      required
+                      [(ngModel)]="inspectionPlan.keyDate"></p-calendar>
+                  </td>
+                </tr>
+              </table>
+            </form>
+          </div>
+        </div>
+      </p-tabPanel>
+      <p-tabPanel header="{{ 'operation' | translate }}" [disabled]="!inspectionPlan.inspectionPlanId">
+        <ng-template pTemplate="content">
+          <list-inspection-plan-operation [inspectionPlanId]="inspectionPlan.inspectionPlanId"></list-inspection-plan-operation>
+        </ng-template>
+      </p-tabPanel>
+      <div class="row col-md-12">
+        <button
+          type="submit"
+          class="btn btn-sm btn-primary"
+          [disabled]="!inspForm.form.valid"
+          (click)="save()">
+          <i class="fa fa-dot-circle-o"></i>
+          {{ "save" | translate }}
+        </button>
+        <button
+          type="button"
+          class="btn btn-sm btn-danger"
+          (click)="reset()">
+          <i class="fa fa-ban"></i>
+          {{ "reset" | translate }}
+        </button>
+      </div>
+    </p-tabView>
+  </div>
+</div>

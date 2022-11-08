@@ -1,0 +1,67 @@
+<div class="animated fadeIn">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card">
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i>{{'capacities-list' | translate}}
+          </div>
+          <div class="card-body">
+
+            <p-table [value]="capacityList" [autoLayout]="true">
+              <ng-template pTemplate="header">
+                  <tr>
+                    <th>{{'capacity-category'|translate}}</th>
+                    <th>{{'factory-calendar'|translate}}</th>
+                    <th>{{'base-unit-measure'|translate}}</th>
+                    <th>{{'start'|translate}}</th>
+                    <th>{{'finish'|translate}}</th>
+                    <th>{{'length-break'|translate}}</th>
+                    <th>{{'capacity-utilize'|translate}}</th>
+                    <th>{{'operating-time'|translate}}</th>
+                    <th>{{'number-of-individual-capacity'|translate}}</th>
+                    <th>{{'capacity'|translate}}</th>
+                  </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-item>
+                  <tr>
+                    <td>{{getCapacityCategoryById(item.capacityUnitId)}}</td>
+                    <td>{{item.factoryCalendarId}}</td>
+                    <td>{{item.baseUnitMeasurementId}}</td>
+                    <td>{{item.start | date:'HH:mm'}}</td>
+                    <td>{{item.finish | date:'HH:mm'}}</td>
+                    <td>{{item.lenghtOfBreaks | date:'HH:mm:ss'}}</td>
+                    <td>{{item.capacityUtilization}}</td>
+                    <td>{{item.operationTime}}</td>
+                    <td>{{item.numberOfIndividualCapacity}}</td>
+                    <td>{{item.capacity}}</td>
+                  </tr>
+              </ng-template>
+          </p-table>
+
+            <!-- <table class="table" style="table-layout: fixed; width: 100%">
+              <thead>
+              <tr>
+                <th>{{'capacity-category'|translate}}</th>
+                <th>{{'factory-calendar'|translate}}</th>
+                <th>{{'base-unit-measure'|translate}}</th>
+                <th>{{'start'|translate}}</th>
+                <th>{{'finish'|translate}}</th>
+                <th>{{'length-break'|translate}}</th>
+                <th>{{'capacity-utilize'|translate}}</th>
+                <th>{{'operating-time'|translate}}</th>
+                <th>{{'number-of-individual-capacity'|translate}}</th>
+                <th>{{'capacity'|translate}}</th>
+              </tr>
+
+              </thead>
+              <tbody>
+              <tr align="center"  *ngFor="let item of capacityList; let i = index">
+                
+              </tr>
+              </tbody>
+            </table> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

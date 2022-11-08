@@ -1,0 +1,267 @@
+<div class="animated fadeIn">
+  <div class="col-md-12">
+    <p-tabView>
+      <p-tabPanel header="{{'details' | translate}}">
+        <div class="card">
+          <div class="card-header">
+            {{'milestone-details' | translate}}
+          </div>
+          <div class="card-body">
+            <div class="row col-md-12">
+              <div class="col-md-6">
+                <table class="table table-bordered">
+                  <tbody>
+                    <tr>
+                      <td>{{'milestone_id'|translate}}</td>
+                      <td>{{milestoneItemdto.milestoneId}}</td>
+                    </tr>
+                    <tr>
+                      <td>{{'milestone_code'|translate}}</td>
+                      <td>{{milestoneItemdto.code}}</td>
+                    </tr>
+                    <tr>
+                      <td>{{'milestone_name'|translate}}</td>
+                      <td>{{milestoneItemdto.name}}</td>
+                    </tr>
+                    <tr>
+                      <td>{{'status'|translate}}</td>
+                      <td>{{milestoneItemdto.status}}</td>
+                    </tr>
+                     <tr>
+                      <td>{{'planned-start-date'|translate}}</td>
+                      <td>{{milestoneItemdto.startDate | date:'dd/MM/yyyy HH:mm'}}</td>
+                    </tr>
+                    <tr>
+                      <td>{{'planned-finish-date'|translate}}</td>
+                      <td>{{milestoneItemdto.finishDate | date:'dd/MM/yyyy HH:mm'}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="col-md-6">
+                <table class="table table-bordered">
+                  <tbody>
+                    <tr>
+                      <td>{{'scheduled-start-date'|translate}}</td>
+                      <td>{{milestoneItemdto.scheduledStartDate | date:'dd/MM/yyyy HH:mm'}}</td>
+                    </tr>
+                    <tr>
+                      <td>{{'scheduled-finish-date'|translate}}</td>
+                      <td>{{milestoneItemdto.scheduledFinishDate | date:'dd/MM/yyyy HH:mm'}}</td>
+                    </tr>
+                    <tr>
+                      <td>{{'actual-start-date'|translate}}</td>
+                      <td>{{milestoneItemdto.actualStartDate | date:'dd/MM/yyyy HH:mm'}}</td>
+                    </tr>
+                     <tr>
+                      <td>{{'actual-finish-date'|translate}}</td>
+                      <td>{{milestoneItemdto.actualFinishData | date:'dd/MM/yyyy HH:mm'}}</td>
+                    </tr>
+                    <tr>
+                      <td>{{'erp-start-date'|translate}}</td>
+                      <td>{{milestoneItemdto.erpPlannedStartDate | date:'dd/MM/yyyy HH:mm'}}</td>
+                    </tr>
+                     <tr>
+                      <td>{{'erp-finish-date'|translate}}</td>
+                      <td>{{milestoneItemdto.erpPlannedFinishDate | date:'dd/MM/yyyy HH:mm'}}</td>
+                    </tr>
+                    <tr>
+                      <td>{{'project'|translate}}</td>
+                      <td>
+                        <a href="javascript:;" 
+                        (click)="modalProjectShow(milestoneItemdto.project?.projectId)">
+                        {{milestoneItemdto.project?.code}} {{milestoneItemdto.project?.name}}
+                      </a>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+             </div>
+          </div>
+        </div>
+      </p-tabPanel>
+      <p-tabPanel header="{{'prod-order-list' | translate}}">
+        <p-table [value]="milestoneItemdto.prodOrderList" [paginator]="milestoneItemdto.prodOrderList?.length>10" [rows]="10" dataKey="jobOrderId"  scrollable="true" scrollHeight="42vh">
+          <ng-template pTemplate="header" let-columns>
+            <tr>
+              <th style="width: 3em">
+              </th>
+              <th> {{'prod-order-id' | translate}} </th>
+              <th> {{'warehouse' | translate}}</th>
+              <th> {{'material' | translate}}</th>
+              <th> {{'planned-quantity' | translate}}</th>
+              <th> {{'produced-quantity' | translate}}</th>
+              <th> {{'status' | translate}}</th>
+            </tr>
+          </ng-template>
+
+          <!-- let-expanded="expanded" -->
+          <ng-template pTemplate="body" let-rowData  >
+            <tr  >
+              <td style="width: 3em; font-size: 12px" >
+                <!-- <a href="#" [pRowToggler]="rowData">
+                  <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+                </a> -->
+              </td>
+              <td>
+                <a href="javascript:;" 
+                (click)="modalProdOrderShow(rowData.prodOrderId)">
+                {{rowData.prodOrderId}}</a>
+              </td>
+              <td>
+                <a href="javascript:;" 
+                (click)="modalWarehouserShow(rowData.wareHouseId)">
+                {{rowData.warehouseName}}</a>
+              </td>
+              <td>
+                <a href="javascript:;" 
+                (click)="modalMAterialShow(rowData.materialId)">
+                {{rowData.materialName}}</a>
+              </td>
+              <td>{{rowData.quantity}}</td>
+              <td>{{rowData.deliveryQuantity}}</td>
+              <td>{{rowData.prodOrderStatus}}</td>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="rowexpansion" let-rowData >
+            <tr>
+              <td colspan="7">
+                <div class="ui-g bg-white pt-1">
+                  <table class="table table-sm  table-striped table-outline bg-white" style="display: block;">
+                    <thead class="small" >
+                    <tr>
+                      <th width="10%"> {{'job-order-id' | translate}} </th>
+                      <th width="15%"> {{'component' | translate}}</th>
+                      <th width="15%"> {{'workstation' | translate}}</th>
+                      <th width="20%"> {{'material' | translate}}</th>
+                      <th width="10%"> {{'planned-quantity' | translate}}</th>
+                      <th width="10%"> {{'produced-quantity' | translate}}</th>
+                      <th width="20%"> {{'status' | translate}}</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr *ngFor="let jb of rowData.jobOrderList">
+                      <td>  <a href="javascript:;"  (click)="showJobDetail(jb.jobOrderId)">{{jb.jobOrderId}} </a></td>
+                      <td>  <div *ngIf="jb.jobOrderStockUseList">
+                        <a href="javascript:;" *ngFor="let stUse of jb.jobOrderStockUseList" (click)="showStockDetail(stUse.stockId)">{{stUse.stockName}} </a>
+                      </div>
+                      </td>
+                      <td> {{jb.workStation?.workStationName}}</td>
+                      <td>  <div *ngIf="jb.jobOrderStockProduceList">
+                        <a href="javascript:;" *ngFor="let stUse of jb.jobOrderStockProduceList" (click)="showStockDetail(stUse.stockId)">{{stUse.stockName}} </a>
+                      </div>
+                      </td>
+                      <td>{{jb.plannedQuantity}}</td>
+
+                      <ng-container *ngIf="jb.jobOrderStatus!=='COMPLETED'">
+                        <td>{{jb.producedQuantity}}</td>
+                      </ng-container>
+                      <ng-container *ngIf="jb.jobOrderStatus==='COMPLETED'">
+                        <td>
+                            <span *ngFor="let item of jb.jobOrderStockProduceList; last as isLast">
+                              <a href="javascript:;" (click)="showStockDetail(item.stockId)">{{item.stockName}}</a>: {{item.quantity}}
+                              <span *ngIf="!isLast">, </span>
+                            </span>
+                        </td>
+                      </ng-container>
+
+                      <td >{{jb.jobOrderStatus|translate}}</td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </td>
+            </tr>
+
+          </ng-template>
+          <ng-template pTemplate="emptymessage" >
+            <tr>
+              <td colspan="6" class="noData text-center">
+                <strong class=""><i class="fa fa-warning "></i>{{'NO_DATA_FOUND'|translate}}!</strong>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </p-tabPanel>
+      <p-tabPanel header="{{'project-task-list' | translate}}">
+        <p-table [value]="milestoneItemdto.projectTask" 
+        [paginator]="milestoneItemdto.projectTask?.length>10" [rows]="10" 
+        dataKey="milestoneTaskId"  scrollable="true" scrollHeight="42vh">
+          <ng-template pTemplate="header" let-columns>
+            <tr>
+              <th style="width: 3em">
+              </th>
+              <th> {{'task-id' | translate}} </th>
+              <th> {{'task-code' | translate}}</th>
+              <th> {{'milestone_code' | translate}}</th>
+              <th> {{'project_code' | translate}}</th>
+              <th> {{'workcenter' | translate}}</th>
+              <th> {{'start-date' | translate}}</th>
+              <th> {{'finish-date' | translate}}</th>
+            </tr>
+          </ng-template>
+
+          <!-- let-expanded="expanded" -->
+          <ng-template pTemplate="body" let-rowData  >
+            <tr  >
+              <td style="width: 3em; font-size: 12px" >
+                <!-- <a href="#" [pRowToggler]="rowData">
+                  <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+                </a> -->
+              </td>
+              <td>
+                {{rowData.milestoneTaskId}}
+              </td>
+              <td>
+                {{rowData.taskCode}}
+              </td>
+              <td>
+                {{rowData.mileStoneNo}}
+              </td>
+              <td>
+                <a href="javascript:;" 
+                (click)="modalProjectShow(rowData.projectId)">
+                {{rowData.projectNo}}</a>
+              </td>
+              <td>
+                <a href="javascript:;" 
+                (click)="modalWorkCenter(rowData.workCenterId)">
+                {{rowData.workCenterName}}</a>
+              </td>
+              <td>{{rowData.startDate | date:'dd/MM/yyyy HH:mm'}}</td>
+              <td>{{rowData.finishDate | date:'dd/MM/yyyy HH:mm'}}</td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage" >
+            <tr>
+              <td colspan="9" class="noData text-center">
+                <strong class=""><i class="fa fa-warning "></i>{{'NO_DATA_FOUND'|translate}}!</strong>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </p-tabPanel>
+    </p-tabView>
+  </div>
+
+  <!-- <div class="row col-md-12 ml-2">
+      <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+        {{'reset' | translate}}
+      </button>
+      [disabled]="!order.purchaseOrderDetailList||order.purchaseOrderDetailList.length==0||!saleForm.form.valid"
+      <button type="submit" class="btn btn-sm btn-primary" 
+        [disabled]="!projectDto.milestoneDtoList
+          ||projectDto.milestoneDtoList.length==0
+          ||!projectDto.status"
+        (click)="save()">
+        <i class="fa fa-dot-circle-o"></i>
+        {{'save' | translate}}
+      </button>
+  </div> -->
+</div>
+
+
+<!------------------------- Modals ---------------------------------------->

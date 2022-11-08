@@ -1,0 +1,91 @@
+<div class="ui-inputgroup  d-flex ui-fluid">
+    <p-autoComplete [disabled]="disabled" [(ngModel)]="selectedSamplingType" [suggestions]="filteredSamplingType"
+                    (completeMethod)="searchSamplingType($event)" field="samplingTypeText" [required]="required"
+                     [dropdown]="dropdown" [forceSelection]="true" dataKey="samplingTypeId"
+                     placeholder="{{placeholder|translate}}" [minLength]="1" name="samplingTypeText"
+                     (onDropdownClick)="handleDropdownClickForSamplingType()" (ngModelChange)="onChangeSamplingType($event)" >
+    </p-autoComplete>
+
+    <button *ngIf="addIfMissing" pButton icon="fa fa-plus-circle"
+        (click)="modalShow()">
+    </button>
+
+</div>
+
+<ng-template [ngIf]="modal.active">
+    <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myqualitySamplingTypeModal="bs-modal" class="modal fade"   (onHidden)="modal.active=false"
+         tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+      <div class="modal-dialog modal-success " role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">
+              <span >{{'new-quality-sampling-type' | translate}}</span>
+            </h4>
+            <button type="button" class="close" (click)="myqualitySamplingTypeModal.hide()" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="animated fadeIn">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="card">
+                    <div class="card-header">
+                      <i class="fa fa-align-justify"></i> {{'quality-sampling-type-information' | translate}}
+                    </div>
+                    <div class="card-body">   
+                      <form #inspForm="ngForm">
+                        <table class="table table-bordered">
+                          <tr>
+                            <td>{{'sampling-type-code' | translate}}</td>
+                            <td>
+                              <input
+                                type="text"
+                                id="samplingTypeCode"
+                                name="samplingTypeCode"
+                                [(ngModel)]="samplingTypeDto.samplingTypeCode"
+                                class="form-control"
+                                required
+                              />
+                            </td>
+                          </tr>
+                          <tr>
+                          <tr>
+                            <td>{{'sampling-type-text' | translate}}</td>
+                            <td>
+                              <input
+                                type="text" 
+                                id="samplingTypeText"
+                                name="samplingTypeText"
+                                [(ngModel)]="samplingTypeDto.samplingTypeText"
+                                class="form-control"
+                                required
+                              />
+                            </td>
+                          </tr>
+                        </table>
+                      </form>
+                    </div>
+                  </div>
+                  <div class="row col-md-12">
+                    <button
+                      type="submit"
+                      class="btn btn-sm btn-primary"
+                      [disabled]="!inspForm.form.valid"
+                      (click)="save(myqualitySamplingTypeModal)"
+                    >
+                      <i class="fa fa-dot-circle-o"></i>
+                      {{ "save" | translate }}
+                    </button>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+  </ng-template>

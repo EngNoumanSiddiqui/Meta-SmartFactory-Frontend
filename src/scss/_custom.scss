@@ -1,0 +1,55 @@
+// Here you can add other styles
+
+
+.sidebar .nav-dropdown.open{
+  .nav-dropdown-toggle {
+    font-size: 12px;
+    font-weight:600 ;
+  }
+  .nav-item{
+    // border-bottom: 1px solid #5d91a7;
+    border-bottom: 1px solid #3ea1b3;
+   a{
+     font-size: 12px;
+   }
+    i{
+      margin-left: 0.8rem ;
+      margin-right: 2px ;
+    }
+
+  }
+  
+
+  .bg-third.open{
+    
+    .nav-item{
+      background-color: #25b3ca !important;
+    i{
+      margin-left: 1.6rem ;
+      margin-right: 2px ;
+    }
+    }
+    .nav-dropdown-toggle {
+      font-size: 12px;
+      font-weight:600 ;
+    }
+  }
+  .bg-fourth.open{
+    
+    .nav-item{
+      background-color: #52c9dc !important;
+    i{
+      margin-left: 2.1rem ;
+      margin-right: 2px ;
+    }
+    }
+    .nav-dropdown-toggle {
+      font-size: 12px;
+      font-weight:600 ;
+    }
+  }
+}
+.largerCheckbox {
+  width: 20px;
+  height: 20px;
+}

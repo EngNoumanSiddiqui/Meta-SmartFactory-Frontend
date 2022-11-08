@@ -1,0 +1,9 @@
+<div class="  d-flex ui-fluid">
+    <p-autoComplete [disabled]="disabled" [(ngModel)]="selectedEquipment" [suggestions]="filteredEquipment"
+                    (completeMethod)="searchEquipment($event)" field="equipmentName" [required]="required"
+                     [dropdown]="dropdown" [forceSelection]="true" dataKey="equipmentId"
+                     placeholder="{{placeholder|translate}}" [minLength]="1" name="equipment"
+                     (onDropdownClick)="handleDropdownClickForEquipment()" (ngModelChange)="onChangeEquipment($event)" >
+    </p-autoComplete>
+
+</div>

@@ -1,0 +1,1343 @@
+<div class="animated fadeIn">
+  <div class="row text-center noData" *ngIf="!isLoading() && (!jobDetail)">
+    <strong class=""><i class="fa fa-warning "></i>{{'NO_JOB_DETAIL_FOUND'|translate}}!</strong>
+  </div>
+
+  <button *ngIf="jobDetail" type="button" style="margin-right: 5px" class="btn rounded btn-warning float-right"
+    (click)="getPrintHtmlDocument()"><i class="fa fa-file"></i> {{'print-document' | translate}}</button>
+  <print-component [active]="printComponent.active" [editMode]="true" [requestPrintDto]="requestPrintDto"
+    (activeEvent)="printComponent.active=$event"></print-component>
+
+  <p-tabView #jobOrderTabView *ngIf="jobDetail">
+    <p-tabPanel header="{{'job-detail' | translate}}">
+      <div class="row justify-content-end">
+        <button pButton type="button" style="margin-right: 15px;"
+        icon="fa fa-refresh" name="refresh" (click)="initialize(jobDetail.jobOrderId)"></button>
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          <table class="table table-sm   table-outline bg-white">
+            <thead class="table-secondary">
+              <tr>
+                <th colspan="2">{{'job-detail' | translate}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td width="30%">{{'prod-order-id' | translate}}<span class="float-right">:</span></td>
+                <td> <a href="javascript:;" (click)="showProductionOrderModal(jobDetail?.prodOrder?.prodOrderId)"> {{jobDetail?.prodOrder?.prodOrderId}}</a></td>
+              </tr>
+              <tr>
+                <td width="30%">{{'job-order-id' | translate}}<span class="float-right">:</span></td>
+                <td> {{jobDetail.jobOrderId}}</td>
+              </tr>
+              <tr>
+                <td width="30%">{{'output-material' | translate}}<span class="float-right">:</span></td>
+                <td>
+                  <a href="javascript:;" (click)="showStockDetail(jobDetail.jobOrderOperations[0].jobOrderStockProduceList[0].stockId)">
+                {{jobDetail.jobOrderOperations[0].jobOrderStockProduceList[0].stockNo}}</a> ||
+                <a href="javascript:;" (click)="showStockDetail(jobDetail.jobOrderOperations[0].jobOrderStockProduceList[0].stockId)">
+                {{jobDetail.jobOrderOperations[0].jobOrderStockProduceList[0].stockName}}</a>
+              </td>
+              </tr>
+              <!-- <tr>
+                <td width="30%">{{'workstation' | translate}}<span class="float-right">:</span></td>
+                <td>
+                  <a href="javascript:;" (click)="showWorkstationDetail(jobDetail.workStation?.workStationId)">
+                    {{jobDetail.workStation?.workStationName}}</a>
+                </td>
+              </tr> -->
+              <tr>
+                <td width="30%">{{'planned-quantity' | translate}}<span class="float-right">:</span></td>
+                <td> {{jobDetail.plannedQuantity}}</td>
+              </tr>
+              <tr>
+                <td width="30%">{{'job-order-status' | translate}}<span class="float-right">:</span></td>
+                <td style="word-break: break-word;"> {{jobDetail.jobOrderStatus}}</td>
+              </tr>
+              <tr>
+                <td width="30%">{{'custom-job-order-status' | translate}}<span class="float-right">:</span></td>
+                <td> {{jobDetail.customerJobOrderStatus}}</td>
+              </tr>
+              <tr>
+                <td width="30%">{{'job-order-index' | translate}}<span class="float-right">:</span></td>
+                <td> {{jobDetail.orderIndex}}</td>
+              </tr>
+              <tr>
+                <td width="30%">{{'production-type' | translate}}<span class="float-right">:</span></td>
+                <td> {{jobDetail.productionType}}</td>
+              </tr>
+              <tr>
+                <td width="30%">{{'position' | translate}}<span class="float-right">:</span></td>
+                <td> {{jobDetail.position}}</td>
+              </tr>
+
+              <tr>
+                <td width="30%">{{'batch' | translate}}<span class="float-right">:</span></td>
+                <td>
+                  <a href="javascript:;" (click)="showBatchDetail(jobDetail?.batch)"> {{jobDetail?.batch}}</a>
+                </td>
+              </tr>
+
+              <tr>
+                <td width="30%">{{'job-order-reference-id' | translate}}<span class="float-right">:</span></td>
+                <td>{{jobDetail?.referenceId}}</td>
+              </tr>
+
+              <tr>
+                <td width="30%">{{'skill-group' | translate}}<span class="float-right">:</span></td>
+                <td>{{jobDetail?.employeeGenericGroupList}}</td>
+              </tr>
+
+              <tr>
+                <td width="30%">{{'prod-order-reference-id' | translate}}<span class="float-right">:</span></td>
+                <td>{{jobDetail?.prodOrder?.referenceId}}</td>
+              </tr>
+              <!-- <tr>
+                <td width="30%">{{'operation-repeat' | translate}}<span class="float-right">:</span></td>
+                <td> {{jobDetail.operationRepeat}}</td>
+              </tr>
+              <tr>
+                <td width="30%">{{'process-control-frequency' | translate}}<span class="float-right">:</span></td>
+                <td> {{jobDetail.processControlFrequency}}</td>
+              </tr>
+              <tr>
+                <td width="30%">{{'single-setup-duration' | translate}}<span class="float-right">:</span></td>
+                <td> {{getReadableTime(jobDetail.singleSetupDuration)}}</td>
+              </tr>
+              <tr>
+                <td width="30%">{{'single-duration' | translate}}<span class="float-right">:</span></td>
+                <td> {{getReadableTime(jobDetail.singleDuration)}}</td>
+              </tr>
+              <tr>
+                <td width="30%">{{'single-standby-duration' | translate}}<span class="float-right">:</span></td>
+                <td> {{getReadableTime(jobDetail.singleStandbyDuration)}}</td>
+              </tr>
+              <tr>
+                <td width="30%">{{'max-single-standby-duration' | translate}}<span class="float-right">:</span></td>
+                <td> {{getReadableTime(jobDetail.maxSingleStandbyDuration)}}</td>
+              </tr> -->
+              <tr *ngIf="jobDetail.reverse">
+                <td width="30%">{{'reverse' | translate}}<span class="float-right">:</span></td>
+                <td> {{(jobDetail.reverse ? 'Yes' : 'No')}}</td>
+              </tr>
+
+              <tr *ngIf="jobDetail?.previousJobOrderId > 0">
+                <td width="30%">{{'next-job-order-id' | translate}}<span class="float-right">:</span></td>
+                <td><a href="javascript:;" (click)="showJobOrderDialog(jobDetail?.previousJobOrderId)">{{jobDetail?.previousJobOrderId}}</a></td>
+              </tr>
+
+              <tr *ngIf="jobDetail?.minimumDetayTime">
+                <td width="30%">{{'minimum-delay-time' | translate}}<span class="float-right">:</span></td>
+                <td> {{jobDetail?.minimumDetayTime}}</td>
+              </tr>
+
+              <tr *ngIf="jobDetail.parentId">
+                <td width="30%">{{'parent-job-id' | translate}} <span class="float-right">:</span></td>
+                <td (click)="showDetail(jobDetail.parentId)">
+                  <strong><a href="javascript:;" class="text-info"> {{jobDetail.parentId}}</a></strong>
+                </td>
+              </tr>
+
+              <tr *ngIf="jobDetail.dividedParentId">
+                <td width="30%">{{'divided-parent-job-id' | translate}} <span class="float-right">:</span></td>
+                <td (click)="showDetail(jobDetail.dividedParentId)">
+                  <strong><a href="javascript:;" class="text-info"> {{jobDetail.dividedParentId}}</a></strong>
+                </td>
+              </tr>
+              <tr *ngIf="jobDetail.combinedParentId">
+                <td width="30%">{{'combined-parent-job-id' | translate}} <span class="float-right">:</span></td>
+                <td (click)="showDetail(jobDetail.combinedParentId)">
+                  <strong><a href="javascript:;" class="text-info"> {{jobDetail.combinedParentId}}</a></strong>
+                </td>
+              </tr>
+
+
+              <tr>
+                <td width="30%">{{'description' | translate}}<span class="float-right">:</span></td>
+                <td> {{jobDetail.description}}</td>
+              </tr>
+              <!--            <tr>-->
+              <!--              <td width="30%">{{'operation-name' | translate}}<span class="float-right">:</span></td>-->
+              <!--              <td> {{jobDetail.operationUseName}}</td>-->
+              <!--            </tr>-->
+              <tr>
+                <td width="30%"> {{'create-date' |translate}}<span class="float-right">:</span></td>
+                <td>{{jobDetail.createDate|date:"dd/MM/yyyy HH:mm" }}</td>
+              </tr>
+              <tr>
+                <td width="30%"> {{'planned-start' |translate}}<span class="float-right">:</span></td>
+                <td>{{jobDetail.startDate|date:"dd/MM/yyyy HH:mm:ss" }}</td>
+              </tr>
+              <tr>
+                <td width="30%"> {{'planned-finish' |translate}}<span class="float-right">:</span></td>
+                <td>{{jobDetail.finishDate|date:"dd/MM/yyyy HH:mm:ss"}}</td>
+              </tr>
+              <tr>
+                <td width="30%"> {{'planned-production-order-start-date' |translate}}<span class="float-right">:</span></td>
+                <td>{{jobDetail.prodOrder?.startDate|date:"dd/MM/yyyy HH:mm:ss" }}</td>
+              </tr>
+              <tr>
+                <td width="30%"> {{'planned-production-order-finish-date' |translate}}<span class="float-right">:</span></td>
+                <td>{{jobDetail.prodOrder?.finishDate|date:"dd/MM/yyyy HH:mm:ss"}}</td>
+              </tr>
+              <ng-container *ngIf="jobDetail.jobOrderStatus=='PROCESSING'||jobDetail.jobOrderStatus=='COMPLETED'">
+                <tr>
+                  <td> {{'actual-start' |translate}}<span class="float-right">:</span></td>
+                  <td>{{jobDetail.actualStart|date:"dd/MM/yyyy HH:mm:ss" }}</td>
+                </tr>
+                <tr>
+                  <td width="30%"> {{'actual-finish' |translate}}<span class="float-right">:</span></td>
+                  <td>{{jobDetail.actualFinish|date:"dd/MM/yyyy HH:mm:ss"}}</td>
+                </tr>
+              </ng-container>
+              <ng-container *ngIf="jobDetail.jobOrderStatus=='COMPLETED'">
+                <tr class="table-warning">
+                  <td width="30%"> {{'planned-duration' |translate}}<span class="float-right">:</span></td>
+                  <td>{{jobDetail.plannedDuration}}</td>
+                </tr>
+                <tr class="table-info">
+                  <td width="30%"> {{'operation-duration' |translate}}<span class="float-right">:</span></td>
+                  <td>{{jobDetail.operationDuration}}</td>
+                </tr>
+                <!-- <tr class="table-success">
+                  <td width="30%">{{'produced-quantity' | translate}}<span class="float-right">:</span></td>
+                  <td>
+                    <span *ngFor="let item of jobDetail.jobOrderStockProduceList; last as isLast">
+                      <a href="javascript:;" (click)="showStockDetail(item.stockId)">{{item.stockName}}</a>:
+                      {{item.quantity}}
+                      <span *ngIf="!isLast">, </span>
+                    </span>
+                  </td>
+                </tr>
+                <tr class="table-success">
+                  <td width="30%">{{'scrap-quantity' | translate}}<span class="float-right">:</span></td>
+                  <td>
+                    <span *ngFor="let item of jobDetail.jobOrderStockProduceList; last as isLast">
+                      <a href="javascript:;" (click)="showStockDetail(item.stockId)">{{item.stockName}}</a>:
+                      {{item.defectQuantity}}
+                      <span *ngIf="!isLast">, </span>
+                    </span>
+                  </td>
+                </tr>
+                <tr class="table-success">
+                  <td width="30%">{{'rework-quantity' | translate}}<span class="float-right">:</span></td>
+                  <td>
+                    <span *ngFor="let item of jobDetail.jobOrderStockProduceList; last as isLast">
+                      <a href="javascript:;" (click)="showStockDetail(item.stockId)">{{item.stockName}}</a>:
+                      {{item.reworkQuantity}}
+                      <span *ngIf="!isLast">, </span>
+                    </span>
+                  </td>
+                </tr> -->
+              </ng-container>
+              <tr>
+                <td width="30%"> {{'manual-planned' |translate}}<span class="float-right">:</span></td>
+                <td>{{(jobDetail.manualPlanned? 'yes' : 'no') |translate }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="col-md-8">
+          <p-tabView>
+
+            <!-- <p-tabPanel header="{{'components' | translate}}">
+              <job-order-component-list [tableData]="jobDetail.jobOrderStockUseList" [detailMode]="true"></job-order-component-list>
+            </p-tabPanel>
+
+            <p-tabPanel header="{{'materials' | translate}}">
+              <job-order-component-list [tableData]="jobDetail.jobOrderStockProduceList" [detailMode]="true">
+              </job-order-component-list>
+            </p-tabPanel>
+
+            <p-tabPanel header="{{'auxiliary-materials' | translate}}">
+              <job-order-component-list [tableData]="jobDetail.jobOrderStockAuxList" [detailMode]="true">
+              </job-order-component-list>
+            </p-tabPanel> -->
+
+            <p-tabPanel header="{{'operations' | translate}}">
+                  <job-order-operation-list [tableData]="jobDetail" [detailMode]="true"></job-order-operation-list>
+
+              <!-- <p-tabView>
+
+                <p-tabPanel  header="{{'details' | translate}}">
+                  <job-order-operation-list [tableData]="jobDetail.jobOrderOperations" [detailMode]="true"></job-order-operation-list>
+                </p-tabPanel>
+
+                <p-tabPanel header="{{'components' | translate}}">
+                  <job-order-component-list [tableData]="jobDetail.jobOrderStockUseList" [detailMode]="true"></job-order-component-list>
+                </p-tabPanel>
+
+                <p-tabPanel header="{{'materials' | translate}}">
+                  <job-order-component-list [tableData]="jobDetail.jobOrderStockProduceList" [detailMode]="true">
+                  </job-order-component-list>
+                </p-tabPanel>
+
+                <p-tabPanel header="{{'auxiliary-materials' | translate}}">
+                  <job-order-component-list [tableData]="jobDetail.jobOrderStockAuxList" [detailMode]="true">
+                  </job-order-component-list>
+                </p-tabPanel>
+              </p-tabView> -->
+
+            </p-tabPanel>
+            <p-tabPanel header="{{'equipments' | translate}}">
+              <job-order-equipment-list [tableData]="jobDetail.jobOrderEquipmentList" [detailMode]="true">
+              </job-order-equipment-list>
+            </p-tabPanel>
+
+          </p-tabView>
+          </div>
+      </div>
+    </p-tabPanel>
+    <!-- <p-tabPanel *ngIf="employeeList.length > 0" header="{{'employee-list' | translate}}">
+      <div class="row">
+        <div class="col-md-6">
+          <table class="table table-bordered b-0">
+            <thead>
+              <tr class="table-secondary">
+                <th>{{'employee-id' |translate}}</th>
+                <th>{{'first-name' |translate}}</th>
+                <th>{{'last-name' |translate}}</th>
+                <th>{{'group-type' |translate}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let empl of employeeList">
+                <td>
+                  <a href="javascript:;"
+                  (click)="showEmployeeDetail(empl.employeeId)">{{empl.employeeId}}</a>
+                </td>
+                <td>
+                  <a href="javascript:;"
+                  (click)="showEmployeeDetail(empl.employeeId)">{{empl.firstName}}</a>
+                </td>
+                <td>
+                  <a href="javascript:;"
+                  (click)="showEmployeeDetail(empl.employeeId)">{{empl.lastName}}</a>
+                </td>
+                <td>{{empl.groupType}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </p-tabPanel> -->
+    <p-tabPanel *ngIf="jobDetail.orderDetail" header="{{'sales-order-detail' | translate}}">
+      <div class="row">
+        <div class="col-md-6">
+          <table class="table table-sm  table-outline  mb-0">
+            <thead class="table-secondary ">
+              <tr>
+                <th colspan="2"> {{'sales-order-detail'|translate}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td width="30%"> {{'sales-order-id' |translate}}<span class="float-right">:</span></td>
+                <td><a href="javascript:;"
+                  (click)="showSalesOrderDetail(jobDetail.orderDetail.order.orderId)">{{jobDetail.orderDetail?.order?.orderId}}</a>
+              </td>
+              </tr>
+              <tr>
+                <td width="30%"> {{'sales-order-detail-id' |translate}}<span class="float-right">:</span></td>
+                <td><a href="javascript:;"
+                  (click)="showOrderDetails(jobDetail.orderDetail.orderId)">{{jobDetail.orderDetail?.orderId}}</a>
+              </td>
+              </tr>
+              <tr>
+                <td width="30%"> {{'customer' |translate}}<span class="float-right">:</span></td>
+                <td><a href="javascript:;"
+                    (click)="showCustomerDetail(jobDetail.orderDetail.order.actId)">{{jobDetail.orderDetail?.order?.actName}}</a>
+                </td>
+              </tr>
+              <tr>
+                <td width="30%"> {{'order-quantity' |translate}}<span class="float-right">:</span></td>
+                <td>{{jobDetail.orderDetail.quantity}}</td>
+              </tr>
+
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </p-tabPanel>
+    <p-tabPanel *ngIf="jobDetail.childJobOrders&&jobDetail.childJobOrders.length>0" header="{{'child-job'|translate}}">
+      <div class="row">
+        <div class="col-md-12">
+          <table class="table table-sm bg-white table-outline">
+            <thead class="table-secondary">
+              <tr align="center">
+                <th colspan="6">
+                  {{'child-job-orders'|translate}}
+                </th>
+              </tr>
+              <tr>
+                <th>{{'job-order-id' | translate}}</th>
+                <th> {{'workstation' | translate}}</th>
+                <th> {{'component' | translate}}</th>
+                <th> {{'material' | translate}}</th>
+                <th> {{'operation' | translate}}</th>
+                <th> {{'planned-quantity' | translate}}</th>
+                <th> {{'position' | translate}}</th>
+                <th> {{'status' | translate}}</th>
+
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let child of jobDetail.childJobOrders">
+                <td (click)="showDetail(child.jobOrderId)"><strong><a href="javascript:;" class="text-info">
+                      {{child.jobOrderId}}</a></strong></td>
+                <td>{{child.workStation?.workStationName}}</td>
+                <!--              <td>-->
+                <!--                <div *ngIf="child.jobOrderStockProduceList">-->
+                <!--                  <span *ngFor="let stToPr of child.jobOrderStockProduceList">{{stToPr.stockName}} </span>-->
+                <!--                </div>-->
+                <!--              </td>-->
+
+                <!--              <td>{{getComponentList(child.jobOrderStockUseList)}}</td>-->
+                <!--              <td>{{getMaterialList(child.jobOrderStockProduceList)}}</td>-->
+                <!--              <td>{{getOperationList(child.jobOrderOperations)}}</td>-->
+                <td>
+                  <span *ngFor="let item of child.jobOrderStockUseList; last as isLast">
+                    <a href="javascript:;" (click)="showStockDetail(item.stockId)">{{item.stockName}}</a>
+                    <span *ngIf="!isLast">, </span>
+                  </span>
+                </td>
+                <td>
+                  <span *ngFor="let item of child.jobOrderStockProduceList; last as isLast">
+                    <a href="javascript:;" (click)="showStockDetail(item.stockId)">{{item.stockName}}</a>
+                    <span *ngIf="!isLast">, </span>
+                  </span>
+                </td>
+                <td>
+                  <span *ngFor="let item of child.jobOrderOperations; last as isLast">
+                    <a href="javascript:;" (click)="showOperationDetail(item.operationId)">{{item.operationName}}</a>
+                    <span *ngIf="!isLast">, </span>
+                  </span>
+                </td>
+
+                <td> {{child.plannedQuantity}}</td>
+                <td>{{child.position|translate}}</td>
+                <td>{{child.jobOrderStatus|translate}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </p-tabPanel>
+    <p-tabPanel *ngIf="jobDetail.jobOrderCombinedList" header="{{'combine-job'|translate}}">
+      <div class="row">
+        <div class="col-md-12">
+
+          <table class="table table-sm bg-white table-outline">
+            <thead class="table-secondary">
+              <tr align="center">
+                <th colspan="6">
+                  {{'combined-job-orders'|translate}}
+                </th>
+              </tr>
+              <tr>
+                <th>{{'job-order-id' | translate}}</th>
+                <th> {{'workstation' | translate}}</th>
+                <th> {{'component' | translate}}</th>
+                <th> {{'material' | translate}}</th>
+                <th> {{'operation' | translate}}</th>
+                <th> {{'planned-quantity' | translate}}</th>
+                <th> {{'position' | translate}}</th>
+                <th> {{'status' | translate}}</th>
+
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let child of jobDetail.jobOrderCombinedList">
+                <td (click)="showDetail(child.jobOrderId)"><strong><a href="javascript:;" class="text-info">
+                      {{child.jobOrderId}}</a></strong></td>
+                <td>{{child.workStation?.workStationName}}</td>
+                <!--              <td>-->
+                <!--                <div *ngIf="child.jobOrderStockProduceList">-->
+                <!--                  <span *ngFor="let stToPr of child.jobOrderStockProduceList">{{stToPr.stockName}} </span>-->
+                <!--                </div>-->
+                <!--              </td>-->
+
+                <!--              <td>{{getComponentList(child.jobOrderStockUseList)}}</td>-->
+                <!--              <td>{{getMaterialList(child.jobOrderStockProduceList)}}</td>-->
+                <!--              <td>{{getOperationList(child.jobOrderOperations)}}</td>-->
+                <td>
+                  <span *ngFor="let item of child.jobOrderStockUseList; last as isLast">
+                    <a href="javascript:;" (click)="showStockDetail(item.stockId)">{{item.stockName}}</a>
+                    <span *ngIf="!isLast">, </span>
+                  </span>
+                </td>
+                <td>
+                  <span *ngFor="let item of child.jobOrderStockProduceList; last as isLast">
+                    <a href="javascript:;" (click)="showStockDetail(item.stockId)">{{item.stockName}}</a>
+                    <span *ngIf="!isLast">, </span>
+                  </span>
+                </td>
+                <td>
+                  <span *ngFor="let item of child.jobOrderOperations; last as isLast">
+                    <a href="javascript:;" (click)="showOperationDetail(item.operationId)">{{item.operationName}}</a>
+                    <span *ngIf="!isLast">, </span>
+                  </span>
+                </td>
+
+                <td> {{child.plannedQuantity}}</td>
+                <td>{{child.position|translate}}</td>
+                <td>{{child.jobOrderStatus|translate}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </p-tabPanel>
+    <p-tabPanel *ngIf="jobDetail.jobOrderDividedList" header="{{'divided-job'|translate}}">
+      <div class="row">
+        <div class="col-md-12">
+          <table class="table table-sm bg-white table-outline">
+            <thead class="table-secondary">
+              <tr align="center">
+                <th colspan="6">
+                  {{'divided-job-orders'|translate}}
+                </th>
+              </tr>
+              <tr>
+                <th>{{'job-order-id' | translate}}</th>
+                <th> {{'workstation' | translate}}</th>
+                <th> {{'material' | translate}}</th>
+                <th> {{'planned-quantity' | translate}}</th>
+                <th> {{'position' | translate}}</th>
+                <th> {{'status' | translate}}</th>
+
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let child of jobDetail.jobOrderDividedList">
+                <td (click)="showDetail(child.jobOrderId)"><strong><a href="javascript:;" class="text-info">
+                      {{child.jobOrderId}}</a></strong></td>
+                <td>{{child.workStationName}}</td>
+                <td>
+                  <div *ngIf="child.jobOrderStockProduceList">
+                    <span *ngFor="let stToPr of child.jobOrderStockProduceList">{{stToPr.stockName}} </span>
+                  </div>
+                </td>
+                <td> {{child.plannedQuantity}}</td>
+                <td>{{child.position|translate}}</td>
+                <td>{{child.jobOrderStatus|translate}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </p-tabPanel>
+    <p-tabPanel header="{{'reservation-list'|translate}}">
+      <div class="row justify-content-end">
+        <div class="col-3" style="align-items: center;justify-content: end;display: flex;">
+          <label class="col-4 p-0 mb-0">{{'show-cancelled' |translate}}</label>
+          <p-checkbox class="p-0" name="showCancelled"  binary="true"
+          [(ngModel)]="showCancelled" (ngModelChange)="onShowCancelledChanged($event)"></p-checkbox>
+        </div>
+        <button pButton type="button" style="margin-right: 15px;"
+        icon="fa fa-refresh" name="refresh" (click)="initialize(jobDetail.jobOrderId)"></button>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <p-table class="ui-modal-table" [columns]="reservationSelectedColumns" [value]="reservationList" autoLayout="true">
+            <ng-template pTemplate="caption">
+              <div class="row">
+                <p-multiSelect class="col-md-3" [options]="reservationCols" [(ngModel)]="reservationSelectedColumns"
+                  optionLabel="header" maxSelectedLabels="0" selectedItemsLabel="{{'columns-selected'|translate}}"
+                  [style]="{minWidth: '200px'}" defaultLabel="Choose Columns">
+                  <ng-template let-col let-i="index" pTemplate="item">
+                    {{col.label|translate}}
+                  </ng-template>
+                </p-multiSelect>
+                <div class="col-md-5" style="text-align: center;align-self: center;">
+                  {{'reservation-list'|translate}}
+                </div>
+              </div>
+            </ng-template>
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th style="width: 3em" rowspan="2">
+                </th>
+                <th *ngFor="let col of columns">
+                  {{col.header | translate}}
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr>
+                <td style="width: 3em">
+                  <button class="btn btn-sm btn-outline-primary" type="button"
+                  (click)="showEditReservationModal(rowData)">
+                    <i class="fa fa-edit"></i></button>
+                  <button class="btn btn-sm btn-outline-secondary" type="button"
+                  (click)="showReservationModal(rowData)">
+                    <i class="fa fa-search"></i></button>
+
+                </td>
+                <td [class.bg-danger]="col.field === 'requirementQuantity' && rowData['requirementQuantity'] > rowData['deliveredQuantity']" *ngFor="let col of columns" style="cursor: pointer" [ngSwitch]="col.field">
+
+                  <ng-container *ngSwitchCase="'itemNo'">
+
+                    <span *ngIf="rowData.movementType === 'RESERVATION_FOR_SALE_ORDER'" >
+                      <a href="javascript:;" (click)="showSalesOrderDetailItem(rowData.orderDetailId)" > {{rowData.itemNo}}</a>
+                    </span>
+
+                    <span *ngIf="rowData.movementType === 'RESERVATION_FOR_PRODUCTION_ORDER'">
+                      <a href="javascript:;" (click)="showProdOrderDetail(rowData.prodOrderId)" > {{rowData.itemNo}}</a>
+                    </span>
+
+                    <span *ngIf="rowData.movementType === 'RESERVATION_FOR_JOB_ORDER'">
+                      <a href="javascript:;" (click)="showJobOrderDetail(rowData.itemNo)" > {{rowData.itemNo}}</a>
+                    </span>
+
+                  </ng-container>
+
+                  <a *ngSwitchCase="'reservationId'" href="javascript:;" (click)="showReservationDialog(rowData.reservationId)">{{rowData[col.field]}}</a>
+
+                  <a href="javascript:;" *ngSwitchCase="'batch'" (click)="showBatchDetail(rowData.batch)">{{rowData.batch}}</a>
+
+                  <a href="javascript:;" *ngSwitchCase="'warehouseName'"
+                  (click)="showWarehouseDetail(rowData.warehouseId)" > {{rowData.warehouseName}}</a>
+                  <a href="javascript:;" *ngSwitchCase="'warehouseFromName'"
+                  (click)="showWarehouseDetail(rowData.fromWareHouse?.wareHouseId)" >
+                  {{rowData.fromWareHouse?.wareHouseName}}</a>
+                  <a href="javascript:;" *ngSwitchCase="'waitingForJobOrderOperationId'"
+                  (click)="showJobORderOperationDetail(rowData.waitingForJobOrderOperationId)">{{rowData.waitingForJobOrderOperationId}}</a>
+
+                  <a href="javascript:;" *ngSwitchCase="'plantName'" (click)="showPlantDetail(rowData.plantId)">{{rowData.plantName}}</a>
+
+                  <p-checkbox *ngSwitchCase="'finalIssue'" name="finalIssue" binary="true" disabled="true"
+                    [(ngModel)]="rowData.finalIssue" pTooltip="{{'final-issue'  | translate}}" tooltipPosition="top">
+                  </p-checkbox>
+                  <a *ngSwitchCase="'materialNo'" href="javascript:;"
+                  (click)="showStockDetail(rowData.materialId)">{{rowData[col.field]}}</a>
+                  <a *ngSwitchCase="'materialName'" href="javascript:;"
+                    (click)="showStockDetail(rowData.materialId)">{{rowData[col.field]}}</a>
+                  <a *ngSwitchCase="'purchaseOrderDetailId'" href="javascript:;"
+                    (click)="showPurchaseOrderDetailItem(rowData.purchaseOrderDetailId)">{{rowData[col.field]}}</a>
+                  <span *ngSwitchCase="'requirementQuantity'" [class.text-white]="rowData['requirementQuantity'] > rowData['deliveredQuantity']"> {{rowData[col.field] | number}} </span>
+                  <span *ngSwitchCase="'deliveredQuantity'"> {{rowData[col.field] | number}} </span>
+                  <span *ngSwitchDefault> {{rowData[col.field]}} </span>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+    </p-tabPanel>
+    <p-tabPanel *ngIf="jobDetail.palletList" header="{{'pallet-list'|translate}}">
+      <div class="row justify-content-end">
+        <button pButton type="button" style="margin-right: 15px;"
+        icon="fa fa-refresh" name="refresh" (click)="initialize(jobDetail.jobOrderId)"></button>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <p-table class="ui-modal-table" [columns]="palletSelectedColumns" [value]="jobDetail.palletList" [dataKey]="'palletId'">
+            <ng-template pTemplate="header" let-columns>
+                <tr>
+                  <th style="width: 3em"></th>
+                    <th *ngFor="let col of columns">
+                        {{col.header | translate}}
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-expanded="expanded" let-columns="columns">
+              <tr>
+                <td>
+                  <a href="#" [pRowToggler]="rowData">
+                    <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+                  </a>
+                </td>
+                <td *ngFor="let col of columns" style="cursor: pointer"
+                  [ngSwitch]="col.field">
+                  <a href="javascript:;" *ngSwitchCase="'palletId'" (click)="showPalletDetail(rowData.palletId)" > {{rowData.palletId}}</a>
+                  <a href="javascript:;" *ngSwitchCase="'batch'" (click)="showBatchDetail(rowData.batch)" > {{rowData.batch}}</a>
+                  <a *ngSwitchCase="'stock'" href="javascript:;" (click)="showStockDetail(rowData[col.field]?.stockId)">{{rowData[col.field]?.stockName}}</a>
+                  <span *ngSwitchCase="'jobOrder'"> </span>
+                  <span *ngSwitchCase="'unit'"> {{rowData.stock?.baseUnit}} </span>
+                  <span *ngSwitchCase="'wareHouse'"> {{rowData[col.field]?.wareHouseName}} </span>
+                  <span *ngSwitchCase="'updateDate'"> {{rowData[col.field] | date:'dd/mm/yyyy HH:mm'}} </span>
+                  <span *ngSwitchCase="'createDate'"> {{rowData[col.field] | date:'dd/mm/yyyy HH:mm'}} </span>
+                  <span *ngSwitchDefault> {{rowData[col.field]}} </span>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="rowexpansion" let-rowData let-columns="columns">
+              <tr>
+                <td colspan="2"></td>
+                <td colspan="2">
+                  <tr><td><strong>{{'stock-no' | translate}}</strong> :
+                    <a href="javascript:;"
+                    (click)="showStockDetail(rowData.stock?.stockId)" > {{rowData.stock?.stockNo}}</a>
+                    </td></tr>
+                  <tr><td><strong>{{'stock' | translate}}</strong> :
+                    <a href="javascript:;"
+                    (click)="showStockDetail(rowData.stock?.stockId)" >
+                    {{rowData.stock?.stockName}}</a>
+                  </td></tr>
+                  <tr><td><strong>{{'warehouse' | translate}}</strong> :
+                    <a href="javascript:;"
+                    (click)="showWarehouseDetail(rowData.wareHouse?.wareHouseId)" > {{rowData.wareHouse?.wareHouseName}}</a>
+                  </td></tr>
+                </td>
+                <td colspan="2">
+                  <tr><td><strong>{{'job-order-id' | translate}}</strong> :
+                    <a href="javascript:;"
+                    (click)="showJobOrderDialog(rowData.jobOrder?.jobOrderId)" >
+                    {{rowData.jobOrder?.jobOrderId}}
+                    </a>
+                  </td></tr>
+                  <tr><td><strong>{{'job-order-operation-id' | translate}}</strong> :
+                    <a href="javascript:;"
+                    (click)="showJobOrderOperationDialog(rowData.jobOrderOperationId)" >
+                    {{rowData.jobOrderOperationId}} </a></td></tr>
+                  <tr><td><strong>{{'batch' | translate}}</strong> : {{rowData.batch}}</td></tr>
+                  <tr><td><strong>{{'create-date' | translate}}</strong> : {{rowData.createDate | date:'dd/MM/yyyy HH:mm'}}</td></tr>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+    </div>
+    </p-tabPanel>
+    <p-tabPanel *ngIf="inputStockTransferNotificationDetailList" header="{{'input-notifications'|translate}}">
+      <div class="row justify-content-end">
+        <button pButton type="button" style="margin-right: 15px;"
+        icon="fa fa-refresh" name="refresh" (click)="initialize(jobDetail.jobOrderId)"></button>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <p-table class="ui-modal-table" [columns]="notificationSelectedColumns" [value]="inputStockTransferNotificationDetailList"
+            [dataKey]="'stockTransferNotificationDetailId'">
+
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th style="width: 3em"></th>
+                <ng-container *ngFor="let col of columns" [ngSwitch]="col.field">
+                  <th *ngSwitchDefault>{{col.header | translate}}</th>
+                  <th *ngSwitchCase="'quantity'" style="width: 4em;">{{col.header | translate}}</th>
+                  <th *ngSwitchCase="'baseUnit'" style="width: 4em;">{{col.header | translate}}</th>
+                  <th *ngSwitchCase="'stockTransferReceiptNotificationId'" style="width: 4em;">{{col.header | translate}}</th>
+                  <th *ngSwitchCase="'stockTransferNotificationDetailId'" style="width: 5em;">{{col.header | translate}}</th>
+                </ng-container>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-expanded="expanded" let-columns="columns">
+              <tr>
+                <td>
+                  <a href="#" [pRowToggler]="rowData">
+                    <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+                  </a>
+                </td>
+                <td *ngFor="let col of columns" style="cursor: pointer" [ngSwitch]="col.field">
+
+                  <a href="javascript:;" *ngSwitchCase="'stockTransferReceiptNotificationId'" (click)="showStockTransferReceiptNotificationModal(rowData.stockTransferReceiptNotificationId)">{{rowData.stockTransferReceiptNotificationId}}</a>
+                  <span *ngSwitchCase="'stockTransferNotificationDetailId'">{{rowData.stockTransferNotificationDetailId}}</span>
+                  <a href="javascript:;" *ngSwitchCase="'batch'" (click)="showBatchDetail(rowData.batch)">{{rowData.batch}}</a>
+                  <a *ngSwitchCase="'materialNo'" href="javascript:;" (click)="showStockDetail(rowData.materialId)">{{rowData[col.field]}}</a>
+                  <a *ngSwitchCase="'materialName'" href="javascript:;" (click)="showStockDetail(rowData.materialId)">{{rowData[col.field]}}</a>
+
+                  <a href="javascript:;" *ngSwitchCase="'wareHouseFromName'" (click)="showWarehouseDetail(rowData.wareHouseFromId)"> {{rowData.wareHouseFromName}}</a>
+                  <a href="javascript:;" *ngSwitchCase="'wareHouseToName'" (click)="showWarehouseDetail(rowData.wareHouseToId)"> {{rowData.wareHouseToName}}</a>
+
+                  <span *ngSwitchCase="'pallet'"> {{rowData[col.field]?.palletId}} </span>
+                  <span *ngSwitchCase="'postingDate'"> {{rowData[col.field] | date:'dd/MM/yyyy HH:mm'}} </span>
+                  <span *ngSwitchCase="'documentDate'"> {{rowData[col.field] | date:'dd/MM/yyyy HH:mm'}} </span>
+                  <span *ngSwitchCase="'updateDate'"> {{rowData[col.field] | date:'dd/MM/yyyy HH:mm'}} </span>
+                  <span *ngSwitchCase="'createDate'"> {{rowData[col.field] | date:'dd/MM/yyyy HH:mm'}} </span>
+                  <span *ngSwitchDefault> {{rowData[col.field]}} </span>
+                </td>
+
+
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="rowexpansion" let-rowData let-columns="columns">
+              <tr>
+                <td colspan="2"></td>
+                <td colspan="4">
+                  <tr><td><strong>{{'prod-order-id' | translate}}</strong> : <a href="javascript:;" (click)="showProductionOrderModal(rowData.prodOrderId)"> {{rowData.prodOrderId}}</a></td></tr>
+                  <tr><td><strong>{{'pallet-id' | translate}}</strong> : <a href="javascript:;" (click)="showPalletDetail(rowData.pallet?.palletId)"> {{rowData.pallet?.palletId}}</a></td></tr>
+                  <tr><td><strong>{{'defect' | translate}}</strong> : {{rowData.defected ? 'Yes' : 'No'}}</td></tr>
+                  <tr><td><strong>{{'barcode' | translate}}</strong> : {{rowData.barcode}}</td></tr>
+                  <tr><td><strong>{{'barcode-to' | translate}}</strong> : {{rowData.barcodeTo}}</td></tr>
+                  <tr><td><strong>{{'location-no' | translate}}</strong> : {{rowData.locationNo}}</td></tr>
+                  <tr><td><strong>{{'batch' | translate}}</strong> : <a href="javascript:;" (click)="showBatchDetail(rowData.batch)"> {{rowData.batch}}</a></td></tr>
+
+                </td>
+                <td colspan="4">
+
+                  <tr><td><strong>{{'document-no' | translate}}</strong> : {{rowData.documentNo}}</td></tr>
+                  <tr><td><strong>{{'description' | translate}}</strong> : {{rowData.description}}</td></tr>
+                  <tr><td><strong>{{'transfer-start-time' | translate}}</strong> : {{rowData.transferStartTime | date:'dd/MM/yyyy HH:mm'}}</td></tr>
+                  <tr><td><strong>{{'transfer-finish-time' | translate}}</strong> : {{rowData.transferFinishTime | date:'dd/MM/yyyy HH:mm'}}</td></tr>
+                  <tr><td><strong>{{'document-date' | translate}}</strong> : {{rowData.documentDate | date:'dd/MM/yyyy HH:mm'}}</td></tr>
+                  <tr><td><strong>{{'posting-date' | translate}}</strong> : {{rowData.postingDate | date:'dd/MM/yyyy HH:mm'}}</td></tr>
+                  <tr><td><strong>{{'create-date' | translate}}</strong> : {{rowData.createDate | date:'dd/MM/yyyy HH:mm'}}</td></tr>
+                </td>
+                <!-- <td [attr.colspan]="columns.length - 1">
+                  <div class="col-md-12">
+                    <table class="table table-bordered">
+                      <tr>
+                        <td>{{'notification-status' | translate}}</td>
+                        <td>{{rowData.goodsMovementStatus}}</td>
+                      </tr>
+                      <tr>
+                        <td>{{'document-type' | translate}}</td>
+                        <td>{{rowData.goodMovementDocumentType}}</td>
+                      </tr>
+                      <tr>
+                        <td>{{'activity-type' | translate}}</td>
+                        <td>{{rowData.goodsMovementActivityType}}</td>
+                      </tr>
+                      <tr>
+                        <td>{{'prod-order-id' | translate}}</td>
+                        <td>{{rowData.prodOrderId}}</td>
+                      </tr>
+                      <tr>
+                        <td>{{'material-no' | translate}}</td>
+                        <td>{{rowData.materialNo}}</td>
+                      </tr>
+                      <tr>
+                        <td>{{'material-name' | translate}}</td>
+                        <td>{{rowData.materialName}}</td>
+                      </tr>
+                      <tr>
+                        <td>{{'quantity' | translate}}</td>
+                        <td>{{rowData.quantity}}</td>
+                      </tr>
+                      <tr>
+                        <td>{{'base-unit' | translate}}</td>
+                        <td>{{rowData.baseUnit}}</td>
+                      </tr>
+                      <tr>
+                        <td>{{'warehouse-from-name' | translate}}</td>
+                        <td>{{rowData.wareHouseFromName}}</td>
+                      </tr>
+                      <tr *ngIf="rowData.goodsMovementStatus==='TRANSFER_POSTING'">
+                        <td>{{'warehouse-to-name' | translate}}</td>
+                        <td>{{rowData.wareHouseToName}}</td>
+                      </tr>
+                      <tr>
+                        <td>{{'batch' | translate}}</td>
+                        <td>{{rowData.batch}}</td>
+                      </tr>
+                      <tr>
+                        <td>{{'create-date' | translate}}</td>
+                        <td>{{rowData.createDate | date: 'dd/mm/yyyy HH:mm'}}</td>
+                      </tr>
+                      <tr>
+                        <td>{{'description' | translate}}</td>
+                        <td>{{rowData.description}}</td>
+                      </tr>
+                    </table>
+                  </div>
+                </td> -->
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+    </p-tabPanel>
+    <p-tabPanel header="{{'output-notifications'|translate}}">
+      <div class="row justify-content-end">
+        <button pButton type="button" style="margin-right: 15px;"
+        icon="fa fa-refresh" name="refresh" (click)="initialize(jobDetail.jobOrderId)"></button>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <p-table class="ui-modal-table" [columns]="notificationSelectedColumns"
+          [value]="jobDetail.stockTransferNotificationDetailList"
+            [dataKey]="'stockTransferNotificationDetailId'">
+
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th style="width: 3em"></th>
+                <ng-container *ngFor="let col of columns" [ngSwitch]="col.field">
+                  <th *ngSwitchDefault>{{col.header | translate}}</th>
+                  <th *ngSwitchCase="'quantity'" style="width: 4em;">{{col.header | translate}}</th>
+                  <th *ngSwitchCase="'baseUnit'" style="width: 4em;">{{col.header | translate}}</th>
+                  <th *ngSwitchCase="'stockTransferReceiptNotificationId'" style="width: 4em;">{{col.header | translate}}</th>
+                  <th *ngSwitchCase="'stockTransferNotificationDetailId'" style="width: 5em;">{{col.header | translate}}</th>
+                </ng-container>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-expanded="expanded" let-columns="columns">
+              <tr>
+                <td>
+                  <a href="#" [pRowToggler]="rowData">
+                    <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+                  </a>
+                </td>
+                <td *ngFor="let col of columns" style="cursor: pointer" [ngSwitch]="col.field">
+
+                  <a href="javascript:;" *ngSwitchCase="'stockTransferReceiptNotificationId'" (click)="showStockTransferReceiptNotificationModal(rowData.stockTransferReceiptNotificationId)">{{rowData.stockTransferReceiptNotificationId}}</a>
+                  <span *ngSwitchCase="'stockTransferNotificationDetailId'">{{rowData.stockTransferNotificationDetailId}}</span>
+                  <a href="javascript:;" *ngSwitchCase="'batch'" (click)="showBatchDetail(rowData.batch)">{{rowData.batch}}</a>
+                  <a *ngSwitchCase="'materialNo'" href="javascript:;" (click)="showStockDetail(rowData.materialId)">{{rowData[col.field]}}</a>
+                  <a *ngSwitchCase="'materialName'" href="javascript:;" (click)="showStockDetail(rowData.materialId)">{{rowData[col.field]}}</a>
+                  <span *ngSwitchCase="'pallet'"> {{rowData[col.field]?.palletId}} </span>
+                  <span *ngSwitchCase="'postingDate'"> {{rowData[col.field] | date:'dd/MM/yyyy HH:mm'}} </span>
+                  <span *ngSwitchCase="'documentDate'"> {{rowData[col.field] | date:'dd/MM/yyyy HH:mm'}} </span>
+                  <span *ngSwitchCase="'updateDate'"> {{rowData[col.field] | date:'dd/MM/yyyy HH:mm'}} </span>
+                  <span *ngSwitchCase="'createDate'"> {{rowData[col.field] | date:'dd/MM/yyyy HH:mm'}} </span>
+                  <span *ngSwitchDefault> {{rowData[col.field]}} </span>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="rowexpansion" let-rowData let-columns="columns">
+              <tr>
+                <td colspan="2"></td>
+                <td colspan="4">
+                  <tr><td><strong>{{'prod-order-id' | translate}}</strong> : <a href="javascript:;" (click)="showProductionOrderModal(rowData.prodOrderId)"> {{rowData.prodOrderId}}</a></td></tr>
+                  <tr><td><strong>{{'pallet-id' | translate}}</strong> : <a href="javascript:;" (click)="showPalletDetail(rowData.pallet?.palletId)"> {{rowData.pallet?.palletId}}</a></td></tr>
+                  <tr><td><strong>{{'defect' | translate}}</strong> : {{rowData.defected ? 'Yes' : 'No'}}</td></tr>
+                  <tr><td><strong>{{'warehouse-from' | translate}}</strong> : <a href="javascript:;" (click)="showWarehouseDetail(rowData.wareHouseFromId)"> {{rowData.wareHouseFromName}}</a></td></tr>
+                </td>
+                <td colspan="4">
+                  <tr><td><strong>{{'barcode' | translate}}</strong> : {{rowData.barcode}}</td></tr>
+                  <tr><td><strong>{{'barcode-to' | translate}}</strong> : {{rowData.barcodeTo}}</td></tr>
+                  <tr><td><strong>{{'location-no' | translate}}</strong> : {{rowData.locationNo}}</td></tr>
+                  <tr><td><strong>{{'batch' | translate}}</strong> : <a href="javascript:;" (click)="showBatchDetail(rowData.batch)"> {{rowData.batch}}</a></td></tr>
+                  <tr><td><strong>{{'create-date' | translate}}</strong> : {{rowData.createDate | date:'dd/MM/yyyy HH:mm'}}</td></tr>
+                  <tr><td><strong>{{'description' | translate}}</strong> : {{rowData.description}}</td></tr>
+                  <tr><td *ngIf="rowData.goodsMovementActivityType==='TRANSFER_POSTING'"><strong>{{'warehouse-to' | translate}}</strong> : {{rowData.wareHouseToName}}</td></tr>
+                </td>
+                <!-- <td [attr.colspan]="columns.length - 1">
+                  <div class="col-md-12">
+                    <table class="table table-bordered">
+                      <tr>
+                        <td>{{'notification-status' | translate}}</td>
+                        <td>{{rowData.goodsMovementStatus}}</td>
+                      </tr>
+                      <tr>
+                        <td>{{'document-type' | translate}}</td>
+                        <td>{{rowData.goodMovementDocumentType}}</td>
+                      </tr>
+                      <tr>
+                        <td>{{'activity-type' | translate}}</td>
+                        <td>{{rowData.goodsMovementActivityType}}</td>
+                      </tr>
+                      <tr>
+                        <td>{{'prod-order-id' | translate}}</td>
+                        <td>{{rowData.prodOrderId}}</td>
+                      </tr>
+                      <tr>
+                        <td>{{'material-no' | translate}}</td>
+                        <td>{{rowData.materialNo}}</td>
+                      </tr>
+                      <tr>
+                        <td>{{'material-name' | translate}}</td>
+                        <td>{{rowData.materialName}}</td>
+                      </tr>
+                      <tr>
+                        <td>{{'quantity' | translate}}</td>
+                        <td>{{rowData.quantity}}</td>
+                      </tr>
+                      <tr>
+                        <td>{{'base-unit' | translate}}</td>
+                        <td>{{rowData.baseUnit}}</td>
+                      </tr>
+                      <tr>
+                        <td>{{'warehouse-from-name' | translate}}</td>
+                        <td>{{rowData.wareHouseFromName}}</td>
+                      </tr>
+                      <tr *ngIf="rowData.goodsMovementStatus==='TRANSFER_POSTING'">
+                        <td>{{'warehouse-to-name' | translate}}</td>
+                        <td>{{rowData.wareHouseToName}}</td>
+                      </tr>
+                      <tr>
+                        <td>{{'batch' | translate}}</td>
+                        <td>{{rowData.batch}}</td>
+                      </tr>
+                      <tr>
+                        <td>{{'create-date' | translate}}</td>
+                        <td>{{rowData.createDate | date: 'dd/mm/yyyy HH:mm'}}</td>
+                      </tr>
+                      <tr>
+                        <td>{{'description' | translate}}</td>
+                        <td>{{rowData.description}}</td>
+                      </tr>
+                    </table>
+                  </div>
+                </td> -->
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+    </p-tabPanel>
+    <p-tabPanel header="{{'workstation-component-list' | translate}}">
+      <div class="row justify-content-end">
+        <button pButton type="button" style="margin-right: 15px;"
+        icon="fa fa-refresh" name="refresh" (click)="initialize(jobDetail.jobOrderId)"></button>
+      </div>
+      <p-table class="ui-modal-table" [value]="workstationComponentList" dataKey="workstationComponentId">
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width:4em"></th>
+                <th>{{'workstation-component-id' | translate}}</th>
+                <th>{{'location' | translate}}</th>
+                <th>{{'barcode' | translate}}</th>
+                <th>{{'material-no' | translate}}</th>
+                <th>{{'material-name' | translate}}</th>
+                <th>{{'quantity' | translate}}</th>
+                <th>{{'total-used-quantity' | translate}}</th>
+                <th>{{'quantity-unit' | translate}}</th>
+                <th>{{'batch' | translate}}</th>
+                <th>{{'status' | translate}}</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-expanded="expanded">
+            <tr [pSelectableRow]="rowData">
+              <td style="width: 4em">
+                <a href="#" [pRowToggler]="rowData">
+                  <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+                </a>
+              </td>
+              <td>{{rowData.workstationComponentId}}</td>
+              <td>{{rowData.locationNo}}</td>
+              <td>{{rowData.barcode}}</td>
+              <td>
+                <a href="javascript:;" (click)="showStockDetail(rowData?.stock?.stockId)">{{rowData?.stock?.stockId}}</a>
+              </td>
+              <td>
+                <a href="javascript:;" (click)="showStockDetail(rowData?.stock?.stockId)">{{rowData?.stock?.stockName}}</a>
+              </td>
+              <td>{{rowData.quantity}}</td>
+              <td>{{rowData.totalUsedQuantity}}</td>
+              <td>{{rowData.quantityUnit}}</td>
+              <td>
+                <a href="javascript:;" (click)="showBatchDetail(rowData.batch)">{{rowData.batch}}</a>
+              </td>
+              <td>{{rowData.usedStatus}}</td>
+
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="rowexpansion" let-componentData>
+            <tr>
+              <td colspan="9" style="padding-top: 0px; padding-bottom: 0px;">
+                <table class="table-sm tbl-ws-list">
+                  <tr>
+                    <td style="width: 3em;"></td>
+                    <td style="width: 148px;"><strong>{{'material-id' | translate}}</strong></td>
+                    <td>:</td>
+                    <td>
+                      <a href="javascript:;" (click)="showStockDetail(componentData.stock?.stockId)">{{componentData?.stock?.stockId}}</a>
+                    </td>
+                    <td style="width: 148px"><strong>{{'height' | translate}}</strong></td>
+                    <td>:</td>
+                    <td>{{componentData.height}}</td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td><strong>{{'workstation-id' | translate}}</strong></td>
+                    <td>:</td>
+
+                    <td>
+                      <a href="javascript:;" (click)="showWorkstationDetail(componentData.workStationId)">{{componentData.workStationId}}</a>
+                    </td>
+                    <td><strong>{{'width' | translate}}</strong></td>
+                    <td>:</td>
+                    <td>{{componentData.width}}</td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td></td>
+
+                    <td><strong>{{'job-order-operation-id' | translate}}</strong></td>
+                    <td>:</td>
+                    <td>{{componentData.jobOrderOperationId}}</td>
+                    <td><strong>{{'used-height' | translate}}</strong></td>
+                    <td>:</td>
+                    <td>{{componentData.usedHeight}}</td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td><strong>{{'notification-detail-id' | translate}}</strong></td>
+                    <td>:</td>
+                    <td><a href="javascript:;" (click)="showStockTransferReceiptNotificationDetailModal(componentData.notificationDetailId)">{{componentData.notificationDetailId}}</a></td>
+                    <td><strong>{{'used-width' | translate}}</strong></td>
+                    <td>:</td>
+                    <td>{{componentData.usedWidth}}</td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td><strong>{{'reservation-id' | translate}}</strong></td>
+                    <td>:</td>
+                    <td><a href="javascript:;" (click)="showReservationDialog(componentData.stockReservationId)">{{componentData.stockReservationId}}</a></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+        </ng-template>
+      </p-table>
+    </p-tabPanel>
+    <p-tabPanel header="{{'employee-list' | translate}}">
+      <div class="row justify-content-end">
+        <button pButton  class="ui-button-success" style="margin-right: 5px;"
+        (click)="modalNewShow(null)" [label]="'add-new'|translate"> </button>
+        <button pButton type="button" style="margin-right: 15px;"
+        icon="fa fa-refresh" name="refresh" (click)="initialize(jobDetail.jobOrderId)"></button>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <p-table class="ui-modal-table" [columns]="employeelistSelectedColumns" [value]="employeeList"
+           dataKey="employeeId"
+           [paginator]="true" [rows]="10" [showCurrentPageReport]="true" responsiveLayout="scroll"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowsPerPageOptions]="[10,25,50]">
+            <ng-template pTemplate="caption">
+              <div class="row">
+                <p-multiSelect class="col-md-3" [options]="employeelistColumns" [(ngModel)]="employeelistSelectedColumns"
+                  optionLabel="header" maxSelectedLabels="0" selectedItemsLabel="{{'columns-selected'|translate}}"
+                  [style]="{minWidth: '200px'}" defaultLabel="Choose Columns">
+                  <ng-template let-col let-i="index" pTemplate="item">
+                    {{col.label|translate}}
+                  </ng-template>
+                </p-multiSelect>
+                <div class="col-md-5" style="text-align: center;align-self: center;">
+                  {{'employee-list'|translate}}
+                </div>
+              </div>
+            </ng-template>
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th *ngFor="let col of columns">
+                  {{col.header | translate}}
+                </th>
+                <th width="80px">{{'action'|translate}}</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr>
+                <td *ngFor="let col of columns" style="cursor: pointer" [ngSwitch]="col.field">
+
+                  <a *ngSwitchCase="'employeeId'" href="javascript:;"
+                  (click)="showEmployeeDetail(rowData.employee?.employeeId)">{{rowData.employee?.employeeId}}</a>
+                  <a *ngSwitchCase="'employeeName'" href="javascript:;"
+                  (click)="showEmployeeDetail(rowData.employee?.employeeId)">{{rowData.employee?.firstName}}</a>
+                  <a *ngSwitchCase="'employeeLastName'" href="javascript:;"
+                  (click)="showEmployeeDetail(rowData.employee?.employeeId)">{{rowData.employee?.lastName}}</a>
+                  <a *ngSwitchCase="'shift'" href="javascript:;"
+                  (click)="showShiftDetail(rowData.shift?.shiftId)">{{rowData.shift?.shiftName}}</a>
+                  <!-- <p *ngSwitchCase="'shift'">{{rowData[col.field]?.shiftId}}</p> -->
+                  <p *ngSwitchCase="'programmingDuration'">{{getReadable(rowData[col.field])}}</p>
+                  <p *ngSwitchCase="'actualStartTime'">{{rowData[col.field]|date:'dd.MM.yyyy HH:mm'}}</p>
+                  <p *ngSwitchCase="'actualFinishTime'">{{rowData[col.field]|date:'dd.MM.yyyy HH:mm'}}</p>
+                  <p-checkbox *ngSwitchCase="'activeWorking'" name="activeWorking" binary="true" disabled="true"
+                    [(ngModel)]="rowData.activeWorking" pTooltip="{{'active-working'  | translate}}" tooltipPosition="top">
+                  </p-checkbox>
+                  <a *ngSwitchCase="'workStation'" href="javascript:;"
+                  (click)="showWorkstationDetail(rowData.workStation?.workStationId)">{{rowData[col.field]?.workStationName}}</a>
+                  <span *ngSwitchDefault> {{rowData[col.field]}} </span>
+                </td>
+                <td width="80px">
+                  <button class="btn btn-sm btn-outline-primary"
+                  pTooltip="Edit" tooltipPosition="top" placeholder="Top"
+                  (click)="modalEditShow(rowData)">
+                  <i class="fa fa-edit"></i>
+                </button>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+        <!-- <div class="row">
+          <app-paging [TotalElements]="pagination.totalElements" [CurrentPage]="pagination.currentPage"
+              [PageSize]="pagination.pageSize" [rows]="pagination.rows"
+              [TotalPageLinkButtons]="pagination.TotalPageLinkButtons"
+              [RowsPerPageOptions]="pagination.RowsPerPageOptions" (onPageChange)="myChanges($event)"></app-paging>
+            <span style="margin-left:2px; padding-top: 2px " class="text-muted">
+              {{'total-records'|translate}}: {{employeeList.length}}
+            </span>
+        </div> -->
+      </div>
+    </p-tabPanel>
+    <p-tabPanel header="{{'reports'|translate}}" >
+      <ng-template pTemplate="content">
+        <app-production-stock-reports [plantId]="employeeFilter.plantId"
+        [jobOrderId]="jobDetail.jobOrderId" [startDate]="startDate" [finishDate]="finishDate"></app-production-stock-reports>
+      </ng-template>
+    </p-tabPanel>
+  </p-tabView>
+  <div class="d-flex float-right" *ngIf="jobDetail">
+    <button class="btn btn-danger" (click)="closeDialog()">Close</button>
+  </div>
+</div>
+
+
+
+
+<ng-template [ngIf]="modal.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal" (onHidden)="selectedReservationRow=null;modal.active=false;"
+    class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-success" [ngStyle]="{'max-width':'100%'}" role="document">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h4 class="modal-title"> {{'advanced-stock-reports' | translate}}</h4>
+          <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+            <advanced-stock-report-list [filteredData]="selectedReservationRow"></advanced-stock-report-list>
+        </div>
+
+        <div class="modal-footer">
+
+          <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary"
+            (click)="myModal.hide()">{{'close' | translate}}
+          </button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</ng-template>
+
+<ng-template [ngIf]="editModal.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal" (onHidden)="selectedReservationRow=null;editModal.active=false;"
+    class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-success modal-lg" role="document">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h4 class="modal-title"> {{'reservation' | translate}}</h4>
+          <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+            <reservation-edit [id]="selectedReservationRow?.reservationId" (saveAction)="myModal.hide();initialize(jobOrderId);"></reservation-edit>
+        </div>
+
+        <div class="modal-footer">
+
+          <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary"
+            (click)="myModal.hide()">{{'close' | translate}}
+          </button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</ng-template>
+
+
+
+<ng-template [ngIf]="empWrkOperationModal.active">
+  <p-dialog class="custom-dialog" [blockScroll]="true"
+    header="{{'employee' | translate}} {{'details' | translate}}"
+    [(visible)]="empWrkOperationModal.active" (onHide)="cancel()"
+    [style]="{'min-width': '800px'}"    [maximizable]="true" #dOrderDetails
+    [contentStyle]="{'min-height':'400px'}" [focusOnShow]="false" [autoZIndex]="false"
+    modal="true" dismissableMask="true">
+    <!---------- MODEL #1 ------------->
+        <div class="col-md-12">
+          <table class="table table-bordered">
+            <tbody>
+              <tr>
+                <td>{{'job-order-operation' | translate}}</td>
+                <td>
+                  <select class="form-control" [(ngModel)]="empWrkOperatorDto.jobOrderOperationId" (ngModelChange)="onJobOperationSelected($event)">
+                    <option *ngFor="let item of jobOperationIds" [value]="item">{{item}}</option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'shift' | translate}}</td>
+                <td class="ui-fluid">
+                  <p-autoComplete [(ngModel)]="selectedShift" [suggestions]="filteredShift" field="shiftName" [dropdown]="true"
+                    (completeMethod)="filterShift($event)" [placeholder]="'select-shift' | translate"
+                    (ngModelChange)="onShiftChanged($event)" (onDropdownClick)="handleDropdownClickForShift()"></p-autoComplete>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'workstation' | translate}}</td>
+                <td>
+                  <workstation-auto-complete [selectedWorkStationId]="empWrkOperatorDto.workstationId"
+                  (selectedWorkStationEvent)="empWrkOperatorDto.workstationId=$event?.workStationId;">
+                  </workstation-auto-complete>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'employee' | translate}}</td>
+                <td>
+                  <employee-auto-complete [selectedEmployeeId]="empWrkOperatorDto.employeeId"
+                    (selectedEmployeeEvent)="empWrkOperatorDto.employeeId=$event?.employeeId;">
+                  </employee-auto-complete>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'actual-start-time'|translate}}</td>
+                <td class="ui-fluid">
+                  <p-calendar [(ngModel)]="empWrkOperatorDto.actualStartTime" [showIcon]="true"
+                  [dateFormat]="'dd-mm-yy'"
+                  [appendTo]="'body'" [baseZIndex]="999999"
+                    [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2060" [placeholder]="'select-date' | translate"
+                    [showButtonBar]="true"
+                    [showTime]="true" [timeOnly]="false" (ngModelChange)="onTimeChanged($event)"></p-calendar>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'actual-finish-time'|translate}}</td>
+                <td class="ui-fluid">
+                  <p-calendar [(ngModel)]="empWrkOperatorDto.actualFinishTime" [showIcon]="true"
+                  [dateFormat]="'dd-mm-yy'" [appendTo]="'body'" [baseZIndex]="999999"
+                    [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2060" [placeholder]="'select-date' | translate"
+                    [showButtonBar]="true"
+                    [showTime]="true" [timeOnly]="false" (ngModelChange)="onTimeChanged($event)"></p-calendar>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'programming-duration'| translate}}</td>
+                <td>
+                  <app-time [name]="'single'" [showMills]="true"
+                    [timeInMills]="empWrkOperatorDto.programmingDuration" [total]="true"
+                    (timeChanged)="empWrkOperatorDto.programmingDuration=$event">
+                  </app-time>
+                  <p-checkbox class="calculate-checkbox" name="calculateProgrammingDuration" binary="true" [label]="'auto-calculate' | translate "  [(ngModel)]="calculateProgrammingDuration"></p-checkbox>
+                  <!-- <input type="text" class="form-control" [(ngModel)]="empWrkOperatorDto.programmingDuration" /> -->
+                </td>
+              </tr>
+              <!-- <tr>
+                <td>{{'login-with-rf-id' | translate}}</td>
+                <td>
+                  <p-checkbox [(ngModel)]="empWrkOperatorDto.loginWithRFID" binary="true"></p-checkbox>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'active-working' | translate}}</td>
+                <td>
+                  <p-checkbox [(ngModel)]="empWrkOperatorDto.activeWorking" binary="true"></p-checkbox>
+                </td>
+              </tr> -->
+              <tr>
+                <td colspan="2">
+                  <button type="button" [disabled]="!empWrkOperatorDto.employeeId ||
+                  !empWrkOperatorDto.jobOrderOperationId || !empWrkOperatorDto.workstationId"
+                   class="btn btn-outline-primary" (click)="saveEmpWorkstationOperator()">{{'save' | translate}}</button>
+                  <button type="button" class="btn btn-outline-danger" (click)="cancel()">{{'cancel' | translate}}</button>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+  </p-dialog>
+</ng-template>

@@ -1,0 +1,7 @@
+
+    <p-autoComplete [disabled]="disabled" [(ngModel)]="selectedEl" [suggestions]="filteredResults"
+                    (completeMethod)="searchMatched($event)" [field]="itemName"
+                     [dropdown]="dropdown" [forceSelection]="true" [required]="required"
+                     [placeholder]="placeHolder|translate" [minLength]="1" name="stock"
+                     (onDropdownClick)="handleDropdownClick()" (ngModelChange)="onChangeModel($event)"[inputStyle]="inputStyle"></p-autoComplete>
+

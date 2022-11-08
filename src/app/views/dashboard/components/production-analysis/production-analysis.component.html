@@ -1,0 +1,49 @@
+<ng-container *ngIf="treeData">
+  <p-treeTable #dt [columns]="cols" [value]="treeData" dataKey="workstationName" autoLayout="true"
+  [rowHover]="true"
+  [rows]="20" [showCurrentPageReport]="true" [rowsPerPageOptions]="[20,30,50]"
+  [paginator]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+  [filterDelay]="0">
+
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th *ngFor="let col of columns let i=index" style="cursor: pointer">
+          {{col.header|translate}}
+        </th>
+      </tr>
+
+      <tr style="background-color: #f8f8f8; height: 45px;">
+        <th><b>{{'overall' | translate | uppercase }} </b></th>
+        <th>{{ getPercentage(treeData[0]?.data.overAllAvailability)}}</th>
+        <th>{{ getPercentage(treeData[0]?.data.overAllperformance) }}</th>
+        <th>{{ getPercentage(treeData[0]?.data.overAllquantity) }}</th>
+        <th>{{ getPercentage(treeData[0]?.data.overAllOee) }}</th>
+        <th colspan="4"></th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns" let-index="rowindex">
+      <tr>
+        <td *ngFor="let col of columns; let i = index" [ngSwitch]="col.field">
+          <p-treeTableToggler [rowNode]="rowNode" *ngIf="i == 0"></p-treeTableToggler>
+          <ng-container *ngSwitchCase="'workstationName'">
+            <a *ngIf="rowData.dimension?.includes('Job Order'); else workstation" href="javascript:;" (click)="showJobOrderDetailModal(rowData)">{{rowData.dimension}}</a>
+            <ng-template #workstation> <a href="javascript:;" (click)="showWorkStationDetailModal(rowData, rowNode)">{{rowData.dimension}}</a></ng-template>
+          </ng-container>
+          <span *ngSwitchDefault> {{rowData[col.field]}}</span>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage" let-columns>
+      <tr>
+        <td [attr.colspan]="columns.length">
+          <div class="noData">
+            <strong class=""><i class="fa fa-warning "></i>{{'no-data'|translate}}!</strong>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+
+  </p-treeTable>
+</ng-container>

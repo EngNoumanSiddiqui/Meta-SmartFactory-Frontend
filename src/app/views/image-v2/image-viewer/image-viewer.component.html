@@ -1,0 +1,120 @@
+<p-tabView>
+  <p-tabPanel header="{{'RFQ'|translate}}">
+    <table *ngIf="rfqImageList && rfqImageList.length>0" class="table table-bordered">
+      <tbody >
+      <tr align="center">
+        <td   colspan="2" style="max-height: 400px;max-width: 300px; vertical-align: bottom">
+          <carousel  [interval]="0" [(activeSlide)]="activerfqSlideIndex">
+    
+            <slide *ngFor=" let im of rfqImageList; let index=index" style="max-height: 400px">
+              <!-- <img class="img-fluid" [src]="im.path" [alt]="im.title" style="display: block;  max-height: 360px; max-width: 100%"> -->
+              <img *ngIf="(im.extension==='jpg')||(im.extension==='png'); else fileLink" [src]="im.path" [alt]="im.title"
+                    style="display: block;  max-height: 250px; max-width: 100%" (click)="activerfqIndex=index; displayrfqCustom=true;">
+              <ng-template #fileLink>
+              <!-- <a href="{{im.path}}" download="{{im.fileName}}">{{im.fileName}}</a> -->
+              <!-- <pdf-viewer [src]="im.path"
+                    [original-size]="false" [autoresize]="true" style="width: 570px; max-height: 450px; overflow-y: scroll; display: block;"
+              ></pdf-viewer> -->
+              <ngx-doc-viewer [url]="im.path" viewer="google"  style="width:100%;height:396px;">
+              </ngx-doc-viewer>
+              </ng-template>
+            </slide>
+          </carousel>
+        </td>
+    
+      </tr>
+      <tr *ngIf="rfqImageList && rfqImageList.length">
+        <p-galleria [(value)]="rfqImageList" [(visible)]="displayrfqCustom" [(activeIndex)]="activerfqIndex" [responsiveOptions]="responsiveOptions" [containerStyle]="{'max-width': '850px'}" [numVisible]="7"
+          [circular]="true" [fullScreen]="true" [showItemNavigators]="true" [showThumbnails]="false" [baseZIndex]="100000"> 
+          <ng-template pTemplate="item" let-item>
+              <img [src]="item.path" style="width: 100%; display: block;"/>
+          </ng-template>
+          <ng-template pTemplate="thumbnail" let-item>
+              <div class="p-grid p-nogutter p-justify-center">
+                  <img [src]="item.path" style="display: block;"/>
+              </div>
+          </ng-template>
+      </p-galleria>
+      </tr>
+      <tr *ngIf="showTitle">
+        <td style="width: 30%" class="">{{'title' | translate}}</td>
+        <td>{{rfqImageList[activerfqSlideIndex]?.title}}</td>
+      </tr>
+      <tr *ngIf="showDescription">
+        <td style="width: 30%" class="">{{'image-description' | translate}}</td>
+        <td>{{rfqImageList[activerfqSlideIndex]?.description}}</td>
+      </tr>
+    
+      </tbody>
+    </table>
+    <table *ngIf="!rfqImageList || rfqImageList.length==0" class="table-bordered">
+      <tbody>
+      <tr align="center">
+        <td  colspan="2"  style="height: 200px;width: 200px; vertical-align: bottom">
+          <img [src]="'assets/img/logo.png'" style=" width: 200px" >
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </p-tabPanel>
+  <p-tabPanel header="{{'CONFIRMED'|translate}}">
+    <table *ngIf="confirmImageList && confirmImageList.length>0" class="table table-bordered">
+      <tbody >
+      <tr align="center">
+        <td   colspan="2" style="max-height: 400px;max-width: 300px; vertical-align: bottom">
+          <carousel  [interval]="0" [(activeSlide)]="activeConfirmSlideIndex">
+    
+            <slide *ngFor=" let im of confirmImageList; let index=index" style="max-height: 400px">
+              <!-- <img class="img-fluid" [src]="im.path" [alt]="im.title" style="display: block;  max-height: 360px; max-width: 100%"> -->
+              <img *ngIf="(im.extension==='jpg')||(im.extension==='png'); else fileLink" [src]="im.path" [alt]="im.title"
+                    style="display: block;  max-height: 250px; max-width: 100%" (click)="activeConfirmIndex=index; displayConfirmCustom=true;">
+              <ng-template #fileLink>
+              <!-- <a href="{{im.path}}" download="{{im.fileName}}">{{im.fileName}}</a> -->
+              <!-- <pdf-viewer [src]="im.path"
+                    [original-size]="false" [autoresize]="true" style="width: 570px; max-height: 450px; overflow-y: scroll; display: block;"
+              ></pdf-viewer> -->
+              <ngx-doc-viewer [url]="im.path" viewer="google"  style="width:100%;height:396px;">
+              </ngx-doc-viewer>
+              </ng-template>
+            </slide>
+          </carousel>
+        </td>
+    
+      </tr>
+      <tr *ngIf="confirmImageList && confirmImageList.length">
+        <p-galleria [(value)]="confirmImageList" [(visible)]="displayConfirmCustom" [(activeIndex)]="activeConfirmIndex" [responsiveOptions]="responsiveOptions" [containerStyle]="{'max-width': '850px'}" [numVisible]="7"
+          [circular]="true" [fullScreen]="true" [showItemNavigators]="true" [showThumbnails]="false" [baseZIndex]="100000"> 
+          <ng-template pTemplate="item" let-item>
+              <img [src]="item.path" style="width: 100%; display: block;"/>
+          </ng-template>
+          <ng-template pTemplate="thumbnail" let-item>
+              <div class="p-grid p-nogutter p-justify-center">
+                  <img [src]="item.path" style="display: block;"/>
+              </div>
+          </ng-template>
+      </p-galleria>
+      </tr>
+      <tr *ngIf="showTitle">
+        <td style="width: 30%" class="">{{'title' | translate}}</td>
+        <td>{{confirmImageList[activeConfirmSlideIndex]?.title}}</td>
+      </tr>
+      <tr *ngIf="showDescription">
+        <td style="width: 30%" class="">{{'image-description' | translate}}</td>
+        <td>{{confirmImageList[activeConfirmSlideIndex]?.description}}</td>
+      </tr>
+    
+      </tbody>
+    </table>
+    <table *ngIf="!confirmImageList || confirmImageList.length==0" class="table-bordered">
+      <tbody>
+      <tr align="center">
+        <td  colspan="2"  style="height: 200px;width: 200px; vertical-align: bottom">
+          <img [src]="'assets/img/logo.png'" style=" width: 200px" >
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </p-tabPanel>
+</p-tabView>
+
+

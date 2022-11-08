@@ -1,0 +1,259 @@
+<div style="padding: 10px;" *ngIf="workstationSkills && workstationSkills.length > 0">
+    <p-tabView>
+
+        <p-tabPanel header="{{'percentage' | translate}}">
+            <div class="row">
+                <div class="col-md-4">
+                    <p-table [value]="scheduleMaterialsList" [rows]="5" [paginator]="true"
+                        styleClass="table table-bordered">
+                        <ng-template pTemplate="header">
+                            <th>{{'material' | translate}}</th>
+                            <th>{{'quantity' | translate}}</th>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-rowData let-index="rowIndex">
+                            <tr>
+                                <td>{{rowData.materialName}}</td>
+                                <td>{{rowData.quantity}}</td>
+                            </tr>
+
+                        </ng-template>
+
+                        <ng-template pTemplate="footer">
+                            <tr>
+                                <td><strong>{{'total' | translate }}</strong></td>
+                                <td>{{calculateMaterialQuantity()}}</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+
+                </div>
+
+                <div class="col-md-8">
+                    <table class="table table-bordered table-sm table-responsive" *ngIf="workstationSkills">
+
+                        <thead>
+                            <tr>
+                                <th rowspan="2" style="vertical-align: middle;">{{'categories' | translate}}</th>
+                                <ng-container *ngIf="skillType == 'EMPLOYEE'; else WORKSTATIONTYPE">
+                                    <th [attr.colspan]="workstationSkills.length" class="text-center">{{'employees' |
+                                        translate}}</th>
+                                </ng-container>
+                                <ng-template #WORKSTATIONTYPE>
+                                    <th [attr.colspan]="workstationSkills.length" class="text-center">{{'workstations' |
+                                        translate}}</th>
+                                </ng-template>
+                            </tr>
+                            <tr>
+                                <th *ngFor="let workstation of workstationSkills">{{workstation.workStationName}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{'SATURATION' | translate}}</td>
+                                <td *ngFor="let workstation of workstationSkills">
+                                    {{getPercentage(workstation.saturation/3)}}%</td>
+
+                            </tr>
+                            <tr>
+                                <td>{{'TARGET' | translate}}</td>
+                                <td *ngFor="let workstation of workstationSkills">100%</td>
+                            </tr>
+
+                            <tr *ngFor="let category of workstationCategories; let index= index"
+                                [style.background]="getBackgroundColor(index)">
+                                <td> {{category.skillMatrixCategoryDescription}}</td>
+                                <!-- 
+                                <td *ngFor="let cat of workstation.categories">{{getPercentage(cat.interest * 100 /
+                                    (calculateTotalValue(workstation))) }}</td> -->
+
+                                <td *ngFor="let workstation of workstationSkills">
+
+                                    <ng-container *ngFor="let wCategory of workstation.categories">
+                                        <span *ngIf="wCategory.skillMatrixCategoryId == category.skillMatrixCategoryId">
+                                            {{calculateCategoryPercentage(workstation, wCategory)}}%
+                                        </span>
+                                    </ng-container>
+                                </td>
+                                <!-- {{wCategory.operationSkillValue}} -->
+                                <ng-container>
+
+                                </ng-container>
+                            </tr>
+                            <tr [style.background]="getBackgroundColor(9999)">
+                                <td>{{'UNSATURATION' | translate}}</td>
+                                <td *ngFor="let workstation of workstationSkills">{{getPercentage(100 -
+                                    workstation.saturation/3)}}%</td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <p-panel>
+                <p-header>
+                    <h4 class="text-center" style="font-weight: 600;">{{'MODEL-AREA' | translate}}</h4>
+                </p-header>
+                <div class="float-right" style="margin-right: -13px; margin-top:-8px" [ngStyle]="{'z-index':2 }">
+                    <button class="btn btn-info btn-xs" (click)="onViewGraph('PERCENTAGE_MODEL_AREA')">{{'view' |
+                        translate}}</button>
+                </div>
+                <div style="margin: 20px 5px 20px 5px;">
+                    <p-chart type="bar" [data]="barData" [options]="options" [height]="'350px'"></p-chart>
+                    <div class="clear-fix"></div>
+
+                </div>
+            </p-panel>
+
+        </p-tabPanel>
+        <p-tabPanel header="{{'time-based' | translate}}">
+            <div style="max-height: 360px; overflow-y: auto;">
+                <table class="table table-sm table-bordered">
+                    <thead>
+                        <th>{{'workstations' | translate}}</th>
+                        <th *ngFor="let workstation of workstationCategories; let index=index"
+                            [style.background]="getBackgroundColor(index)">
+                            {{workstation.skillMatrixCategoryDescription}}</th>
+                        <th [style.background]="getBackgroundColor(9999)">{{'total-value' | translate}}</th>
+                        <th *ngFor="let workstation of workstationCategories; let index=index">
+                            {{workstation.skillMatrixCategoryDescription}} %</th>
+                    </thead>
+
+                    <tbody>
+                        <tr *ngFor="let workstation of workstationSkills">
+                            <td>{{workstation.workStationName}}</td>
+                            <ng-container
+                                *ngIf="workstationCategories.length == workstation.categories.length; else noMatch">
+                                <td *ngFor="let cat of workstation.categories">{{cat.interest.toFixed(2)}}</td>
+                            </ng-container>
+                            <ng-template #noMatch>
+                                <td *ngFor="let wc of workstationCategories">
+                                    <ng-container *ngFor="let cat of workstation.categories">
+                                        <span
+                                            *ngIf="cat.skillMatrixCategoryDescription == wc.skillMatrixCategoryDescription; else noDescription">{{cat.interest.toFixed(2)}}</span>
+                                        <ng-template #noDescription>0</ng-template>
+                                    </ng-container>
+                                </td>
+                            </ng-template>
+                            <td>{{calculateTotalValue(workstation)}}</td>
+
+                            <!-- <ng-container *ngIf="workstationCategories.length == workstation.categories.length; else noMatchPer">
+                                <td *ngFor="let cat of workstation.categories">{{getPercentage(cat.interest * 100 / (calculateTotalValue(workstation))) }}</td>
+                            </ng-container>
+                            <ng-template #noMatchPer>
+                                <td *ngFor="let wc of workstationCategories">
+                                    <ng-container *ngFor="let cat of workstation.categories">
+                                        <span *ngIf="cat.skillMatrixCategoryDescription == wc.skillMatrixCategoryDescription; else noDescriptionPer">{{getPercentage(cat.interest * 100 / (calculateTotalValue(workstation))) }}</span>
+                                        <ng-template #noDescriptionPer>0</ng-template>
+                                    </ng-container>
+                                </td>
+                            </ng-template> -->
+
+                            <td *ngFor="let cat of workstation.categories">{{getPercentage(cat.interest * 100 /
+                                (calculateTotalValue(workstation))) }}</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="clear-fix"></div>
+            <p-panel>
+                <p-header>
+                    <h4 class="text-center" style="font-weight: 600;">{{'WORKLOAD-CHART' | translate}}</h4>
+                </p-header>
+                <div class="float-right" style="margin-right: -13px; margin-top:-8px" [ngStyle]="{'z-index':2 }">
+                    <button class="btn btn-info btn-xs" (click)="onViewGraph('WORKLOAD_CHART')">{{'view' |
+                        translate}}</button>
+                </div>
+                <div style="margin: 20px 5px 20px 5px;">
+                    <p-chart type="bar" [data]="workloadChartData" [options]="workLoadChartOptions" [height]="'350px'">
+                    </p-chart>
+                    <div class="clear-fix"></div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12" style="overflow-x: auto;">
+                        <table class="table table-sm table-bordered table-responsive">
+                            <thead>
+                                <tr>
+                                    <th rowspan="2" style="vertical-align: middle;">{{'categories' | translate}}</th>
+                                    <ng-container *ngIf="skillType == 'EMPLOYEE'; else WORKSTATIONTYPE1">
+                                        <th [attr.colspan]="workstationSkills.length" class="text-center">{{'employees'
+                                            |
+                                            translate}}</th>
+                                    </ng-container>
+                                    <ng-template #WORKSTATIONTYPE1>
+                                        <th [attr.colspan]="workstationSkills.length" class="text-center">
+                                            {{'workstations' |
+                                            translate}}</th>
+                                    </ng-template>
+                                </tr>
+                                <tr>
+                                    <th *ngFor="let workstation of workstationSkills">{{workstation.workStationName}}
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <tr *ngFor="let category of workstationSkills[0]?.categories; let index= index">
+                                    <td>
+                                        <div disabled [style.background]="getBackgroundColor(index)"
+                                            style="height: 12px; width: 12px; display:inline-block"></div> Sum of
+                                        {{category.skillMatrixCategoryDescription}}
+                                    </td>
+                                    <td *ngFor="let workstation of workstationSkills">
+                                        <ng-container *ngFor="let wCategory of workstation.categories">
+                                            <span
+                                                *ngIf="wCategory.skillMatrixCategoryId == category.skillMatrixCategoryId">{{wCategory.interest.toFixed(2)}}</span>
+                                        </ng-container>
+                                    </td>
+                                </tr>
+                                <tr [style.background]="getBackgroundColor(9999)">
+                                    <td>
+                                        <div disabled [style.background]="getBackgroundColor(9999)"
+                                            style="height: 12px; width: 12px; display:inline-block"></div> Sum of Total
+                                    </td>
+                                    <td *ngFor="let workstation of workstationSkills">
+                                        {{calculateTotalValue(workstation)}}
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </p-panel>
+
+        </p-tabPanel>
+    </p-tabView>
+</div>
+
+<ng-container *ngIf="modal.type === 'PERCENTAGE_MODEL_AREA'">
+    <p-dialog header="{{'MODEL-AREA'|translate}}" [(visible)]="modal.active" [autoZIndex]="true"  
+        [baseZIndex]="999999" modal="true" (onHide)="onHide(false)"
+        [style]="{'max-width': '100%','width': '100%', 'min-height': '100vh', 'top': '20px', overflow: 'auto'}"
+        baseZIndex="99999">
+        <div class="col-12 bg-white">
+            <div style="margin: 20px 5px 20px 5px;">
+                <p-chart type="bar" [data]="barData" [options]="options" [height]="'80vh'"></p-chart>
+                <div class="clear-fix"></div>
+            </div>
+        </div>
+    </p-dialog>
+</ng-container>
+
+
+<ng-container *ngIf="modal.type === 'WORKLOAD_CHART'">
+    <p-dialog header="{{'WORKLOAD-CHART'|translate}}" [(visible)]="modal.active" [autoZIndex]="true"  
+        [baseZIndex]="999999" modal="true" (onHide)="onHide(false)"
+        [style]="{'max-width': '100%','width': '100%', 'min-height': '100vh', 'top': '20px', overflow: 'auto'}"
+        baseZIndex="99999">
+        <div class="col-12 bg-white">
+            <div style="margin: 20px 5px 20px 5px;">
+                <p-chart type="bar" [data]="workloadChartData" [options]="workLoadChartOptions" [height]="'80vh'">
+                </p-chart>
+                <div class="clear-fix"></div>
+            </div>
+        </div>
+    </p-dialog>
+</ng-container>

@@ -1,0 +1,181 @@
+<p-confirmDialog></p-confirmDialog>
+
+<div class="animated fadeIn">
+
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+
+        <div class="card-body"  >
+
+          <p-table #dt [columns]="selectedColumns" scrollable="true" scrollHeight="55vh"
+           [value]="causes" [rows]="pagination.rows" [totalRecords]="pagination.totalElements" dataKey="stopCauseId" [(selection)]="selectedCauses" >
+
+            <ng-template pTemplate="caption">
+              <div style="text-align:left">
+                <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header" maxSelectedLabels="0"  selectedItemsLabel="{{'columns-selected'|translate}}"
+                               [style]="{minWidth: '200px'}" defaultLabel="Choose Columns">
+                  <ng-template let-col let-i="index" pTemplate="item">
+                    {{col.label|translate}}
+                  </ng-template>
+                </p-multiSelect>
+                <button pButton  class="ui-button-success float-right" (click)="modalShow(null,'NEW')" label="{{'add-new'|translate}}"> </button>
+                <button pButton style="margin-right: 5px" class="ui-button-warning float-right" type="button"  icon="fa fa-file-alt" iconPos="left" label="{{'export-all'|translate}}" (click)="dt.exportCSV()"></button>
+                <button pButton style="margin-right: 5px" class="ui-button-warning float-right" type="button"  icon="fa fa-file" iconPos="left" label="{{'export-selected'|translate}}" (click)="dt.exportCSV({selectionOnly:true})"
+                ></button>
+              </div>
+              <!--<hr>-->
+
+            </ng-template>
+            <ng-template pTemplate="header" let-columns>
+
+              <tr >
+                <th style="width: 3em" rowspan="2">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th *ngFor="let col of columns let i=index" style="cursor: pointer" [ngClass]="{'bg-selected-order':pageFilter.orderByProperty ==col.field}" (click)="reOrderData(i,col.field)"><i [ngClass]="'fa fa-sort-alpha-' + classReOrder[i]"></i>
+                  {{col.header|translate}}
+                </th>
+                <th width="80px" rowspan="2">{{'action' | translate}}</th>
+              </tr>
+              <tr>
+                <th *ngFor="let col of columns" class="ui-fluid" [ngSwitch]="col.field">
+                  <select *ngSwitchCase="'stopCauseStatus'" id="status" name="status" class="form-control" 
+                  [(ngModel)]="pageFilter.stopCauseStatus" (ngModelChange)="filter(pageFilter)">
+                    <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                    <option *ngFor="let status of listStatus" value="{{status}}">{{status}}</option>
+                  </select>
+                  <select *ngSwitchCase="'stopCauseTypeName'" id="stopCauseTypeName" name="stopCauseTypeName" 
+                  class="form-control" 
+                  [(ngModel)]="pageFilter.stopCauseTypeName" (ngModelChange)="filter(pageFilter)">
+                    <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                    <option *ngFor="let type of listTypes" value="{{type.stopCauseTypeName}}">{{type.stopCauseTypeName}}</option>
+                  </select>
+                  <select *ngSwitchCase="'planned'" id="planned" name="planned" class="form-control" [(ngModel)]="pageFilter.planned" (ngModelChange)="filter(pageFilter)">
+                    <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                    <option  value="true">{{'PLANNED'|translate}}</option>
+                    <option  value="false">{{'UNPLANNED'|translate}}</option>
+                  </select>
+                  <select *ngSwitchCase="'shift'" id="shiftid" name="shiftId" class="form-control"
+                  [(ngModel)]="pageFilter.shiftId" (ngModelChange)="filter(pageFilter)">
+                  <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                  <option *ngFor="let type of shiftList" value="{{type.shiftId}}">
+                    {{type.shiftName}}</option>
+                </select>
+                  <span *ngSwitchCase="'duration'"></span>
+                  <span *ngSwitchCase="'color'"></span>
+
+                  <select *ngSwitchCase="'workCenterType'" id="workCenterType" name="workCenterType" class="form-control"
+                  [(ngModel)]="pageFilter.workCenterTypeId" (ngModelChange)="filter(pageFilter)">
+                  <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                  <option *ngFor="let type of workcenterTypeList" value="{{type.workCenterTypeId}}">
+                    {{type.workCenterTypeName}}</option>
+                </select>
+                 
+                  <input *ngSwitchCase="'plant'" disabled style="width: 100%"  [(ngModel)]="pageFilter.plantName" pInputText type="text" (ngModelChange)="filter(pageFilter)">
+                  <input *ngSwitchDefault style="width: 100%"  [(ngModel)]="pageFilter[col.field]" pInputText type="text" (input)="filterByColumn($event.target.value,col.field)">
+                </th>
+
+              </tr>
+
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr [pSelectableRow]="rowData">
+                <td style="width: 3em">
+                  <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                </td>
+                <td *ngFor="let col of columns" style="cursor: pointer" [ngSwitch]="col.field">
+
+                  <a *ngSwitchCase="'stopCauseId'" href="javascript:;" (click)="modalShow(rowData.stopCauseId,'DETAIL')">{{rowData[col.field]}}</a>
+
+                  <a *ngSwitchCase="'plant'" href="javascript:;" (click)="showDetailDialog(rowData.plant?.plantId,'PLANT')">{{rowData[col.field]?.plantName}}</a>
+
+                  <a *ngSwitchCase="'shift'" href="javascript:;" (click)="showDetailDialog(rowData.shift?.shiftId,'SHIFT')">{{rowData[col.field]?.shiftName}}</a>
+
+                  <a *ngSwitchCase="'workCenterType'" href="javascript:;" (click)="showDetailDialog(rowData.workCenter?.workCenterId,'WORKCENTERTYPE')">{{rowData.workCenter?.workCenterTypeName}}</a>
+
+                  <a *ngSwitchCase="'stopCauseTypeName'" href="javascript:;" (click)="showDetailDialog(rowData.stopCauseTypeId,'CAUSETYPE')">{{rowData.stopCauseTypeName}}</a>
+
+                  <span *ngSwitchCase="'duration'"  (click)="modalShow(rowData.stopCauseId,'DETAIL')" > {{getReadableTime(rowData[col.field])}}</span>
+
+                  <span *ngSwitchCase="'startTime'"  (click)="modalShow(rowData.stopCauseId,'DETAIL')" > {{rowData[col.field] | date :'HH:mm' }}</span>
+                  <!-- <span *ngSwitchCase="'plant'"> {{rowData[col.field]?.plantName}}</span> -->
+                  <!-- <span *ngSwitchCase="'shift'"> {{rowData[col.field]?.shiftName}}</span> -->
+                  <span *ngSwitchCase="'planned'"  (click)="modalShow(rowData.stopCauseId,'DETAIL')" >{{rowData[col.field]?('PLANNED'|translate):('UNPLANNED'|translate)}}</span>
+
+                  <!--<p-colorPicker *ngSwitchCase="'color'" [ngModel]="rowData[col.field]" [disabled]="true" ></p-colorPicker>-->
+                  <span  *ngSwitchCase="'color'"  style="padding:8px 20px" [ngStyle]="{'background-color':rowData[col.field] }"  (click)="modalShow(rowData.stopCauseId,'DETAIL')" ></span>
+                  <span *ngSwitchCase="'affectOeeAvilability'">
+                    <p-checkbox [(ngModel)]="rowData[col.field]" binary="true" inputId="affectOeeAvilability" name="affectOeeAvilability" disabled=true></p-checkbox>
+                  </span>
+                  <span *ngSwitchCase="'affectOeePerformance'">
+                    <p-checkbox [(ngModel)]="rowData[col.field]" binary="true" inputId="affectOeePerformance" name="affectOeePerformance" disabled=true></p-checkbox>
+                  </span>
+
+                  <span *ngSwitchDefault  (click)="modalShow(rowData.stopCauseId,'DETAIL')" >{{rowData[col.field]}}</span>
+
+                </td>
+                <td width="80px" >
+                  <button class="btn btn-sm btn-outline-danger" type="button" (click)="delete(rowData.stopCauseId)">
+                    <i class="fa fa-trash"></i></button>
+                  <button class="btn btn-sm btn-outline-info" type="button" (click)="modalShow(rowData.stopCauseId,'EDIT')">
+                    <i class="fa fa-edit"></i></button>
+                </td>
+              </tr>
+
+            </ng-template>
+          </p-table>
+        <br/>
+          <div class="row">
+            <app-paging
+              [TotalElements]="pagination.totalElements"
+              [CurrentPage]="pagination.currentPage"
+              [PageSize]="pagination.pageSize"            [rows]="pagination.rows"
+              [TotalPageLinkButtons]="pagination.TotalPageLinkButtons"
+              [RowsPerPageOptions]="pagination.RowsPerPageOptions"
+              (onPageChange)="myChanges($event)"
+            ></app-paging>
+            <span style="margin-left:2px; padding-top: 2px " class="text-muted" >{{'total-records'|translate}}: {{pagination?.totalElements}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--/.col-->
+  </div>
+</div>
+<div bsModal [config]="{backdrop: 'static', keyboard: false}" #myModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true" (onHidden)="causesModal.modal=null; causesModal.id=null;">
+  <div class="modal-dialog modal-success modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"> {{'cause-information' | translate}}</h4>
+        <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <ng-template [ngIf]="causesModal.modal=='NEW'">
+          <causes-new (saveAction)="myModal.hide(); filter(pageFilter)"></causes-new>
+        </ng-template>
+        <ng-template [ngIf]="causesModal.modal=='EDIT'">
+          <causes-edit [id]="causesModal.id" (saveAction)="myModal.hide(); filter(pageFilter)"></causes-edit>
+        </ng-template>
+        <ng-template [ngIf]="causesModal.modal=='DETAIL'">
+          <causes-detail [id]="causesModal.id" ></causes-detail>
+        </ng-template>
+
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary" (click)="myModal.hide()">{{'close' | translate}}</button>
+        <button *ngIf="causesModal.modal=='DETAIL'" type="button" class="btn rounded btn-primary" (click)="causesModal.modal='NEW'">{{'new' | translate}}</button>
+        <button *ngIf="causesModal.modal=='DETAIL'" type="button" class="btn rounded btn-success"
+                (click)="causesModal.modal='EDIT'">{{'edit' | translate}}</button>
+
+
+      </div>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

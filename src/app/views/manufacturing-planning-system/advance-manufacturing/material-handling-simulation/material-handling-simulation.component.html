@@ -1,0 +1,296 @@
+<div class="row">
+  <div class="col-lg-12">
+    <div class="card" style="margin-bottom: 0px !important">
+      <div class="card-header">
+        {{ "material-handling-simulation" | translate }}
+      </div>
+      <div class="card-body">
+        <div class="d-flex">
+          <div class="col-md-12 d-flex badge-light border m-minus-10 p-2">
+            <input type="text" placeholder="Customer No" [(ngModel)]="filters.customerNo" class="time-w" max="49"
+              min="0" pInputText />
+            <input type="text" placeholder="Stock No" [(ngModel)]="filters.stockNo" class="time-w mr-2 ml-2" max="49"
+              min="0" pInputText />
+            <div>
+              <workstation-auto-complete [plantId]="filters?.plantId" (selectedWorkStationEvent)="
+                  filter('workstationNo', $event.workStationNo)
+                ">
+              </workstation-auto-complete>
+            </div>
+            <div class="col-md-2 px-1 ui-fluid">
+              <p-calendar [(ngModel)]="dates.startDate" [monthNavigator]="true" [yearNavigator]="true"
+                yearRange="1990:2100" (ngModelChange)="datefilter($event)" [showIcon]="true" dateFormat="dd/mm/yy"
+                placeholder="{{ 'order-start-date' | translate }}"></p-calendar>
+            </div>
+            <div class="col-md-2 px-1 ui-fluid">
+              <p-calendar [(ngModel)]="dates.finishDate" [monthNavigator]="true" [yearNavigator]="true"
+                yearRange="1990:2100" placeholder="{{ 'order-end-date' | translate }}"
+                (ngModelChange)="datefilter($event)" [showIcon]="true" dateFormat="dd/mm/yy"></p-calendar>
+            </div>
+            <div class="ml-1">
+              <div class="p-field-checkbox">
+                <p-checkbox name="pallet" [(ngModel)]="isVisiblePallet" binary="true"
+                  ></p-checkbox>
+                  <label style="margin-left: 0.295rem;" for="pallet">{{'show-target' | translate}}</label>
+              </div>
+            </div>
+            <div class="col">
+              <button pButton type="button" class="float-right" icon="fa fa-refresh" label="Filter" name="refresh"
+                (click)="getMaterialHandlingSimulation()"></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-parent">
+          <div class="d-flex">
+            <div class="d-flex">
+              <!-- workstation -->
+              <div class="pp workstation">
+                <p-table [rows]="pagination.rows" [totalRecords]="pagination.totalElements" class="custom-appreance"
+                  [columns]="columns_workstation" [value]="stockOrders" responsiveLayout="scroll" [autoLayout]="true">
+                  <ng-template pTemplate="header" let-columns>
+                    <tr>
+                      <th [ngStyle]="{
+                          'min-width': col.width ? col.width : 'auto'
+                        }" class="bg-grey" *ngFor="let col of columns">
+                        {{ col.displayName }}
+                      </th>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-data let-columns="columns">
+                    <tr>
+                      <td *ngFor="let col of columns">
+                        <label class="label-style">{{
+                          col.field === "workStation"
+                          ? data?.workstation?.workStationName
+                          : col.field === "customerCode"
+                          ? data?.act?.actNo
+                          : col.field === "stockNo"
+                          ? data?.stock?.stockNo
+                          : col.field === "stockName"
+                          ? data?.stock?.stockName
+                          : col.field === "unit"
+                          ? data?.stock?.baseUnit
+                          : ""
+                          }}</label>
+                      </td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+              </div>
+              <!-- pallet -->
+              <div class="pp pallet" *ngIf="isVisiblePallet">
+                <p-table [rows]="pagination.rows" [totalRecords]="pagination.totalElements" class="custom-appreance"
+                  [columns]="columns_pallet" [value]="stockOrders" responsiveLayout="scroll" [autoLayout]="true">
+                  <ng-template pTemplate="header" let-columns>
+                    <tr>
+                      <th width="50" class="bg-cyan" *ngFor="let col of columns">
+                        {{ col.displayName }}
+                      </th>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-data let-columns="columns">
+                    <tr>
+                      <td *ngFor="let col of columns" [ngClass]="{ 'bg-cyan': col.field === 'totalCapacity' }">
+                        <label class="label-style text-center">{{
+                          data?.pallet && data?.pallet[col.field]
+                          | number: "1.2-2"
+                          }}</label>
+                      </td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+              </div>
+              <!-- Job Orders -->
+              <div class="pp">
+                <div style="width: calc(100% - 100px)" class="position-absolute bg-green">
+                  <label>Job Orders</label>
+                </div>
+                <p-table [rows]="pagination.rows" [totalRecords]="pagination.totalElements"
+                  [columns]="columns_job_orders" [value]="stockOrders" class="custom-appreance"
+                  responsiveLayout="scroll" [autoLayout]="true">
+                  <ng-template [class]="'position-relative'" pTemplate="header" let-columns>
+                    <tr>
+                      <th [class.totalqty-header]="
+                          col.field === 'totalOrderQuantity'
+                        " [ngStyle]="{ width: isLast ? '100px' : 'auto' }" [class.bg-majanda]="isLast"
+                        *ngFor="let col of columns; let isLast = last">
+                        {{ col.displayName }}
+                      </th>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-data let-columns="columns">
+                    <tr>
+                      <td *ngFor="let col of columns" [ngClass]="{ 'bg-dark-blue': col.field === 'total' }">
+                        <label class="label-style text-center">{{
+                          col.field === "total"
+                          ? data?.totalOrderQuantity
+                          : data?.jobOrder && data?.jobOrder[col.field]
+                          }}
+                        </label>
+                      </td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+              </div>
+            </div>
+            <div class="d-flex">
+              <!-- Warehouse -->
+              <div class="pp warehouse ml-3 mr-1">
+                <div class="width-100 position-absolute bg-camel">
+                  <label for="">Warehouse</label>
+                </div>
+                <p-table [rows]="pagination.rows" [totalRecords]="pagination.totalElements" class="custom-appreance"
+                  [columns]="columns_warehouse" [value]="stockOrders" responsiveLayout="scroll" [autoLayout]="true">
+                  <ng-template pTemplate="header" let-columns>
+                    <tr>
+                      <th style="min-width: 45px; padding: 0" *ngFor="let col of columns">
+                        <div class="height-100 d-flex flex-column">
+                          <div class="t-cell">
+                            {{ col.wareHouseNo }}
+                          </div>
+                          <div class="vertical-text">
+                            {{ col.wareHouseName }}
+                          </div>
+                        </div>
+                      </th>
+                      <th class="text-center">Total</th>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-data let-columns="columns">
+                    <tr>
+                      <td *ngFor="let col of columns">
+                        <label class="label-style text-center">
+                          {{ data?.warehouseInfo[col.wareHouseNo] }}
+                        </label>
+                      </td>
+                      <td>
+                        <label class="label-style text-center">
+                          {{ data?.warehouseInfo.total / 2 }}
+                        </label>
+                      </td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+              </div>
+              <!-- Production Plan -->
+              <div class="pp mr-1">
+                <div class="width-100 b-r b-l position-absolute bg-light-green">
+                  <button (click)="run()">Run</button>
+                  <div class="flex-grow-1 d-flex justify-content-around">
+                    <label for="">Production Plan</label>
+                  </div>
+                </div>
+                <p-table [rows]="pagination.rows" [totalRecords]="pagination.totalElements" class="custom-appreance"
+                  [columns]="columns_with_dates" [value]="stockOrders" responsiveLayout="scroll" [autoLayout]="true">
+                  <ng-template pTemplate="header" let-columns>
+                    <tr>
+                      <th style="padding: 0" *ngFor="let col of columns">
+                        <div class="d-flex flex-column justify-content-around height-100">
+                          <div class="t-cell">
+                            {{ col.day }}
+                          </div>
+                          <div class="d-flex flex-column">
+                            <div class="text-center">{{ col.date }}</div>
+                            <div class="d-flex mt-3 b-t">
+                              <div style="width: 50px" class="d-flex align-items-center b-r p-1 justify-content-center"
+                                title="Available Capacity">
+                                %
+                              </div>
+                              <div style="width: 50px" class="d-flex align-items-center p-1 justify-content-center"
+                                title="Quantity to Plan">
+                                <img src="assets/img/write-svgrepo-com.svg" height="14px" alt="" />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </th>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-data let-rowIndex="rowIndex" let-columns="columns">
+                    <tr>
+                      <td class="multi-cell" *ngFor="let col of columns">
+                        <div class="d-flex align-items-center justify-content-around">
+                          <div style="width: 50px; min-height: 28px" class="flex-grow-1 text-center b-r ellipsis"
+                            [attr.title]="
+                              data?.availableCapacity[col.date] + '%'
+                            ">
+                            {{ data?.availableCapacity[col.date] }}
+                          </div>
+                          <div style="width: 50px" class="flex-grow-1 text-center ellipsis">
+                            <input style="border-bottom: 1px solid #c8c8c8" class="transparent-input ellipsis"
+                              type="text" [(ngModel)]="data.productionPlan[col.date]" (change)="
+                                calculateProduction(
+                                  data.productionPlan[col.date],
+                                  rowIndex,
+                                  col.date
+                                )
+                              " />
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+              </div>
+              <!-- Stock prediction -->
+              <div class="pp">
+                <div class="width-100 position-absolute bg-skin">
+                  <label for="">Stock Report and Available Workstation Capacity
+                    Percentage</label>
+                </div>
+                <p-table [rows]="pagination.rows" [totalRecords]="pagination.totalElements" class="custom-appreance"
+                  [columns]="columns_with_dates" [value]="stockOrders" responsiveLayout="scroll" [autoLayout]="true">
+                  <ng-template pTemplate="header" let-columns>
+                    <tr>
+                      <th style="min-width: 50px; padding: 0" *ngFor="let col of columns">
+                        <div class="d-flex flex-column justify-content-around height-100">
+                          <div class="t-cell">
+                            {{ col.day }}
+                          </div>
+                          <div class="text-center">
+                            {{ col.date }}
+                          </div>
+                        </div>
+                      </th>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-data let-columns="columns">
+                    <tr>
+                      <td class="multi-cell" *ngFor="let col of columns">
+                        <div class="d-flex align-items-center justify-content-around">
+                          <div style="width: 50px; min-height: 28px" class="flex-grow-1 text-center b-r ellipsis"
+                            [attr.title]="
+                              data?.allocatedCapacity[col.date] + '%'
+                            ">
+                            {{ data?.allocatedCapacity[col.date] }}
+                          </div>
+                          <div style="width: 50px" class="flex-grow-1 text-center ellipsis"
+                            [attr.title]="data?.stockShiftReports[col.date]">
+                            {{ data?.stockShiftReports[col.date] }}
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="stockOrders.length === 0" class="no-record">
+          No Records Found
+        </div>
+        <br />
+        <div class="pagination-bar">
+          <app-paging [showSearch]="false" [TotalElements]="pagination.totalElements"
+            [CurrentPage]="pagination.currentPage" [PageSize]="pagination.pageSize" [rows]="pagination.rows"
+            [TotalPageLinkButtons]="pagination.TotalPageLinkButtons"
+            [RowsPerPageOptions]="pagination.RowsPerPageOptions" (onPageChange)="myChanges($event)"></app-paging>
+          <span>{{ "total-records" | translate }}:
+            {{ pagination?.totalElements }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,242 @@
+<!--<form #orderEdit="ngForm" >-->
+  <div class="animated fadeIn">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            {{'maintenance-operation'|translate}}
+          </div>
+          <div class="card-body">
+            <form #saleForm="ngForm" class="form-horizontal ui-fluid">
+              <table class="table table-bordered m-0">
+                <tbody>
+                <tr>
+                  <td>
+                    <div class="card" style="margin: 0px;">
+                      <!-- <div class="card-header">
+                        {{'maintenance-operation-information'|translate}}
+                      </div> -->
+                      <div class="card-body">
+                        <table class="table table-bordered m-0">
+                          <tr>
+                            <td width="30%">{{'maintenance-operation-id' | translate}}</td>
+                            <td> <span class="form-control bg-readonly">{{dataModel.maintenanceOperationId}}</span>
+                          </td>
+                          <tr>
+                            <td width="30%">{{'equipment-operation' | translate}}</td>
+                            <td> <equipment-operation-auto-complete [required]="true" [addIfMissing]="true" [selectedEquipmentOperation]="detailData?.equipmentOperation"
+                                      [disabled]="maintenanceStatus === 'COMPLETED'"
+                                                                (selectedEquipmentOperationEvent)="setSelectedEquipmentOperation($event)"></equipment-operation-auto-complete>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td >{{'equipment' | translate}}</td>
+                            <td>
+                              {{dataModel.equipment?.equipmentName}}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>{{'planning-plant' | translate}}</td>
+                            <td>{{dataModel.planningPlant?.plantName}}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>{{'workstation' | translate}}</td>
+                            <td>
+                              {{dataModel.workstation?.workStationName}}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>{{'maintenance-activity-type' | translate}}</td>
+                            <td>
+                              <select id="maintenanceActivityType" name="maintenanceActivityType" class="form-control" [(ngModel)]="dataModel.maintenanceActivityType">
+                     
+                                <option [ngValue]="null">{{ "please-select" | translate }}</option>
+                                <option *ngFor="let maintenanceActivityType of maintenanceActivityTypes" value="{{maintenanceActivityType}}">
+                                  {{maintenanceActivityType}}
+                                </option>
+                              </select>
+                            </td>
+                          </tr>
+                          
+  
+                <tr>
+                  <td >{{'work' | translate}}</td>
+                  <td><input class="form-control" [(ngModel)]="dataModel.work" type="number" min="0"
+                             name="work" />
+                  </td>
+                </tr>
+                <tr>
+                  <td >{{'unit' | translate}}</td>
+                  <td><unit-auto-complete [addIfMissing]="true" [selectedUnit]="dataModel.workUnit" (unitChangeEvent)="dataModel.workUnit=$event"></unit-auto-complete>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td >{{'final-cost' | translate}}</td>
+                  <td><input class="form-control" [(ngModel)]="dataModel.finalCost" type="number" min="0" name="finalCost" />
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>{{'cost-rate' | translate}}</td>
+                  <td><input class="form-control" [(ngModel)]="dataModel.costRate" type="number" min="0"
+                      name="costRate" />
+                  </td>
+                </tr>
+                        </table>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="card" style="margin: 0px;">
+                      <!-- <div class="card-header">
+                        {{'operation-information'|translate}}
+                      </div> -->
+                      <div class="card-body">
+                        <table class="table table-bordered m-0">
+                          <tr>
+                            <td width="30%">{{'actual-work' | translate}}</td>
+                            <td><input class="form-control" [(ngModel)]="dataModel.actualWork" 
+                              [disabled]="maintenanceStatus === 'COMPLETED'"
+                              type="number" min="0"
+                                      name="actualWork" />
+                            </td>
+                          </tr>
+                          <tr>
+                            <td >{{'actual-work-unit' | translate}}</td>
+                            <td><unit-auto-complete [addIfMissing]="true" 
+                              [disabled]="maintenanceStatus === 'COMPLETED'"
+                              [selectedUnit]="dataModel.actualWorkUnit" (unitChangeEvent)="dataModel.actualWorkUnit=$event"></unit-auto-complete>
+                            </td>
+                          </tr>
+                          <tr> 
+                            <td >{{'duration' | translate}}</td>
+                            <td><input class="form-control" [(ngModel)]="dataModel.duration"
+                              [disabled]="maintenanceStatus === 'COMPLETED'" type="number" min="0"
+                                       name="duration" />
+                            </td>
+                          </tr>
+                          <!-- <tr>
+                            <td >{{'duration-unit' | translate}}</td>
+                            <td><unit-auto-complete [addIfMissing]="true" [selectedUnit]="dataModel.durationUnit" (unitChangeEvent)="dataModel.durationUnit=$event"></unit-auto-complete>
+                            </td>
+                          </tr> -->
+                          <tr>
+                            <td >{{'index-no' | translate}}</td>
+                            <td><input class="form-control" [(ngModel)]="dataModel.indexNo" type="number" min="0"
+                                       name="indexNo" />
+                            </td>
+                          </tr>
+                          <tr>
+  
+                            <td>{{'planned-start-date' | translate}}</td>
+                            <td><p-calendar [(ngModel)]="dataModel.plannedStartDate" [showTime]="true"
+                              [disabled]="maintenanceStatus === 'COMPLETED'"
+                                            [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                                            placeholder="{{'start-date'|translate}}" name="plannedStartDate"
+                                            [showIcon]="true" dateFormat="dd/mm/yy"></p-calendar>
+                            </td>
+                          </tr>
+                     <tr>
+                  <td>{{'planned-finish-date' | translate}}</td>
+                  <td><p-calendar [(ngModel)]="dataModel.plannedFinishDate" name="plannedFinishDate"
+                    [disabled]="maintenanceStatus === 'COMPLETED'"
+                                  [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                                  placeholder="{{'finish-date'|translate}}" [showTime]="true"
+                                  [showIcon]="true" dateFormat="dd/mm/yy"></p-calendar>
+                  </td>
+                </tr>
+                <tr *ngIf="dataModel.maintenanceOrderStatus==='COMPLETED' || dataModel.maintenanceOrderStatus==='INPROCESS'">
+                  <td>{{'actual-start-date' | translate}}</td>
+                  <td>
+                    <p-calendar [(ngModel)]="dataModel.actualStartDate" name="actualstartDate"
+                    [disabled]="maintenanceStatus === 'COMPLETED'"
+                                [monthNavigator]="true" [showTime]="true" [yearNavigator]="true" yearRange="1990:2100"
+                                [showIcon]="true" dateFormat="dd/mm/yy"></p-calendar>
+                  </td>
+                </tr>
+                <tr *ngIf="dataModel.maintenanceOrderStatus==='COMPLETED'">
+                  <td>{{'actual-finish-date' | translate}}</td>
+                  <td>
+                    <p-calendar [(ngModel)]="dataModel.actualFinishedDate" name="actualfinisheddate"
+                    [disabled]="maintenanceStatus === 'COMPLETED'"
+                                [monthNavigator]="true" [showTime]="true" [yearNavigator]="true" yearRange="1990:2100"
+                                [showIcon]="true" dateFormat="dd/mm/yy"></p-calendar>
+                  </td>
+                </tr>
+                <tr *ngIf="fromOutStandToProcess">
+                  <td>{{'actual-start-date' | translate}}</td>
+                  <td><p-calendar [(ngModel)]="dataModel.actualStartDate"
+                    [disabled]="maintenanceStatus === 'COMPLETED'"
+                                  [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                                  placeholder="{{'start-date'|translate}}" name="plannedStartDate"
+                                  [showIcon]="true" [showTime]="true" dateFormat="dd/mm/yy"></p-calendar>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'employee-name' | translate}}</td>
+                  <td>
+                    <employee-auto-complete [selectedEmployeeId]="dataModel.maintenanceEmployeeId"
+                    [required]="fromOutStandToProcess"
+                    [disabled]="maintenanceStatus === 'COMPLETED'" (selectedEmployeeEvent)="dataModel.maintenanceEmployeeId=$event?.employeeId"></employee-auto-complete>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'result-note' | translate}}</td>
+                  <td>
+                    <textarea name="resultNote" id="resultNote"
+                    [disabled]="maintenanceStatus === 'COMPLETED'" [(ngModel)]="dataModel.resultNote" class="form-control"></textarea>
+                  </td>
+                </tr>
+                        </table>
+                      </div>
+                    </div>
+                  </td>
+                  
+                 
+                </tr>
+  
+                <!-- <tr>
+                  <td >{{'no-of-person' | translate}}</td>
+                  <td><input class="form-control" [(ngModel)]="dataModel.numberOfperson" type="number" min="0"
+                             name="indexNo" />
+                  </td>
+                </tr> -->
+                <!-- <tr>
+                  <td>{{'actual-start-date' | translate}}</td>
+                  <td><p-calendar [(ngModel)]="dataModel.actualStartDate"
+                                  [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                                  placeholder="{{'start-date'|translate}}" name="plannedStartDate"
+                                  [showIcon]="true" dateFormat="dd/mm/yy"></p-calendar>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'actual-finish-date' | translate}}</td>
+                  <td><p-calendar [(ngModel)]="dataModel.actualFinishedDate" name="actualFinishedDate"
+                                  [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                                  placeholder="{{'finish-date'|translate}}"
+                                  [showIcon]="true" dateFormat="dd/mm/yy"></p-calendar>
+                  </td>
+                </tr> -->
+                </tbody>
+  
+              </table>
+  
+            </form>
+          </div>
+          <div class="card-footer">
+            <!-- <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+              {{'reset' | translate}}
+            </button> -->
+            <button type="submit" class="btn btn-sm btn-primary" [disabled]="!saleForm.form.valid || !dataModel.equipmentOperationId"
+                    (click)="save()"><i class="fa fa-dot-circle-o"></i>
+              {{'save' | translate}}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div><!--/.row-->
+  </div>
+  <!--</form>-->
+  

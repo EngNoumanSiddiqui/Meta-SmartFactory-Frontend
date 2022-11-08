@@ -1,0 +1,328 @@
+<table class="table table-bordered ui-fluid cost-screen">
+    <tbody>
+        <tr>
+            <td>
+                <span class="d-flex">
+                    <span style="width: 40%;">
+                        <strong>{{ "material" | translate }}:   </strong>
+                    </span>
+                    <span style="width: 60%;">{{stock?.stockNo}} | {{purchasingScreen?.stockName}}</span>
+                </span>
+            </td>
+            <td>
+                <span class="d-flex">
+                    <span style="width: 40%;">
+                        <strong>{{ "warehouse" | translate }}:&nbsp;&nbsp;</strong>
+                    </span>
+                    <span style="width: 60%;">
+                        {{purchasingScreen?.wareHouseName}}
+                    </span>
+                </span>
+
+            </td>
+            <td>
+                <span><strong>{{ "plant" | translate }}: </strong></span>
+                {{purchasingScreen?.plantName}}
+            </td>
+
+        </tr>
+        <tr>
+            <td>
+                <span class="d-flex">
+                    <span style="width: 40%;">
+                        <strong>{{ "base-unit-measure" | translate }}:&nbsp;&nbsp;</strong>
+                    </span>
+                    <span style="width: 58%;">
+                       {{purchasingScreen.baseUnitMeasure}}
+                    </span>
+                </span>
+                <!-- <span style="width: 40%;">
+                    <strong>{{ "base-unit-measure" | translate }}: </strong>
+                </span>
+                {{purchasingScreen?.baseUnitMeasure}} -->
+            </td>
+            <td>
+                <span class="d-flex">
+                    <span style="width: 40%;">
+                        <strong>{{ "order-unit" | translate }}:&nbsp;&nbsp;</strong>
+                    </span>
+                    <span style="width: 58%;">
+                       {{purchasingScreen.orderUnit}}
+                    </span>
+                </span>
+
+            </td>
+            <td>
+                <span class="d-flex">
+                    <strong>{{ "batch-management" | translate }}:&nbsp;&nbsp;</strong>
+                    <p-checkbox [binary]="true" [(ngModel)]="purchasingScreen.batchManagement" ></p-checkbox>
+                </span>
+            </td>
+
+        </tr>
+
+        <tr>
+            
+            <td>
+                <span class="d-flex">
+                    <span style="width: 40%;">
+                        <strong>{{ "supplier-lead-time-day" | translate }}:&nbsp;&nbsp;</strong>
+                    </span>
+                    <span style="width: 60%;">
+                        {{purchasingScreen.supplierLeadTimeDay}}
+                        
+                    </span>
+                </span>
+            </td>
+            <td>
+                <span class="d-flex">
+                    <span style="width: 40%;">
+                        <strong>{{"max-order-size-per-week" | translate}}:&nbsp;&nbsp;</strong>
+                    </span>
+                    <span style="width: 60%;">
+                        {{purchasingScreen.maxOrderSizePerWeek}}
+                    
+                    </span>
+                </span>
+            </td>
+
+        </tr>
+    </tbody>
+</table>
+<div class="cost-screen-header">
+    <span>{{ "info-records" | translate }}</span>
+    <!-- <button style="float: right; padding: 0 5px;" type="button" class="btn btn-primary" data-toggle="modal"
+        (click)="showInfoRecordModal()">
+        <i class="fa fa-plus-circle"></i>
+    </button> -->
+</div>
+
+<p-table [value]="infoRecordsList">
+    <ng-template pTemplate="header">
+        <tr>
+            <th>Vendor</th>
+            <th>Net Price</th>
+            <th style="width: 135px;">Effective Price</th>
+            <th>Currency</th>
+            <th>Status</th>
+            <th>Description</th>
+            <th style="width: 180px;">Action</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-infoRecord>
+        <tr>
+            <td>{{infoRecord.vendorId}}</td>
+            <td>{{infoRecord.purchaseConditionRecord.netPrice}}</td>
+            <td>{{infoRecord.purchaseConditionRecord.effectivePrice}}</td>
+            <td>{{infoRecord.purchaseConditionRecord.currencyCode}}</td>
+            <td>{{infoRecord.purchaseInfoRecordStatus}}</td>
+            <td>{{infoRecord.description}}</td>
+            <td style="width: 180px;">
+                <button class="btn btn-success" type="button" (click)="conditionAction(infoRecord.purchaseInfoRecordId)" style="margin-right:5px">Condition</button>
+                <button class="btn btn-sm btn-outline-danger" type="button" (click)="delete(infoRecord)">
+                    <i class="fa fa-trash"></i></button>
+                <button class="btn btn-sm btn-outline-info" type="button" (click)="onRowSelect(infoRecord);">
+                    <i class="fa fa-edit"></i></button>
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
+
+
+
+<!------------------------- Modals ---------------------------------------->
+<!-- <ng-template [ngIf]="modal.active"> -->
+<div bsModal [config]="{backdrop: 'static', keyboard: false}" #myModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+    aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-success" role="document" style="max-width: 55%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <span>{{ "info-record" | translate }}</span>
+                </h4>
+                <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-bordered info-record-tbl">
+                            <tr>
+                                <td style="width: 50%;">{{ 'material' | translate }}:<span style="padding-left:10px">{{ purchasingScreen?.stockName }}</span></td>
+                                <td>{{ 'base-unit' | translate }}:<span style="padding-left:10px">{{ purchasingScreen?.baseUnitMeasure }}</span></td>
+                                <td>{{ 'order-unit' | translate }}:<span style="padding-left:10px">{{ purchasingScreen?.orderUnit }}</span></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-md-12">
+                        <table class="table table-bordered info-record-tbl">
+                            <tr>
+                                <td>
+                                    <span>{{ 'vendor' | translate }}: </span>
+                                    <span style="margin-left: 30px;">
+                                        <auto-complete [dropdown]="true" [allElements]="actList" [itemName]="'actName'"
+                                            [required]="true" (selectedEvent)="setSelectedVendor($event)" [inputStyle]="{'width': '230px'}">
+                                        </auto-complete>
+                                    </span>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td style="border: none;">
+                                    <span>
+                                        {{ 'description' | translate }}:
+                                    </span>
+                                    <span>
+                                        <textarea [rows]="5" [cols]="30" style="height: 50px; width: 270px" id="description"
+                                            name="description" [(ngModel)]="infoRecordDto.description"></textarea>
+                                    </span>
+                                </td>
+                            </tr>
+
+                        </table>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="cost-screen-header">
+                            <span>{{ "Purchase Control" | translate }}</span>
+                        </div>
+                        <table class="table info-record-tbl">
+                            <tr>
+                                <td colspan="1">{{ "Purchase Group" | translate }}</td>
+                                <td colspan="2">
+                                    <select id="purchseGroup" name="purchseGroup" class="form-control"
+                                        [(ngModel)]="infoRecordDto.purchaseControl.purchaseGroupId">
+                                        <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                                        <option value="{{purchaseGroup.purchaseGroupId}}"
+                                            *ngFor="let purchaseGroup of purchaseGroups">
+                                            {{purchaseGroup.purchaseGroupName}}
+                                        </option>
+                                    </select>
+                                </td>
+                                <td colspan="1">{{ "Planned Delivery Time" | translate }}</td>
+                                <td colspan="2">
+                                    <span class="d-flex">
+                                        <input type="text" id="plannedDeliveryTime" name="plannedDeliveryTime"
+                                            class="form-control" class="form-control"
+                                            [(ngModel)]="infoRecordDto.purchaseControl.plannedDeliveryTime" />
+                                            <span style="margin-left:5px">Days</span>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>{{ "Standard Quantity" | translate }}</td>
+                                <td>
+                                    <input type="number" id="standardQuantity" name="standardQuantity"
+                                        class="form-control" class="form-control"
+                                        [(ngModel)]="infoRecordDto.purchaseControl.standardQuantity" />
+                                </td>
+                                <td>{{ "Minimum Quantity" | translate }}</td>
+                                <td>
+                                    <input type="number" id="minQuanity" name="minQuanity" class="form-control"
+                                        class="form-control"
+                                        [(ngModel)]="infoRecordDto.purchaseControl.minimumQuantity" />
+                                </td>
+                                <td>{{ "Maximum Quantity" | translate }}</td>
+                                <td>
+                                    <input type="number" id="maxQuanity" name="maxQuanity" class="form-control"
+                                        class="form-control"
+                                        [(ngModel)]="infoRecordDto.purchaseControl.maximumQuantity" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="cost-screen-header">
+                            <span>{{ "Conditions" | translate }}</span>
+                            <button type="button" class="btn btn-warning" style="float: right; padding: 0 5px;">Edit</button>
+                        </div>
+                        <table class="table info-record-tbl">
+                            <tr>
+                                <td>{{ "Incoterms" | translate }}</td>
+                                <td>
+                                    <select id="incoTerm" name="incoTerm" class="form-control"
+                                        [(ngModel)]="infoRecordDto.purchaseConditionRecord.incoTerm">
+                                        <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                                        <option value="{{incoTerm}}" *ngFor="let incoTerm of incoTerms">
+                                            {{incoTerm}}
+                                        </option>
+                                    </select>
+                                </td>
+                                <td>{{ "Currency" | translate }}</td>
+                                <td>
+                                    <currency-auto-complete (selectedCurrencyEvent)="setSelectedCurrencyEvent($event)">
+                                    </currency-auto-complete>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>{{'valid-from' | translate}}</td>
+                                <td>
+                                    <p-calendar name="validFrom" [monthNavigator]="true" [yearNavigator]="true"
+                                        yearRange="1990:2100" [showIcon]="true" dateFormat="dd/mm/yy"
+                                        [style]="{'display': 'flex'}"
+                                        [(ngModel)]="infoRecordDto.purchaseConditionRecord.validFrom"></p-calendar>
+                                </td>
+                                <td>{{'Net Price'| translate}}</td>
+                                <td>
+                                    <span class="d-flex">
+                                        <input type="text" id="netPrice" name="netPrice" class="form-control"
+                                            class="form-control" style="width: 55%;margin-right: 5px;"
+                                            [(ngModel)]="infoRecordDto.purchaseConditionRecord.netPrice" />
+                                        <input type="text" class="form-control" class="form-control"
+                                            style="width: 20%;margin-right: 5px;" disabled />
+                                        <input type="text" value="/1" class="form-control" class="form-control"
+                                            style="width: 25%;margin-right: 5px;" disabled />
+                                    </span>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>{{'Valid To' | translate}}</td>
+                                <td>
+                                    <p-calendar name="validTo" [monthNavigator]="true" [yearNavigator]="true"
+                                        yearRange="1990:2100" [showIcon]="true" dateFormat="dd/mm/yy"
+                                        [style]="{'display': 'flex'}"
+                                        [(ngModel)]="infoRecordDto.purchaseConditionRecord.validTo"></p-calendar>
+                                </td>
+                                <td>{{'Effective Price' | translate}}</td>
+                                <td>
+                                    <span class="d-flex">
+                                        <input type="text" id="effectivePrice" name="effectivePrice"
+                                            class="form-control" class="form-control"
+                                            style="width: 55%;margin-right: 5px;" disabled />
+                                        <input type="text" class="form-control" class="form-control"
+                                            style="width: 20%;margin-right: 5px;" disabled />
+                                        <input type="text" value="/1" class="form-control" class="form-control"
+                                            style="width: 25%;margin-right: 5px;" disabled />
+                                    </span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="myModal.hide()">
+                    {{ "close" | translate }}
+                </button>
+                <span>
+                    <button type="button" class="btn btn-danger" (click)="resetInfoRecord()">
+                        {{ "reset" | translate }}
+                    </button>
+                </span>
+                <span>
+                    <button type="button" class="btn btn-success" (click)="addInfoRecords()">
+                        {{ "add" | translate }}
+                    </button>
+                </span>
+
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->

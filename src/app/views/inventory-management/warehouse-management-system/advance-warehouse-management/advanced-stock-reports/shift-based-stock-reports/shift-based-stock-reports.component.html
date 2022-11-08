@@ -1,0 +1,68 @@
+<div class="card">
+  <div class="card-body">
+    <div class="d-flex">
+      <div class="col-md-12 d-flex badge-light border m-minus-10 p-2">
+        <!--<stock-auto-complete (selectedStockEvent)="stockChanged($event)" [dropdown]="true"></stock-auto-complete>-->
+        <div class="col px-1 ui-fluid">
+          <p-calendar [(ngModel)]="shiftBasedStockReportPageFilter.startDate" [monthNavigator]="true"
+            [yearNavigator]="true" yearRange="1990:2100" [showIcon]="true" dateFormat="dd/mm/yy"
+            placeholder="{{'start-date'|translate}}"></p-calendar>
+        </div>
+        <div class="col px-1 ui-fluid">
+          <p-calendar [(ngModel)]="shiftBasedStockReportPageFilter.finishDate" [monthNavigator]="true"
+            [yearNavigator]="true" yearRange="1990:2100" placeholder="{{'finish-date'|translate}}" [showIcon]="true"
+            dateFormat="dd/mm/yy"></p-calendar>
+        </div>
+        <div class="col px-1 ui-fluid">
+          <stock-auto-complete (selectedStockEvent)="shiftBasedStockReportPageFilter.stockId=$event?.stockId">
+          </stock-auto-complete>
+        </div>
+        <div class="col-md-6 px-1 ui-fluid">
+          <p-selectButton [options]="selectButtons" [(ngModel)]="selectedbutton" optionLabel="name"></p-selectButton>
+        </div>
+        <div class="col-md-1">
+          <button pButton type="button" class="float-right" name="filter" label="{{'filter'|translate}}"
+            (click)="filtershiftBasedStockReport();"></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex" style="position:relative;">
+      <div style="position: absolute; right:1px; top:5px;z-index:10;">
+        <p-selectButton id="view_list_buttons" [options]="viewOptions" optionLabel="code" dataKey="icon"
+        [(ngModel)]="selectedViewOption">
+          <ng-template let-item>
+              <i [class]="item.value.icon"></i>
+          </ng-template>
+        </p-selectButton>
+      </div>
+      <div class="d-flex row col-md-12" *ngIf="selectedbutton.code=='GV'">
+        <p-chart *ngIf="selectedViewOption.code==='graph'"  type="line" style="width:100%;" [data]="lineChartData" [options]="lineChartOptions" 
+        [height]="'600px'"
+          [width]="'100%'"></p-chart>
+          <app-list-view-data class="col-md-12" *ngIf="selectedViewOption.code==='table'" [tableData]="tableData"></app-list-view-data>
+      </div>
+      <div class="d-flex row col-md-12" *ngIf="selectedbutton.code=='WV'">
+        <p-chart *ngIf="selectedViewOption.code==='graph'" type="line" style="width:100%;" [data]="weeklyChartData" [options]="lineChartOptions" 
+        [height]="'450px'"
+          [width]="'100%'"></p-chart>
+          <app-list-view-data class="col-md-12"  *ngIf="selectedViewOption.code==='table'"  
+          [tableData]="trendStockWarehouseShiftReportData?.weeklyList"></app-list-view-data>
+      </div>
+      <div class="d-flex row col-md-12" *ngIf="selectedbutton.code=='DV'">
+        <p-chart *ngIf="selectedViewOption.code==='graph'" type="line" style="width:100%;" [data]="dailyChartData" [options]="lineChartOptions" 
+        [height]="'450px'"
+          [width]="'100%'"></p-chart>
+          <app-list-view-data class="col-md-12"  *ngIf="selectedViewOption.code==='table'"  
+          [tableData]="trendStockWarehouseShiftReportData?.dailyList"></app-list-view-data>
+      </div>
+      <div class="d-flex row col-md-12" *ngIf="selectedbutton.code=='MV'">
+        <p-chart *ngIf="selectedViewOption.code==='graph'" type="line" style="width:100%;" [data]="monthlyChartData" [options]="lineChartOptions" 
+        [height]="'450px'"
+          [width]="'100%'"></p-chart>
+          <app-list-view-data class="col-md-12"  *ngIf="selectedViewOption.code==='table'"  
+          [tableData]="trendStockWarehouseShiftReportData?.montlyList"></app-list-view-data>
+      </div>
+    </div>
+  </div>
+</div>

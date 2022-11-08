@@ -1,0 +1,14 @@
+.modal-content {
+  min-width: 900px;
+  min-height: 400px;
+}
+
+.modal-dialog {
+  max-width: 1100px;
+  margin: 10px auto;
+  height: auto;
+}
+
+:host ::ng-deep .ui-widget-content {
+  border: none!important;
+}

@@ -1,0 +1,66 @@
+<div class="animated fadeIn">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i> {{'cause-information' | translate}}
+          </div>
+          <div class="card-body">   
+            <form #inspForm="ngForm">
+              <table class="table table-bordered">
+                <tr>
+                  <td>{{'code' | translate}}</td>
+                  <td>
+                    <input
+                      type="text"
+                      id="qualityCauseTypeCode"
+                      name="qualityCauseTypeCode"
+                      [(ngModel)]="qualityCausesType.qualityCauseTypeCode"
+                      class="form-control"
+                      required
+                    />
+                  </td>
+                </tr>
+                <tr>
+                <tr>
+                  <td>{{'quality-cause-Description' | translate}}</td>
+                  <td>
+                    <input
+                      type="text" 
+                      id="qualityCauseTypeDescription"
+                      name="qualityCauseTypeDescription"
+                      [(ngModel)]="qualityCausesType.qualityCauseTypeDescription"
+                      class="form-control"
+                      required
+                    />
+                  </td>
+                </tr>
+
+              </table>
+            </form>
+          </div>
+        </div>
+        <div class="row col-md-12">
+            <button
+            type="button"
+            class="btn btn-sm btn-danger"
+            (click)="reset()"
+          >
+          <i class="fa fa-ban" aria-hidden="true"></i>
+            {{ "reset" | translate }}
+          </button>
+          <button
+            type="submit"
+            class="btn btn-sm btn-primary"
+            [disabled]="!inspForm.form.valid"
+            (click)="save()"
+          >
+            <i class="fa fa-dot-circle-o"></i>
+            {{ "save" | translate }}
+          </button>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+  

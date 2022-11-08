@@ -1,0 +1,504 @@
+<div class="row ui-fluid">
+  <!-- <div class="col">
+
+  </div> -->
+  <div class="col-lg-12">
+    <form #notificationForm="ngForm">
+      <p-tabView>
+        <p-tabPanel header="{{'notification-details'|translate}}">
+          <div class="card" style="margin: 0px;">
+            <div class="card-header">
+              {{'maintenance-notification-information'|translate}}
+              <button pButton *ngIf="!dataModel.maintenanceOrder" style="width: 180px;" type="button"
+                class="ui-button-warning float-right ml-1" label="{{'create-order'  |translate}}"
+                (click)="showCreateOrderModal()"></button>
+            </div>
+            <div class="card-body">
+              <table class="table table-bordered m-0">
+                <tbody>
+                  <tr>
+                    <td width="50%">
+                      <table class="table table-bordered m-0">
+                        <tr>
+                          <td width="15%">{{'notification-type' | translate}}</td>
+                          <td width="35%" class="ui-fluid">
+
+                            <select id="notificationType" name="notificationType" class="form-control" [(ngModel)]="dataModel.maintenanceNotificationType">
+                     
+                              <option [ngValue]="null">{{ "please-select" | translate }}</option>
+                              <option *ngFor="let maintenanceNotificationType of maintenanceNotificationTypes"value="{{maintenanceNotificationType}}">
+                                {{maintenanceNotificationType}}</option>
+                            </select>
+                          </td>
+
+                        </tr>
+                        <tr>
+                          <td>{{'functional-location' | translate}}</td>
+                          <td>
+                            <select id="functionalLocations" name="functionalLocations" class="form-control"
+                              [(ngModel)]="dataModel.maintenanceFunctionalLocationId">
+                              <option [value]="null">{{'please-select-functional-location' | translate}}</option>
+                              <option *ngFor="let item of functionalLocations"
+                                value="{{item.maintenanceFunctionalLocationId}}">
+                                {{item.description}}
+                              </option>
+                            </select>
+                          </td>
+                        </tr>
+
+                        <tr>
+                          <td>{{'equipment' | translate}}</td>
+                          <td>
+                            <equipment-auto-complete [plantId]="selectedPlant?.plantId"
+                              [selectedEquipmentId]="dataModel.equipmentId"
+                              (selectedEquipmentEvent)="setSelectedEquipment($event)"></equipment-auto-complete>
+
+                          </td>
+
+
+                        </tr>
+                        <tr>
+                          <td>{{'plant' | translate}}</td>
+                          <td>
+                            <span
+                              *ngIf="dataModel.mainPlantId && selectedPlant && dataModel.mainPlantId=== selectedPlant.plantId">{{selectedPlant.plantName}}</span>
+                            <plant-auto-complete *ngIf="!dataModel.mainPlantId && !selectedPlant"
+                              [selectedPlantId]="dataModel.mainPlantId" (selectedPlantEvent)="setSelectedPlant($event)"
+                              [eventFire]="true"></plant-auto-complete>
+
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>{{'workstation' | translate}}</td>
+                          <td>
+                            <workstation-auto-complete [selectedWorkStationId]="dataModel.workStationId"
+                              (selectedWorkStationEvent)="dataModel.workStationId=$event.workStationId">
+                            </workstation-auto-complete>
+                          </td>
+                        </tr>
+
+                        <tr>
+                          <td width="15%">{{'planner-group' | translate}}</td>
+                          <td width="35%">
+                            <planner-group-auto-complete [plantId]="selectedPlant?.plantId"
+                              [selectedPlannerGroup]="dataModel.equipmentPlannerGroup"
+                              (selectedPlannerGroupEvent)="dataModel.equipmentPlannerGroupId=$event.plannerGroupId">
+                            </planner-group-auto-complete>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>{{'problem-definition' | translate}}</td>
+                          <td>
+                            <input type="text" class="form-control" [(ngModel)]="dataModel.problemDefination"
+                              name="definition" />
+                          </td>
+
+                        </tr>
+                        <tr>
+                          <td>{{'breakdown' | translate}}</td>
+                          <td>
+                            <p-checkbox class="form-control" [(ngModel)]="dataModel.breakdown" name="breakdown"
+                              binary="true" required></p-checkbox>
+                          </td>
+                        </tr>
+                        <tr
+                          *ngIf="dataModel.breakdown && !(dataModel.notificationStatus=='INPROCESS' || dataModel.notificationStatus=='OUTSTANDING')">
+                          <td>{{'breakdown-duration' | translate}}</td>
+                          <td>
+                            <input type="number" name="breakdownDuration" class="form-control"
+                              [(ngModel)]="dataModel.breakdownDuration" name="breakdownDuration"
+                              [required]="dataModel.breakdown" />
+                          </td>
+
+                        </tr>
+                        <!-- <tr *ngIf="dataModel.breakdown=== false">
+                                    <td>{{'malfunction-end' | translate}}</td>
+                                    <td>
+                                      <p-calendar [(ngModel)]="dataModel.malfunctionEnd" name="malfunctionEnd" [readonlyInput]="true"
+                                                  [showTime]="true" [showIcon]="true"></p-calendar>
+                                    </td>
+                                  </tr> -->
+                      </table>
+                    </td>
+                    <td>
+                      <table class="table table-bordered m-0">
+                        <tr>
+                          <td>{{'status' | translate}}</td>
+                          <td>
+                            <select id="notificationStatus" name="notificationStatus" class="form-control"
+                              [(ngModel)]="dataModel.notificationStatus">
+                              <option [ngValue]="null">
+                                {{ "please-select" | translate }}</option>
+                              <option *ngFor="let status of maintenanceStatusList" value="{{ status }}">{{ status }}
+                              </option>
+                            </select>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>{{'priority' | translate}}</td>
+                          <td>
+                            <select id="priority" name="priority" class="form-control" [(ngModel)]="dataModel.priority">
+                              <option [ngValue]="null">{{'please-select' | translate}}</option>
+                              <option *ngFor="let item of priority" value="{{item.value}}">{{item.label}}</option>
+                            </select>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td width="15%">{{'catalog/code-group' | translate}}</td>
+                          <td>
+                            <select id="catalog" name="catalog" class="form-control"
+                              [(ngModel)]="dataModel.notificationNo">
+                              <option [ngValue]="null">{{'please-select' | translate}}</option>
+                              <option *ngFor="let item of catalogs" value="{{item.equipmentCodeGroupHeaderId}}">
+                                {{item.equipmentCodeGroupHeaderId}} - {{item.codeGroup}}
+                              </option>
+                            </select>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td width="15%">{{'abc-indicator' | translate}}</td>
+                          <td>
+                            <select id="abcIndicators" name="abcIndicators" class="form-control"
+                              [(ngModel)]="dataModel.equipmentABCIndicatorId">
+                              <option [ngValue]="null">{{'please-select' | translate}}</option>
+                              <option *ngFor="let item of abcIndicators" value="{{item.equipmentAbcIndicatorId}}">
+                                {{item.equipmentAbcIndicatorDescription}}
+                              </option>
+                            </select>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>{{'reported-by' | translate}}</td>
+                          <td>
+                            <employee-auto-complete [selectedEmployeeId]="dataModel.reportedbyId"
+                              (selectedEmployeeEvent)="dataModel.reportedbyId=$event?.employeeId">
+                            </employee-auto-complete>
+
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>{{'response-by' | translate}}</td>
+                          <td>
+                            <employee-auto-complete [selectedEmployeeId]="dataModel.responsebyId"
+                              [required]="dataModel.notificationStatus=='INPROCESS'"
+                              (selectedEmployeeEvent)="dataModel.responsebyId=$event?.employeeId">
+                            </employee-auto-complete>
+
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>{{'required-start' | translate}}</td>
+                          <td>
+                            <p-calendar [(ngModel)]="dataModel.requiredStart" name="requiredStart" [showTime]="true"
+                              [showIcon]="true"></p-calendar>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>{{'required-end' | translate}}</td>
+                          <td>
+                            <p-calendar [(ngModel)]="dataModel.requiredEnd" name="requiredEnd" dateFormat="dd.mm.yy"
+                              [showIcon]="true"></p-calendar>
+                          </td>
+                        </tr>
+                        <tr *ngIf="dataModel.notificationStatus==='COMPLETED'">
+                          <td>{{'required-end' | translate}}</td>
+                          <td>
+                            <p-calendar [(ngModel)]="dataModel.requiredEnd" name="requiredEnd" [disabled]="true"
+                              [dateFormat="dd.mm.yy" ] [showIcon]="true"></p-calendar>
+                          </td>
+                        </tr>
+
+                        <tr *ngIf="dataModel.breakdown">
+                          <td>{{'malfunction-start' | translate}}</td>
+                          <td>
+                            <p-calendar [(ngModel)]="dataModel.malfunctionStart" name="malfunctionStart"
+                              [readonlyInput]="true" [showTime]="true" [showIcon]="true"></p-calendar>
+                          </td>
+                        </tr>
+                        <tr
+                          *ngIf="dataModel.breakdown && !(dataModel.notificationStatus=='INPROCESS' || dataModel.notificationStatus=='OUTSTANDING')">
+                          <td>{{'malfunction-end' | translate}}</td>
+                          <td>
+                            <p-calendar [(ngModel)]="dataModel.malfunctionEnd" name="malfunctionEnd" [showTime]="true"
+                              [showIcon]="true"></p-calendar>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="row col-md-12">
+            <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+              {{'reset' | translate}}
+            </button>
+            <button type="submit" class="btn btn-sm btn-primary" [disabled]="!notificationForm.form.valid ||
+                          !dataModel.equipmentId || !dataModel.workStationId || !dataModel.equipmentPlannerGroupId ||
+                          ((dataModel.notificationStatus=='INPROCESS') && !dataModel.responsebyId)" (click)="save()"><i
+                class="fa fa-dot-circle-o"></i>
+              {{'save' | translate}}
+            </button>
+          </div>
+        </p-tabPanel>
+        <p-tabPanel *ngIf="dataModel.maintenanceOrder as data;" header="{{'maintenance-order-detail' | translate}}">
+          <div class="card">
+            <div class="card-header">
+              {{'maintenance-order'|translate}}
+            </div>
+            <div class="card-body">
+              <table class="table m-0" style="border-top: 5px solid white;">
+                <tbody>
+                  <tr>
+                    <td width="50%">
+                      <table class="table table-bordered">
+                        <tbody>
+                          <tr>
+                            <td width="35%">{{'maintenance-order-id' | translate}}</td>
+                            <td>{{data.maintenanceId}}</td>
+
+                          </tr>
+                          <tr>
+                            <td>{{'equipment' | translate}}</td>
+                            <td>{{data?.equipment?.equipmentName}}
+                            </td>
+
+                          </tr>
+                          <tr>
+                            <td>{{'maintenance-order-type' | translate}}</td>
+                            <td>{{data.maintenanceOrderType?.maintenanceOrderTypeName}}</td>
+
+                          </tr>
+                          <tr>
+                            <td>{{'planner-group' | translate}}</td>
+                            <td> {{data?.plannerGroup?.plannerGroup}}
+                            </td>
+
+                          </tr>
+                          <tr>
+                            <td>{{'workstation' | translate}}</td>
+                            <td> {{data?.mainWorkStation?.workStationName}}
+                            </td>
+
+                          </tr>
+                          <tr>
+                            <td>{{'planning-plant' | translate}}</td>
+                            <td> {{data?.planningPlant?.plantName}}
+                            </td>
+                            <!-- <td>{{'assembly' | translate}}</td>
+                  <td>{{data.assembly}}</td> -->
+
+                          </tr>
+                          <tr>
+                            <td>{{'maintenance-system-condition' | translate}}</td>
+                            <td> {{data?.maintenanceSystemCondition?.description}}
+                            </td>
+
+                          </tr>
+                          <tr>
+                            <td>{{'maintenance-activity-type' | translate}}</td>
+                            <td> {{data?.maintenanceActivityType?.description}}
+                            </td>
+
+                          </tr>
+                          <tr>
+                            <td>{{'maintenance-category' | translate}}</td>
+                            <td> {{data?.maintenanceCategory?.description}}
+                            </td>
+
+                          </tr>
+                          <tr>
+                            <td>{{'functional-location' | translate}}</td>
+                            <td> {{data?.maintenanceFunctionalLocation?.description}}
+                            </td>
+
+                          </tr>
+                          <tr>
+                            <td *ngIf="data.maintenanceStatus==='COMPLETED' || data.maintenanceStatus==='INPROCESS'">
+                              {{'actual-start-date' | translate}}</td>
+                            <td *ngIf="data.maintenanceStatus==='COMPLETED' || data.maintenanceStatus==='INPROCESS'">
+                              {{data?.actualStartDate |date:'short'}}</td>
+
+                          </tr>
+                        </tbody>
+
+                      </table>
+                    </td>
+                    <td>
+                      <table class="table table-bordered">
+                        <tbody>
+                          <tr>
+                            <td width="30%">{{'response-by' | translate}}</td>
+                            <td> {{data?.responseby?.firstName}} {{data?.responseby?.lastName}}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>{{'status' | translate}}</td>
+                            <td>{{data.maintenanceStatus}}</td>
+                          </tr>
+                          <tr>
+                            <td>{{'priority' | translate}}</td>
+                            <td>{{data.priority}}</td>
+                          </tr>
+                          <tr>
+                            <td>{{'date-priority' | translate}}</td>
+                            <td>{{data.datePriority}}</td>
+                          </tr>
+                          <tr>
+                            <td>{{'address' | translate}}</td>
+                            <td>{{data.address}}</td>
+                          </tr>
+                          <tr>
+                            <td>{{'date-revision' | translate}}</td>
+                            <td>{{data.dateRevision}}</td>
+                          </tr>
+                          <tr>
+                            <td>{{'problem-definition' | translate}}</td>
+                            <td>{{data.problemDefination}}</td>
+                          </tr>
+                          <tr>
+                            <td>{{'date-basic-start' | translate}}</td>
+                            <td>{{data.dateBasicStart|date:'dd/MM/yyyy'}}</td>
+                          </tr>
+                          <tr>
+                            <td>{{'date-basic-finish' | translate}}</td>
+                            <td>{{data.datebasicFinish|date:'dd/MM/yyyy'}}</td>
+                          </tr>
+                          <tr>
+                            <td>{{'maintenance-reason' | translate}}</td>
+                            <td> {{data?.maintenanceReason?.description}}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td *ngIf="data.maintenanceStatus==='COMPLETED'">{{'actual-finish-date' | translate}}</td>
+                            <td *ngIf="data.maintenanceStatus==='COMPLETED'">{{data?.actualFinishDate |date:'short'}}
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </p-tabPanel>
+        <p-tabPanel header="{{'operation-details' | translate}}" *ngIf="dataModel.maintenanceOrder as data;">
+          <maintenance-order-operation-list [maintenanceOrderId]="data.maintenanceId">
+          </maintenance-order-operation-list>
+        </p-tabPanel>
+        <p-tabPanel header="{{'component-details' | translate}}" *ngIf="dataModel.maintenanceOrder as data;">
+          <maintenance-order-component-list [maintenanceOrderId]="data.maintenanceId">
+          </maintenance-order-component-list>
+        </p-tabPanel>
+      </p-tabView>
+    </form>
+
+
+
+
+
+    <!-- <p-tabPanel *ngIf="dataModel.maintenanceOrder as data;" header="{{'maintenance-order-detail' | translate}}">
+          <div class="card">
+            <div class="card-header">
+              {{'maintenance-order'|translate}}
+            </div>
+            <div class="card-body">
+              <form #saleForm="ngForm" class="form-horizontal ui-fluid">
+                <table class="table table-bordered">
+                  <tbody>
+                  <tr>
+                    <td width="25%">{{'maintenance-order-id' | translate}}</td>
+                    <td width="25%">{{data.maintenanceId}}</td>
+                    <td>{{'response-by' | translate}}</td>
+                    <td> {{data?.responseby?.firstName}} {{data?.responseby?.lastName}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'equipment' | translate}}</td>
+                    <td>{{data?.equipment?.equipmentName}}
+                    </td>
+                    <td>{{'status' | translate}}</td>
+                    <td>{{data.maintenanceStatus}}</td>
+                  </tr>
+                  <tr>
+                    <td>{{'maintenance-order-type' | translate}}</td>
+                    <td>{{data.maintenanceOrderType?.maintenanceOrderTypeName}}</td>
+                    <td>{{'priority' | translate}}</td>
+                    <td>{{data.priority}}</td>
+                  </tr>
+                  <tr>
+                    <td>{{'planner-group' | translate}}</td>
+                    <td> {{data?.plannerGroup?.plannerGroup}}
+                    </td>
+                    <td>{{'date-priority' | translate}}</td>
+                    <td>{{data.datePriority}}</td>
+                  </tr>
+                  <tr>
+                    <td>{{'workstation' | translate}}</td>
+                    <td> {{data?.mainWorkStation?.workStationName}}
+                    </td>
+                    <td>{{'address' | translate}}</td>
+                    <td>{{data.address}}</td>
+                  </tr>
+                  <tr>
+                    <td>{{'planning-plant' | translate}}</td>
+                    <td> {{data?.planningPlant?.plantName}}
+                    </td>
+                    <td></td>
+                    <td></td>
+
+                  </tr>
+                  <tr>
+                    <td>{{'maintenance-system-condition' | translate}}</td>
+                    <td> {{data?.maintenanceSystemCondition?.description}}
+                    </td>
+                    <td>{{'date-revision' | translate}}</td>
+                    <td>{{data.dateRevision}}</td>
+                  </tr>
+                  <tr>
+                    <td>{{'maintenance-activity-type' | translate}}</td>
+                    <td> {{data?.maintenanceActivityType?.description}}
+                    </td>
+                    <td>{{'problem-definition' | translate}}</td>
+                    <td>{{data.problemDefination}}</td>
+                  </tr>
+                  <tr>
+                    <td>{{'maintenance-category' | translate}}</td>
+                    <td> {{data?.maintenanceCategory?.description}}
+                    </td>
+                    <td>{{'date-basic-start' | translate}}</td>
+                    <td>{{data.dateBasicStart|date:'dd/MM/yyyy'}}</td>
+                  </tr>
+                  <tr>
+                    <td>{{'functional-location' | translate}}</td>
+                    <td> {{data?.maintenanceFunctionalLocationId}}
+                    </td>
+                    <td>{{'date-basic-finish' | translate}}</td>
+                    <td>{{data.datebasicFinish|date:'dd/MM/yyyy'}}</td>
+                  </tr>
+                  <tr>
+                    <td>{{'maintenance-reason' | translate}}</td>
+                    <td> {{data?.maintenanceReason?.description}}
+                    </td>
+                  </tr>
+                  </tbody>
+
+                </table>
+
+              </form>
+            </div>
+          </div>
+        </p-tabPanel> -->
+    <!-- <p-tabPanel header="{{'operation-details' | translate}}" *ngIf="dataModel.maintenanceOrder as data;">
+          <maintenance-order-operation-list [isDetail]="true" [maintenanceOrderId]="data.maintenanceId"></maintenance-order-operation-list>
+        </p-tabPanel>
+        <p-tabPanel header="{{'component-details' | translate}}" *ngIf="dataModel.maintenanceOrder as data;">
+          <maintenance-order-component-list [isDetail]="true" [maintenanceOrderId]="data.maintenanceId"></maintenance-order-component-list>
+        </p-tabPanel> -->
+    <!-- </p-tabView> -->
+  </div>
+
+</div>

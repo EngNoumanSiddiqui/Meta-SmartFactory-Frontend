@@ -1,0 +1,91 @@
+<div class="animated fadeIn row">
+    <div class="col-md-4">
+      <form #calendarForm="ngForm">
+        <div class="form-group row align-items-center">
+          <label class="col-md-4 col-form-label" for="plant"> {{'factory-calendar-id' | translate}} :</label>
+          <div class="col-md-6">
+            {{reqDto.factoryCalendarId}}
+          </div>
+        </div>
+        <div class="form-group row align-items-center">
+          <label class="col-md-4 col-form-label" for="plant"> {{'plant' | translate}} :</label>
+          <div class="col-md-6">
+            <a href="javascript:;" (click)="showPlantDetail(reqDto.plant?.plantId)"> {{reqDto.plant?.plantName}}</a>
+          </div>
+        </div>
+        <div class="form-group row align-items-center">
+            <label class="col-md-4 col-form-label" for="calendarCode"> {{'calendar-code' | translate}} :</label>
+            <div class="col-md-6">
+              {{reqDto.code}}
+            </div>
+        </div>
+        <div class="form-group row align-items-center">
+            <label class="col-md-4 col-form-label" for="calendarCategory"> {{'calendar-category' | translate}} :</label>
+            <div class="col-md-6">
+              {{reqDto.category}}
+            </div>
+        </div>
+
+        <div class="form-group row align-items-center">
+          <label class="col-md-4 col-form-label" for="calendarCategory"> {{'default' | translate}} {{'calendar' | translate}} :</label>
+          <div class="col-md-6">
+            <p-checkbox id="defaultCalendar" name="defaultCalendar" [(ngModel)]="reqDto.defaultCalendar" binary="true" inputId="binary" disabled></p-checkbox>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="col-md-8">
+      <div class="col-md-12">
+          <div class="card">
+            <div class="card-header">
+              {{'factory-calendar' | translate}}
+            </div>
+            <div class="card-body">
+          <table class="table table-bordered">
+            <tr>
+              <th>{{'workstation' | translate}}</th>
+              <th>{{'code' | translate}}</th>
+              
+              <!-- <th>{{'calendar-code' | translate}}</th> -->
+              <th>{{'work-day' | translate}}</th>
+              <!-- <th>{{'shift' | translate}}</th> -->
+              <th>{{'holiday' | translate}}</th>
+              <!-- <th>Work Day Name</th> -->
+              <th>{{'start-time' | translate}}</th>
+              <th>{{'end-time' | translate}}</th>
+              <th>{{'description' | translate}}</th>
+            </tr>
+            <ng-template [ngIf]="reqDto.factoryCalendarDetailList">
+              <tr *ngFor="let holiday of reqDto.factoryCalendarDetailList; let i=index;">
+                <td>{{holiday?.workstationName}}</td>
+                <td>{{holiday?.code}}</td>
+               
+                <!-- <td>{{holiday?.factoryCalendarCode}}</td> -->
+                <td>{{holiday?.workdayName}}</td>
+                <!-- <td>
+                  <a href="javascript:;" (click)="openShiftModal(holiday?.shift?.shiftId)">
+                    {{holiday?.shift?.shiftName}}
+                  </a>
+                </td> -->
+                <td>
+                  <p-checkbox name="holiday{{i}}" [disabled]="true" [(ngModel)]="holiday.holiday"  binary="true" inputId="holiday{{i}}"></p-checkbox>
+                </td>
+                <!-- <td>{{holiday?.workdayName}}</td> -->
+                <td>
+                  <span *ngIf="holiday.holiday">{{holiday?.startTime | date: 'dd/MM/yyyy HH:mm'}}</span>
+                  <span *ngIf="!holiday.holiday">{{holiday?.startTime | date: 'HH:mm'}}</span>
+                </td>
+                <td>
+                  <span *ngIf="holiday.holiday">{{holiday?.endTime | date: 'dd/MM/yyyy HH:mm'}}</span>
+                  <span *ngIf="!holiday.holiday">{{holiday?.endTime | date: 'HH:mm'}}</span>
+                </td>
+                <td>{{holiday?.description}}</td>
+              </tr>
+            </ng-template>
+          </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+            

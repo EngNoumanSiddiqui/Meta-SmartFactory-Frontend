@@ -1,0 +1,257 @@
+<div class="ui-g layout-dashboard">
+    <div class="ui-g-6 intro-text">
+
+        <!-- <span>status of job orders</span> -->
+    </div>
+    <div class="ui-g-6 intro-calendar">
+        <p-calendar placeholder="Date" [showIcon]="true"></p-calendar>
+    </div>
+
+    <div class="ui-g w-100">
+        <div class="ui-lg-3 ui-md-6 ui-sm-12">
+            <div class="ui-g">
+            <ng-container *ngFor="let orderSummary of salesInfo.saleOrderStatusList">
+                    <div class="ui-xl-6 ui-lg-6 ui-md-6 ui-sm-6">
+                        <div class="stats-box" [class]="randomColors(orderSummary.status)" (click)="showDetailModal('SALES', orderSummary.status)">
+                            <!-- <i class="fa fa-angle-right"></i> -->
+                            <span class="statistics">{{orderSummary.count}}</span>
+                            <div class="statistics-info-bg">
+                                <span class="statistics-info">{{orderSummary.status | translate}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+            </ng-container>
+            </div>
+        </div>
+        <div class="ui-lg-9 ui-md-12 ui-sm-12">
+            <div class="ui-g">
+                <div class="ui-lg-6 ui-md-6 ui-sm-12">
+                    <p-panel header="{{'lead-time-of-sale-order-items' | translate}}" styleClass="my-contacts">
+                        <p-chart type="bar" [data]="barData" [options]="options" [height]="'490px'"></p-chart>
+                        <!-- <ul>
+                            <li>
+                                <div class="team-box">
+                                    <i class="fa fa-cubes ng-star-inserted"></i>
+                                    <span class="team-member">Sale Orders</span>
+        
+                                </div>
+                                <div style="float:right">
+                                    <a href="#" class="twitter order-1">
+                                        51
+                                    </a>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="team-box">
+                                    <i class="fa fa-cubes ng-star-inserted"></i>
+        
+                                    <span class="team-member">Job Orders </span>
+        
+                                </div>
+                                <div style="float:right">
+                                    <a href="#" class="twitter order-2">
+                                        51
+                                    </a>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="team-box">
+                                    <i class="fa fa-cubes ng-star-inserted"></i>
+        
+                                    <span class="team-member">Canceled</span>
+        
+                                </div>
+                                <div style="float:right">
+                                    <a href="#" class="twitter order-3">
+                                        51
+                                    </a>
+                                </div>
+                            </li>
+        
+                        </ul> -->
+                    </p-panel>
+        
+                  
+                </div>
+                <div class="ui-lg-6 ui-md-6 ui-sm-12">
+                    <p-panel styleClass="my-contacts" header="{{'completion-status' | translate}}">
+                        <div class="ui-g">
+                            <div class="ui-g ui-md-12 p-0">
+                                <div class="ui-md-3">
+                                    <circle-progress
+                                    [percent]="salesInfo.saleOrderCompletionStatus?.completedSaleOrderCount"
+                                    [radius]="50"
+                                    [outerStrokeWidth]="12"
+                                    [innerStrokeWidth]="50"
+                                    [space] = "5"
+                                    [title]="(salesInfo.saleOrderCompletionStatus?.completedSaleOrderCount ? salesInfo.saleOrderCompletionStatus?.completedSaleOrderCount : '0')  + '/' + (salesInfo.saleOrderCompletionStatus?.totalSaleOrderCount ? salesInfo.saleOrderCompletionStatus?.totalSaleOrderCount : '0')"
+                                    [outerStrokeColor]="'#4882c2'"
+                                    [innerStrokeColor]="'#e7e8ea'"
+                                    [titleFontSize]= "18"
+                                    [showUnits]="false" 
+                                    [showSubtitle]="false"
+                                    [animation]="true"
+                                    [animationDuration]="300"
+                                    [startFromZero]="false"
+                                    [responsive]="false"
+                                ></circle-progress>
+                                </div>
+                                <div class="ui-md-7" style="align-self: center; text-align: start; margin-left: 15px;">
+                                    <strong>{{'completion-of-sale-orders' | translate}}</strong>
+                                </div>
+                                <div class="ui-md-12 knob-label p-0" style="color:#00b395; margin-top: -20px;">
+                                    <p-progressBar [value]="(salesInfo.saleOrderCompletionStatus?.saleOrderPercentage * 100).toFixed(2)"></p-progressBar>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ui-g">
+                            <div class="ui-g ui-md-12">
+                            <div class="ui-md-3">
+                                <circle-progress
+                                [percent]="salesInfo.saleOrderCompletionStatus?.completedProductionOrderCount"
+                                [radius]="50"
+                                [outerStrokeWidth]="12"
+                                [innerStrokeWidth]="50"
+                                [space] = "5"
+                                [title]="(salesInfo.saleOrderCompletionStatus?.completedProductionOrderCount ? salesInfo.saleOrderCompletionStatus?.completedProductionOrderCount : '0')  + '/' + (salesInfo.saleOrderCompletionStatus?.totalProductionOrderCount ? salesInfo.saleOrderCompletionStatus?.totalProductionOrderCount : '0')"
+                                [outerStrokeColor]="'#4882c2'"
+                                [innerStrokeColor]="'#e7e8ea'"
+                                [titleFontSize]= "18"
+                                [showUnits]="false" 
+                                [showSubtitle]="false"
+                                [animation]="true"
+                                [animationDuration]="300"
+                                [startFromZero]="false"
+                                [responsive]="false"
+                              ></circle-progress>
+                            </div>
+                            <div class="ui-md-7" style="align-self: center; text-align: start; margin-left: 15px;">
+                                <strong>{{'completion-of-production-orders' | translate}}</strong>
+                            </div>
+                            <div class="ui-md-12 knob-label p-0" style="color:#00b395; margin-top: -20px;">
+                                <p-progressBar [value]="(salesInfo.saleOrderCompletionStatus?.productionOrderPercentage * 100).toFixed(2)"></p-progressBar>
+                            </div>
+                            </div>
+                        </div>
+                    </p-panel>
+                   
+                </div>
+                <div class="ui-lg-12 ui-g-nopad">
+                    <div class="ui-g">
+
+                  
+                    <div class="ui-lg-3">
+                        <p-card header="{{'total-sale-orders' | translate}}" class="card-content-red" [style]="{height: '80px'}">
+                            <a href="javascript:;" (click)="showDetailModal('SALES')" class="sales-link">
+                            {{salesInfo.saleOrderTotalOverdueCounts?.totalSaleOrderCount ? salesInfo.saleOrderTotalOverdueCounts?.totalSaleOrderCount : 0}}
+                            </a>
+                        </p-card>
+                    </div>
+        
+                    <div class="ui-lg-3">
+                        <p-card header="{{'overdue-sale-orders' | translate}}" class="card-content-red" [style]="{height: '80px'}">
+                            <a href="javascript:;" (click)="showDetailModal('SALES', 'OVERDUE_SALE')" class="sales-link">
+                                {{salesInfo.saleOrderTotalOverdueCounts?.overdueSaleOrderCount ? salesInfo.saleOrderTotalOverdueCounts?.overdueSaleOrderCount : 0 }}
+                            </a>
+                        </p-card>
+                    </div>
+                    <div class="ui-lg-3">
+                        <p-card header="{{'total-production-orders' | translate}}" class="card-content-red" [style]="{height: '80px'}">
+                            <a href="javascript:;" (click)="showDetailModal('PRODUCTIONORDER')" class="sales-link">
+                                {{salesInfo.saleOrderTotalOverdueCounts?.totalProductionOrderCount ? salesInfo.saleOrderTotalOverdueCounts?.totalProductionOrderCount : 0}}
+                            </a>
+                        </p-card>
+                    </div>
+        
+                    <div class="ui-lg-3">
+                        <p-card  header="{{'overdue-production-orders' | translate}}" class="card-content-red" [style]="{height: '80px'}">
+                            {{salesInfo.saleOrderTotalOverdueCounts?.overdueProductionOrderCount ? salesInfo.saleOrderTotalOverdueCounts?.overdueProductionOrderCount : 0}}
+                        </p-card>
+                    </div>
+
+                      </div>
+                </div>
+               
+            </div>
+        </div>
+
+        <div class="ui-g">
+            <div class="ui-lg-6 ui-md-6 ui-sm-12">
+                <p-panel header="{{'sale-order-summary'| translate}}" styleClass="my-table">
+                    <p-table [value]="salesInfo.saleOrderSummaryList">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th  width="35%" class="first-header">{{'status' | translate}}</th>
+                                <th>{{'today' | translate}}</th>
+                                <th>{{'this-week' | translate}}</th>
+                                <th>{{'this-month' | translate}}</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-data>
+                            <tr>
+                                <td class="first-header first-rowData">{{data.status}}</td>
+                                <td>{{data.dailyCount}}</td>
+                                <td>{{data.weeklyCount}}</td>
+                                <td>{{data.monthlyCount}}</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </p-panel>
+            </div>
+            <div class="ui-lg-6 ui-md-6 ui-sm-12">
+                <p-panel header="{{'production-order-summary'| translate}}" styleClass="my-table">
+                    <p-table [value]="salesInfo.productionOrderSummaryList">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th width="35%" class="first-header">{{'status' | translate}}</th>
+                                <th>{{'today' | translate}}</th>
+                                <th>{{'this-week' | translate}}</th>
+                                <th>{{'this-month' | translate}}</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-data>
+                            <tr>
+                                <td class="first-header first-rowData">{{data.status}}</td>
+                                <td>{{data.dailyCount}}</td>
+                                <td>{{data.weeklyCount}}</td>
+                                <td>{{data.monthlyCount}}</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </p-panel>
+            </div>
+        </div>
+        
+       
+    </div>
+</div>
+
+
+<ng-template [ngIf]="modal.active">
+    <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal" (onHidden)="modal.active=false" class="modal fade"
+         tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+    <div class="modal-dialog modal-success modal-lg" role="document" style="max-width: 90%;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" *ngIf="modal.type === 'SALES'"> {{'sales-information' | translate}}</h4>
+          <h4 class="modal-title" *ngIf="modal.type === 'PRODUCTIONORDER'"> {{'prod-order-list' | translate}}</h4>
+          <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <!--step2-->
+        <div *ngIf="modal.type === 'SALES'">
+            <sale-order-items [dashboardStatus]="modal.status"></sale-order-items>
+        </div>
+
+        <div *ngIf="modal.type === 'PRODUCTIONORDER'">
+            <app-list [dashboardStatus]="modal"></app-list>
+        </div>
+       
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+  </ng-template>
+  

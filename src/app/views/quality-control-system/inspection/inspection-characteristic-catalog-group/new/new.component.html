@@ -1,0 +1,48 @@
+<!--<form #orderEdit="ngForm" >-->
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          {{'inspection-characteristic-catalog-group'|translate}}
+        </div>
+        <div class="card-body">
+          <form #saleForm="ngForm" class="form-horizontal ui-fluid">
+            <table class="table table-bordered">
+              <tbody>
+              <tr>
+                <td>{{('catalog-group-name'|translate)}}</td>
+                <td>
+                 <input type="text" name="cataloggroupname" class="form-control" [(ngModel)]="dataModel.catalogGroupName" required />
+                </td>
+              </tr>
+              <tr>
+                <td>{{('catalog-group-code'|translate)}}</td>
+                <td>
+                 <input type="text" name="cataloggroupcode" class="form-control" [(ngModel)]="dataModel.catalogGroupCode" required />
+                </td>
+              </tr>
+              <tr>
+                <td>{{('catalog-group-type'|translate)}}</td>
+                <td>
+                   <!-- place list here -->
+                </td>
+              </tr>
+              </tbody>
+            </table>
+
+          </form>
+        </div>
+        <div class="card-footer">
+          <!--<button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>-->
+          <!--{{'reset' | translate}}-->
+          <!--</button>-->
+          <button type="submit" class="btn btn-sm btn-primary"  [disabled]="!saleForm.form.valid"
+                  (click)="save()"><i class="fa fa-dot-circle-o"></i>
+            {{'save' | translate}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

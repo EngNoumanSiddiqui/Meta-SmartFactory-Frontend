@@ -1,0 +1,1099 @@
+<div class="row ui-fluid">
+<div class="col-lg-12 m-auto">
+  <div class="card">
+    <div class="card-header">
+      <i class="fa fa-align-justify"></i>{{'maintenance-plan-information' | translate}}
+    </div>
+    <div class="card-body">
+      <form #maintenanceOrderPlanForm="ngForm">
+      <p-tabView (onChange)="handleChange($event)">
+        <p-tabPanel header="Maintenance Order Plan " [selected]="selectedIndex === 0">
+         <div class="row col-md-12 p-0">
+          <div class="col-md-4 pr-0">
+            <div class="card">
+              <div class="card-header">
+                {{'maintenance-plan-information'|translate}}
+              </div>
+              <div class="card-body">
+                <table class="table table-bordered">
+                  <tr>
+                    <td>{{'maintenance-plan-name' | translate}}</td>
+                    <td>
+                      <input type="text" name="breakdownDuration" class="form-control"
+                             [(ngModel)]="dataModel.maintenancePlanPlanName" required/>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'maintenance-order-plan-type' | translate}}</td>
+                    <td>
+                      <select id="maintenanceOrderPlanTypeId" name="maintenanceOrderPlanTypelst" class="form-control"
+                              [(ngModel)]="dataModel.maintenanceOrderPlanTypeId" (ngModelChange)="onMaintenanceOrderPlanTypeChanged($event)" required>
+                        <option [ngValue]="null">{{'please-select' | translate}}</option>
+                        <option *ngFor="let item of maintenanceOrderPlanTypeList" value="{{item}}">{{item}}
+                        </option>
+                      </select>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-8 pr-0">
+            <div class="card">
+              <span class="card-header">{{'maintenance-plan-items'|translate}}
+                <button style="float: right" type="button" class="btn btn-primary" data-toggle="modal"
+                  (click)="dialog.title = 'maintenance-plan';maintenancePlanShow(null,'NEW');">
+                  <i class="fa fa-plus-circle"></i>
+                </button>
+              </span>
+              <div class="card-body p-0">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>{{'item-no'|translate}}</th>
+                      <th>{{'plan-item-name'|translate}}</th>
+                      <th>{{'plant'|translate}}</th>
+                      <th>{{'functional-location'|translate}}</th>
+                      <th>{{'equipment'|translate}}</th>
+                      <th>{{'equipment-task' | translate}}</th>
+                      <th>{{'planner-group'|translate}}</th>
+                      <th>{{'priority'|translate}}</th>
+                      <th width="80px">{{'action'|translate}}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of dataModel.maintenanceOrderPlanItemList; let i = index">
+                      <td>
+                        {{i + 1}}
+                      </td>
+                      <td>
+                        {{item.maintenancePlanItemName}}
+                      </td>
+                      <td>
+                        {{item.planningPlantName}}
+                      </td>
+
+                      <td>
+                        {{item.maintenanceFunctionalLocationDesc}}
+                      </td>
+                      <td>
+                        {{item.equipmentName}}
+                      </td>
+                      <td>
+                        {{item.equipmentTaskName}}
+                      </td>
+                      <td>
+                        {{item.plannerGroupName}}
+                      </td>
+                      <td>
+                        {{item.priority}}
+                      </td>
+                      <td width="80px" style="display: flex;">
+                        <button class="btn btn-sm" (click)="dialog.title='maintenance-plan';editMaintenancePlanShow(i,'EDIT');">
+                          <i class="fa fa-edit"></i></button>
+                        <button class="btn btn-sm" (click)="removeMaintenancePlan(i)">
+                          <i class="fa fa-trash"></i></button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+         </div>
+          <!-- <tr>
+          <td>{{'functional-location' | translate}}</td>
+          <td>
+            <select id="functional" name="functionalLocations" class="form-control"
+                    [(ngModel)]="dataModel.maintenanceFunctionalLocationId">
+              <option [ngValue]="null">{{'please-select' | translate}}</option>
+              <option *ngFor="let item of functionalLocations" value="{{item.maintenanceFunctionalLocationId}}">
+                {{item.description}}
+              </option>
+            </select>
+          </td>
+          </tr>
+          <tr>
+            <td>{{'equipment' | translate}}</td>
+            <td>
+              <select id="equipment" name="equipmentList" class="form-control"
+                      [(ngModel)]="dataModel.equipmentId">
+                <option [ngValue]="null">{{'please-select' | translate}}</option>
+                <option *ngFor="let item of equipmentList" value="{{item.equipmentId}}">{{item.equipmentName}}
+                </option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td>{{'plant' | translate}}</td>
+            <td>
+              <span *ngIf="dataModel.planningPlantId && selectedPlant && dataModel.planningPlantId=== selectedPlant.plantId">{{selectedPlant.plantName}}</span>
+              <plant-auto-complete *ngIf="!selectedPlant"  [selectedPlantId]="dataModel.planningPlantId" (selectedPlantEvent)="setSelectedPlanningPlant($event)" [eventFire]="true"></plant-auto-complete>
+            </td>
+          </tr>
+          <tr>
+            <td>{{'order-type' | translate}}</td>
+            <td>
+              <select id="ordeType" name="ordeType" class="form-control" [(ngModel)]="selectedOrderType">
+                <option [ngValue]="null">{{'please-select' | translate}}</option>
+                <option *ngFor="let item of orderTypeList" value="{{item.maintenanceOrderTypeId}}">{{item.maintenanceOrderType}}</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td>{{'main-workstation' | translate}}</td>
+            <td>
+              <select id="mainWorkstation" name="ordeType" class="form-control" [(ngModel)]="dataModel.mainWorkStationId">
+                <option [ngValue]="null">{{'please-select' | translate}}</option>
+                <option *ngFor="let item of workstations" value="{{item.workStationId}}">{{item.workStationName}}</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td>{{'priority' | translate}}</td>
+            <td>
+              <select id="priorities" name="priority" class="form-control" [(ngModel)]="dataModel.priority">
+                <option [ngValue]="null">{{'please-select' | translate}}</option>
+                <option *ngFor="let item of priority" value="{{item.value}}">{{item.label}}</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td>{{'planner-group' | translate}}</td>
+            <td>
+              <select id="plannerGrp" name="plannerGroup" class="form-control"
+                      [(ngModel)]="dataModel.maintenancePlannerGroupId">
+                <option [ngValue]="null">{{'please-select' | translate}}</option>
+                <option *ngFor="let item of plannerGroup" value="{{item.plannerGroupId}}">{{item.plannerGroup}}
+                </option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td>{{'maintenance-activity-type' | translate}}</td>
+            <td>
+              <maintenance-activity-type-auto-complete (selectedMaintenanceActivityTypeEvent)="selectedMaintenanceActivityType($event)"></maintenance-activity-type-auto-complete>
+            </td>
+          </tr> -->
+        </p-tabPanel>
+        <!-- <p-tabPanel header="{{'maintenance-plan-items'|translate}}">
+
+          <div class="card" *ngIf="dataModel.maintenanceOrderPlanTypeId !== 'MULTIPLE_COUNTER_PLAN'">
+            <div class="card-header">{{'maintenance-plan-items'|translate}}</div>
+            <div class="card-body">
+              <form #planForm="ngForm" class="col-md-12">
+                <table class="table table-bordered">
+                  <tbody>
+                    <tr>
+                      <td>{{'maintenance-plan-item' | translate}}</td>
+                      <td>
+                        <select id="maintenancePlanItem" name="maintenancePlanItems" class="form-control"
+                                [(ngModel)]="maintenancePlanItem.imaintenancePlanItemId">
+                          <option [ngValue]="null">{{'please-select' | translate}}</option>
+                          <option *ngFor="let item of cyclePlanItemList" value="{{item.imaintenancePlanItemId}}">{{item.imaintenancePlanItemId}}
+                          </option>
+                        </select>
+                      </td>
+                  </tr>
+                  <tr>
+                    <td>{{'equipment' | translate}}</td>
+                    <td>
+                      <equipment-auto-complete [selectedEquipmentId]="maintenancePlanItem.equipmentId" (selectedEquipmentEvent)="setEquipment($event)"></equipment-auto-complete>
+
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'equipment-task' | translate}}</td>
+                    <td>
+                      <p-dropdown name="equipmentList" [options]="equipmentTaskList" [(ngModel)]="selectedEquipmentTask"
+                      (ngModelChange)="onEquipmentTaskSelected($event)"
+                       placeholder="Select Equipment Task" optionLabel="taskDescription" ></p-dropdown>
+
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'maintenance-plan-type' | translate}}</td>
+                    <td>
+                      <select *ngIf="maintenanceOrderPlanTypeList" id="maintenanceOrderPlanTypeId" name="equipmentListItem" class="form-control"
+                              [(ngModel)]="maintenancePlanItem.maintenanceOrderPlanTypeId" required>
+                        <option [ngValue]="null">{{'please-select' | translate}}</option>
+                        <option *ngFor="let item of maintenanceOrderPlanTypeList" value="{{item.maintenancePlanTypeId}}">{{item.description}}
+                        </option>
+                      </select>
+                    </td>
+                </tr>
+                <tr>
+                  <td>{{'functional-location' | translate}}</td>
+                  <td>
+                    <select id="functionalLocations" name="functionalLocationsItem" class="form-control"
+                            [(ngModel)]="maintenancePlanItem.maintenanceFunctionalLocationId">
+                      <option [ngValue]="null">{{'please-select' | translate}}</option>
+                      <option *ngFor="let item of functionalLocations" value="{{item.maintenanceFunctionalLocationId}}">
+                        {{item.description}}
+                      </option>
+                    </select>
+                  </td>
+              </tr>
+              <tr>
+                <td>{{'plant' | translate}}</td>
+                <td>
+                  <plant-auto-complete [selectedPlantId]="maintenancePlanItem.planningPlantId" (selectedPlantEvent)="setPlant($event)" [eventFire]="true"></plant-auto-complete>
+
+                </td>
+            </tr>
+                    <tr>
+                      <td>{{'planner-group' | translate}}</td>
+                      <td>
+                        <select id="plannerGroup" name="plannerGroupItem" class="form-control"
+                                [(ngModel)]="maintenancePlanItem.maintenancePlannerGroupId">
+                          <option [ngValue]="null">{{'please-select' | translate}}</option>
+                          <option *ngFor="let item of plannerGroup" value="{{item.plannerGroupId}}">{{item.plannerGroup}}
+                          </option>
+                        </select>
+                      </td>
+                  </tr>
+                  <tr>
+                    <td>{{'main-workstation' | translate}}</td>
+                    <td>
+
+                      <select id="mainWorkstation" name="ordeTypeItem" class="form-control" [(ngModel)]="maintenancePlanItem.mainWorkStationId">
+                        <option [ngValue]="null">{{'please-select' | translate}}</option>
+                        <option *ngFor="let item of workstations" value="{{item.workStationId}}">{{item.workStationName}}</option>
+                      </select>
+                    </td>
+                </tr>
+
+                  <tr>
+                      <td>{{'priority' | translate}}</td>
+                      <td>
+                        <select  id="priority" name="priorityItem" class="form-control" [(ngModel)]="maintenancePlanItem.priority">
+                          <option [ngValue]="null">{{'please-select' | translate}}</option>
+                          <option *ngFor="let item of priority" value="{{item.value}}">{{item.label}}</option>
+                        </select>
+                      </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </form>
+            </div>
+          </div>
+        </p-tabPanel> -->
+        <p-tabPanel header="{{'maintenance-plan-cycle-items'|translate}}" [selected]="selectedIndex === 1">
+          <div class="card" *ngIf="(dataModel.maintenanceOrderPlanTypeId === 'MULTIPLE_COUNTER_PLAN' || dataModel.maintenanceOrderPlanTypeId == 'TIME_BASED_STRATEGY_PLAN' || dataModel.maintenanceOrderPlanTypeId == 'PERFORMANCE_BASED_STRATEGY_PLAN'); else singlePlanCycleItem ">
+            <span class="card-header">{{'maintenance-plan-cycle-items'|translate}}
+              <button *ngIf="dataModel.maintenanceOrderPlanTypeId === 'MULTIPLE_COUNTER_PLAN'" style="float: right" type="button" class="btn btn-primary" data-toggle="modal"
+                (click)="dialog.title = 'maintenance-plan-cycle';maintenancePlanCycleShow(null,'NEW');">
+                <i class="fa fa-plus-circle"></i>
+              </button>
+            </span>
+            <div class="card-body">
+              <table class="table" style="table-layout: fixed; width: 100%">
+                <thead>
+                  <tr align="center">
+                    <th *ngIf="(dataModel.maintenanceOrderPlanTypeId === 'MULTIPLE_COUNTER_PLAN' || dataModel.maintenanceOrderPlanTypeId == 'PERFORMANCE_BASED_SINGLE_CYCLE_PLAN' || dataModel.maintenanceOrderPlanTypeId == 'PERFORMANCE_BASED_STRATEGY_PLAN')">{{'counter'|translate}}</th>
+                    <th>{{'cycle'|translate}}</th>
+                    <th>{{'cycle-unit'|translate}}</th>
+                    <th>{{'maintenanceCycleText'|translate}}</th>
+                    <th>{{'offset'|translate}}</th>
+                    <th>{{'offset-short-text'|translate}}</th>
+                    <th *ngIf="dataModel.maintenanceOrderPlanTypeId === 'MULTIPLE_COUNTER_PLAN'">{{'description'|translate}}</th>
+                    <th *ngIf="dataModel.maintenanceOrderPlanTypeId === 'MULTIPLE_COUNTER_PLAN'" width="80px">{{'action'|translate}}</th>
+
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr align="center" *ngFor="let item of dataModel.maintenanceOrderPlanCycleItemList; let i = index">
+                    <td class="text-center" *ngIf="(dataModel.maintenanceOrderPlanTypeId === 'MULTIPLE_COUNTER_PLAN' || dataModel.maintenanceOrderPlanTypeId == 'PERFORMANCE_BASED_SINGLE_CYCLE_PLAN' || dataModel.maintenanceOrderPlanTypeId == 'PERFORMANCE_BASED_STRATEGY_PLAN')">
+                      {{item.counter}}
+                    </td>
+                    <td class="text-center">
+                      {{item.cycle}}
+                    </td>
+                    <td class="text-center">
+                      {{item.cycleUnit}}
+                    </td>
+                    <td class="text-center">
+                      {{item.maintenanceCycleText}}
+                    </td>
+                    <td class="text-center">
+                      {{item.offset}}
+                    </td>
+                    <td class="text-center">
+                      {{item.offsetShortText}}
+                    </td>
+                    <td class="text-center" *ngIf="dataModel.maintenanceOrderPlanTypeId === 'MULTIPLE_COUNTER_PLAN'">
+                      {{item.description}}
+                    </td>
+                    <td width="80px" style="display: flex;" *ngIf="dataModel.maintenanceOrderPlanTypeId === 'MULTIPLE_COUNTER_PLAN'">
+                      <button class="btn btn-sm" (click)="dialog.title='maintenance-plan-cycle';editMaintenancePlanCycleShow(i,'EDIT');">
+                        <i class="fa fa-edit"></i></button>
+                      <button class="btn btn-sm" (click)="removeMaintenancePlanCycle(i)">
+                        <i class="fa fa-trash"></i></button>
+                    </td>
+
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <ng-template #singlePlanCycleItem>
+            <div class="card" >
+              <div class="card-header">{{'maintenance-plan-cycle-items'|translate}}</div>
+              <div class="card-body">
+                <form #plantCycleForm="ngForm" class="col-md-12">
+                  <table class="table table-bordered">
+                    <tbody>
+                      <tr *ngIf="(dataModel.maintenanceOrderPlanTypeId === 'MULTIPLE_COUNTER_PLAN' || dataModel.maintenanceOrderPlanTypeId == 'PERFORMANCE_BASED_SINGLE_CYCLE_PLAN' || dataModel.maintenanceOrderPlanTypeId == 'PERFORMANCE_BASED_STRATEGY_PLAN')">
+                        <td width="35%" >{{'counter' | translate}}</td>
+                        <td>
+                          <input type="number" name="counter" class="form-control"
+                                [(ngModel)]="maintenancePlanCycleItem.counter"/>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>{{'cycle' | translate}}</td>
+                        <td>
+                          <input type="number" name="cycle" class="form-control"
+                                [(ngModel)]="maintenancePlanCycleItem.cycle"/>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>{{'cycle-unit' | translate}}</td>
+                        <td>
+                          <unit-auto-complete [selectedUnit]="maintenancePlanCycleItem.cycleUnit" [addIfMissing]="true" (unitChangeEvent)="maintenancePlanCycleItem.cycleUnit=$event"
+                          ></unit-auto-complete>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>{{'maintenanceCycleText' | translate}}</td>
+                        <td>
+                          <input type="text" name="maintenanceCycleText" class="form-control"
+                                [(ngModel)]='maintenancePlanCycleItem.maintenanceCycleText'/>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>{{'offset' | translate}}</td>
+                        <td>
+                          <input type="number" name="off" class="form-control"
+                                [(ngModel)]='maintenancePlanCycleItem.offset'/>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>{{'offset-short-text' | translate}}</td>
+                        <td>
+                          <input type="text" name="offsetShortText" class="form-control"
+                            [(ngModel)]='maintenancePlanCycleItem.offsetShortText'/>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>{{'description' | translate}}</td>
+                        <td>
+                          <textarea name="description" class="form-control"
+                                [(ngModel)]="maintenancePlanCycleItem.description"></textarea>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </form>
+              </div>
+            </div>
+          </ng-template>
+
+        </p-tabPanel>
+
+          <p-tabPanel header="{{'scheduling-parameters' | translate}}" [selected]="selectedIndex === 2">
+
+            <table class="table maintable">
+              <tbody>
+                <tr>
+                  <td>
+                    <table class="table table-bordered">
+                      <tbody>
+                        <tr *ngIf="!((dataModel.maintenanceOrderPlanTypeId == 'PERFORMANCE_BASED_SINGLE_CYCLE_PLAN') || (dataModel.maintenanceOrderPlanTypeId == 'PERFORMANCE_BASED_STRATEGY_PLAN'))">
+                          <td width="35%">{{'scheduling-indicator' | translate}}</td>
+                          <td *ngIf="dataModel.maintenanceOrderPlanTypeId=='TIME_BASED_STRATEGY_PLAN' || dataModel.maintenanceOrderPlanTypeId=='TIME_BASE_SINGLE_CYCLE_PLAN'">
+                            <select id="schedulingIndicator" name="schedulingIndicator" class="form-control"
+                            [required]="(dataModel.maintenanceOrderPlanTypeId=='TIME_BASED_STRATEGY_PLAN' || dataModel.maintenanceOrderPlanTypeId=='TIME_BASE_SINGLE_CYCLE_PLAN')"
+                            [(ngModel)]="dataModel.schedulingIndicator">
+                              <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                              <option *ngFor="let item of schedulingEnumSliceList" [value]="item">{{item}}</option>
+                            </select>
+                          </td>
+                          <td *ngIf="!(dataModel.maintenanceOrderPlanTypeId=='TIME_BASED_STRATEGY_PLAN' || dataModel.maintenanceOrderPlanTypeId=='TIME_BASE_SINGLE_CYCLE_PLAN')">
+                            <select id="schedulingIndicator" name="schedulingIndicator" class="form-control"
+                            [(ngModel)]="dataModel.schedulingIndicator">
+                              <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                              <option *ngFor="let item of schedulingEnumList" [value]="item">{{item}}</option>
+                            </select>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td width="35%">{{'call-horizon' | translate}}</td>
+                          <td>
+                            <div class="d-flex">
+                              <input type="number"
+                              required
+                              class="form-control col-md-11" name="callHorizan" [(ngModel)]="dataModel.callHorizan"/>
+                              <span class="col-md-1 align-self-center">%</span>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>{{'completion-requirement' | translate}}</td>
+                          <td>
+                            <div class="d-flex">
+                              <p-checkbox name="completionRequirement" [(ngModel)]="dataModel.completionRequirement" binary="true"></p-checkbox>
+
+                            </div>
+                          </td>
+                        </tr>
+                        <tr *ngIf="dataModel.maintenanceOrderPlanTypeId === 'TIME_BASE_SINGLE_CYCLE_PLAN'
+                        || dataModel.maintenanceOrderPlanTypeId === 'TIME_BASED_STRATEGY_PLAN'
+                        || dataModel.maintenanceOrderPlanTypeId === 'MULTIPLE_COUNTER_PLAN'">
+                          <td>{{'start-of-cycle-date' | translate}}</td>
+                          <td>
+
+                            <p-calendar [(ngModel)]="dataModel.startOfCycleDate"
+                            name="startofcycle"
+                            [required]="(dataModel.maintenanceOrderPlanTypeId=='TIME_BASED_STRATEGY_PLAN' || dataModel.maintenanceOrderPlanTypeId=='TIME_BASE_SINGLE_CYCLE_PLAN'
+                            || dataModel.maintenanceOrderPlanTypeId === 'MULTIPLE_COUNTER_PLAN')"
+                            [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                            placeholder="{{'start-of-cycle-date'|translate}}"
+                            [showIcon]="true" dateFormat="dd/mm/yy"></p-calendar>
+                          </td>
+                        </tr>
+                        <tr *ngIf="dataModel.maintenanceOrderPlanTypeId === 'PERFORMANCE_BASED_STRATEGY_PLAN'
+                        || dataModel.maintenanceOrderPlanTypeId === 'PERFORMANCE_BASED_SINGLE_CYCLE_PLAN'
+                        || dataModel.maintenanceOrderPlanTypeId === 'MULTIPLE_COUNTER_PLAN'">
+                          <td>{{'start-of-cycle-counter' | translate}}</td>
+                          <td>
+                            <input type="text" class="form-control" name="startOfCycleCounter"
+                            [required]="!(dataModel.maintenanceOrderPlanTypeId=='TIME_BASED_STRATEGY_PLAN' || dataModel.maintenanceOrderPlanTypeId=='TIME_BASE_SINGLE_CYCLE_PLAN')"
+                             [(ngModel)]="dataModel.startOfCycleCounter"/>
+                          </td>
+                        </tr>
+                        <tr *ngIf="dataModel.maintenanceOrderPlanTypeId === 'PERFORMANCE_BASED_STRATEGY_PLAN'
+                        || dataModel.maintenanceOrderPlanTypeId === 'PERFORMANCE_BASED_SINGLE_CYCLE_PLAN'
+                        || dataModel.maintenanceOrderPlanTypeId === 'MULTIPLE_COUNTER_PLAN'">
+                          <td>{{'cycle-counter-unit' | translate}}</td>
+                          <td>
+                            <unit-auto-complete [selectedUnit]="dataModel.startOfCycleCounterUnit"
+                            [required]="!(dataModel.maintenanceOrderPlanTypeId=='TIME_BASED_STRATEGY_PLAN' || dataModel.maintenanceOrderPlanTypeId=='TIME_BASE_SINGLE_CYCLE_PLAN')"
+                            [addIfMissing]="true"
+                            (unitChangeEvent)="dataModel.startOfCycleCounterUnit=$event"></unit-auto-complete>
+
+                          </td>
+                        </tr>
+                        <tr *ngIf="dataModel.maintenanceOrderPlanTypeId=='MULTIPLE_COUNTER_PLAN'">
+                          <td>{{'operation-type' | translate}}</td>
+                          <td>
+                            <div class="ui-g">
+                              <div class="ui-g-4"><p-radioButton name="operationType" value="OR_LINK" label="OR_LINK" [(ngModel)]="dataModel.schedulingOperationType" inputId="orny"></p-radioButton></div>
+                              <div class="ui-g-4"><p-radioButton name="operationType" value="AND_LINK" label="AND_LINK" [(ngModel)]="dataModel.schedulingOperationType" inputId="andny"></p-radioButton></div>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                  <td>
+                    <table class="table table-bordered">
+                      <tbody>
+                        <tr>
+                          <td width="40%">{{'scheduling-period' | translate}}</td>
+                          <td>
+                            <input type="number" class="form-control" name="schedulingPeriod" [(ngModel)]="dataModel.schedulingPeriod"/>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>{{'period-unit' | translate}}</td>
+                          <td>
+                            <unit-auto-complete [selectedUnit]="dataModel.schedulingPeriodUnit" [addIfMissing]="true"
+                            [onlyThatValue]="'Day'"
+                            (unitChangeEvent)="dataModel.schedulingPeriodUnit= ($event && $event === 'Day' ? $event : null)"></unit-auto-complete>
+
+                          </td>
+
+                        </tr>
+                        <tr>
+                          <td>{{'shift-factor-late-completion' | translate}}</td>
+                          <td>
+                            <div class="d-flex">
+                              <input type="number" step="1" pattern="\d+" required class="form-control col-md-11" name="shiftFactorLateCompletion" [(ngModel)]="dataModel.shiftFactorLateCompletion"/>
+                              <span class="col-md-1 align-self-center">%</span>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>{{'shift-factor-late-tolerance' | translate}}</td>
+                          <td>
+                            <div class="d-flex">
+                              <input type="number" step="1" pattern="\d+" required class="form-control col-md-11" name="shiftFactorLateTolerance" [(ngModel)]="dataModel.shiftFactorLateTolerance"/>
+                              <span class="col-md-1 align-self-center">%</span>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>{{'shift-factor-early-completion' | translate}}</td>
+                          <td>
+                            <div class="d-flex">
+                              <input type="number" step="1" pattern="\d+" required class="form-control col-md-11" name="shiftFactorEarlyCompletion" [(ngModel)]="dataModel.shiftFactorEarlyCompletion"/>
+                              <span class="col-md-1 align-self-center">%</span>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>{{'shift-factor-early-tolerance' | translate}}</td>
+                          <td>
+                            <div class="d-flex">
+                              <input type="number" step="1" pattern="\d+" required class="form-control col-md-11" name="shiftFactorEarlyTolerance" [(ngModel)]="dataModel.shiftFactorEarlyTolerance"/>
+                              <span class="col-md-1 align-self-center">%</span>
+                            </div>
+
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>{{'cycle-modification-factor' | translate}}</td>
+                          <td>
+                            <div class="d-flex">
+                              <input type="number" class="form-control" name="cyclemodificationfactor" [(ngModel)]="dataModel.cycleModificationFactor"/>
+
+                            </div>
+
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- <table class="table table-bordered">
+              <tr *ngIf="!((dataModel.maintenanceOrderPlanTypeId == 'PERFORMANCE_BASED_SINGLE_CYCLE_PLAN') || (dataModel.maintenanceOrderPlanTypeId == 'PERFORMANCE_BASED_STRATEGY_PLAN'))">
+                <td width="35%">{{'scheduling-indicator' | translate}}</td>
+                <td *ngIf="dataModel.maintenanceOrderPlanTypeId=='TIME_BASED_STRATEGY_PLAN' || dataModel.maintenanceOrderPlanTypeId=='TIME_BASE_SINGLE_CYCLE_PLAN'">
+                  <select id="schedulingIndicator" name="schedulingIndicator" class="form-control"
+                  [(ngModel)]="dataModel.schedulingIndicator">
+                    <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                    <option *ngFor="let item of schedulingEnumSliceList" [value]="item">{{item}}</option>
+                  </select>
+                </td>
+                <td *ngIf="!(dataModel.maintenanceOrderPlanTypeId=='TIME_BASED_STRATEGY_PLAN' || dataModel.maintenanceOrderPlanTypeId=='TIME_BASE_SINGLE_CYCLE_PLAN')">
+                  <select id="schedulingIndicator" name="schedulingIndicator" class="form-control"
+                  [(ngModel)]="dataModel.schedulingIndicator">
+                    <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                    <option *ngFor="let item of schedulingEnumList" [value]="item">{{item}}</option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td width="35%">{{'call-horizon' | translate}}</td>
+                <td>
+                  <div class="row col-md-12">
+                    <input type="number" class="form-control col-md-11" name="callHorizan" [(ngModel)]="dataModel.callHorizan"/>
+                    <span class="col-md-1 align-self-center">%</span>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'scheduling-period' | translate}}</td>
+                <td>
+                  <input type="number" class="form-control" name="schedulingPeriod" [(ngModel)]="dataModel.schedulingPeriod"/>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'period-unit' | translate}}</td>
+                <td>
+                  <unit-auto-complete [selectedUnit]="dataModel.schedulingPeriodUnit" [addIfMissing]="true"
+                  (unitChangeEvent)="dataModel.schedulingPeriodUnit=$event"></unit-auto-complete>
+                </td>
+
+              </tr>
+              <tr>
+                <td>{{'completion-requirement' | translate}}</td>
+                <td>
+                  <div class="row col-md-12">
+                    <p-checkbox name="completionRequirement" [(ngModel)]="dataModel.completionRequirement" binary="true"></p-checkbox>
+
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'shift-factor-late-completion' | translate}}</td>
+                <td>
+                  <div class="row col-md-12">
+                    <input type="number" class="form-control col-md-11" name="shiftFactorLateCompletion" [(ngModel)]="dataModel.shiftFactorLateCompletion"/>
+                    <span class="col-md-1 align-self-center">%</span>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'shift-factor-late-tolerance' | translate}}</td>
+                <td>
+                  <div class="row col-md-12">
+                    <input type="number" class="form-control col-md-11" name="shiftFactorLateTolerance" [(ngModel)]="dataModel.shiftFactorLateTolerance"/>
+                    <span class="col-md-1 align-self-center">%</span>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'shift-factor-early-completion' | translate}}</td>
+                <td>
+                  <div class="row col-md-12">
+                    <input type="number" class="form-control col-md-11" name="shiftFactorEarlyCompletion" [(ngModel)]="dataModel.shiftFactorEarlyCompletion"/>
+                    <span class="col-md-1 align-self-center">%</span>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'shift-factor-early-tolerance' | translate}}</td>
+                <td>
+                  <div class="row col-md-12">
+                    <input type="number" class="form-control col-md-11" name="shiftFactorEarlyTolerance" [(ngModel)]="dataModel.shiftFactorEarlyTolerance"/>
+                    <span class="col-md-1 align-self-center">%</span>
+                  </div>
+
+                </td>
+              </tr>
+              <tr>
+                <td>{{'cycle-modification-factor' | translate}}</td>
+                <td>
+                  <div class="row col-md-12">
+                    <input type="number" class="form-control" name="cyclemodificationfactor" [(ngModel)]="dataModel.cycleModificationFactor"/>
+
+                  </div>
+
+                </td>
+              </tr>
+              <tr *ngIf="dataModel.maintenanceOrderPlanTypeId === 'PERFORMANCE_BASED_STRATEGY_PLAN' || dataModel.maintenanceOrderPlanTypeId === 'PERFORMANCE_BASED_SINGLE_CYCLE_PLAN' ">
+                <td>{{'start-of-cycle-counter' | translate}}</td>
+                <td>
+                  <input type="text" class="form-control" name="startOfCycleCounter" [(ngModel)]="dataModel.startOfCycleCounter"/>
+                </td>
+              </tr>
+              <tr *ngIf="dataModel.maintenanceOrderPlanTypeId === 'PERFORMANCE_BASED_STRATEGY_PLAN' || dataModel.maintenanceOrderPlanTypeId === 'PERFORMANCE_BASED_SINGLE_CYCLE_PLAN' ">
+                <td>{{'cycle-counter-unit' | translate}}</td>
+                <td>
+                  <unit-auto-complete [selectedUnit]="dataModel.startOfCycleCounterUnit" [addIfMissing]="true"
+                  (unitChangeEvent)="dataModel.startOfCycleCounterUnit=$event"></unit-auto-complete>
+
+                </td>
+              </tr>
+              <tr *ngIf="dataModel.maintenanceOrderPlanTypeId === 'TIME_BASE_SINGLE_CYCLE_PLAN' || dataModel.maintenanceOrderPlanTypeId === 'TIME_BASED_STRATEGY_PLAN'">
+                <td>{{'start-of-cycle-date' | translate}}</td>
+                <td>
+
+                  <p-calendar [(ngModel)]="dataModel.startOfCycleDate"
+                  [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                  placeholder="{{'start-of-cycle-date'|translate}}"
+                  [showIcon]="true" dateFormat="dd/mm/yy"></p-calendar>
+                </td>
+              </tr>
+            </table> -->
+            <!--<tr>
+              <td>
+            <tr>
+              <td>
+                <b>Date Determination</b>
+            <tr>
+              <td>{{'shift-factor-forLate-completion' | translate}}</td>
+              <td>
+                <input required type="number" name="shiftFactorLateCompletion" placeholder="0.00" min="0.0"  step="0.1" [(ngModel)]="dataModel.shiftFactorLateCompletion"/>
+              </td>
+            </tr>
+            <tr>
+              <td>{{'tolerance-factor-for-lateCompletion' | translate}}</td>
+              <td>
+                <input required type="number" name="shiftFactorLateTolerance" placeholder="0.00" min="0.0"  step="0.1" [(ngModel)]="dataModel.shiftFactorLateTolerance"/>
+              </td>
+            </tr>
+            <tr>
+              <td>{{'shift-factor-forearlycompletion' | translate}}</td>
+              <td>
+                <input required type="number" name="shiftFactorEarlyCompletion" placeholder="0.00" min="0.0"  step="0.1" [(ngModel)]="dataModel.shiftFactorEarlyCompletion"/>
+              </td>
+            </tr>
+            <tr>
+              <td>{{'tolerance-factor-forearly-completion' | translate}}</td>
+              <td>
+                <input type="number" name="shiftFactorEarlyTolerance" placeholder="0.00" min="0.0"  step="0.1" [(ngModel)]="dataModel.shiftFactorEarlyTolerance" />
+              </td>
+            </tr>
+            <tr>
+              <td>{{'cycle-moderation-factor' | translate}}</td>
+              <td>
+                <input type="number" name="cycleModificationFactor" placeholder="0.00" min="0.0"  step="0.1" [(ngModel)]="dataModel.cycleModificationFactor"/>
+              </td>
+            </tr>
+            <tr>
+              <td>{{'factory-Calendar' | translate}}</td>
+              <td>
+                <p-calendar [(ngModel)]="dataModel.createDate" name="createDate"
+                            dateFormat="dd.mm.yy"></p-calendar>
+              </td>
+            </tr>
+            <b>Call Control Parameters</b>
+            <tr>
+              <td>{{'call-horizon' | translate}}</td>
+              <td>
+                <input type="text" name="calHorizon" [(ngModel)]="dataModel.calHorizon"/>
+              </td>
+            </tr>
+            <tr>
+              <td>{{'scheduling-period' | translate}}</td>
+              <td>
+                <input type="text" name="schedulingIndicator" [(ngModel)]="dataModel.schedulingIndicator"/>
+              </td>
+            </tr>
+            <tr>
+              <td>{{'unit' | translate}}</td>
+              <td>
+                <input type="text" name="schedulingPeriodUnit" [(ngModel)]="dataModel.schedulingPeriodUnit"/>
+              </td>
+            </tr>
+            <tr>
+              <td>{{'completion-requirement' | translate}}</td>
+              <td>
+                <p-checkbox name="completionRequirement"  binary="false"></p-checkbox>
+              </td>
+            </tr>
+            <td>
+              <b>Scheduling Indicator</b>
+              <tr>
+                <td>
+              <tr>
+                <td>{{'time' | translate}}</td>
+                <td>
+                  <input type="radio" name="time" >
+                </td>
+              </tr>
+              <tr>
+                <td>{{'key-date' | translate}}</td>
+                <td>
+                  <input type="radio" name="keyDate">
+                </td>
+              </tr>
+              <tr>
+                <td>{{'factory-Calendar' | translate}}</td>
+                <td>
+                  <input type="radio" name="factoryCalendar">
+                </td>
+              </tr>
+              <b>Start Scheduling</b>
+              <tr>
+                <td>{{'start-of-cycle' | translate}}</td>
+                <td>
+                  <p-calendar [(ngModel)]="dataModel.startOfCycleDate" name="createDate"
+                              dateFormat="dd.mm.yy"></p-calendar>
+                </td>
+              </tr>
+            </td>-->
+          </p-tabPanel>
+          <p-tabPanel header="{{'scheduled-calls' | translate}}" [disabled]="!dataModel.maintenancePlanId" [selected]="selectedIndex === 3">
+            <ng-template pTemplate="content">
+              <schedule-call-list *ngIf="dataModel.maintenancePlanId" [maintenanceOrderPlanId]="dataModel.maintenancePlanId"></schedule-call-list>
+            </ng-template>
+          </p-tabPanel>
+      </p-tabView>
+      <div class="col-md-12">
+            <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+              {{'reset' | translate}}
+            </button>
+            <button type="submit" class="btn btn-sm btn-primary"
+              [disabled]="!(dataModel.maintenancePlanPlanName) ||
+                          !(dataModel.maintenanceOrderPlanTypeId) ||
+                          (dataModel.maintenanceOrderPlanTypeId=='MULTIPLE_COUNTER_PLAN' ? !dataModel.schedulingOperationType : false) ||
+                          !(dataModel.maintenanceOrderPlanItemList.length > 0)
+                          "
+                    (click)="saveMaintenancePlan()"><i class="fa fa-dot-circle-o"></i>
+              {{'save' | translate}}
+            </button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+</div>
+
+
+<ng-template [ngIf]="dialog.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myMaintenancePlanModal="bs-modal" (onHidden)="dialog.active=false" class="modal fade"
+       tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog modal-success modal-md" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"> {{ dialog.title | translate}}</h4>
+          <button type="button" class="close" (click)="myMaintenancePlanModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <ng-template [ngIf]="dialog.title=='maintenance-plan-cycle'">
+            <form #plantCycleForm="ngForm">
+              <table class="table table-bordered">
+                <tbody>
+                  <tr *ngIf="(dataModel.maintenanceOrderPlanTypeId === 'MULTIPLE_COUNTER_PLAN' || dataModel.maintenanceOrderPlanTypeId == 'PERFORMANCE_BASED_SINGLE_CYCLE_PLAN' || dataModel.maintenanceOrderPlanTypeId == 'PERFORMANCE_BASED_STRATEGY_PLAN')">
+                    <td>{{'counter' | translate}}</td>
+                    <td>
+                      <input type="number" name="counter" class="form-control"
+                            [(ngModel)]="maintenancePlanCycleItem.counter" required/>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'cycle' | translate}}</td>
+                    <td>
+                      <input type="number" name="cycle" class="form-control"
+                            [(ngModel)]="maintenancePlanCycleItem.cycle" required/>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'cycle-unit' | translate}}</td>
+                    <td>
+                      <unit-auto-complete [selectedUnit]="maintenancePlanCycleItem.cycleUnit" [addIfMissing]="true" (unitChangeEvent)="maintenancePlanCycleItem.cycleUnit=$event"
+                      ></unit-auto-complete>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'maintenanceCycleText' | translate}}</td>
+                    <td>
+                      <input type="text" name="maintenanceCycleText" class="form-control"
+                            [(ngModel)]='maintenancePlanCycleItem.maintenanceCycleText' required/>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'offset' | translate}}</td>
+                    <td>
+                      <input type="number" name="off" class="form-control"
+                            [(ngModel)]='maintenancePlanCycleItem.offset' required/>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'offset-short-text' | translate}}</td>
+                    <td>
+                      <input type="text" name="offsetShortText" class="form-control"
+                      [(ngModel)]='maintenancePlanCycleItem.offsetShortText' required/>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'description' | translate}}</td>
+                    <td>
+                      <textarea name="description" class="form-control"
+                            [(ngModel)]="maintenancePlanCycleItem.description" required></textarea>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="col-md-12" style="display: flex; flex-direction: row-reverse;">
+                <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary"
+                    (click)="myMaintenancePlanModal.hide()">{{'close' | translate}}
+                </button>
+                <button *ngIf="dialog.title==='maintenance-plan-cycle'&& dialog.type=='NEW'"
+                type="button" class="btn rounded btn-primary" [disabled]="!plantCycleForm.valid"
+                        (click)="AddMaintenancePlanCycleItem()">{{'new' | translate}}
+                </button>
+                <button *ngIf="dialog.title==='maintenance-plan-cycle'&& dialog.type=='EDIT'"
+                type="button" class="btn rounded btn-primary" [disabled]="!plantCycleForm.valid"
+                (click)="EditMaintenancePlanCycleItem()">{{'edit' | translate}}
+                </button>
+              </div>
+            </form>
+          </ng-template>
+          <ng-template [ngIf]="dialog.title=='maintenance-plan'">
+            <form #planForm="ngForm" class="col-md-12">
+              <table class="table table-bordered">
+                <tbody>
+                  <tr>
+                    <td>{{'maintenance-plan-item-name' | translate}}</td>
+                    <td>
+                      <input type="text" name="maintenanceplanitemname" class="form-control" required
+                      [(ngModel)]="maintenancePlanItem.maintenancePlanItemName"/>
+                      <!-- <select id="maintenancePlanItem" name="maintenancePlanItems" class="form-control"
+                              [(ngModel)]="maintenancePlanItem.imaintenancePlanItemId">
+                        <option [ngValue]="null">{{'please-select' | translate}}</option>
+                        <option *ngFor="let item of cyclePlanItemList" value="{{item.imaintenancePlanItemId}}">{{item.imaintenancePlanItemId}}
+                        </option>
+                      </select> -->
+                    </td>
+                </tr>
+                <tr>
+                  <td>{{'plant' | translate}}</td>
+                  <td>
+                    <span style="width: 100%;" *ngIf="selectedPlant && maintenancePlanItem.planningPlantId"> {{maintenancePlanItem.planningPlantName}}</span>
+                    <plant-auto-complete *ngIf="!selectedPlant || !maintenancePlanItem.planningPlantId" [addIfMissing]="false" [selectedPlantId]="maintenancePlanItem.planningPlantId"
+                      (selectedPlantEvent)="maintenancePlanItem.planningPlantId = +$event.plantId" [selectedPlant]="maintenancePlanItem.planningPlantId"></plant-auto-complete>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'functional-location' | translate}}</td>
+                  <td class="ui-fluid">
+                    <p-dropdown name="functionalLocations" required [options]="functionalLocations" [(ngModel)]="selectedFunctionalLocation"
+                    (ngModelChange)="onFunctionalLocationSelected($event)"
+                     placeholder="Select Functional Location" optionLabel="description" ></p-dropdown>
+                    <!-- <select id="functionalLocations" name="functionalLocationsItem" class="form-control"
+                            [(ngModel)]="maintenancePlanItem.maintenanceFunctionalLocationId">
+                      <option [ngValue]="null">{{'please-select' | translate}}</option>
+                      <option *ngFor="let item of functionalLocations" value="{{item.maintenanceFunctionalLocationId}}">
+                        {{item.description}}
+                      </option>
+                    </select> -->
+                  </td>
+              </tr>
+                <tr>
+                  <td>{{'equipment' | translate}}</td>
+                  <td>
+                    <equipment-auto-complete [plantId]="selectedPlant?.plantId" [required]="true" [selectedEquipmentId]="maintenancePlanItem.equipmentId" (selectedEquipmentEvent)="setEquipment($event)"></equipment-auto-complete>
+                    <!-- <select id="equipmentList" name="equipmentListItem" class="form-control"
+                            [(ngModel)]="maintenancePlanItem.equipmentId">
+                      <option [ngValue]="null">{{'please-select' | translate}}</option>
+                      <option *ngFor="let item of equipmentList" value="{{item.equipmentId}}">{{item.equipmentName}}
+                      </option>
+                    </select> -->
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'equipment-task' | translate}}</td>
+                  <td>
+                    <span class="bg-readonly form-control" *ngIf="maintenancePlanItem.equipmentTaskId" (click)="equipmModal.active=true">{{maintenancePlanItem.equipmentTask.taskDescription}}</span>
+                      <span class="bg-readonly form-control" *ngIf="!maintenancePlanItem.equipmentTaskId" (click)="equipmModal.active=true">{{'choose-equipment-task' | translate}}</span>
+                    <!-- <p-dropdown name="equipmentList" required [options]="equipmentTaskList" [(ngModel)]="selectedEquipmentTask"
+                    (ngModelChange)="onEquipmentTaskSelected($event)"
+                     placeholder="Select Equipment Task" optionLabel="taskDescription" ></p-dropdown> -->
+                  </td>
+                </tr>
+                <!-- <tr>
+                  <td>{{'maintenance-order-type' | translate}}</td>
+                  <td>
+                    <select id="maintenanceOrderPlanTypeId" name="maintenanceOrderPlanTypeId" class="form-control"
+                            [(ngModel)]="maintenancePlanItem.maintenanceOrderPlanTypeId" required>
+                      <option [ngValue]="null">{{'please-select' | translate}}</option>
+                      <option *ngFor="let item of maintenanceOrderPlanTypeList" value="{{item}}">{{item}}
+                      </option>
+                    </select>
+                  </td>
+              </tr> -->
+
+
+
+                  <tr>
+                    <td>{{'planner-group' | translate}}</td>
+                    <td class="ui-fluid">
+                      <p-dropdown name="plannerGroup" [options]="plannerGroup" [(ngModel)]="selectedPlannerGroup"
+                      (ngModelChange)="onPlannerGroupSelected($event)"
+                       placeholder="Select Planner Group" optionLabel="plannerGroup" ></p-dropdown>
+                      <!-- <select id="plannerGroup" name="plannerGroupItem" class="form-control"
+                              [(ngModel)]="maintenancePlanItem.maintenancePlannerGroupId">
+                        <option [ngValue]="null">{{'please-select' | translate}}</option>
+                        <option *ngFor="let item of plannerGroup" value="{{item.plannerGroupId}}">{{item.plannerGroup}}
+                        </option>
+                      </select> -->
+                    </td>
+                </tr>
+                <tr>
+                  <td>{{'main-workstation' | translate}}</td>
+                  <td>
+                    <workstation-auto-complete *ngIf="maintenancePlanItem.mainWorkStationId" [selectedWorkStation]="{ workStationId: maintenancePlanItem.mainWorkStationId, workStationName : this.maintenancePlanItem.mainWorkStationName}"
+                    [plantId]="maintenancePlanItem.planningPlantId" (selectedWorkStationEvent)="setWorkstation($event)"></workstation-auto-complete>
+
+                    <workstation-auto-complete *ngIf="!maintenancePlanItem.mainWorkStationId"
+                    [plantId]="maintenancePlanItem.planningPlantId" (selectedWorkStationEvent)="setWorkstation($event)"></workstation-auto-complete>
+                    <!-- <select id="mainWorkstation" name="ordeTypeItem" class="form-control" [(ngModel)]="maintenancePlanItem.mainWorkStationId">
+                      <option [ngValue]="null">{{'please-select' | translate}}</option>
+                      <option *ngFor="let item of workstations" value="{{item.workStationId}}">{{item.workStationName}}</option>
+                    </select> -->
+                  </td>
+              </tr>
+              <tr>
+                <td>{{'maintenance-order-type' | translate}}</td>
+                <td>
+                  <select id="maintenanceOrderType" name="maintenanceOrderType" class="form-control"
+                  (ngModelChange)="maintenanceOrderTypeSelected($event)"
+                  [(ngModel)]="maintenancePlanItem.maintenanceOrderType">
+       
+                    <option [ngValue]="null">{{ "please-select" | translate }}</option>
+                    <option *ngFor="let maintenanceOrderType of maintenanceOrderTypes" value="{{maintenanceOrderType}}">
+                      {{maintenanceOrderType}}
+                    </option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'maintenance-activity-type' | translate}}</td>
+                <td>   
+                  <select id="maintenanceActivityType" name="maintenanceActivityType" class="form-control" 
+                  (ngModelChange)="maintenanceActivityTypeSelected($event)"
+                  [(ngModel)]="maintenancePlanItem.maintenanceActivityType">
+       
+                  <option [ngValue]="null">{{ "please-select" | translate }}</option>
+                  <option *ngFor="let maintenanceActivityType of maintenanceActivityTypes" value="{{maintenanceActivityType}}">
+                    {{maintenanceActivityType}}
+                  </option>
+                </select>
+                </td>
+              </tr>
+                <tr>
+                    <td>{{'priority' | translate}}</td>
+                    <td>
+                      <select  id="priority" name="priorityItem" class="form-control" [(ngModel)]="maintenancePlanItem.priority">
+                        <option [ngValue]="null">{{'please-select' | translate}}</option>
+                        <option *ngFor="let item of priority" [value]="item">{{item}}</option>
+                      </select>
+                    </td>
+                </tr>
+                </tbody>
+              </table>
+            </form>
+          </ng-template>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary"
+                  (click)="myMaintenancePlanModal.hide()">{{'close' | translate}}
+          </button>
+          <button *ngIf="dialog.title==='maintenance-plan-cycle'&& dialog.type=='NEW'"
+          type="button" class="btn rounded btn-primary" [disabled]="!plantCycleForm.valid"
+                  (click)="AddMaintenancePlanCycleItem()">{{'add' | translate}}
+          </button>
+          <button *ngIf="dialog.title==='maintenance-plan-cycle'&& dialog.type=='EDIT'"
+          type="button" class="btn rounded btn-primary" [disabled]="!plantCycleForm.valid"
+          (click)="EditMaintenancePlanCycleItem()">{{'add' | translate}}
+          </button>
+          <button *ngIf="dialog.title=='maintenance-plan' && dialog.type=='NEW'"
+          type="button" class="btn rounded btn-primary"
+                  (click)="AddMaintenancePlanItem()">{{'add' | translate}}
+          </button>
+          <button *ngIf="dialog.title==='maintenance-plan' && dialog.type=='EDIT'"
+          type="button" class="btn rounded btn-primary"
+          (click)="EditMaintenancePlanItem()">{{'add' | translate}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template [ngIf]="equipmModal.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #chooseEquipmentModal="bs-modal" (onHidden)="equipmModal.active=false" class="modal fade"
+       tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog modal-success modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"> {{ 'choose-equipment-task' | translate}}</h4>
+          <button type="button" class="close" (click)="chooseEquipmentModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <choose-equipment-task-pane (selectedEvent)="onEquipmentTaskSelected($event); chooseEquipmentModal.hide();"></choose-equipment-task-pane>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary"
+                  (click)="chooseEquipmentModal.hide()">{{'close' | translate}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

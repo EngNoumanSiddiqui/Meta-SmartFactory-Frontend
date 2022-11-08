@@ -1,0 +1,20 @@
+<div class="row">
+  <div style="margin-left: 10px;">
+    <label *ngIf="!path && !picture" class="btn btn-sm btn-primary bt" for="my-fil-selector" style="border-radius: 2px">
+      <input id="my-fil-selector" name="addPicture" type="file" style="display:none" (change)="onSelectFile($event)" onclick="this.value=null;" [accept]="accept">
+      {{'add-picture'|translate}} <i class="fa fa-plus"></i>
+    </label>
+    <label *ngIf="path || picture" class="btn btn-sm btn-primary bt" for="my-file-selector2"
+           style="margin-top: 0.38rem; border-radius: 2px">
+      <input id="my-file-selector2" name="file-select" type="file" style="display:none" (change)="onSelectFile($event)" onclick="this.value=null;" [accept]="accept">
+      {{'change-picture'|translate}} </label>
+    <button *ngIf="path" [disabled]="isDisabled" pButton type="button"
+            class="ui-button-success " icon="pi pi-upload" label="{{'upload'|translate}}" (click)="upload()"></button>
+    <img *ngIf="selectedFile&&path" [src]="path" alt="" height="50">
+    <span class='label label-info'> {{selectedFile?.name}}</span>
+  </div>
+  <div style="height: 50px">
+    <p-progressSpinner *ngIf="showSpin" [style]="{width: '40px', height: '40px'} "></p-progressSpinner>
+  </div>
+
+</div>

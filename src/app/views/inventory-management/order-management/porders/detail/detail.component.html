@@ -1,0 +1,332 @@
+<div class="animated fadeIn">
+  <div class="row" *ngIf="purchaseOrder">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          {{'order-info' | translate}}
+        </div>
+        <div class="card-body">
+          <table class="table table-sm table-striped table-outline">
+            <tbody>
+              <tr>
+                <td width="20%" class="text-bold">{{'order-id' | translate}} <span class="float-right">:</span></td>
+                <td width="30%">{{purchaseOrder.porderId}}</td>
+                <td width="20%" class="text-bold">{{'order-no' | translate}}<span class="float-right">:</span></td>
+                <td>{{purchaseOrder.porderNo}}</td>
+              </tr>
+              <tr>
+                <td class="text-bold">{{'order-type' | translate}}<span class="float-right">:</span></td>
+                <td>{{purchaseOrder.purchaseOrderType}}</td> 
+                <td class="text-bold">{{'vendor' | translate}}<span class="float-right">:</span></td>
+                <td><a href="javascript:;" (click)="showSupplierDetailDialog(purchaseOrder.supplierId)">
+                    {{purchaseOrder.supplierName}}</a></td>
+               
+              </tr>
+              <tr>
+                <td class="text-bold">{{'status' | translate}}<span class="float-right">:</span></td>
+                <td>{{purchaseOrder.purchaseOrderStatus}}</td>
+                <td class="text-bold">{{'order-date' | translate}}<span class="float-right">:</span></td>
+                <td>{{purchaseOrder.porderDate|date:"dd/MM/yyyy" }}</td>
+              </tr>
+              <tr>
+                <td class="text-bold">{{'description' | translate}}<span class="float-right">:</span></td>
+                <td style="max-width: 260px;">
+                  
+                  <pre  class="form-control">{{purchaseOrder.description}}</pre>
+                  
+                </td>
+                <td class="text-bold">{{'parity' | translate}}<span class="float-right">:</span></td>
+                <td>{{purchaseOrder.parity}}</td>
+              </tr>
+              <tr>
+                <td class="text-bold">{{'cost-center' | translate}}<span class="float-right">:</span></td>
+                <td>
+                  <a href="javascript:;" (click)="showDetailDialog(purchaseOrder?.costCenter?.costCenterId, 'COSTCENTER')"> 
+                    {{purchaseOrder?.costCenter?.costCenterName}}
+                  </a>
+                </td>
+                <!-- <td class="text-bold">{{'reference-id' | translate}}<span class="float-right">:</span></td>
+                <td>{{purchaseOrder.referenceId}}</td> -->
+               
+              </tr>
+             
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <p-tabView>
+        <p-tabPanel header="{{'purchase-item-list'|translate}}">
+          <table class="table table-responsive table-outline mb-0">
+            <thead class="table-secondary">
+              <tr>
+                <th>{{'item-no'|translate}}</th>
+                <th>{{'reference-id'|translate}}</th>
+                <!-- <th>{{'plant'|translate}}</th> -->
+                <th>{{'material-no'|translate}}</th>
+                <th>{{'material'|translate}}</th>
+                <!-- <th>{{'height' |translate}}</th>
+                <th>{{'width' |translate}}</th>
+                <th>{{'dimension-unit' |translate}}</th> -->
+                <th>{{'quantity'|translate}}</th>
+                <th>{{'base-unit'|translate}}</th>
+                <th>{{'order-unit'|translate}}</th>
+                <th>{{'status'|translate}}</th>
+                <th>{{'batch'|translate}}</th>
+                <th>{{'start-delivery-date'|translate}}</th>
+                <th>{{'end-delivery-date'|translate}}</th>
+                <th>{{'delivery-complete-date'|translate}}</th>
+                <th>{{'warehouse'|translate}}</th>
+                
+                <th>{{'total-income-quantity'|translate}}</th>
+                <th>{{'reserved-quantity'|translate}}</th>
+                
+                <th>{{'priority'|translate}}</th>
+                <th>{{'purchase-price'|translate}}</th>
+                <th>{{'currency'|translate}}</th>
+                <th>{{'fixed-price'|translate}}</th>
+                <th>{{'outsource'|translate}}</th>
+                <th>{{'job-order-operation-id'|translate}}</th>
+
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngFor="let item of purchaseOrder.purchaseOrderDetailList; let i = index">
+                <tr >
+                  <td>{{item.purchaseOrderDetailId}}</td>
+                  <td>{{item.referenceId}}</td>
+                  <!-- <td><a href="javascript:;" (click)="showDetailDialog(item.plantId, 'PLANT')">{{item.plantName}}</a></td> -->
+                  <td><a href="javascript:;" (click)="showDetailDialog(item.stockId, 'STOCK')">{{item.stockNo}}</a></td>
+                  <td><a href="javascript:;" (click)="showDetailDialog(item.stockId, 'STOCK')">{{item.stockName}}</a></td>
+                  <!-- <td>{{item.height}}</td>
+                  <td>{{item.width}}</td>
+                  <td>{{item.dimensionUnit}}</td> -->
+                  <td>{{item.quantity}}</td>
+                  <td>{{item.baseUnit}}</td>
+                  <td>{{item.orderUnit}}</td>
+                  <td>{{item.purchaseOrderStatus}}</td>
+                  <!--need api fix-->
+                  <td><a href="javascript:;" (click)="showDetailDialog(item.batch, 'BATCH')">{{item.batch}}</a></td>
+                  <td>{{item.deliveryStartDate | date:'dd/MM/yyyy'}}</td>
+                  <td>{{item.deliveryDate | date:'dd/MM/yyyy'}}</td>
+                  <td>{{item.deliveryCompletionDate | date: 'dd/MM/yyyy'}}</td>
+                  <td><a href="javascript:;"
+                      (click)="showDetailDialog(item.wareHouseId, 'WAREHOUSE')">{{item.wareHouseName}}</a></td>
+                  
+                  <td>{{item.totalIncomeQuantity}}</td>
+                  <td>{{item.reservedQuantity}}</td>
+                  <td>{{item.priority}}</td>
+                  <td>{{item.purchaseOrderItemCosting?.effectivePrice}}</td>
+                  <td>{{item.purchaseOrderItemCosting?.currency}}</td>
+                  <td><p-checkbox [(ngModel)]="item.fixedPrice" name="fixedPrice" binary="true" inputId="binary" disabled></p-checkbox></td>
+                  <td><p-checkbox [(ngModel)]="item.outsource" name="outsource" binary="true" inputId="binary" disabled></p-checkbox></td>
+                  <td>
+                    <a href="javascript:;" 
+                      (click)="showDetailDialog(item.jobOrderOperationId, 'JOBORDEROPERATION')">
+                      {{item.jobOrderOperationId}}
+                    </a>
+                  </td>
+
+                </tr>
+                <tr>
+                  <td colspan="19">
+                    <span class="text-bold">{{'description'| translate}}</span>: 
+                    <!-- <pre  class="form-control">{{item.description}}</pre> -->
+                    <textarea rows="2" class="form-control" [(ngModel)]="item.description"></textarea> 
+                  </td>
+                </tr>
+              </ng-container>
+            </tbody>
+            <tr *ngIf="!purchaseOrder.purchaseOrderDetailList || purchaseOrder.purchaseOrderDetailList.length==0">
+              <td colspan="18" class="noData text-center">
+                <strong class=""><i class="fa fa-warning "></i>{{'NO_DATA_FOUND'|translate}}!</strong>
+              </td>
+            </tr>
+          </table>
+        </p-tabPanel>
+        <p-tabPanel header="{{'notification'|translate}}">
+          <div class="row">
+            <div class="col-md-12">
+              <p-table [columns]="notificationSelectedColumns" [value]="notificationTree"
+                [dataKey]="'stockTransferNotificationDetailId'">
+                <ng-template pTemplate="header" let-columns>
+                  <tr>
+                    <th style="width: 3em"></th>
+                    <ng-container *ngFor="let col of columns" [ngSwitch]="col.field">
+                      <th *ngSwitchDefault>{{col.header | translate}}</th>
+                      <th *ngSwitchCase="'goodMovementDocumentType'" style="width: 14em;">{{col.header | translate}}
+                      </th>
+                      <th *ngSwitchCase="'materialNo'" style="width: 9em;">{{col.header | translate}}</th>
+                      <th *ngSwitchCase="'quantity'" style="width: 6em;">{{col.header | translate}}</th>
+                      <th *ngSwitchCase="'baseUnit'" style="width: 6em;">{{col.header | translate}}</th>
+                      <th *ngSwitchCase="'stockTransferReceiptNotificationId'" style="width: 6em;">
+                        {{col.header | translate}}</th>
+                      <th *ngSwitchCase="'stockTransferNotificationDetailId'" style="width: 7em;">
+                        {{col.header | translate}}</th>
+                    </ng-container>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-rowData let-expanded="expanded" let-columns="columns">
+                  <tr>
+                    <td>
+                      <a href="#" [pRowToggler]="rowData">
+                        <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+                      </a>
+                    </td>
+                    <td *ngFor="let col of columns" style="cursor: pointer" [ngSwitch]="col.field">
+
+                      <!-- <a href="javascript:;" *ngSwitchCase="'batch'" (click)="showBatchDetail(rowData.batch)">
+                          {{rowData.batch}}</a> -->
+                      <a *ngSwitchCase="'materialName'" href="javascript:;" (click)="showDetailDialog(rowData.materialId, 'STOCK')">{{rowData.materialName}}</a>
+                      <a  *ngSwitchCase="'materialNo'" href="javascript:;" (click)="showDetailDialog(rowData.materialId, 'STOCK')">{{rowData.materialNo}}</a>
+                      <a *ngSwitchCase="'stockTransferReceiptNotificationId'" href="javascript:;" 
+                      (click)="showDetailDialog(rowData.stockTransferReceiptNotificationId, 'TRANSFERNOTIFICATION')">
+                      {{rowData.stockTransferReceiptNotificationId}}
+                    </a>
+                      <a  *ngSwitchCase="'stockTransferNotificationDetailId'" href="javascript:;" 
+                        (click)="showDetailDialog(rowData.stockTransferNotificationDetailId, 'TRANSFERNOTIFICATION')">
+                         {{rowData.stockTransferNotificationDetailId}}
+                      </a>
+                      <a  *ngSwitchCase="'pallet'" href="javascript:;" 
+                        (click)="showDetailDialog(rowData.pallet?.palletId, 'PALLET')">
+                         {{rowData.pallet?.palletId}}
+                      </a>
+                      <span *ngSwitchCase="'postingDate'"> {{rowData[col.field] | date:'dd/mm/yyyy HH:mm'}} </span>
+                      <span *ngSwitchCase="'documentDate'"> {{rowData[col.field] | date:'dd/mm/yyyy HH:mm'}} </span>
+                      <span *ngSwitchCase="'updateDate'"> {{rowData[col.field] | date:'dd/mm/yyyy HH:mm'}} </span>
+                      <span *ngSwitchCase="'createDate'"> {{rowData[col.field] | date:'dd/mm/yyyy HH:mm'}} </span>
+                      <span *ngSwitchDefault> {{rowData[col.field]}} </span>
+                    </td>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="rowexpansion" let-rowData let-columns="columns">
+                  <tr>
+                    <td colspan="2"></td>
+                    <td colspan="4">
+                  <tr>
+                    <td><strong>{{'purchase-order-id' | translate}}</strong> : 
+                      <a href="javascript:;" 
+                        (click)="showDetailDialog(rowData.purchaseOrderId, 'PURCHASEORDER')">
+                         {{rowData.purchaseOrderId}}
+                      </a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>{{'pallet-id' | translate}}</strong> : 
+                      <a href="javascript:;" 
+                        (click)="showDetailDialog(rowData.pallet?.palletId, 'PALLET')">
+                         {{rowData.pallet?.palletId}}
+                      </a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>{{'defect' | translate}}</strong> : {{rowData.defected ? 'Yes' : 'No'}}</td>
+                  </tr>
+                  <tr>
+                    <td><strong>{{'warehouse-from-name' | translate}}</strong> : 
+                      <a href="javascript:;" 
+                      (click)="showDetailDialog(rowData.wareHouseFromId, 'WAREHOUSE')">
+                       {{rowData.wareHouseFromName}}
+                    </a>
+                    </td>
+                  </tr>
+                  </td>
+                  <td colspan="4">
+                    <tr>
+                      <td><strong>{{'batch' | translate}}</strong> : 
+                        <a href="javascript:;" 
+                      (click)="showDetailDialog(rowData.batch, 'BATCH')">
+                       {{rowData.batch}}
+                    </a>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><strong>{{'create-date' | translate}}</strong> :
+                        {{rowData.createDate | date:'dd/mm/yyyy HH:mm'}}</td>
+                    </tr>
+                    <tr>
+                      <td><strong>{{'description' | translate}}</strong> : {{rowData.description}}</td>
+                    </tr>
+                    <tr>
+                      <td *ngIf="rowData.goodsMovementActivityType==='TRANSFER_POSTING'">
+                        <strong>{{'warehouse-to-name' | translate}}</strong> : {{rowData.wareHouseToName}}</td>
+                    </tr>
+                  </td>
+                  <!-- <td [attr.colspan]="columns.length - 1">
+                        <div class="col-md-12">
+                          <table class="table table-bordered">
+                            <tr>
+                              <td>{{'notification-status' | translate}}</td>
+                              <td>{{rowData.goodsMovementStatus}}</td>
+                            </tr>
+                            <tr>
+                              <td>{{'document-type' | translate}}</td>
+                              <td>{{rowData.goodMovementDocumentType}}</td>
+                            </tr>
+                            <tr>
+                              <td>{{'activity-type' | translate}}</td>
+                              <td>{{rowData.goodsMovementActivityType}}</td>
+                            </tr>
+                            <tr>
+                              <td>{{'prod-order-id' | translate}}</td>
+                              <td>{{rowData.prodOrderId}}</td>
+                            </tr>
+                            <tr>
+                              <td>{{'material-no' | translate}}</td>
+                              <td>{{rowData.materialNo}}</td>
+                            </tr>
+                            <tr>
+                              <td>{{'material-name' | translate}}</td>
+                              <td>{{rowData.materialName}}</td>
+                            </tr>
+                            <tr>
+                              <td>{{'quantity' | translate}}</td>
+                              <td>{{rowData.quantity}}</td>
+                            </tr>
+                            <tr>
+                              <td>{{'base-unit' | translate}}</td>
+                              <td>{{rowData.baseUnit}}</td>
+                            </tr>
+                            <tr>
+                              <td>{{'warehouse-from-name' | translate}}</td>
+                              <td>{{rowData.wareHouseFromName}}</td>
+                            </tr>
+                            <tr *ngIf="rowData.goodsMovementStatus==='TRANSFER_POSTING'">
+                              <td>{{'warehouse-to-name' | translate}}</td>
+                              <td>{{rowData.wareHouseToName}}</td>
+                            </tr>
+                            <tr>
+                              <td>{{'batch' | translate}}</td>
+                              <td>{{rowData.batch}}</td>
+                            </tr>
+                            <tr>
+                              <td>{{'create-date' | translate}}</td>
+                              <td>{{rowData.createDate | date: 'dd/mm/yyyy HH:mm'}}</td>
+                            </tr>
+                            <tr>
+                              <td>{{'description' | translate}}</td>
+                              <td>{{rowData.description}}</td>
+                            </tr>
+                          </table>
+                        </div>
+                      </td> -->
+                  </tr>
+                </ng-template>
+              </p-table>
+            </div>
+          </div>
+        </p-tabPanel>
+        <p-tabPanel header="{{'invoices'|translate}}">
+          <ng-template pTemplate="content">
+            <invoice-list [fromTab]="true" [referenceId]="purchaseOrder.porderId" [invoiceType]="'PURCHASE_ORDER'"></invoice-list>  
+          </ng-template>
+        </p-tabPanel>
+      </p-tabView>
+    </div>
+    <!--/.col-->
+    <!--[disabled]="! order.orderDetailList||order.orderDetailList.length==0 ||!order.actId||!saleForm.form.valid"-->
+  </div>
+  <!--/.row-->
+</div>
+<!--</form>-->

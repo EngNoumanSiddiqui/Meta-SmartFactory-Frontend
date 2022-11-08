@@ -1,0 +1,119 @@
+<div class="col-lg-12">
+  <div class="row ui-fluid  badge-light border p-2  mb-2">
+    <div class=" col-md d-flex">
+      <strong class="p-1 text-muted" style="align-self: center;"> {{'plant'|translate}}</strong>
+      <!-- <plant-auto-complete class="flex-grow-1" [addIfMissing]="false" [eventFire]="true"
+                           (selectedPlantEvent)="setSelectedPlant($event)"></plant-auto-complete> -->
+      <plant-auto-complete *ngIf="!filterModel.plantId" class="flex-grow-1" [addIfMissing]="false" [eventFire]="true"
+            (selectedPlantEvent)="setSelectedPlant($event)"></plant-auto-complete>
+      <strong *ngIf="filterModel.plantId" class="flex-grow-1 text-muted" style="align-self: center; margin-left: 30px;"> {{selectedPlant.plantName}} </strong>
+    </div>
+
+    <div class="col-md d-flex">
+      <strong class="p-1 text-muted"> {{'workcenter'|translate}}</strong>
+      <workcenter-auto-complete class="flex-grow-1" [plantId]="filterModel.plantId"
+                                (selectedWorkCenterEvent)="setSelectedWorkCenter($event)">
+      </workcenter-auto-complete>
+    </div>
+
+    <div class="col-md d-flex">
+      <strong class="p-1 text-muted"> {{'workstation'|translate}}</strong>
+      <workstation-auto-complete class="flex-grow-1" [plantId]="filterModel.plantId"
+                                 (selectedWorkStationEvent)="setSelectedWorkstation($event)">
+      </workstation-auto-complete>
+    </div>
+
+    <div class="col-md d-flex">
+<!--      <strong class="p-1 text-muted"> {{'employee'|translate}}</strong>-->
+      <employee-auto-complete class="flex-grow-1" [plantId]="filterModel.plantId" [selectedEmployeeId]="filterModel.employeeId"
+                              (selectedEmployeeEvent)="setSelectedEmployee($event)">
+      </employee-auto-complete>
+    </div>
+
+    <div class="col-md ">
+      <p-calendar [(ngModel)]="dateRange" placeholder="{{'date-range'|translate}}" selectionMode="range"
+                  [yearNavigator]="true" yearRange="1990:2100"
+                  name="startDate" [showIcon]="true" dateFormat="dd/mm/yy"
+                  required></p-calendar>
+    </div>
+
+    <div class="col-auto">
+      <button type="button" pButton class="ui-button-info   "
+              [disabled]="!dateRange||!dateRange[1]"
+              (click)="analyze()" label="{{'analyze' | translate}}">
+      </button>
+    </div>
+  </div>
+
+  <div class="row mb-2">
+    <div class="col-12 col-md-6 bg-white">
+      <app-monthly-mttr-bar-graph [mttrInfo]="mttrInfo"></app-monthly-mttr-bar-graph>
+    </div>
+    <div class="col-12 col-md-6 bg-white">
+      <app-monthly-mtbf-bar-graph [mtbfInfo]="mtbfInfo"></app-monthly-mtbf-bar-graph>
+    </div>
+  </div>
+
+  <div class="row mb-2 layout-dashboard card-section">
+    <div class="ui-g-12 ui-md-6 ui-lg-2">
+      <p-card header="{{'maintenance-dashboard-mttr-in-hours' | translate}}" class="card-content-red">
+        {{convertSecondsToHours(mttrInfo?.mttrInSeconds)}}</p-card>
+    </div>
+
+    <div class="ui-g-12 ui-md-6 ui-lg-2">
+      <p-card header="{{'maintenance-dashboard-mtbf-in-hours' | translate}}" class="card-content-red">
+        {{convertSecondsToHours(mtbfInfo?.mtbfInSeconds)}}</p-card>
+    </div>
+    <div class="ui-g-12 ui-md-6 ui-lg-2">
+      <p-card header="{{'maintenance-dashboard-operation-hours' | translate}}" class="card-smaller">
+        {{convertSecondsToHours(mtbfInfo?.totalOperationTimeInSeconds)}}</p-card>
+    </div>
+
+
+    <div class="ui-g-12 ui-md-6 ui-lg-3">
+      <p-card header="{{'maintenance-dashboard-breakdown-maintenance-count' | translate}}" class="card-smaller">
+        {{mttrInfo?.numberOfBreakdowns}}</p-card>
+    </div>
+
+    <div class="ui-g-12 ui-md-6 ui-lg-3">
+      <p-card header="{{'maintenance-dashboard-breakdown-maintenance-hours' | translate}}" class="card-smaller">
+        {{convertSecondsToHours(mttrInfo?.totalMaintenanceTimeInSeconds)}}</p-card>
+    </div>
+  </div>
+
+<!--  <div class="row">-->
+<!--    <div class="col-12 col-md-6 bg-white">-->
+<!--      <app-monthly-mttr-line-graph [mttrInfo]="mttrInfo"></app-monthly-mttr-line-graph>-->
+<!--    </div>-->
+<!--    <div class="col-12 col-md-6 bg-white">-->
+<!--      <app-monthly-mtbf-line-graph [mtbfInfo]="mtbfInfo"></app-monthly-mtbf-line-graph>-->
+<!--    </div>-->
+<!--  </div>-->
+
+  <ng-template [ngIf]="mttrInfo?.employeeMaintenanceOperationPerformanceList && mttrInfo?.employeeMaintenanceOperationPerformanceList.length > 0">
+    <p-table #dt [columns]="cols" [value]="mttrInfo?.employeeMaintenanceOperationPerformanceList" [rows]="mttrInfo?.employeeMaintenanceOperationPerformanceList?.length"
+             [paginator]="false" dataKey="employeeId">
+
+      <ng-template pTemplate="header" let-columns>
+        <tr >
+          <th *ngFor="let col of columns">
+            {{col.header|translate}}
+          </th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-rowData let-index="rowindex" let-columns="columns">
+        <tr [pSelectableRow]="rowData">
+          <td *ngFor="let col of columns" style="cursor: pointer" [ngSwitch]="col.field">
+            <span *ngSwitchCase="'onSchedule'"> {{rowData[col.field] * 100}} %</span>
+            <span *ngSwitchCase="'employeeName'"> {{rowData[col.field]}}</span>
+          </td>
+        </tr>
+      </ng-template>
+
+    </p-table>
+  </ng-template>
+
+</div>
+
+

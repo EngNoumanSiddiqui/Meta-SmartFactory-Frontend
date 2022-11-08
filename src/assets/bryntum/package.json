@@ -1,0 +1,22 @@
+{
+  "author": {
+    "name": "Bryntum Dev Team",
+    "email": "support@bryntum.com"
+  },
+  "browserslist": [
+    "ie >= 11",
+    "last 2 versions"
+  ],
+  "dependencies": {},
+  "description": "This package.json makes the files in this folder importable as a npm package. Utilized in some demos",
+  "devDependencies": {},
+  "homepage": "https://bryntum.com",
+  "license": "Commercial",
+  "main": "scheduler.module.js",
+  "name": "bryntum-scheduler",
+  "types": "./scheduler.d.ts",
+  "version": "3.1.5",
+  "__processed_by_ivy_ngcc__": {
+    "main": "8.2.4"
+  }
+}

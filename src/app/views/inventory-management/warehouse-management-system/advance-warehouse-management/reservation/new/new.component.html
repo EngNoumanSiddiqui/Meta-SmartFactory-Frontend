@@ -1,0 +1,311 @@
+<div class="row ui-fluid">
+
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header">
+        <i class="fa fa-align-justify"></i> {{'new-reservation' | translate}}
+      </div>
+      <div class="card-body">
+        <form #reservationForm="ngForm">
+          <table class="table table-bordered">
+            <tbody>
+
+            <tr>
+              <td width="30%">{{'plant' | translate}}</td>
+              <td>
+                <div class="input-group" *ngIf="!selectedPlant">
+                 <select id="plantList" name="plantList" class="form-control"
+                          [(ngModel)]="reservationRequestDto.plantId" required [disabled]="reservationRequestDtoList.length > 0">
+                    <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                    <option *ngFor="let plant of plantList" value="{{plant.plantId}}">{{plant.plantName}}</option>
+                  </select>
+                  <!-- <plant-auto-complete [required]="true" [addIfMissing]="true"
+                  [selectedPlantId]="reservationRequestDto.plantId"
+                   (selectedPlantEvent)="setSelectedPlant($event)">
+                </plant-auto-complete> -->
+
+                </div>
+              <span *ngIf="selectedPlant" style="width: 100%;">{{selectedPlant.plantName}}</span>
+              </td>
+            </tr>
+
+
+            <tr>
+              <td>{{'movement-type' | translate}}</td>
+              <td>
+                <div class="input-group">
+                  <select id="movementTypeList" name="movementTypeList" class="form-control"
+                          [(ngModel)]="reservationRequestDto.movementType" required
+                          (ngModelChange)="onMovementTypeChange($event, reservationRequestDto.movementType)"
+                          [disabled]="reservationRequestDtoList.length > 0">
+                    <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                    <option *ngFor="let item of movementTypeList" value="{{item}}">{{item}}</option>
+                  </select>
+                </div>
+              </td>
+            </tr>
+
+            <ng-template [ngIf]="reservationRequestDto.movementType == 'RESERVATION_FOR_PRODUCTION_ORDER'">
+              <tr>
+                <td>{{'production-order' | translate}}</td>
+                <td>
+                  <div class="input-group ui-fluid">
+                    <p-dropdown  class="ui-dropdown" placeholder="{{'please-select' | translate}}"
+                                [options]="productionOrders" [(ngModel)]="reservationRequestDto.prodOrder"
+                                (ngModelChange)="onProductionOrderChange($event, reservationRequestDto.prodOrder.prodOrderId)"
+                                optionLabel="prodOrderId"
+                                filter="true" name="productionOrder" required [disabled]="reservationRequestDtoList.length > 0"></p-dropdown>
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <td>{{'job-order-id' | translate}}</td>
+                <td>
+                  <div class="input-group ui-fluid">
+                    <p-dropdown  class="ui-dropdown" placeholder="{{'please-select' | translate}}"
+                                [options]="jobOrderList" [(ngModel)]="reservationRequestDto.jobOrder"
+                                optionLabel="jobOrderId"
+                                filter="true" name="jobOrder" required></p-dropdown>
+                  </div>
+                </td>
+              </tr>
+
+
+            </ng-template>
+
+            <ng-template [ngIf]="reservationRequestDto.movementType == 'RESERVATION_FOR_SALE_ORDER'">
+              <tr>
+                <td>{{'sales-order' | translate}}/{{'item' | translate}}</td>
+                <td>
+                <div class="input-group ui-fluid">
+                  <p-dropdown  class="ui-dropdown" placeholder="{{'please-select' | translate}}"
+                              [options]="saleOrders" [(ngModel)]="reservationRequestDto.saleOrder"
+                               (ngModelChange)="onSaleOrderChange($event, reservationRequestDto.saleOrder.orderId)"
+                              optionLabel="orderId"
+                              filter="true" name="saleOrd" required [disabled]="reservationRequestDtoList.length > 0"></p-dropdown>
+                </div>
+                </td>
+              </tr>
+
+              <tr>
+                <td>{{'sales-order-detail-id' | translate}}</td>
+                <td>
+                  <div class="input-group ui-fluid">
+                    <p-dropdown class="ui-dropdown" placeholder="{{'please-select' | translate}}"
+                                [options]="saleOrderDetailList" [(ngModel)]="reservationRequestDto.orderDetail"
+                                (ngModelChange)="onSaleOrderDetailChange($event, reservationRequestDto.orderDetail.orderId)"
+                                optionLabel="orderDetailId"
+                                filter="true" name="saleOrdId" required ></p-dropdown>
+                  </div>
+                </td>
+              </tr>
+
+            </ng-template>
+            <tr>
+              <td colspan="2">
+                <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+                  {{'reset' | translate}}
+                </button>
+                <button type="submit" class="btn btn-sm btn-primary"
+                        [disabled]="!reservationForm.form.valid || reservationRequestDtoList.length==0"
+                        (click)="saveReservation()"><i class="fa fa-dot-circle-o"></i>
+                  {{'save' | translate}}
+                </button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header">
+        {{'transfer-details' | translate}}
+        <div class="card-actions">
+          <button type="button" class="btn btn-primary" data-toggle="modal"
+                  (click)="openTransferDetailsModal(-1)"><i class="fa fa-plus"></i></button>
+        </div>
+      </div>
+
+
+      <div class="card-body">
+        <form action="" method="post" class="form-horizontal">
+
+          <table class="table table-sm table-hover table-outline mb-0"
+                 *ngIf="reservationRequestDtoList.length > 0">
+            <thead class="table-secondary small">
+            <tr>
+
+              <th>{{'material' | translate}}</th>
+              <th *ngIf="reservationRequestDto.movementType == 'RESERVATION_FOR_PRODUCTION_ORDER'"> {{'production-order' | translate}}</th>
+              <th *ngIf="reservationRequestDto.movementType == 'RESERVATION_FOR_SALE_ORDER'"> {{'sales-order' | translate}}</th>
+              <th>{{'height' |translate}}</th>
+              <th>{{'width' |translate}}</th>
+              <th>{{'dimension-unit' |translate}}</th>
+              <th>{{'quantity' | translate}}</th>
+              <th>{{'unit' | translate}}</th>
+              <th>{{'storage-location' | translate}}</th>
+              <th>{{'batch' |translate}}</th>
+              <th>{{'final-issue' |translate}}</th>
+              <th></th>
+              <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <ng-container *ngFor="let item of reservationRequestDtoList; let i = index">
+              <tr style="cursor: pointer" [ngClass]="{'bg-success':selectedItemIndex==i}">
+                <td>{{item.materialName}}</td>
+                <td *ngIf="reservationRequestDto.movementType == 'RESERVATION_FOR_PRODUCTION_ORDER'">{{reservationRequestDto.prodOrder.prodOrderId}}</td>
+                <td *ngIf="reservationRequestDto.movementType == 'RESERVATION_FOR_SALE_ORDER'">{{reservationRequestDto.saleOrder.orderId}}</td>
+                <td>{{item.height}}</td>
+                <td>{{item.width}}</td>
+                <td>{{item.dimensionUnit}}</td>
+                <td>{{item.quantity}}</td>
+                <td>{{item.baseUnit}}</td>
+                <td>{{item.wareHouse.wareHouseName}}</td>
+                <td>{{item.batch}}</td>
+                <td>     <p-checkbox name="finalIssue" binary="true" disabled="true"
+                                     [(ngModel)]="item.finalIssue"
+                                     pTooltip="{{'final-issue'  | translate}}"
+                                     tooltipPosition="top"></p-checkbox></td>
+                <td><a (click)="openTransferDetailsModal(i)"><i class="fa fa-edit"></i></a></td>
+                <td><a (click)="deleteDetailFromList(i)"><i class="fa fa-close"></i></a></td>
+              </tr>
+            </ng-container>
+
+            </tbody>
+          </table>
+
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+<!--</div>-->
+
+
+<p-dialog header="{{'transfer-details' | translate}}" [(visible)]="params.dialog.visible"
+          [style]="{width: '600px'}">
+  <!---------- MODEL #1 ------------->
+  <span>
+      <div class="form-group row">
+          <div class="col-md-12">
+            <form #reservationDetailForm="ngForm">
+              <table class="table table-bordered  ">
+                <tbody *ngIf="reservationRequestDto">
+                  <tr>
+                  <td width="30%">{{'material' | translate}}</td>
+                  <td>
+                    {{reservationRequestDto.materialName}}
+<!--                    <div class=" ui-fluid">-->
+<!--                      <stock-auto-complete [dropdown]="true" [required]="true"-->
+<!--                                           (selectedStockEvent)="setSelectedMaterial($event)"></stock-auto-complete>-->
+
+<!--                    </div>-->
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>{{'height' | translate}}</td>
+                  <td>
+                    <input type="number" class="form-control-sm" name="height"
+                      [(ngModel)]="reservationRequestDto.height" min="1" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'width' | translate}}</td>
+                  <td>
+                    <input type="number" class="form-control-sm" name="width"
+                      [(ngModel)]="reservationRequestDto.width" min="1" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'dimension-unit' | translate}}</td>
+                  <td>
+                    <select id="dimensionunit" name="dimensionunit" class="form-control"
+                        [disabled]="!unitList||unitList.length==0"
+                        [(ngModel)]="reservationRequestDto.dimensionUnit" required>
+                        <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                        <option *ngFor="let item of unitList" value="{{item.alternativeUnit}}">{{item.alternativeUnit}}
+                        </option>
+                      </select>
+                  </td>
+                </tr>
+                  <tr>
+              <td>{{'quantity' | translate}}</td>
+              <td class="d-flex flex-row">
+                <input class="form-control form-control-sm flex-grow-1" type="number" [(ngModel)]="reservationRequestDto.quantity"
+                      name="quantity" required min="1"/>
+                <span>{{reservationRequestDto.baseUnitOfStock}}</span>
+              </td>
+            </tr>
+            <tr>
+              <td>{{'unit' | translate}}</td>
+              <td>
+                <select id="salesOrderUnitList" name="salesOrderUnitList"  [disabled]="!unitList||unitList.length==0" class="form-control form-control-sm"
+                        [(ngModel)]="reservationRequestDto.baseUnit">
+                  <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                  <option *ngFor="let item of unitList" value="{{item.alternativeUnit}}">{{item.alternativeUnit}}</option>
+                </select>
+              </td>
+            </tr>
+
+            <tr>
+              <td>{{'storage-location' | translate}}</td>
+              <td>
+                <div class="input-group ui-fluid">
+                   <p-dropdown  class="ui-dropdown" placeholder="{{'please-select' | translate}}"
+                               [options]="wareHouseList" [(ngModel)]="reservationRequestDto.wareHouse"
+                               optionLabel="wareHouseName" dataKey="wareHouseId"
+                               filter="true" name="storageLoc" required></p-dropdown>
+                </div>
+              </td>
+            </tr>
+             <tr>
+                  <td >{{'batch-code' | translate}}</td>
+                  <td class="ui-fluid">
+
+                       <batch-auto-complete (selectedBatchEvent)="setSelectedBatch($event)"
+                          [stockId]="reservationRequestDto.materialId" [batchLevel]="'RESERVATION'"
+                          [plantId]="reservationRequestDto.plantId" [addIfMissing]="true">
+                        </batch-auto-complete>
+
+                  </td>
+                </tr>
+
+
+            <tr>
+              <td>{{'final-issue' | translate}}</td>
+              <td>
+                <p-checkbox name="finalIssue" binary="true"
+                            [(ngModel)]="reservationRequestDto.finalIssue"
+                            pTooltip="{{'final-issue'  | translate}}"
+                            tooltipPosition="top"></p-checkbox>
+
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                <button class="btn btn-sm btn-danger" (click)="resetNewItemDetails()"><i class="fa fa-ban"></i>
+                  {{'reset' | translate}}
+                    </button>
+                    <button type="submit" class="btn btn-sm btn-primary"
+                            [disabled]="!reservationDetailForm.form.valid ||!reservationRequestDto.materialId"
+                            (click)="addDetails()"><i class="fa fa-dot-circle-o"></i>
+                      {{'add' | translate}}
+                    </button>
+              </td>
+            </tr>
+                </tbody>
+              </table>
+            </form>
+
+          </div>
+      </div>
+    </span>
+</p-dialog>

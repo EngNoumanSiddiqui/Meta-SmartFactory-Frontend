@@ -1,0 +1,65 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i> {{'transfer' | translate}}  {{'details' | translate}}
+        </div>
+        <div class="card-body">
+          <form #partForm="ngForm">
+          <table class="table table-bordered">
+            <tbody>
+            <tr>
+              <td width="30%">{{'part-code' | translate}}*</td>
+              <td><input type="text" name="partCode" required class="form-control" [(ngModel)]="part.partCode"/> </td>
+            </tr>
+            <tr>
+              <td>{{'part-name' | translate}}*</td>
+              <td><input type="text" name="partName" required class="form-control" [(ngModel)]="part.partName"/> </td>
+            </tr>
+            <tr>
+              <td>{{'supplier' | translate}}</td>
+              <td><input type="text"  class="form-control" name="supplier" [(ngModel)]="part.supplier"/>  </td>
+            </tr>
+            <tr>
+              <td>{{'description' | translate}}</td>
+              <td> <input type="text"  class="form-control" name="description" [(ngModel)]="part.description"/> </td>
+            </tr>
+            <tr>
+              <td>{{'quantity' | translate}}</td>
+              <td> <input type="number"  class="form-control" name="quantity" [(ngModel)]="part.quantity" min="0"/> </td>
+            </tr>
+            <tr>
+              <td>{{'unit' | translate}}</td>
+              <td> <input type="text"  class="form-control"  name="unit" [(ngModel)]="part.unit" /> </td>
+            </tr>
+            <tr>
+              <td>{{'cost' | translate}}</td>
+              <td> <input type="number" min="0" class="form-control" name="amount"  [(ngModel)]="part.amount" /> </td>
+            </tr>
+            <tr>
+              <td>{{'life' | translate}}</td>
+              <td> <input type="text"  class="form-control"  name="lifeTime" [(ngModel)]="part.lifeTime" /> </td>
+            </tr>
+
+            <tr>
+              <td colspan="2">
+                <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+                  {{'reset' | translate}}</button>
+                <button type="submit" class="btn btn-sm btn-primary" [disabled]="!partForm.form.valid" (click)="save()"><i class="fa fa-dot-circle-o"></i>
+                  {{'save' | translate}}</button>
+                <!--<button type="button" class="btn btn-sm btn-secondary float-right" (click)="goPage()">
+                  <i class="icon-arrow-left-circle"></i> {{'cancel' | translate}} </button>-->
+              </td>
+            </tr>
+            </tbody>
+          </table>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+

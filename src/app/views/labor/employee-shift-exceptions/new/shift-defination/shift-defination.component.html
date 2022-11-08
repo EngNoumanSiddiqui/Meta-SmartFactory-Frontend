@@ -1,0 +1,65 @@
+<div class="animated fadeIn">
+    <div class="row">
+        <div class="card">
+            <div class="card-header">
+              <i class="fa fa-align-justify"></i>{{'shift-definition'|translate}}
+            </div>
+            <div class="card-body">
+              <form #empShiftForm="ngForm">
+              <table class="table table-bordered">
+              <tbody>
+                <tr>
+                  <td>{{'is-group'|translate}}</td>
+                  <td>
+                      <p-checkbox name="groupname" value="val" [(ngModel)]="showHide" binary="true" (onChange)="showHideEmployeeList($event)"></p-checkbox>
+                  </td>
+                </tr>
+                <tr *ngIf="hideEmployeeList">
+                  <td>{{'employee'|translate}}</td>
+                  <td>
+                      <div class="input-group">
+                        <select id="nonGroupedEmployee" name="nonGroupedEmployee" class="form-control" [(ngModel)]="employeeShift.employeeId" >
+                              <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                              <option *ngFor="let emp of employees" value="{{emp.employeeId}}">{{emp.firstName}}-{{emp.lastName}}</option>
+                        </select>
+                      </div>
+                  </td>
+                </tr>
+                <tr *ngIf="hideEmployeeGroup">
+                  <td>{{'group-code'|translate}}</td>
+                  <td>
+                      <div class="input-group">
+                        <select id="GroupedEmployee" name="GroupedEmployee" class="form-control" [(ngModel)]="employeeShift.employeeGroupId">
+                              <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                              <option *ngFor="let empGroup of employeeGroup" value="{{empGroup.employeeGroupId}}">{{empGroup.groupName}}</option>
+                        </select>
+                      </div>
+                  </td>
+                </tr>
+                <tr>
+                    <td>{{'shift'|translate}}</td>
+                    <td>
+                        <div class="input-group">
+                          <select id="empShift" name="empShift" class="form-control" [(ngModel)]="employeeShift.shiftId">
+                                <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                                <option *ngFor="let shift of shiftSettingList" value="{{shift.shiftId}}">{{shift.shiftName}}</option>
+                          </select>
+                        </div>
+                    </td>
+                  </tr>
+               <tr>
+                <td colspan="2">
+                  <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+                    {{'reset' | translate}}</button>
+                  <button type="submit" class="btn btn-sm btn-primary"  [disabled]="!empShiftForm.form.valid"  (click)="save()"><i class="fa fa-dot-circle-o"></i>
+                    {{'save' | translate}}
+                  </button>
+                </td>
+              </tr>
+              </tbody>
+              </table>
+              </form>
+            </div>
+          </div>
+    </div>
+  </div>

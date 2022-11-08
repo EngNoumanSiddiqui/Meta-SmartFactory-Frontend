@@ -1,0 +1,101 @@
+<div class="ui-inputgroup  d-flex ui-fluid">
+    <p-autoComplete [disabled]="disabled" [(ngModel)]="selectedinspectionControlDataCertification" [suggestions]="filteredinspectionControlDataCertification"
+                    (completeMethod)="searchinspectionControlDataCertification($event)" field="text" [required]="required"
+                     [dropdown]="dropdown" [forceSelection]="true" dataKey="inspectionControlDataCertification"
+                     placeholder="{{placeholder|translate}}" [minLength]="1" name="vendorSourceInspectionCode"
+                     (onDropdownClick)="handleDropdownClickForinspectionControlDataCertification()" (ngModelChange)="onChangeinspectionControlDataCertification($event)" >
+    </p-autoComplete>
+
+    <button *ngIf="addIfMissing" pButton icon="fa fa-plus-circle"
+        (click)="modalShow()">
+    </button>
+
+</div>
+
+<ng-template [ngIf]="modal.active">
+
+
+    <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myqualityNotificationModal="bs-modal" class="modal fade"   (onHidden)="modal.active=false"
+         tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+      <div class="modal-dialog modal-success " role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">
+              <span >{{'new-quality-inspection-control-data' | translate}}</span>
+            </h4>
+            <button type="button" class="close" (click)="myqualityNotificationModal.hide()" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="animated fadeIn">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="card">
+                    <div class="card-header">
+                      <i class="fa fa-align-justify"></i> {{'quality-inspection-control-data-information' | translate}}
+                    </div>
+                    <div class="card-body">   
+                      <form #inspForm="ngForm">
+                        <table class="table table-bordered">
+                          <tr>
+                            <td>{{'control-data-code' | translate}}</td>
+                            <td>
+                              <input
+                                type="text" 
+                                id="inspectionControlDataCertificationCode"
+                                name="inspectionControlDataCertificationCode"
+                                [(ngModel)]="inspectionControlDataCertificationNewDto.inspectionControlDataCertificationCode"
+                                class="form-control"
+                                required
+                              />
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>{{'text' | translate}}</td>
+                            <td>
+                              <input
+                                type="text" 
+                                id="vendortext"
+                                name="vendortext"
+                                [(ngModel)]="inspectionControlDataCertificationNewDto.text"
+                                class="form-control"
+                                required
+                              />
+                            </td>
+                          </tr>
+                         
+                        </table>
+                      </form>
+                    </div>
+                  </div>
+                  <div class="row col-md-12">
+                      <!-- <button
+                      type="button"
+                      class="btn btn-sm btn-danger"
+                      (click)="reset()"
+                    >
+                    <i class="fa fa-ban" aria-hidden="true"></i>
+                      {{ "reset" | translate }}
+                    </button> -->
+                    <button
+                      type="submit"
+                      class="btn btn-sm btn-primary"
+                      [disabled]="!inspForm.form.valid"
+                      (click)="save(myqualityNotificationModal)"
+                    >
+                      <i class="fa fa-dot-circle-o"></i>
+                      {{ "save" | translate }}
+                    </button>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+  </ng-template>

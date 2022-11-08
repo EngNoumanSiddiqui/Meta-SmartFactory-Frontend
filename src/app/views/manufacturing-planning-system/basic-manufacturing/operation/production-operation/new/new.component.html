@@ -1,0 +1,266 @@
+<!--<form #orderEdit="ngForm" >-->
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <p-tabView (onChange)="handleChange($event)">
+        <p-tabPanel header="{{'main' | translate}}" [selected]="tabIndex == 0">
+          <div class="card">
+            <div class="card-header">
+              {{'operation'|translate}}
+            </div>
+            <div class="card-body">
+              <form #saleForm="ngForm" class="form-horizontal ui-fluid">
+                <table class="table table-bordered">
+                  <tbody>
+                  <tr>
+                    <td>{{('operation'|translate)}}</td>
+                    <td><span style="height: auto;" *ngIf="dataModel.operation" class="form-control bg-readonly" (click)="myModal.show()">{{dataModel?.operation?.operationName}}</span>
+                      <span style="height: auto;" *ngIf="!dataModel.operation" class="form-control bg-readonly" (click)="myModal.show()">{{'click-to-select'|translate}}</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{('workstation'|translate)}}</td>
+                    <td>
+                      <workstation-auto-complete [plantId]="selectedPlant?.plantId"
+                        [selectedWorkStation]="dataModel.workStation"
+                        [selectedWorkStationId]="dataModel.workStationId"
+                        [workStationList]="myWorkstationList"
+                        (selectedWorkStationEvent)="setSelectedWorkstation($event)"></workstation-auto-complete>
+                    </td>
+                  </tr>
+                  <!-- <tr *ngIf="!isCombineOperation">
+                    <td>{{('material'|translate)}}</td>
+                    <td>
+
+                      <select id="material" name="material" class="form-control" [(ngModel)]="dataModel.defaultStockId" >
+                        <option [value]="null"> {{'please-select' | translate}}</option>
+                        <option *ngFor="let stock of stockList" [value]="stock.stockId">{{stock.stockName}}</option>
+                      </select>
+                     
+                    </td>
+                  </tr> -->
+
+                  <tr>
+                    <td width="35%">{{'quantity' | translate}}</td>
+                    <td><input type="number" min="0" class="form-control" [(ngModel)]="dataModel.quantity"
+                        (ngModelChange)="onQuantityChanged($event)"
+                               name="quantity" required/>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{('parent'|translate)}}</td>
+                    <td style="padding: 0em 0.6em 0em 0.6em;">
+                      <table class="table table-borderless" style="margin-bottom: 0px;">
+                        <tr>   
+                          <td style="border-right: 1px solid #c8c8c8;">
+                            <p-checkbox name="parent"
+                            binary="true" [(ngModel)]="dataModel.parent"
+                            
+                            >
+                            <!-- (ngModelChange)="onParentChanged($event)" -->
+                        </p-checkbox>
+                          </td>
+                          <td style="border-right: 1px solid #c8c8c8;">
+                            <div style="margin-left: 15px;">{{('operation-order'|translate)}}</div>
+                          </td>
+                          <td>
+                            <input style="margin-left: 25px; width: 90%;" type="number" step="1" pattern="\d+"  class="form-control" name="operationOrder" 
+                            [(ngModel)]="dataModel.operationOrder" (ngModelChange)="operationOrderChanged($event)"/>
+                          </td>
+                        </tr>
+                      </table>
+                    </td> 
+                  </tr>
+                  <tr>
+                    <td>{{('needed-person'|translate)}}</td>
+                    <td>
+                        <input class="form-control" type="number" [(ngModel)]="dataModel.neededPerson"
+                        name="neededPerson" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'description' | translate}}</td>
+                    <td><input class="form-control" type="text" [(ngModel)]="dataModel.description"
+                               name="description" /></td>
+                  </tr>
+                  </tbody>
+                </table>
+
+              </form>
+            </div>
+          </div>
+        </p-tabPanel>
+        <p-tabPanel header="{{'detail' | translate}}" [selected]="tabIndex == 1">
+          <table class="table table-bordered table-md">
+            <tbody>
+              <tr>
+                <td width="35%">{{'operation-repeat' | translate}}</td>
+                <td><input type="number" min="0" class="form-control" [(ngModel)]="dataModel.operationRepeat"
+                    name="operationRepeat" required />
+                </td>
+              </tr>
+              <tr>
+                <td width="35%">{{'process-control-frequency' | translate}}</td>
+                <td><input type="number" min="0" class="form-control"
+                    [(ngModel)]="dataModel.processControlFrequency" name="processControlFrequency" required />
+                </td>
+              </tr>
+              <tr>
+                <td width="35%">{{'planned-cycle-quantity' | translate}}</td>
+                <td><input type="number" min="0" class="form-control" [(ngModel)]="dataModel.plannedCycleQuantity"
+                    name="plannedCycleQuantity" required />
+                </td>
+              </tr>
+              <tr>
+                <td width="35%">{{'single-duration' | translate}}*</td>
+                <td>
+                  <app-time [name]="'single'" [showMills]="true" [timeInMills]="dataModel.singleDuration"
+                    (timeChanged)="addsingleDuration($event)"></app-time>
+                </td>
+              </tr>
+              <tr>
+                <td width="35%">{{'single-setup-duration' | translate}}</td>
+                <td>
+                  <app-time [name]="'setup'" [showMills]="true"  [timeInMills]="dataModel.singleSetupDuration"
+                    (timeChanged)="addsingleSetupDuration($event)"></app-time>
+                </td>
+              </tr>
+              <tr>
+                <td width="35%" *ngIf="fromOutSideProductTree">{{'total-duration' | translate}}</td>
+                <td width="35%" *ngIf="!fromOutSideProductTree">{{'single-total-duration' | translate}}</td>
+                <td>
+                  <app-time [name]="'total'" [showMills]="true"  [total]="true" [disabled]="true"
+                    [timeInMills]="dataModel.singleTotalDuration"></app-time>
+                </td>
+              </tr>
+              <tr>
+                <td width="35%">{{'max-single-standby-duration' | translate}}*</td>
+                <td>
+                  <app-time [name]="'standby'" [showMills]="true"  [timeInMills]="dataModel.maxSingleStandbyDuration"
+                    (timeChanged)="dataModel.maxSingleStandbyDuration=$event"></app-time>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </p-tabPanel>
+        <p-tabPanel header="{{'material-output' | translate}}" [selected]="tabIndex == 2">
+          <product-tree-component-list [plant]="selectedPlant" [isMaterialMaterial]="true"
+            [manualProdOrder]="manualProdOrder"
+            [quantity]="dataModel.quantity"
+            [saleOrderQuantity]="saleOrderQuantity"
+            [productTreeDetailId]="productTreeDetailId" [tableData]="this.operationMaterialList"
+            [productTreeDetailOperationId]="dataModel.productTreeDetailOperationId"
+            [isCombineOperation]="isCombineOperation"
+
+            (saveEvent)="this.operationMaterialList=$event;"></product-tree-component-list>
+        </p-tabPanel>
+        <p-tabPanel header="{{'component-input' | translate}}" [selected]="tabIndex == 3">
+          <product-tree-component-list [plant]="selectedPlant" [isComponentMaterial]="true"
+          [manualProdOrder]="manualProdOrder"
+          [quantity]="dataModel.quantity"
+          [saleOrderQuantity]="saleOrderQuantity"
+            [productTreeDetailId]="productTreeDetailId" [tableData]="this.operationComponentList"
+            [productTreeDetailOperationId]="dataModel.productTreeDetailOperationId"
+            [isCombineOperation]="isCombineOperation"
+            (saveEvent)="this.operationComponentList=$event;"></product-tree-component-list>
+        </p-tabPanel>
+        <p-tabPanel header="{{'auxiliary-materials' | translate}}" [selected]="tabIndex == 4">
+          <product-tree-component-list [plant]="selectedPlant" [isAuxiliaryMaterial]="true"
+            [productTreeDetailId]="productTreeDetailId" [tableData]="this.operationAuxMaterialList"
+            [isCombineOperation]="isCombineOperation"
+            
+            (saveEvent)="this.operationAuxMaterialList=$event"></product-tree-component-list>
+        </p-tabPanel>
+        <p-tabPanel header="{{'workstation-program' | translate}}" [selected]="tabIndex == 5">
+          <product-tree-workstation-program-list [tableData]="dataModel.productTreeDetailWorkstationProgramList"
+                                                 [productTreeDetailOperationId]="dataModel.productTreeDetailOperationId"
+                                                 [isCombineOperation]="isCombineOperation"
+                                                 (saveEvent)="featuresUpdated($event)"
+          ></product-tree-workstation-program-list>
+        </p-tabPanel>
+        <p-tabPanel header="{{'cost' | translate}}" [selected]="tabIndex == 6">
+          <table class="table table-bordered table-md">
+            <tbody>
+              <tr>
+                <td width="35%">{{'fixed-cost' | translate}}</td>
+                <td><input type="number" min="0" class="form-control" [(ngModel)]="dataModel.fixedCost"
+                    name="fixedCost" />
+                </td>
+              </tr>
+              <tr>
+                <td width="35%">{{'labor-cost' | translate}}</td>
+                <td><input type="number" min="0" class="form-control" [(ngModel)]="dataModel.laborCost"
+                    name="laborCost" />
+                </td>
+              </tr>
+              <tr>
+                <td width="35%">{{'variable-cost' | translate}}</td>
+                <td><input type="number" min="0" class="form-control" [(ngModel)]="dataModel.variableCost"
+                    name="variableCost" />
+                </td>
+              </tr>
+              <tr>
+                <td>{{'currency' | translate}}</td>
+                <td>
+                  <currency-auto-complete [selectedCurrency]="dataModel.currency" (selectedCurrencyEvent)="dataModel.currency=$event?.currencyCode"></currency-auto-complete>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </p-tabPanel>
+      </p-tabView>
+    </div>
+    <div class="col-md-12">
+      <!-- || !operationMaterialList.length || !operationComponentList.length -->
+      <button type="submit" class="btn btn-sm btn-primary"  
+        [disabled]="!saleForm.form.valid||!dataModel.operationId || !dataModel.singleDuration|| !dataModel.maxSingleStandbyDuration" 
+      (click)="save()" id="btnsubmit"><i class="fa fa-dot-circle-o"></i>
+          {{'save' | translate}}
+      </button>
+      <button type="button" class="btn btn-sm btn-danger" (click)="close()"><i class="fa fa-window-close"></i>
+          {{'close' | translate}}
+      </button>
+    </div>
+    <!-- <div class="col-md-12" id="hiddenDiv">
+      <p-message *ngIf="!dataModel.operationId" severity="warn" text="Add Operation"></p-message>  
+      <p-message *ngIf="!dataModel.singleDuration" severity="warn" text="Add Single Duration"></p-message>  
+      <p-message *ngIf="!dataModel.maxSingleStandbyDuration" severity="warn" text="Add Max Single Stand By Duration"></p-message>  
+      <p-message *ngIf="!operationMaterialList.length" severity="warn" text="Add atleast one Output"></p-message>  
+      <p-message *ngIf="!operationComponentList.length" severity="warn" text="Add atleast one Input"></p-message>  
+    </div> -->
+  </div><!--/.row-->
+</div>
+<!--</form>-->
+<!------------------------- Modals ---------------------------------------->
+<div bsModal [config]="{backdrop: 'static', keyboard: false}" #myModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-success modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          {{('operation'|translate)}}
+        </h4>
+        <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <!---------- MODEL #Stocks ------------->
+      <!--[(visible)]="display"-->
+      <div class="modal-body">
+        <div class="form-group row">
+          <!--keep the modal open!!!!!-->
+          <div class="col-md-12">
+
+            <choose-operation-pane [plantId]="selectedPlant?.plantId" [workstationId]="workstationId" (selectedEvent)="setSelectedOperation($event);myModal.hide()"></choose-operation-pane>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="myModal.hide()">{{'close' | translate}}</button>
+      </div>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

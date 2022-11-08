@@ -1,0 +1,295 @@
+<p-confirmDialog [autoZIndex]="true" [baseZIndex]="999999"></p-confirmDialog>
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+
+        <div class="card-body">
+          <p-table #dt [columns]="selectedColumns" [value]="materials" [rows]="pagination.rows" scrollable="true"
+            scrollHeight="55vh" [totalRecords]="pagination.totalElements" dataKey="stockId"
+            [(selection)]="selectedStocks" [scrollable]="true">
+
+            <ng-template pTemplate="caption">
+              <div style="text-align:left">
+                <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header" maxSelectedLabels="0"
+                  selectedItemsLabel="{{'columns-selected'|translate}}" [style]="{minWidth: '200px'}"
+                  defaultLabel="Choose Columns">
+                  <ng-template let-col let-i="index" pTemplate="item">
+                    {{col.label|translate}}
+                  </ng-template>
+                </p-multiSelect>
+                <button pButton type="button" class="ui-button-warning float-right ml-1" label="{{'reset'  |translate}}"
+                  (click)="resetFilter()"></button>
+                <button pButton class="ui-button-success float-right ml-1" (click)="modalShow(null,'NEW', null)"
+                  label="{{'add-new'|translate}}">
+                </button>
+                <button pButton style="margin-right: 5px; margin-left:5px;" class="ui-button-primary float-right"
+                  [disabled]="selectedStocks.length !=1" (click)="modalClone('CLONE',selectedStocks)"
+                  label="{{'Clone'|translate}}"> </button>
+
+                <p-splitButton [style]="{'margin-right' : '5px'}" label="{{'export-all'|translate}}"
+                  icon="fa fa-file-alt" [model]="menuItems" styleClass="ui-button-warning float-right">
+                </p-splitButton>
+                <p-splitButton [style]="{'margin-right' : '5px'}" label="{{'export-selected'|translate}}"
+                  icon="fa fa-file" [model]="selecteMenuItems" styleClass="ui-button-warning float-right">
+                </p-splitButton>
+                <!-- <button pButton class="ui-button-warning float-right ml-1" type="button" icon="fa fa-file-alt"
+                  iconPos="left" label="{{'export-all'|translate}}" (click)="dt.exportCSV();"></button>
+                <button pButton class="ui-button-warning float-right ml-1" type="button" icon="fa fa-file"
+                  iconPos="left" label="{{'export-selected'|translate}}"
+                  (click)="dt.exportCSV({selectionOnly:true})"></button> -->
+              </div>
+              <!--<hr>-->
+
+            </ng-template>
+            <!-- <ng-template pTemplate="colgroup" let-columns>
+              <colgroup>
+                  <col>
+                  <col *ngFor="let col of columns" style="width:120px">
+                  <col width="80px" rowspan="2">
+              </colgroup>
+          </ng-template> -->
+            <ng-template pTemplate="header" let-columns>
+
+              <tr>
+                <th style="width: 3em" rowspan="2">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <ng-container *ngFor="let col of columns let i=index">
+                  <th class="text-center" *ngIf="col.field != 'buy/make'" style="cursor: pointer"
+                    [ngClass]="{'bg-selected-order':pageFilter.orderByProperty ==col.field}"
+                    (click)="reOrderData(i,col.field)"><i [ngClass]="'fa fa-sort-alpha-' + classReOrder[i]"></i>
+                    {{col.header|translate}}
+                  </th>
+                  <th class="text-center" rowspan="2" *ngIf="col.field == 'buy/make'">
+                    {{col.header|translate}}
+                  </th>
+                </ng-container>
+                <th width="80px" rowspan="2">{{'action' | translate}}</th>
+              </tr>
+              <tr>
+                <ng-container *ngFor="let col of columns">
+                  <th *ngIf="col.field != 'buy/make'" [ngSwitch]="col.field">
+                    <select *ngSwitchCase="'stockTypeName'" id="stockTypeName" name="stockTypeName" class="form-control"
+                      [(ngModel)]="pageFilter.stockTypeId" (ngModelChange)="filterByColumn($event,col.field)">
+                      <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                      <option *ngFor="let type of listStockTypes" [value]="type.stockTypeId">
+                        {{type.stockTypeName | translate}}
+                      </option>
+                    </select>
+
+                    <select *ngSwitchCase="'stockGroupName'" id="materialGroup" name="materialGroup"
+                      class="form-control" [(ngModel)]="pageFilter.stockGroupName" (ngModelChange)="filter(pageFilter)">
+                      <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                      <option *ngFor="let group of materialGroupList" value="{{group.groupDescription}}">
+                        {{group.groupDescription | translate}}
+                      </option>
+                    </select>
+                    <select *ngSwitchCase="'autoCreated'" id="autoCreated" name="autoCreated" class="form-control"
+                      [(ngModel)]="pageFilter.autoCreated" (ngModelChange)="filter(pageFilter)">
+                      <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                      <option [value]="true"> {{'yes' | translate}}</option>
+                      <option [value]="false"> {{'no' | translate}}</option>
+                    </select>
+                    <span *ngSwitchCase="'grossWeight'"> </span>
+                    <span *ngSwitchCase="'netWeight'"> </span>
+                    <span *ngSwitchCase="'volume'"> </span>
+                    <span *ngSwitchCase="'volumeUnit'"> </span>
+                    <span *ngSwitchCase="'thickness'"> </span>
+                    <span *ngSwitchCase="'length'"> </span>
+                    <span *ngSwitchCase="'height'"> </span>
+                    <span *ngSwitchCase="'dimensionUnit'"> </span>
+                    <!-- <span *ngSwitchCase="'buy/make'"></span> -->
+
+                    <select *ngSwitchCase="'stockStatus'" id="stockStatus" name="stockStatus" class="form-control"
+                      [(ngModel)]="pageFilter.status" (ngModelChange)="filter(pageFilter)">
+                      <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                      <option *ngFor="let type of listStockStatus" value="{{type}}">{{type | translate}}
+                      </option>
+                    </select>
+
+                    <!-- <select *ngSwitchCase="'buy/make'" id="buy-make" name="buy-make" class="form-control"
+
+                    [(ngModel)]="pageFilter.buy" (ngModelChange)="filter(pageFilter)">
+                    <option value="" selected> {{'please-select' | translate}}</option>
+                    <option value="1">{{'buy' | translate}}</option>
+                    <option value="1">{{'make' | translate}}</option>
+                  </select> -->
+
+                    <input *ngSwitchDefault style="width: 100%" [(ngModel)]="pageFilter[col.field]" pInputText
+                      type="text" (input)="filterByColumn($event.target.value,col.field)">
+                  </th>
+                </ng-container>
+
+              </tr>
+
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr [pSelectableRow]="rowData">
+                <td class="text-center" style="width: 3em">
+                  <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                </td>
+                <td class="text-center" *ngFor="let col of columns" style="cursor: pointer" [ngSwitch]="col.field">
+
+                  <span *ngSwitchCase="'buy/make'"
+                    (click)="modalShow(rowData.stockId,'DETAIL', rowData);">{{((rowData.buy && !rowData.make) ? ('Buy' |
+                    translate) : '')}}
+                    {{((rowData.make && !rowData.buy) ? ('Make'|translate) : '')}}
+                    {{((rowData.make && rowData.buy) ? 'Both' : '')}}</span>
+                  <span *ngSwitchCase="'productTreeList'" class="text-success">
+                    <a *ngIf="rowData.productTreeList.length > 0" (click)="showProductTreeDetail(rowData.stockId)">
+                      Tree Items</a>
+                  </span>
+
+                  <span *ngSwitchCase="'autoCreated'">{{(rowData.autoCreated? 'yes': 'no') | translate}}</span>
+                  <a href="javascript:;" *ngSwitchCase="'stockId'"
+                    (click)="modalShow(rowData.stockId,'DETAIL', rowData);">{{rowData[col.field]}}</a>
+                  <!-- <span *ngSwitchCase="'stockUnitMeasureList'">{{rowData.stockUnitMeasureList.baseUnit}}</span>-->
+                  <span *ngSwitchDefault
+                    (click)="modalShow(rowData.stockId,'DETAIL', rowData);">{{rowData[col.field]}}</span>
+
+                </td>
+                <td class="text-center" width="75px">
+                  <button class="btn btn-sm btn-outline-danger" type="button" (click)="delete(rowData.stockId)">
+                    <i class="fa fa-trash"></i></button>
+                  <button class="btn btn-sm btn-outline-info" type="button"
+                    (click)="modalShow(rowData.stockId,'EDIT', rowData);">
+                    <i class="fa fa-edit"></i></button>
+                </td>
+              </tr>
+
+            </ng-template>
+          </p-table>
+
+          <br />
+          <div class="row">
+            <app-paging [showSearch]="false" [TotalElements]="pagination.totalElements"
+              [CurrentPage]="pagination.currentPage" [PageSize]="pagination.pageSize" [rows]="pagination.rows"
+              [TotalPageLinkButtons]="pagination.TotalPageLinkButtons"
+              [RowsPerPageOptions]="pagination.RowsPerPageOptions" (onPageChange)="myChanges($event)"></app-paging>
+            <span style="margin-left:2px; padding-top: 2px " class="text-muted">{{'total-records'|translate}}:
+              {{pagination?.totalElements}}</span>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--/.col-->
+  </div>
+</div>
+<ng-template [ngIf]="modal.active">
+  <div bsModal [config]="{backdrop: 'static', show: true, keyboard: false}" #myModal="bs-modal"
+    (onHidden)="modal.active=false; materialCardModal.data=null; materialCardModal.id=null;" class="modal fade"
+    tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-success modal-md" role="document" style="width:85%; max-width: 90%;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"> {{'material-information' | translate}}</h4>
+          <button type="button" class="close" (click)="onModalHide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <ng-template [ngIf]="materialCardModal.modal=='NEW'">
+            <material-card-new (saveAction)="onSaveSuccessful($event, myModal)"></material-card-new>
+          </ng-template>
+          <ng-template [ngIf]="materialCardModal.modal=='EDIT'">
+            <material-card-edit [data]="materialCardModal.data" (saveAction)="onSaveSuccessful($event, myModal)">
+            </material-card-edit>
+          </ng-template>
+          <ng-template [ngIf]="materialCardModal.modal=='DETAIL'">
+            <material-card-detail [data]="materialCardModal.data"></material-card-detail>
+          </ng-template>
+          <ng-template [ngIf]="materialCardModal.modal=='CLONE'">
+            <!-- <material-card-detail [id]="materialCardModal.id"></material-card-detail>
+               -->
+            <material-card-clone [data]="materialCardModal.data" (saveAction)="onSaveSuccessful($event, myModal);">
+            </material-card-clone>
+          </ng-template>
+        </div>
+
+        <div class="modal-footer">
+          <div class="col-md-12 d-flex justify-content-center ">
+            <button *ngIf="materialCardModal.modal=='DETAIL'" type="button"
+              class="btn rounded btn-outline-primary ml-2 mr-2" (click)="materialCardModal.modal='NEW'">{{'add' |
+              translate}} {{'new' | translate}}
+            </button>
+            <button
+              *ngIf="materialCardModal.modal=='NEW' || materialCardModal.modal=='CLONE' || materialCardModal.modal=='EDIT'"
+              type="button" class="btn rounded btn-outline-primary ml-2 mr-2" (click)="SaveActionFire(false)">{{'save' |
+              translate}}
+            </button>
+            <button
+              *ngIf="materialCardModal.modal=='NEW' || materialCardModal.modal=='CLONE' || materialCardModal.modal=='EDIT'"
+              type="button" class="btn rounded btn-outline-primary ml-2 mr-2" (click)="SaveActionFire(true)">{{'save' |
+              translate}} & {{'new' | translate}}
+            </button>
+
+            <button *ngIf="materialCardModal.modal=='DETAIL'" type="button"
+              class="btn rounded btn-outline-success ml-2 mr-2" (click)="materialCardModal.modal='EDIT'">{{'edit' |
+              translate}}
+            </button>
+
+            <button *ngIf="materialCardModal.modal=='DETAIL' || materialCardModal.modal=='EDIT'" pButton
+              class="ui-button-primary ml-2 mr-2" label="{{'Clone'|translate}}" [disabled]="selectedStocks.length !=1"
+              (click)="modalClone('CLONE',selectedStocks)">
+            </button>
+            <button type="button" class="btn rounded btn-outline-danger ml-2 mr-2" (click)="onModalHide()">{{'cancel' |
+              translate}}
+            </button>
+          </div>
+        </div>
+
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</ng-template>
+
+<p-dialog header="{{'product-tree-list' | translate}}" [(visible)]="treeListDialog" [style]="{'min-width': '1000px'}"
+  (mousedown)="dproductTreeList.moveOnTop()" [autoZIndex]="true" [baseZIndex]="999999" [maximizable]="true"
+  #dproductTreeList (onHide)="treeListDialog=false" [contentStyle]="{'min-height':'400px'}" modal="true"
+  dismissableMask="true">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header">
+        Product Tree List
+      </div>
+      <div class="card-body">
+        <table class="table table-bordered">
+          <tr>
+            <th>ProductTreeId</th>
+            <th>Material</th>
+            <th>Workstation</th>
+            <th>Plant</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th>Start Date</th>
+            <th>Expiry Date</th>
+          </tr>
+          <ng-template [ngIf]="productTreeListForDialog">
+            <tr *ngFor="let product of productTreeListForDialog">
+              <td><a href="javascript:;" *ngIf="product.productTreeId"
+                  (click)="OpenProductTreeDetails(product.productTreeId)">{{product?.productTreeId}}</a></td>
+              <td>
+                <a href="javascript:;" *ngIf="product.material" (click)="OpenMaterialDetails(product.material.stockId)">
+                  {{product?.material?.stockName}} </a>
+              </td>
+              <td>
+                <a href="javascript:;" *ngIf="product.workstation"
+                  (click)="OpenWorkSDetails(product.workstation.workStationId)">
+                  {{product?.workstation?.workStationName}}</a>
+              </td>
+              <td>
+                {{product?.plant?.plantName}}
+              </td>
+              <td>{{product?.description}}</td>
+              <td>{{product?.status}}</td>
+              <td>{{product?.startDate | date:'short'}}</td>
+              <td>{{product?.expiryDate | date:'short'}}</td>
+            </tr>
+          </ng-template>
+        </table>
+      </div>
+    </div>
+  </div>
+</p-dialog>

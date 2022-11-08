@@ -1,0 +1,470 @@
+<p-confirmDialog key="detailNotification"></p-confirmDialog>
+
+<div class="row ui-fluid" *ngIf="stockTransferReceipt">
+
+  <div class="col-lg-4">
+
+    <div class="card">
+      <div class="card-header">
+        <i class="fa fa-align-justify"></i> {{'goods-movement-notification' | translate}}
+      </div>
+      <div class="card-body">
+        <form #transferForm="ngForm">
+          <table class="table table-striped table-outline  ">
+            <tbody *ngIf="stockTransferReceipt">
+              <tr>
+                <td width="35%" class="text-bold">{{'notification-id' | translate}}<span class="float-right">:</span></td>
+                <td>{{stockTransferReceipt.stockTransferReceiptNotificationId}}</td>
+              </tr>
+
+              <tr>
+                <td width="35%" class="text-bold">{{'activity-type' | translate}}<span class="float-right">:</span></td>
+                <td>{{stockTransferReceipt.goodsMovementActivityType}}</td>
+              </tr>
+
+              <tr>
+                <td class="text-bold">{{'document-type' | translate}}<span class="float-right">:</span></td>
+                <td>{{ stockTransferReceipt.goodMovementDocumentType}}</td>
+              </tr>
+              <tr>
+                <td class="text-bold">{{'status' | translate}}<span class="float-right">:</span></td>
+                <td>{{stockTransferReceipt.goodsMovementStatus}}</td>
+              </tr>
+
+              <!-- <ng-template [ngIf]="stockTransferReceipt.goodsMovementActivityType != 'TRANSFER_POSTING'"> -->
+                <ng-template [ngIf]="stockTransferReceipt.goodMovementDocumentType == 'PURCHASE_ORDER'">
+                  <tr>
+                    <td class="text-bold">{{'purchase-order-id' | translate}}<span class="float-right">:</span></td>
+                    <td><a href="javascript:;" (click)="showDetailDialog('PURCHASE_ORDER', stockTransferReceipt.purchaseOrderId)">{{stockTransferReceipt.purchaseOrderId}}</a></td>
+                  </tr>
+                </ng-template>
+
+                <ng-template [ngIf]="stockTransferReceipt.goodMovementDocumentType == 'PRODUCTION_ORDER' || stockTransferReceipt.goodMovementDocumentType == 'WORKSTATION' || stockTransferReceipt.goodMovementDocumentType == 'ON_SITE'">
+                  <tr>
+                    <td class="text-bold">{{'production-order-id' | translate}}<span class="float-right">:</span></td>
+                    <td><a href="javascript:;" (click)="showDetailDialog('PROD_ORDER', stockTransferReceipt.prodOrderId)">{{stockTransferReceipt.prodOrderId}}</a></td>
+                  </tr>
+                </ng-template>
+
+                <ng-template [ngIf]="stockTransferReceipt.goodMovementDocumentType == 'SALES_ORDER'">
+                  <tr>
+                    <td class="text-bold">{{'sales-order-id' | translate}}<span class="float-right">:</span></td>
+                    <td>{{stockTransferReceipt.saleOrderId}} | {{stockTransferReceipt.saleOrderNo}}</td>
+                  </tr>
+                </ng-template>
+              <!-- </ng-template> -->
+
+              <tr>
+                <td class="text-bold">{{'document-no' | translate}}<span class="float-right">:</span></td>
+                <td>
+                  <input class="form-control" type="text" name="documentNo" [(ngModel)]="stockTransferReceipt.documentNo" (change)="onQuantityChange($event)"/>
+                </td>
+              </tr>
+
+              <tr *ngIf="!showSaveAndConfirmBtn || stockTransferReceipt.goodsMovementStatus === 'COMPLETED'">
+                <td class="text-bold">{{'document-date' | translate}}<span class="float-right">:</span></td>
+                <td>{{stockTransferReceipt.documentDate | date:'dd-MM-yyyy HH:mm:ss'}}</td>
+              </tr>
+              <tr *ngIf="showSaveAndConfirmBtn && stockTransferReceipt.goodsMovementStatus !== 'COMPLETED'">
+                <td class="text-bold">{{'document-date' | translate}}<span class="float-right">:</span></td>
+                <td>
+                  <p-calendar [(ngModel)]="stockTransferReceipt.documentDate" [monthNavigator]="true"
+                    [yearNavigator]="true" yearRange="1990:2100" name="documentDate" [showIcon]="true"
+                    dateFormat="dd/mm/yy" required></p-calendar>
+                </td>
+              </tr>
+
+
+              <tr *ngIf="!showSaveAndConfirmBtn || stockTransferReceipt.goodsMovementStatus === 'COMPLETED'">
+                <td class="text-bold">{{'posting-date' | translate}}<span class="float-right">:</span></td>
+                <td>{{stockTransferReceipt.postingDate | date:'dd-MM-yyyy HH:mm:ss'}}</td>
+              </tr>
+              <tr *ngIf="showSaveAndConfirmBtn && stockTransferReceipt.goodsMovementStatus !== 'COMPLETED'">
+                <td class="text-bold">{{'posting-date' | translate}}<span class="float-right">:</span></td>
+                <td>
+                  <p-calendar [(ngModel)]="stockTransferReceipt.postingDate" [monthNavigator]="true"
+                    [yearNavigator]="true" yearRange="1990:2100" name="postingDate" [showIcon]="true"
+                    dateFormat="dd/mm/yy" required></p-calendar>
+
+                </td>
+              </tr>
+              <tr>
+                <td class="text-bold">{{'reference-id' | translate}}<span class="float-right">:</span></td>
+                <td>
+                  {{stockTransferReceipt.referenceId}}
+                </td>
+              </tr>
+              <tr *ngIf="showSaveAndConfirmBtn && stockTransferReceipt.goodsMovementStatus !== 'COMPLETED'">
+                <td colspan="2">
+                  <button type="submit" class="btn btn-sm btn-primary"
+                    [disabled]="!stockTransferReceipt.postingDate || !stockTransferReceipt.documentDate"
+                    (click)="saveAndConfirmStockTransfer()"><i class="fa fa-dot-circle-o"></i>
+                    {{'save-and-confirm' | translate}}
+                  </button>
+
+                  <!--<button type="button" class="btn btn-sm btn-secondary float-right" (click)="goPage()">-->
+                  <!--<i class="icon-arrow-left-circle"></i> {{'cancel' | translate}} </button>-->
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-8 p-0">
+    <p-tabView>
+      <p-tabPanel header="{{'goods-movement-notification-details'|translate}}" [style]="{height: '300px'}">
+        <div class="card">
+          <div class="card-body" style="width: 100%; overflow-x: auto;">
+            <table class="table table-sm table-hover table-outline mb-0">
+
+              <thead class="table-secondary small">
+                <tr>
+                  <th>{{'stock-transfer-notification-detail-id' | translate}}</th>
+                  <th>{{'item-no' | translate}}</th>
+                  <!-- <th>{{'plant' | translate}}</th> -->
+                  <th>{{'material-no' | translate}}</th>
+                  <th>{{'material' | translate}}</th>
+                  <th>{{'defect' | translate}}</th>
+                  <th *ngIf="stockTransferReceipt.goodsMovementActivityType == 'TRANSFER_POSTING'">
+                    {{'batch-code-from' | translate}}</th>
+                  <th *ngIf="stockTransferReceipt.goodsMovementActivityType == 'TRANSFER_POSTING'">
+                    {{'batch-code-to' | translate}}</th>
+                  <th *ngIf="stockTransferReceipt.goodsMovementActivityType != 'TRANSFER_POSTING'">
+                    {{'batch-code' | translate}}</th>
+                  <th>{{'location-no' | translate}}</th>
+                  <th>{{'barcode' |translate}}</th>
+                  <ng-container
+                    *ngIf="stockTransferReceipt.goodsMovementActivityType !== 'GOODS_RECEIPT'; else wareHouseFrom">
+                    <th>{{'warehouse-from' | translate}}</th>
+                  </ng-container>
+                  <ng-template #wareHouseFrom>
+                    <th>{{'warehouse-to' | translate}}</th>
+                  </ng-template>
+
+                  <th *ngIf="stockTransferReceipt.goodsMovementActivityType == 'TRANSFER_POSTING'">
+                    {{'warehouse-to' | translate}}</th>
+                    <!-- <th>{{'height' |translate}}</th>
+                    <th>{{'width' |translate}}</th> -->
+                    <th>{{'quantity' |translate}}</th>
+                    <th>{{'unit-of-measures' |translate}}</th>
+                    <th>{{'pallet' |translate}}</th>
+                    <!-- <th>{{'dimension-unit' |translate}}</th> -->
+                  <th>{{'action' |translate}}</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <ng-container
+                  *ngFor="let item of stockTransferReceipt.responseStockTransferNotificationDetailList;
+                   let i = index">
+                   <!-- [ngClass]="{'bg-success':selectedItemIndex==i}" -->
+                  <tr>
+                    <td>
+                          {{item.stockTransferNotificationDetailId}}
+                    </td>
+                    <ng-container *ngIf="stockTransferReceipt.goodMovementDocumentType == 'ON_SITE'; else goodMovementDocumentTypes">
+                      <td> {{item.itemNo}}</td>
+                    </ng-container>
+                    <ng-template #goodMovementDocumentTypes>
+                      <td *ngIf="stockTransferReceipt.goodMovementDocumentType != 'PURCHASE_ORDER'"><a href="javascript:;" (click)="showDetailDialog('JOB_ORDER', item.itemNo)">{{item.itemNo}}</a></td>
+                      <td *ngIf="stockTransferReceipt.goodMovementDocumentType == 'PURCHASE_ORDER'"><a href="javascript:;" (click)="showDetailDialog('PURCHASEORDERITEM', item.purchaseOrderId)">{{item.itemNo}}</a></td>
+                    </ng-template>
+
+                    <!-- <td><a href="javascript:;" (click)="showDetailDialog('PLANT', item.plantId)">{{item.plantName}}</a></td> -->
+
+                    <td><a href="javascript:;" (click)="showDetailDialog('STOCK', item.materialId)">{{item.materialNo}}</a></td>
+
+                    <td><a href="javascript:;" (click)="showDetailDialog('STOCK', item.materialId)">{{item.materialName}}</a></td>
+
+                    <td>{{item.defected==true?'YES':'NO'}}</td>
+
+                    <td *ngIf="stockTransferReceipt.goodsMovementActivityType == 'TRANSFER_POSTING'">{{item.batchFrom}}</td>
+
+                    <td><a href="javascript:;" (click)="showDetailDialog('BATCH', item.batch)">{{item.batch}}</a></td>
+                    <td>
+                      {{item.locationNo}}
+                      <button class="btn btn-sm btn-outline-primary" (click)="selectedItemIndex=i;modal.active=true;">
+                        <i class="fa fa-edit"></i>
+                      </button>
+                      <!-- <location-auto-complete [selectedLocationNo]="item.locationNo" [addIfMissing]="true"
+                      (selectedLocationEvent)="item.locationNo=$event?.locationNo; notificationQuantityChanged.next(stockTransferReceipt)" ></location-auto-complete> -->
+                    </td>
+                    <td>
+                      <p-inplace>
+                        <span pInplaceDisplay>
+                          {{item.barcode}} <i class="fa fa-pencil"></i>
+                        </span>
+                        <span pInplaceContent>
+                          <input type="text" value="{{item.barcode}}" pInputText
+                          [(ngModel)]="stockTransferReceipt.responseStockTransferNotificationDetailList[i].barcode"
+                          (change)="onQuantityChange($event)"
+                            style="width: 50px;">
+                        </span>
+                      </p-inplace>
+                      <!-- {{item.barcode}} -->
+                    </td>
+
+                    <td><a href="javascript:;" (click)="showDetailDialog('WAREHOUSE', item.wareHouseFromId)">{{item.wareHouseFromName}}</a></td>
+
+                    <td *ngIf="stockTransferReceipt.goodsMovementActivityType == 'TRANSFER_POSTING'">
+                      <a href="javascript:;" (click)="showDetailDialog('WAREHOUSE', item.wareHouseToId)">{{item.wareHouseToName}}</a>
+                    </td>
+
+                    <!-- <td>{{item.height}}</td>
+
+                    <td>{{item.width}}</td> -->
+
+                    <td>
+                    <ng-container *ngIf="item.goodsMovementStatus == 'REQUESTED'; else noQuantityDisplay">
+                        <p-inplace>
+                          <span pInplaceDisplay>
+                            {{item.quantity | number : '1.1-1'}} <i class="fa fa-pencil"></i>
+                          </span>
+                          <span pInplaceContent>
+                            <input type="text" value="{{item.quantity}}" pInputText
+                              [(ngModel)]="stockTransferReceipt.responseStockTransferNotificationDetailList[i].quantity"
+                              style="width: 50px;" (change)="onQuantityChange($event)">
+                          </span>
+                        </p-inplace>
+                      </ng-container>
+                      <ng-template #noQuantityDisplay>
+                        {{ item.quantity | number : '1.1-1' }}
+                      </ng-template>
+                    </td>
+                    <td>{{item.baseUnit}}</td>
+                    <td>{{(item.pallet)? 'YES': 'NO'}}</td>
+                    <!-- <td>{{item.dimensionUnit}}</td> -->
+                    <td>
+                      <button *ngIf="item.goodsMovementStatus=='REQUESTED'" class="btn btn-sm btn-outline-danger"
+                        type="button" (click)="cancelTransferNotification(item.stockTransferNotificationDetailId)">
+                        <i class="fa fa-close"></i>
+                      </button>
+                      <!-- <button *ngIf="item.goodsMovementStatus=='REQUESTED'" type="button" class="btn rounded btn-danger"
+                      (click)="cancelTransferNotification(item.stockTransferNotificationDetailId)">{{'cancel' | translate}}
+                      </button> -->
+                    </td>
+                  </tr>
+                </ng-container>
+
+                <tr
+                  *ngIf="!stockTransferReceipt.responseStockTransferNotificationDetailList || stockTransferReceipt.responseStockTransferNotificationDetailList.length==0">
+                  <td colspan="13" class="noData text-center">
+                    <strong class=""><i class="fa fa-warning "></i>{{'NO_DATA_FOUND'|translate}}!</strong>
+                  </td>
+                </tr>
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </p-tabPanel>
+      <p-tabPanel header="{{'order-details' | translate}}">
+        <div class="card">
+          <div class="card-body" style="width: 100%; overflow-x: auto;">
+            <table class="table table-sm table-hover table-bordered table-outline mb-0" style="min-height: 50px;">
+
+              <thead class="table-secondary small">
+                <th>{{'sales-order-id' |translate}}</th>
+                <th>{{'production-order-id' |translate}}</th>
+                <th>{{'job-order-id' |translate}}</th>
+                <th>{{'purchase-order-id' |translate}}</th>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of stockTransferReceipt.responseStockTransferNotificationDetailList; let i = index">
+                  <td><a href="javascript:;" (click)="showDetailDialog('SALE_ORDER', item.saleOrderId)">{{item.saleOrderId}}</a></td>
+                  <td><a href="javascript:;" (click)="showDetailDialog('PROD_ORDER', item.prodOrderId)">{{item.prodOrderId}}</a></td>
+                  <td>
+                    <ng-container *ngIf="item.goodMovementDocumentType == 'WORKSTATION'">
+                      <a href="javascript:;" (click)="showDetailDialog('JOB_ORDER', item.itemNo)">{{item.itemNo}}</a>
+                    </ng-container>
+                  </td>
+                  <td><a href="javascript:;" (click)="showDetailDialog('PURCHASE_ORDER', item.purchaseOrderId)">{{item.purchaseOrderId}}</a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </p-tabPanel>
+      <p-tabPanel header="{{'pallet-list'|translate}}">
+        <div class="row">
+          <div class="col-md-12">
+            <p-table [columns]="palletSelectedColumns" [value]="palletList" [dataKey]="'palletId'">
+              <ng-template pTemplate="header" let-columns>
+                <tr>
+                  <th style="width: 3em"></th>
+                  <th *ngFor="let col of columns">
+                    {{col.header | translate}}
+                  </th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-rowData let-expanded="expanded" let-columns="columns">
+                <tr>
+                  <td>
+                    <a href="#" [pRowToggler]="rowData">
+                      <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+                    </a>
+                  </td>
+                  <td *ngFor="let col of columns" style="cursor: pointer" [ngSwitch]="col.field">
+
+                    <a href="javascript:;" *ngSwitchCase="'palletId'"
+                    (click)="showPalletDetail(rowData[col.field])">{{rowData[col.field]}}</a>
+                    <span *ngSwitchCase="'batch'"> {{rowData.batch}}</span>
+                    <span *ngSwitchCase="'stock'">{{rowData[col.field]?.stockName}}</span>
+                    <span *ngSwitchCase="'jobOrder'"> </span>
+                    <span *ngSwitchCase="'unit'"> {{rowData.stock?.baseUnit}} </span>
+                    <span *ngSwitchCase="'wareHouse'"> {{rowData[col.field]?.wareHouseName}} </span>
+                    <span *ngSwitchCase="'updateDate'"> {{rowData[col.field] | date:'dd/mm/yyyy HH:mm'}} </span>
+                    <span *ngSwitchCase="'createDate'"> {{rowData[col.field] | date:'dd/mm/yyyy HH:mm'}} </span>
+                    <span *ngSwitchDefault> {{rowData[col.field]}} </span>
+                  </td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="rowexpansion" let-rowData let-columns="columns">
+                <tr>
+                  <td colspan="2"></td>
+                  <td colspan="2">
+                <tr>
+                  <td><strong>{{'stock-no' | translate}}</strong> : {{rowData.stock?.stockNo}}</td>
+                </tr>
+                <tr>
+                  <td><strong>{{'stock' | translate}}</strong> : {{rowData.stock?.stockName}}</td>
+                </tr>
+                <tr>
+                  <td><strong>{{'warehouse' | translate}}</strong> : {{rowData.wareHouse?.wareHouseName}}</td>
+                </tr>
+                </td>
+                <td colspan="2">
+                  <tr>
+                    <td><strong>{{'jobOrder' | translate}}</strong> : {{rowData.jobOrder?.jobOrderId}}</td>
+                  </tr>
+                  <tr>
+                    <td><strong>{{'batch' | translate}}</strong> : {{rowData.batch}}</td>
+                  </tr>
+                  <tr>
+                    <td><strong>{{'create-date' | translate}}</strong> :
+                      {{rowData.createDate | date:'dd/MM/yyyy HH:mm'}}</td>
+                  </tr>
+                </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+        </div>
+      </p-tabPanel>
+      <p-tabPanel header="{{'dimension' | translate}}">
+        <div class="card">
+          <div class="card-body" style="width: 100%; overflow-x: auto;">
+            <table class="table table-sm table-hover table-bordered table-outline mb-0"  style="min-height: 50px;">
+
+              <thead class="table-secondary small">
+                <th>{{'height' |translate}}</th>
+                <th>{{'width' |translate}}</th>
+                <th>{{'dimension-unit' |translate}}</th>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of stockTransferReceipt.responseStockTransferNotificationDetailList; let i = index">
+                  <td>{{item.height}}</td>
+                  <td>{{item.width}}</td>
+                  <td>{{item.dimensionUnit}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </p-tabPanel>
+      <p-tabPanel header="{{'description' | translate}}">
+        <div class="card">
+          <div class="card-body" style="width: 100%; overflow-x: auto;">
+            <table class="table table-sm table-hover table-outline mb-0">
+              <tbody>
+                <ng-container *ngFor="let item of stockTransferReceipt.responseStockTransferNotificationDetailList;let i = index">
+                  <tr>
+                    <td style="width: 15%;">{{'description' | translate}} :</td>
+                    <td>
+                      <textarea rows="3" class="form-control" [(ngModel)]="item.description" (change)="onQuantityChange($event)"></textarea>
+                    </td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+           
+            
+          </div>
+        </div>
+      </p-tabPanel>
+      <p-tabPanel header="{{'document'| translate }}">
+        <div class="card">
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i>{{ "documentation" | translate }}
+          </div>
+          <div class="card-body">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th width="100px">{{'stock-transfer-notification-detail-id' | translate}}</th>
+                  <th></th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let item of stockTransferReceipt.responseStockTransferNotificationDetailList;
+                 let i = index">
+                 
+                <tr align="center">
+                  <td width="100px">
+                    {{item.stockTransferNotificationDetailId}}
+                  </td>
+                  <td class="text-center" colspan="2">
+                    <image-adder [referenceId]="item.stockTransferNotificationDetailId" 
+                    [tableType]="'GOODS_MOVEMENT'" [isFile]="true"></image-adder>
+                  </td>
+                </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </p-tabPanel>
+    </p-tabView>
+  </div>
+
+</div>
+
+
+
+<ng-template [ngIf]="modal.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal" (onHidden)="modal.active=false"
+    class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-success modal-lg" role="document">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h4 class="modal-title"> {{'warehouse-locations' | translate}}</h4>
+          <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <choose-warehouse-location-pane  [fromChoosePane]="true"
+            (selectedStockEvent)="onSelectWarehouseLocation($event); modal.active=false;">
+          </choose-warehouse-location-pane>
+        </div>
+
+        <div class="modal-footer">
+         
+           
+
+          <button type="button" style="background:lightslategray;"  class="btn rounded btn-outline-secondary"
+              (click)="myModal.hide()">{{'close' | translate}}
+          </button>
+
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</ng-template>

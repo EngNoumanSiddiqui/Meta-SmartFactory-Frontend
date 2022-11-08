@@ -1,0 +1,94 @@
+<!--<form #orderEdit="ngForm" >-->
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12" *ngIf="dataModel">
+      <p-tabView>
+        <p-tabPanel [header]="
+        (this.dataModel.direction === 1) ?
+          ('new-material' | translate) : ((this.dataModel.direction === -1) ? ('new-component' | translate): ('new-auxiliary-material' | translate) )
+        ">
+          <div class="card">
+            <div class="card-header">
+              {{'component'|translate}}
+            </div>
+            <div class="card-body">
+              <table class="table table-bordered">
+                <tbody>
+
+                <tr>
+                  <td>{{'direction'|translate}}</td>
+                  <td> {{dataModel.direction==1? ('MATERIAL'|translate) :('COMPONENT'|translate)}}</td>
+                </tr>
+                <tr>
+                  <td>{{dataModel.direction==1? ('material'|translate):('component'|translate)}}</td>
+                  <td>
+                    <span *ngIf="dataModel.component">
+                    <a href="javascript:;" (click)="showStockDetail(dataModel.component.stockId)">{{dataModel.component?.stockName}} </a>
+                    <a *ngIf="dataModel.component.productTreeId" href="javascript:;"
+                       (click)="showProductTreeDetail(dataModel.component.productTreeId)"><i
+                      class="fa fa-share-alt text-success"> </i> </a>
+                  </span>
+
+                  </td>
+                </tr>
+
+                <tr>
+                  <td width="35%">{{'quantity' | translate}}</td>
+                  <td> {{dataModel.quantity}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'quantity-unit' | translate}}</td>
+                  <td> {{dataModel.quantityUnit}}</td>
+                </tr>
+                <tr *ngIf="manualProdOrder">
+                  <td width="35%">{{'material-cost-rate' | translate}}</td>
+                  <td>
+                    {{dataModel.materialCostRate}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'material-cost' | translate}}</td>
+                  <td> {{dataModel.materialCost}}</td>
+                </tr>
+                <tr>
+                  <td>{{'scrap-cost' | translate}}</td>
+                  <td>{{dataModel.scrapCost}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'currency' | translate}}</td>
+                  <td>
+                    {{dataModel.currency}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{ "extra-production-percentage" | translate }}</td>
+                  <td>
+                   {{dataModel.extraProductionPercentage}}
+                  </td>
+                </tr>
+                <tr *ngIf="manualProdOrder">
+                  <td width="35%">{{'description' | translate}}</td>
+                  <td>
+                    <textarea class="form-control" 
+                    [(ngModel)]="dataModel.description" name="description" ></textarea>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </p-tabPanel>
+        <p-tabPanel header="{{'features' | translate}}">
+          <product-tree-component-feature-list [tableData]="dataModel.productTreeDetailComponentFeatureList"
+                                               [detailMode]="true"
+                                               [productTreeDetailComponentId]="dataModel.productTreeDetailComponentId"
+                                               (saveEvent)="featuresUpdated($event)"
+          ></product-tree-component-feature-list>
+        </p-tabPanel>
+      </p-tabView>
+    </div>
+  </div><!--/.row-->
+</div>
+<!--</form>-->

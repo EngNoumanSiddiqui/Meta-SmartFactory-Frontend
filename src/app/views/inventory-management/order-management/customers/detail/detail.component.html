@@ -1,0 +1,518 @@
+<div class="animated fadeIn">
+  <div class="row" >
+    <p-tabView class="col-md-12">
+      <p-tabPanel header="{{'basic-informations'| translate }}">
+        <div class="row col-md-12 mt-2">
+          <div class="card col-md-5 pl-0 pr-0">
+            <div class="card-header">
+              <i class="fa fa-align-justify"></i> {{'account-information' | translate}}
+            </div>
+            <div class="card-body">
+
+              <table class="table table-striped table-outline" *ngIf="customer">
+                <tbody>
+                  <!-- <tr>
+                              <td width="30%" class="text-bold">{{'account-position' | translate}} <span class="float-right">:</span>
+                              </td>
+                              <td>{{customer.accountPosition}}</td>
+                            </tr> -->
+                  <tr>
+                    <td width="30%" class="text-bold">{{'account-id' | translate}}<span class="float-right">:</span>
+                    </td>
+                    <td>{{customer.actId}}</td>
+                  </tr>
+                  <tr>
+                    <td width="30%" class="text-bold">{{'account-no' | translate}}<span class="float-right">:</span>
+                    </td>
+                    <td>{{customer.actNo}}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'prefix' | translate}}<span class="float-right">:</span></td>
+                    <td>{{customer.prefix}}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'account-name' | translate}}<span class="float-right">:</span></td>
+                    <td>{{customer.actName}}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'account-name' | translate}} - 2<span class="float-right">:</span></td>
+                    <td>{{customer.actName2}}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'contact-name' | translate}}<span class="float-right">:</span></td>
+                    <td>{{customer.contactName}}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'account-type' | translate}}<span class="float-right">:</span></td>
+                    <td>{{customer.actType?.actTypeName}}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'account-position' | translate}}<span class="float-right">:</span></td>
+                    <td>{{customer.accountPosition}}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'description' | translate}}<span class="float-right">:</span></td>
+                    <td>{{customer.description}}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'tax-id' | translate}}<span class="float-right">:</span></td>
+                    <td>{{customer.taxId}}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'priority' | translate}}<span class="float-right">:</span></td>
+                    <td>{{customer.priority}}</td>
+                  </tr>
+               
+                  <tr>
+                    <td class="text-bold"> {{'registration-no' | translate}}</td>
+                    <td >
+                      {{customer.registrationNo}}
+                    </td>
+                  </tr>
+              
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="ml-2 card col-md pl-0 pr-0">
+            <div class="card-header">
+              <i class="fa fa-align-justify"></i> {{'contact-info' | translate}}
+            </div>
+            <div class="card-body">
+              <table class="table table-striped table-outline" *ngIf="customer">
+                <tbody>
+                  <tr>
+                    <td class="text-bold" width="30%">{{'address' | translate}} 1<span class="float-right">:</span></td>
+                    <td>{{customer.address1}}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'address' | translate}} 2<span class="float-right">:</span></td>
+                    <td>{{customer.address2}}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'city' | translate}}<span class="float-right">:</span></td>
+                    <td>{{customer.city?.cityName}}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'postal-code' | translate}}<span class="float-right">:</span></td>
+                    <td>{{customer.postalCode}}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'country' | translate}}<span class="float-right">:</span></td>
+                    <td>{{customer.country?.countryName}}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'phone' | translate}}<span class="float-right">:</span></td>
+                    <td>{{customer.phone}}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'mobile' | translate}}<span class="float-right">:</span></td>
+                    <td>{{customer.gsm}}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'fax' | translate}}<span class="float-right">:</span></td>
+                    <td>{{customer.fax}}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'email' | translate}}<span class="float-right">:</span></td>
+                    <td>{{customer.email}}</td>
+                  </tr>
+
+                  <tr>
+                    <td class="text-bold">{{'web' | translate}}<span class="float-right">:</span></td>
+                    <td>{{customer.webSite}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </p-tabPanel>
+      <p-tabPanel header="{{'contract'| translate }}">
+        <div class="row col-md-12">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                {{'contract-information' | translate}}
+              </div>
+              <div class="card-body">
+                <table class="table table-striped table-outline">
+                  <tbody>
+                    <tr>
+                      <td width="40%" class="text-bold">
+                        {{'currency' | translate}}
+                        <span class="float-right">:</span>
+                      </td>
+                      <td>
+                        {{customer?.contractDto?.currency}}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-bold">
+                        {{'VAT %' | translate}}
+                        <span class="float-right">:</span>
+                      </td>
+                      <td>
+                        {{customer?.contractDto?.vat}}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-bold">
+                        {{'delivery-term' | translate}} (days)
+                        <span class="float-right">:</span>
+                      </td>
+                      <td>
+                        {{customer?.contractDto?.deliveryTerm}}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-bold">
+                        {{'discount' | translate}} %
+                        <span class="float-right">:</span>
+                      </td>
+                      <td>
+                        {{customer?.contractDto?.discount}}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-bold">
+                        {{'language' | translate}}
+                        <span class="float-right">:</span>
+                      </td>
+                      <td>
+                        {{customer?.contractDto?.language}}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-bold">
+                        {{'parity' | translate}}
+                        <span class="float-right">:</span>
+                      </td>
+                      <td>
+                        {{customer?.contractDto?.parity}}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                {{'contract-information' | translate}}
+              </div>
+              <div class="card-body">
+                <table class="table table-striped table-outline">
+                  <tbody>
+                    <tr>
+                      <td width="40%" class="text-bold">
+                        {{'payment-term' | translate}} (days)
+                        <span class="float-right">:</span>
+                      </td>
+                      <td>
+                        {{customer?.contractDto?.paymentTerm}}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-bold">
+                        {{'insurance' | translate}}
+                        <span class="float-right">:</span>
+                      </td>
+                      <td>
+                        {{customer?.contractDto?.insurance}}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-bold">
+                        {{'rebate' | translate}} %
+                        <span class="float-right">:</span>
+                      </td>
+                      <td>
+                        {{customer?.contractDto?.rebate}}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-bold">
+                        {{'bank-name' | translate}} %
+                        <span class="float-right">:</span>
+                      </td>
+                      <td>
+                        {{customer?.contractDto?.bankName}}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-bold">
+                        {{'bank-account-number' | translate}} %
+                        <span class="float-right">:</span>
+                      </td>
+                      <td>
+                        {{customer?.contractDto?.bankAccountNumber}}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+               </div>
+            </div>
+          </div>
+        </div>
+      </p-tabPanel>
+      <p-tabPanel header="{{'employee'| translate }} {{'details'| translate }}" >
+        <div class="row col-md-12">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                {{'employee' | translate}} {{'information' | translate}}
+              </div>
+              <div class="card-body">
+                <table class="table table-striped table-outline"  *ngIf="customer">
+                  <tbody>
+                    <tr>
+                      <td width="40%" class="text-bold">
+                        {{'responsible_employee' | translate}}
+                        <span class="float-right">:</span>
+                      </td>
+                      <td>
+                        <span  *ngIf="customer?.responsibleEmployee">
+                          {{customer?.responsibleEmployee.firstName}} {{customer?.responsibleEmployee.lastName}}
+                        </span>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td class="text-bold"> {{'created-by-name' | translate}}</td>
+                      <td>{{customer.createdByName}}</td>
+                    </tr>
+                    <tr>
+                      <td class="text-bold"> {{'created-by-code' | translate}}</td>
+                      <td>
+                        {{customer.createdByCode}}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-bold"> {{'updated-by-name' | translate}}</td>
+                      <td>
+                        {{customer.updatedByName}}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-bold"> {{'updated-by-code' | translate}}</td>
+                      <td>
+                        {{customer.updatedByCode}}
+                      </td>
+                    </tr>
+                    
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </p-tabPanel>
+  
+      <p-tabPanel header="{{'billing-address'| translate }}">
+        <div class="card">
+          <!--<div class="card-header">
+            {{'customer-information' | translate}}
+          </div>-->
+          <div class="card-body">
+            <table class="table table-striped table-outline" *ngIf="customer">
+              <tbody>
+                <tr>
+                  <td width="30%" class="text-bold">{{'address' | translate}}<span class="float-right">:</span>
+                  </td>
+                  <td>
+                    {{customer?.billingAddress?.address1}}
+                  </td>
+                  <td width="30%" class="text-bold">
+                    {{'address' | translate}} 2<span class="float-right">:</span>
+                  </td>
+                  <td>
+                    {{customer?.billingAddress?.address2}}
+                  </td>
+                </tr>
+                <tr>
+                  <td width="30%" class="text-bold">{{'country' | translate}}<span class="float-right">:</span>
+                  </td>
+                  <td>
+                    {{customer?.billingAddress?.countryId}}
+                  </td>
+                  <td width="30%" class="text-bold">
+                    {{'city' | translate}}<span class="float-right">:</span>
+                  </td>
+                  <td>
+                    {{customer?.billingAddress?.cityId}}
+                  </td>
+                </tr>
+                <tr>
+                  <td width="30%" class="text-bold">{{'postal-code' | translate}}<span class="float-right">:</span>
+                  </td>
+                  <td colspan="3">
+                    {{customer?.billingAddress?.postalCode}}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </p-tabPanel>
+      <p-tabPanel header="{{'shipping-address'| translate }}">
+        <div class="card">
+          <!--<div class="card-header">
+            {{'customer-information' | translate}}
+          </div>-->
+          <div class="card-body">
+            <table class="table table-striped table-outline" *ngIf="customer">
+              <tbody>
+                <tr>
+                  <td width="30%" class="text-bold">{{'address' | translate}}<span class="float-right">:</span>
+                  </td>
+                  <td>
+                    {{customer?.shippingAddress?.address1}}
+                  </td>
+                  <td width="30%" class="text-bold">
+                    {{'address' | translate}} 2<span class="float-right">:</span>
+                  </td>
+                  <td>
+                    {{customer?.shippingAddress?.address2}}
+                  </td>
+                </tr>
+                <tr>
+                  <td width="30%" class="text-bold">{{'country' | translate}}<span class="float-right">:</span>
+                  </td>
+                  <td>
+                    {{customer?.shippingAddress?.countryId}}
+                  </td>
+                  <td width="30%" class="text-bold">
+                    {{'city' | translate}}<span class="float-right">:</span>
+                  </td>
+                  <td>
+                    {{customer?.shippingAddress?.cityId}}
+                  </td>
+                </tr>
+                <tr>
+                  <td width="30%" class="text-bold">{{'postal-code' | translate}}<span class="float-right">:</span>
+                  </td>
+                  <td colspan="3">
+                    {{customer?.shippingAddress?.postalCode}}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </p-tabPanel>
+      <p-tabPanel header="{{'contact-persons'| translate }}">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header">
+              {{'contact-persons' | translate}}
+              <div class="card-actions">
+                <!-- <button type="button" class="btn btn-primary" data-toggle="modal"
+                                  (click)="newcontactPerson()"  ><i class="fa fa-plus"></i></button> -->
+              </div>
+            </div>
+            <div class="card-body m-0 p-0">
+              <table *ngIf="customer" class="table table-sm table-responsive-sm table-hover table-outline m-0">
+                <thead class="table-secondary">
+                  <tr>
+                    <th>{{'id' |translate}}</th>
+                    <th>{{'name' | translate}}</th>
+                    <th>{{'email' |translate}}</th>
+                    <th>{{'mobile' |translate}}</th>
+                    <th>{{'phone' |translate}}</th>
+                    <th>{{'fax' |translate}}</th>
+                    <!-- <th>{{'action' |translate}}</th> -->
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let person of contactPersons; let i = index">
+                    <td>{{person.actContactPersonId}}</td>
+                    <td>{{person.name}}</td>
+                    <td>{{person.email}}</td>
+                    <td>{{person.mobile}}</td>
+                    <td>{{person.phone}}</td>
+                    <td>{{person.fax}}</td>
+                    <!-- <td width="70px" ><button class="btn btn-sm btn-outline-info float-left" (click)="editContactPerson(i)"><i class="fa fa-edit"></i></button>
+                                  <button class="btn btn-sm btn-outline-danger float-right" (click)="removeContactPerson(i)"><i class="fa fa-close"></i></button></td> -->
+                  </tr>
+                </tbody>
+                <tr *ngIf="!contactPersons || contactPersons.length==0">
+                  <td colspan="10" class="noData text-center">
+                    <strong class=""><i class="fa fa-warning "></i>{{'NO_DATA_FOUND'|translate}}!</strong>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </p-tabPanel>
+      <p-tabPanel header="{{'email'| translate }}">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header">
+              {{'email' | translate}}
+            </div>
+            <div class="card-body m-0 p-0">
+              <table class="table table-bordered">
+                <tbody *ngIf="customer">
+                  <tr>
+                    <td>
+                      {{'email-template' |translate}}
+                  </td>
+                    <td>
+                      <pre>
+                        {{customer.emailTemplate}}
+                      </pre>
+                      
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </p-tabPanel>
+      <p-tabPanel header="{{'documentation'| translate }}">
+        <div class="card">
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i>{{'other-details' | translate}}
+          </div>
+          <div class="card-body">
+            <table class="table table-bordered">
+              <tbody>
+              <tr align="center">
+                <td class="text-center" colspan="2">
+                  <image-viewer></image-viewer>
+                </td>
+              </tr>
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </p-tabPanel>
+      <p-tabPanel header="{{'analysis'| translate }}">
+      </p-tabPanel>
+      <p-tabPanel header="{{'orders'|translate}}">
+        <div class="row" *ngIf="customer">
+
+          <div class="col-md-4 pr-1">
+            <customer-all-orders [actId]="customer.actId" (selectedOrderDetailEvent)="setSelectedOrderDetail($event)">
+            </customer-all-orders>
+          </div>
+
+          <div class="col-md-8" *ngIf="orderDetail">
+            <order-detail-plan #orderDetailPlan [orderDetailId]="orderDetail.orderDetailId"
+              [stockName]="orderDetail.stockName"></order-detail-plan>
+          </div>
+        </div>
+      </p-tabPanel>
+      <p-tabPanel header="{{'transfers'|translate}}">
+        <customer-transfer-list *ngIf="customer" [customerId]="customer.actId"></customer-transfer-list>
+      </p-tabPanel>
+    </p-tabView>
+  </div>
+</div>

@@ -1,0 +1,235 @@
+<div class="card">
+  <!--<div class="badge-info header-dass" ><h3 class="text-white " >{{'custom-stop-analysis'|translate}}</h3></div>-->
+
+
+  <div class="col-lg-12">
+
+
+    <div class="row ui-fluid  badge-light border p-2 ">
+
+      <div class="col-md-2 p-0">
+        <p-calendar [showIcon]="true" dateFormat="dd.mm.yy"
+                    [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100" [required]="true" showTime="true"
+                    [(ngModel)]="filterCon.startDate" placeholder="{{'start-date'|translate}}"></p-calendar>
+      </div>
+      <div class="col-md-2">
+        <p-calendar [showIcon]="true" dateFormat="dd.mm.yy" [required]="true" showTime="true"
+                    [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                    [(ngModel)]="filterCon.endDate" placeholder="{{'end-date'|translate}}"></p-calendar>
+      </div>
+      <div class="col-md-2 p-0">
+        <workstation-auto-complete (selectedWorkStationEvent)="setWorkStationFilter($event)"></workstation-auto-complete>
+      </div>
+      <div class="col-md-2" >
+        <stop-cause-auto-complete (selectedStopCauseEvent)="setStopCauseFilter($event)"></stop-cause-auto-complete>
+      </div>
+      <div class="col-md-auto p-0" >
+        <p-checkbox name="waiting-component" [(ngModel)]="filterCon.waitingComponent" binary="true"
+                     label="{{'waiting-component'|translate}}"></p-checkbox>
+      </div>
+      <div class="col-md-auto">
+        <button type="button" pButton class="ui-button-info   "
+                [disabled]=" !filterCon.endDate||!filterCon.startDate"
+                (click)="analyze()" label="{{'analyze' | translate}}">
+        </button>
+      </div>
+      <div class="col-md-auto p-0">
+        <button pButton class="ui-button-warning float-left" type="button" icon="fa fa-file-alt"
+                iconPos="left" label="{{'export-image'|translate}}" (click)="exportAsPng('custom-stop')"></button>
+      </div>
+
+    </div>
+
+    <ng-template [ngIf]="injected && injected.length>0">
+      <p-tabView>
+        <p-tabPanel header="{{'detail'|translate}}">
+          <p-table #dt [value]="dataTable"[rows]="pagination.rows"
+          [totalRecords]="pagination.totalElements"
+          scrollable="true" scrollHeight="60vh" dataKey="stopCauseId" >
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>{{'stop-cause' |translate}}</th>
+                    <th>{{'stop-duration' |translate}}</th>
+                    <th>{{'employee' |translate}}</th>
+                    <th>{{'workstation' |translate}}</th>
+                    <th>{{'job-order-operation' |translate}}</th>
+                    <th>{{'percentage' |translate}}</th>
+                    <th>{{'actual-cost' |translate}}</th>
+                    <th>{{'currency' |translate}}</th>
+                    <th>{{'color' |translate}}</th>
+                </tr>
+                <tr>
+                  <th>
+                    <input style="width: 100%" pInputText type="text" name="stopCauseName"
+                      [(ngModel)]="pageFilter.stopCauseName" (ngModelChange)="analyze()" />
+                  </th>
+                  <th>
+
+                  </th>
+                  <th>
+                    <input style="width: 100%" pInputText type="text" name="employeeName"
+                      [(ngModel)]="pageFilter.employeeName" (ngModelChange)="analyze()" />
+                  </th>
+                  <th>
+                    <input style="width: 100%" pInputText type="text" name="workStationName"
+                      [(ngModel)]="pageFilter.workStationName" (ngModelChange)="analyze()" />
+                  </th>
+                  <th>
+                    <input style="width: 100%" pInputText type="text" name="jobOrderOperationId"
+                      [(ngModel)]="pageFilter.jobOrderOperationId" (ngModelChange)="analyze()" />
+                  </th>
+                  <th>
+
+                  </th>
+                  <th>
+
+                  </th>
+                  <th>
+
+                  </th>
+                  <th>
+
+                  </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-product>
+                <tr>
+                   <td>{{product.stopCauseName}}</td>
+                   <td>{{getReadableTime(product.duration)}}</td>
+                   <td>
+                    <a href="javascript:;" (click)="showemployeeDetails(product.employee?.employeeId)">
+                     {{product.employee?.firstName}} {{product.employee?.lastName}}
+                    </a>
+                    </td>
+                   <td>
+                    <a href="javascript:;" (click)="showworkstationDetails(product.workStation?.workStationId)">
+                     {{product.workStation?.workStationName}}
+                     </a>
+                    </td>
+                    <td>
+                      {{product.jobOrderOperationId}}
+                    </td>
+                   <td>{{product.stopPercent}}</td>
+                   <td>{{product.actualCost ? product.actualCost.toFixed(2) : ''}}</td>
+                   <td>{{product.currency}}</td>
+                   <td>
+                      <span style="padding: 1px 20px" [ngStyle]="{'background-color':product.color }" >
+                      </span>
+                     <!-- {{product.color}} -->
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+
+        <br />
+        <div class="row">
+          <app-paging [TotalElements]="pagination.totalElements" [CurrentPage]="pagination.currentPage"
+            [PageSize]="pagination.pageSize" [rows]="pagination.rows"
+            [TotalPageLinkButtons]="pagination.TotalPageLinkButtons"
+            [RowsPerPageOptions]="pagination.RowsPerPageOptions" (onPageChange)="myChanges($event)"></app-paging>
+          <span style="margin-left:2px; padding-top: 2px " class="text-muted">{{'total-records'|translate}}:
+            {{pagination?.totalElements}}</span>
+        </div>
+
+
+        </p-tabPanel>
+        <p-tabPanel header="{{'report'|translate}}">
+          <div class="row" id="custom-stop">
+            <div class="col-md-12">
+              <p-multiSelect [options]="optionList" [(ngModel)]="selectedOptionList" 
+                  defaultLabel="{{'select-option' | translate}}" [style]="{minWidth: '200px'}" optionLabel="label" 
+                  (ngModelChange)="onSelectOptions($event)"></p-multiSelect>
+            </div>
+            <div class="col-md-12">
+              <div>
+                <p-chart type="bar" #chart2 [data]="barData" [options]="options"></p-chart>
+              </div>
+            </div>
+          </div>
+        </p-tabPanel>
+        <p-tabPanel header="{{'summary'|translate}}">
+          <div class="row" id="detailp">
+            <div class="col-md-12">
+              <p-table #dx [value]="details" [rows]="pagination.rows"
+              [totalRecords]="pagination.totalElements"
+              scrollable="true" scrollHeight="60vh" dataKey="stopCause" >
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th>{{'stop-cause' |translate}}</th>
+                    <th>{{'stop-duration' |translate}}</th>
+                    <th>{{'workstation' |translate}}</th>
+                    <th>{{'percentage' |translate}}</th>
+                    <th>{{'actual-cost' |translate}}</th>
+                    <th>{{'currency' |translate}}</th>
+                    <th>{{'color' |translate}}</th>
+                  </tr>
+                  <tr>
+                    <th>
+                      <input style="width: 100%" pInputText type="text" name="stopCauseName"
+                        [(ngModel)]="pageFilter.stopCauseName" (ngModelChange)="analyze()" />
+                    </th>
+                    <th>
+  
+                    </th>
+                    <th>
+                      <input style="width: 100%" pInputText type="text" name="workStationName"
+                        [(ngModel)]="pageFilter.workStationName" (ngModelChange)="analyze()" />
+                    </th>
+                    <!-- <th>
+                      <input style="width: 100%" pInputText type="text" name="jobOrderOperationId"
+                        [(ngModel)]="pageFilter.jobOrderOperationId" (ngModelChange)="analyze()" />
+                    </th> -->
+                    <th>
+  
+                    </th>
+                    <th>
+  
+                    </th>
+                    <th>
+  
+                    </th>
+                    <th>
+  
+                    </th>
+                </tr>
+  
+
+                </ng-template>
+                <ng-template pTemplate="body" let-product>
+                  <tr>
+                    <td>{{product.stopCause}}</td>
+                    <td>{{getReadableTime(product.stopDuration)}}</td>
+                    <td>
+                      <a href="javascript:;" (click)="showworkstationDetails(product.workStation?.workStationId)">
+                        {{product.workStation?.workStationName}}
+                      </a>
+                    </td>
+                    <td>{{product.stopPercent}}</td>
+                    <td>{{product.actualCost ? product.actualCost.toFixed(2) : ''}}</td>
+                    <td>{{product.currency}}</td>
+                    <td>
+                      <span style="padding: 1px 20px" [ngStyle]="{'background-color':product.color }" >
+                      </span>
+                      <!-- {{product.color}} -->
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </div>
+          </div>
+          <div class="row">
+            <app-paging [TotalElements]="pagination.totalElements" [CurrentPage]="pagination.currentPage"
+              [PageSize]="pagination.pageSize" [rows]="pagination.rows"
+              [TotalPageLinkButtons]="pagination.TotalPageLinkButtons"
+              [RowsPerPageOptions]="pagination.RowsPerPageOptions" (onPageChange)="myChanges($event)"></app-paging>
+            <span style="margin-left:2px; padding-top: 2px " class="text-muted">{{'total-records'|translate}}:
+              {{pagination?.totalElements}}</span>
+          </div>
+        </p-tabPanel>
+      </p-tabView>
+    </ng-template>
+
+
+  </div>
+</div>
+

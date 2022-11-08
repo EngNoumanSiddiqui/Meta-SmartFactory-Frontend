@@ -1,0 +1,352 @@
+
+.ui-table-scrollable-header-box {
+  // margin-right: 5px !important;
+  padding-right: 0px !important;
+}
+.ui-table-scrollable-footer-box {
+  // margin-right: 5px !important;
+  padding-right: 0px !important;
+}
+
+body {
+  a {
+    font-size: inherit;
+  }
+  .ui-button{
+    font-size: 11px !important;
+  }
+  .ui-inputtext {
+    font-size: 11px;
+  }
+  
+  .ui-table .ui-table-summary {
+    border-top: 0 none;
+    // margin-right: 5px;
+    font-weight: 700;
+  }
+  .job-order-table>.ui-table.ui-table-auto-layout>.ui-table-wrapper>table{
+    table-layout: auto;
+    display: block;
+    max-height: 60vh;
+    overflow-y: auto;
+  }
+  .ui-modal-table .ui-table .ui-table-summary {
+    border-top: 0 none;
+    // margin-right: 0px;
+    font-weight: 700;
+  }
+  .ui-table .ui-table-thead > tr > th {
+    // font-size: inherit !important;
+    padding: 0.6em 0.6em;
+  }
+  .secondary-table .ui-table .ui-table-thead > tr > th {
+    background-color: lightgray;
+  }
+  .ui-table .ui-table-tbody > tr > td, .ui-table .ui-table-tfoot > tr > td {
+    padding: 0.3em 0.6em 0.3em 0.6em;
+    // font-size: inherit;
+    p {
+      margin-bottom: 0.2rem;
+      font-size: inherit;
+    }
+    span {
+      font-size: inherit;
+    }
+  }
+  .ui-treetable .ui-treetable-thead > tr > th {
+    padding: 0.6em 0.6em;
+  }
+  .ui-treetable .ui-treetable-tbody > tr > td, .ui-treetable .ui-treetable-tfoot > tr > td {
+    padding: 0.3em 0.6em 0.3em 0.6em;
+    p {
+      margin-bottom: 0.2rem;
+      font-size: inherit;
+    }
+    span {
+      font-size: inherit;
+    }
+  }
+
+  .p-table-small {
+    .ui-table .ui-table-thead > tr > th {
+      font-size: 11px;
+    }
+    .ui-table .ui-table-tbody > tr > td, .ui-table .ui-table-tfoot > tr > td {
+      font-size: 11px;
+    }
+    .ui-treetable .ui-treetable-thead > tr > th {
+      font-size: 11px;
+    }
+    .ui-treetable .ui-treetable-tbody > tr > td, .ui-treetable .ui-treetable-tfoot > tr > td {
+      font-size: 11px;
+    }
+  }
+
+  .ui-button .ui-button-text {
+    font-size: inherit;
+  }
+  .ui-button.ui-button-icon-only .ui-button-text {
+    padding: 0.35em;
+  }
+  .ui-button.ui-button-icon-only {
+    padding: 0;
+  }
+  .ui-button.ui-state-default.ui-button-secondary {
+    color: #333333;
+    background-color: #d4d4d4;
+    border: 1px solid #f4f4f4;
+  }
+  #view_list_buttons {
+    .ui-button.ui-widget {
+      padding: 4px;
+    }
+  }
+  .ui-inputtext {
+    padding: 0.3em;
+  }
+  // .ui-table .ui-table-caption {
+  //   margin-right: 5px;
+  // }
+  // .ui-modal-table .ui-table .ui-table-caption {
+  //   // border-top: 0 none;
+  //   // margin-right: 0px;
+  //   // font-weight: 700;
+  // }
+  // .ui-treetable-scrollable-header {
+  //   margin-right: 5px;
+  // }
+  .ui-multiselect-panel .ui-multiselect-header .ui-multiselect-filter-container .ui-inputtext {
+    padding: 0.2em;
+    padding-right: 2em;
+  }
+  .ui-multiselect .ui-multiselect-label {
+    padding: 0.3em;
+  }
+  .ui-fluid .ui-autocomplete .ui-autocomplete-dropdown.ui-button {
+    padding: 0;
+  }
+  .ui-fileupload .ui-fileupload-content {
+    min-height: 100px;
+  }
+  .ui-autocomplete .ui-autocomplete-input {
+    padding: 0.3em;
+  }
+  .ui-autocomplete .ui-autocomplete-panel {
+    min-width: 100%;
+    max-width: 120%;
+}
+  .ui-datepicker .ui-timepicker span {
+    font-size: 1em;
+  }
+  .ui-datepicker .ui-timepicker {
+    padding: 0;
+  }
+
+  .ui-autocomplete.ui-autocomplete-multiple .ui-autocomplete-multiple-container {
+    padding: 0.07em 0.429em;
+  }
+
+  // .ui-datepicker table {
+  //   font-size: 12px;
+  //   margin: 0;
+  // }
+  // .ui-paginator {
+  //   margin-right: 6px;
+  // }
+  .ui-overlaypanel {
+    max-height: 45vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    .ui-overlaypanel-close {
+      margin-top: 15px;
+      margin-right: 15px;
+    }
+  }
+}
+
+// .ui-dropdown-panel .ui-dropdown-item {
+//   font-size: 12px;
+// }
+.ui-table-scrollable-wrapper {
+  overflow: auto !important;
+}
+// .ui-table-scrollable-header, .ui-table-scrollable-body, .ui-table-scrollable-footer {
+//   overflow: visible !important;
+// }
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #ffffff;
+  border-radius: 4px;
+  
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 3px;
+  background: #c4c4c4;
+  &:hover {
+    background: #7c7c7c;
+  }
+}
+
+.ui-treetable-scrollable-body {
+  overflow-y: scroll;
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #ffffff;
+    border-radius: 4px;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    background: #c4c4c4;
+    &:hover {
+      background: #7c7c7c;
+    }
+  }
+}
+
+// .ui-datatable-scrollable-header-box {
+//   margin-right: 5px !important;
+// }
+
+.ui-datatable-scrollable-body {
+  overflow-y: scroll;
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    background: #c4c4c4;
+    &:hover {
+      background: #7c7c7c;
+    }
+  }
+}
+
+p-dialog .ui-dialog {
+
+  max-height: 90%;
+  max-width: 70%;
+  width: 65%;
+
+  overflow-y: scroll;
+  overflow-x: auto;
+  &::-webkit-scrollbar {
+    width: 5px;
+    height: 11px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    background: #c4c4c4;
+    &:hover {
+      background: #7c7c7c;
+    }
+  }
+}
+
+p-autoComplete .ui-autocomplete-dropdown {
+  padding: 0.15rem;
+}
+
+.carousel-indicators .active {
+  background-color: #234b44;
+}
+
+.card .card-header {
+  background-color: #56bedb;
+}
+
+.table .thead-light th {
+  color: #3e515b;
+  background-color: #d0eafb;
+  border-color: #c2cfd6;
+}
+
+.ui-datatable th {
+  &.ui-state-default {
+    background: #daeefb;
+    border-color: #d9d9d9;
+  }
+  &.ui-state-active {
+    background: #c0cadd;
+    color: #fff;
+  }
+}
+
+.ui-button {
+  &.ui-button-success:enabled {
+    &:hover {
+      color: #fff;
+      background-color: #20a235;
+      border-color: #20a235;
+    }
+    color: #fff;
+    background-color: #209533;
+    border-color: #1f8e33;
+  }
+  &.ui-button-danger:enabled {
+    color: #fff;
+    background-color: #ff3236;
+    border-color: #d83034;
+    &:hover {
+      color: #fff;
+      background-color: #d62b2f;
+      border-color: #c13033;
+    }
+  }
+}
+
+.ui-button-warning {
+  color: #333;
+  background-color: #ffba01;
+  border: 1px solid #ffba01;
+}
+
+.ui-datepicker.ui-widget .ui-datepicker-calendar td {
+  padding: 0;
+}
+
+.ui-button-warning:enabled {
+  &:hover {
+    background-color: #ed990b;
+    color: #333;
+    border-color: #ed990b;
+  }
+  &:focus {
+    background-color: #ffc834;
+  }
+  &:active {
+    background-color: #d38b10;
+    color: #333;
+    border-color: #d38b10;
+  }
+}
+.ui-button-primary {
+  color: #333;
+  background-color: #007ad9;
+  border: 1px solid #007ad9;
+}
+
+// .ui-dialog-mask {
+//   position: fixed;
+//   width: 100%;
+//   height: 100%;
+//   z-index: 1055 !important;
+// }
+
+.ui-fluid .ui-dropdown, .ui-fluid p-dropdown {
+  width: 100%;
+  min-width: 80%;
+}

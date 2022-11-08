@@ -1,0 +1,40 @@
+// .table td{
+//     padding-bottom: 2px !important;
+//     padding-top: 2px !important;
+//   }
+
+  .form-group{
+    margin-bottom: 2px;
+  }
+
+
+  .mytable td {
+    padding: 0.35rem;
+    vertical-align: middle;
+    padding-bottom: 3px !important;
+    padding-top: 4px !important;
+
+  }
+
+  .selectedItem {
+    background-color: #007ad9;
+    color: white;
+  }
+  .selectedItem a{
+    color: white;
+  }
+
+  .mytable thead th {
+    vertical-align: middle;
+    border-bottom: 2px solid #a4b7c1;
+}
+
+::ng-deep #JobOrderComponent p-tabpanel .col-lg-6{
+  max-width: 100% !important;
+  flex: 0 0 100% !important;
+}
+
+::ng-deep #JobOrderComponent p-tabpanel .col-lg-4{
+  max-width: 100% !important;
+  flex: 0 0 100% !important;
+}

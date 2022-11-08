@@ -1,0 +1,58 @@
+<p-tabView *ngIf="rowData" class="col-md-12">
+  <!-- <p-tabPanel header="{{'components' | translate}}&{{'material' | translate}}" >
+    <div class="row">
+      <div class="col-md-12">
+        <span class="caption">{{'component'|translate}}</span>
+        <job-order-component-list [tableData]="rowData.jobOrderStockUseList"
+                                  [detailMode]="true"></job-order-component-list>
+      </div>
+      <div class="col-md-12">
+        <span class="caption">{{'material'|translate}}</span>
+        <job-order-component-list [tableData]="rowData.jobOrderStockProduceList"
+                                  [detailMode]="true"></job-order-component-list>
+
+      </div>
+    </div>
+
+  </p-tabPanel>
+  
+  <p-tabPanel header="{{'auxiliary-materials' | translate}}" >
+    <div class="row">
+      <div class="col-md-12">
+        <span class="caption">{{'auxiliary-material'|translate}}</span>
+        <job-order-component-list [tableData]="rowData.jobOrderStockAuxList"
+                                  [detailMode]="true"></job-order-component-list>
+
+      </div>
+    </div>
+  </p-tabPanel> -->
+  <p-tabPanel header="{{'operations'|translate}}" [style]="{'width':'100%'}">
+    <div class="row">
+      <div class="col-md-12">
+        <span class="caption ">{{'operations'|translate}}</span>
+        <job-order-operation-list [tableData]="rowData.jobOrderOperations"
+                                  [detailMode]="true"></job-order-operation-list>
+      </div>
+    </div>
+  </p-tabPanel>
+  <p-tabPanel header="{{'equipment'|translate}}" [style]="{'width':'100%'}">
+    <div class="row">
+      <!-- <div class="col-md-6">
+        <span class="caption ">{{'operations'|translate}}</span>
+        <job-order-operation-list [tableData]="rowData.jobOrderOperations"
+                                  [detailMode]="true"></job-order-operation-list>
+      </div> -->
+      <div class="col-md-6">
+        <span class="caption">{{'equipments'|translate}}</span>
+        <job-order-equipment-list [tableData]="rowData.jobOrderEquipmentList"
+                                  [detailMode]="true"></job-order-equipment-list>
+      </div>
+      <!-- <div class="col-md-6">
+        <span class="caption">{{'workstation-program'|translate}}</span>
+        <job-order-workstation-program-list [tableData]="rowData.workstationProgramList"
+                                            [detailMode]="true"></job-order-workstation-program-list>
+
+      </div> -->
+    </div>
+  </p-tabPanel>
+</p-tabView>

@@ -1,0 +1,207 @@
+<p-confirmDialog></p-confirmDialog>
+
+
+<div class="animated fadeIn">
+
+
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+
+        <div class="card-body"  >
+          <div  class="d-flex ">
+            <div class="d-flex col-md-12 badge-light border border-bottom-0 m-minus-10 p-2 justify-content-between">
+              <div class="col-md-2 px-1 ui-fluid ">
+                <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header" maxSelectedLabels="0"  selectedItemsLabel="{{'columns-selected'|translate}}"
+                               defaultLabel="Choose Columns">
+                  <ng-template let-col let-i="index" pTemplate="item">
+                    {{col.label|translate}}
+                  </ng-template>
+                </p-multiSelect>
+              </div>
+              <!-- <div class="col-md-2 px-1 ui-fluid ">
+                <p-calendar appendTo="body" [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                  [(ngModel)]="pageFilter.startDate" (ngModelChange)="pageFilter.startDate=$event;filter(pageFilter)"
+                  placeholder="{{'start-date'|translate}}" [showIcon]="true" dateFormat="dd/mm/yy"></p-calendar>
+              </div>
+              <div class="col-md-2 px-1 ui-fluid ">
+                <p-calendar appendTo="body" [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                  [(ngModel)]="pageFilter.endDate" (ngModelChange)="pageFilter.endDate=$event; filter(pageFilter)"
+                  placeholder="{{'end-date'|translate}}" [showIcon]="true" dateFormat="dd/mm/yy"></p-calendar>
+              </div> -->
+              <div class="col-md-6">
+                <button pButton type="button" style="margin-left: 5px; margin-top: 1px;" class="float-right" icon="fa fa-refresh" name="refresh" (click)="filter(pageFilter)"></button>
+                <button pButton  style="margin-left: 4px" type="button" class="ui-button-warning float-right" label="{{'reset'  |translate}}" (click)="resetFilter()"></button>
+                <button pButton style="margin-left: 4px" class="ui-button-warning float-right" type="button"  icon="fa fa-file-alt" iconPos="left" label="{{'export-all'|translate}}" (click)="dt.exportCSV()"></button>
+                <button pButton  style="margin-left: 4px" class="ui-button-warning float-right" type="button"  icon="fa fa-file" iconPos="left" label="{{'export-selected'|translate}}" (click)="dt.exportCSV({selectionOnly:true})"
+                ></button>
+              </div>
+            </div>
+          </div>
+          <p-table #dt [columns]="selectedColumns" scrollable="true" scrollHeight="55vh" [value]="stockReports"
+          [rows]="pagination.rows" [totalRecords]="pagination.totalElements" dataKey="wareHouseLocationId"
+          [(selection)]="selectedStockReports" >
+
+            <ng-template pTemplate="header" let-columns>
+
+              <tr >
+                <th style="width: 3em" rowspan="2" *ngIf="!isFilterMaterial">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th style="width: 3.5em" rowspan="2"  *ngIf="isFilterMaterial">
+                  {{'select'|translate}}
+                </th>
+                <!-- <ng-template ngFor let-i="index" let-col [ngForOf]="columns"> -->
+                    <ng-container *ngFor="let col of columns; let i=index;" [ngSwitch]="col.field">
+                        <th *ngSwitchCase="'plantName'" style="cursor: pointer" [ngClass]="{'bg-selected-order':pageFilter.orderByProperty ==col.field}" (click)="reOrderData(i,col.field)"><i [ngClass]="'fa  fa-sort-alpha-' + classReOrder[i]"></i>
+                          {{col.header|translate}}
+                        </th>
+                        <th *ngSwitchCase="'wareHouseName'" style="cursor: pointer;" [ngClass]="{'bg-selected-order':pageFilter.orderByProperty ==col.field}" (click)="reOrderData(i,col.field)"><i [ngClass]="'fa  fa-sort-alpha-' + classReOrder[i]"></i>
+                          {{col.header|translate}}
+                        </th>
+
+                        <th *ngSwitchCase="'batch'" style="cursor: pointer" [ngClass]="{'bg-selected-order':pageFilter.orderByProperty ==col.field}" (click)="reOrderData(i,col.field)"><i [ngClass]="'fa  fa-sort-alpha-' + classReOrder[i]"></i>
+                          {{col.header|translate}}
+                        </th>
+
+                        <th *ngSwitchDefault style="cursor: pointer" >
+                          {{col.header|translate}}
+                        </th>
+                    </ng-container>
+                <!-- </ng-template> -->
+
+                <!-- <th width="80px" rowspan="2">{{'action' | translate}}</th> -->
+              </tr>
+
+              <tr>
+                <th *ngFor="let col of columns" class="ui-fluid" [ngSwitch]="col.field">
+                  <select *ngSwitchCase="'freeze'"  name="freeze" class="form-control"
+                        [(ngModel)]="pageFilter[col.field]" (ngModelChange)="filter(pageFilter)">
+                  <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                  <option [value]="true"> {{'yes' | translate}}</option>
+                  <option [value]="false"> {{'no' | translate}}</option>
+                </select>
+                  <input *ngSwitchDefault   pInputText type="text" [(ngModel)]="pageFilter[col.field]"
+                   (input)="filterByColumn($event.target.value,col.field)">
+                </th>
+
+              </tr>
+
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr [pSelectableRow]="rowData">
+                <td style="width: 3em" *ngIf="!isFilterMaterial">
+                  <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                </td>
+                <td style="width: 3.5em" *ngIf="isFilterMaterial">
+                  <button class="btn btn-sm btn-outline-secondary" type="button" (click)="selectedStockEvent.emit(rowData)">
+                    <i class="fa fa-plus"></i></button>
+                </td>
+                <!-- [style.width]="getStyle(col.field)" -->
+                <td *ngFor="let col of columns" [ngSwitch]="col.field" style="cursor: pointer" [ngSwitch]="col.field">
+
+                  <a href="javascript:;" *ngSwitchCase="'batch'" (click)="showBatchDetail(rowData.batch)" > {{rowData.batch}}</a>
+
+                  <a href="javascript:;" *ngSwitchCase="'plant'" 
+                  (click)="showPlantDetailDialog(rowData.plant?.plantId)">{{ rowData.plant?.plantName }}</a>
+
+                 <p *ngSwitchCase="'wareHouseLocationGroup'" >
+                    {{rowData[col.field]?.code}}</p>
+
+                    <a href="javascript:;" *ngSwitchCase="'warehouseNo'" 
+                    (click)="showWareHouseDialog(rowData.wareHouse?.wareHouseId)">
+                    {{ rowData.wareHouse?.wareHouseNo }}</a>
+                  <a href="javascript:;" *ngSwitchCase="'wareHouseName'" 
+                  (click)="showWareHouseDialog(rowData.wareHouse?.wareHouseId)">
+                  {{ rowData?.wareHouse?.wareHouseName }}</a>
+
+
+
+                  <span *ngSwitchDefault> {{(rowData[col.field]?(rowData[col.field]+''):'')|translate}} </span>
+
+                </td>
+
+
+                <!-- <td width="80px">
+                  <button class="btn btn-sm btn-outline-info" type="button"
+                  (click)="editStockQuantity(rowData)">
+                    <i class="fa fa-edit"></i>
+                  </button>
+                </td> -->
+              </tr>
+
+            </ng-template>
+            <!-- <ng-template pTemplate="footer" let-columns>
+              <tr *ngIf="(pageFilter.materialName || pageFilter.warehouseName) && (pagination.pageSize > pagination.totalElements || pagination.pageSize === pagination.totalElements)">
+                <td style="width: 2.8em" *ngIf="!isFilterMaterial"></td>
+                <td style="width: 3.5em" *ngIf="isFilterMaterial"></td>
+                <td *ngFor="let col of columns" [ngSwitch]="col.field">
+                  <span *ngSwitchDefault></span>
+                  <span *ngSwitchCase="'batch'">{{'total'|translate}}</span>
+                  <span *ngSwitchCase="'quantity'">{{geTotalQuantity()}}</span>
+                  <span *ngSwitchCase="'reservation'">{{geTotalReservation()}}</span>
+                  <span *ngSwitchCase="'incoming'">{{geTotalIncoming()}}</span>
+                  <span *ngSwitchCase="'outgoing'">{{geTotalOutgoing()}}</span>
+                  <span *ngSwitchCase="'unRestricted'">{{geTotalUnRestricted()}}</span>
+                </td>
+              </tr>
+            </ng-template> -->
+            <ng-template pTemplate="summary">
+              <div class="row p-0 m-0">
+                  <app-paging
+                  [showSearch]="false"
+                  [TotalElements]="pagination.totalElements"
+                  [CurrentPage]="pagination.currentPage"
+                  [PageSize]="pagination.pageSize"            [rows]="pagination.rows"
+                  [TotalPageLinkButtons]="pagination.TotalPageLinkButtons"
+                  [RowsPerPageOptions]="pagination.RowsPerPageOptions"
+                  (onPageChange)="myChanges($event)"
+                ></app-paging>
+                <span style="margin-left:5px; margin-left: 3px; padding-top: 8px " class="text-muted" >{{'total-records'|translate}}: {{pagination?.totalElements}}</span>
+               </div>
+            </ng-template>
+          </p-table>
+          <br/>
+        </div>
+      </div>
+    </div>
+    <!--/.col-->
+  </div>
+</div>
+<ng-template [ngIf]="modal.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal" (onHidden)="selectedRow=null;stockReportModal.modal=null;modal.active=false;"
+    class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-success" [ngStyle]="{'max-width': '100%'}" role="document">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h4 class="modal-title" *ngIf="stockReportModal.modal=='good-movement-notification'"> {{'goods-movement-notification' | translate}}</h4>
+          <h4 class="modal-title" *ngIf="stockReportModal.modal=='stock-reservation'"> {{'reservation' | translate}}</h4>
+          <h4 class="modal-title" *ngIf="stockReportModal.modal=='incoming'"> {{'incoming' | translate}}</h4>
+          <h4 class="modal-title" *ngIf="stockReportModal.modal=='outgoing'"> {{'outgoing' | translate}}</h4>
+          <h4 class="modal-title" *ngIf="stockReportModal.modal=='blocked'"> {{'automatic_dispatching_management' | translate}}</h4>
+          <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+
+          <ng-template [ngIf]="stockReportModal.modal=='good-movement-notification'">
+
+          </ng-template>
+
+
+
+        </div>
+
+        <div class="modal-footer">
+
+          <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary"
+            (click)="myModal.hide()">{{'close' | translate}}
+          </button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</ng-template>

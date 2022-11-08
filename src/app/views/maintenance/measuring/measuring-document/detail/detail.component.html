@@ -1,0 +1,64 @@
+<div class="animated fadeIn">
+  <div class="row" *ngIf="measuringDocument">
+
+    <div class="col-lg-6">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i> {{'measuring-document-detail' | translate}}
+        </div>
+        <div class="card-body">
+          <table class="table table-bordered">
+            <tbody>
+            <tr>
+              <td width="35%">{{'measuring-document-id'}}</td>
+              <td>{{measuringDocument.measurementDocumentId}}</td>
+            </tr>
+            <tr>
+              <td>{{'measurement-point' | translate}}</td>
+              <td>{{measuringDocument?.equipmentMeasuringPoint?.equipmentMeasuringPointId}}</td>
+            </tr>
+            <tr>
+              <td>{{'measurement-position' | translate}}</td>
+              <td class="bg-readonly">{{measuringDocument?.equipmentMeasuringPoint?.measurementPosition}}</td>
+            </tr>
+            <tr>
+              <td>{{'measurement-equipment' | translate}}</td>
+              <td>{{measuringDocument?.equipment?.equipmentName}}</td>
+            </tr>
+            <tr>
+              <td>{{'measuring-date' | translate}}</td>
+              <td>{{measuringDocument.measurementDate|date:'dd/MM/yyyy HH:mm'}}</td>
+            </tr>
+            <tr>
+              <td>{{'measurement-characteristic' | translate}}</td>
+              <td>{{measuringDocument?.equipmentMeasuringPoint?.maintenanceCharacteristic?.characteristic}}</td>
+            </tr>
+            <tr>
+              <td>{{'characteristic-unit' | translate}}</td>
+              <td>{{measuringDocument?.equipmentMeasuringPoint?.maintenanceCharacteristic?.unitMeasure}}</td>
+            </tr>
+            <tr>
+              <td>{{'counter-reading' | translate}}</td>
+              <td>{{measuringDocument.decimalPlaces}}</td>
+            </tr>
+            <tr>
+              <td>{{'read-by' | translate}}</td>
+              <td>{{measuringDocument.employee?.firstName+' '+measuringDocument.employee?.lastName}}</td>
+            </tr>
+            <tr>
+              <td>{{'measurement-code-group-header' | translate}}</td>
+              <td>{{measuringDocument?.equipmentCodeGroupHeader?.shortText}}</td>
+            </tr>
+            <tr>
+              <td>{{'parameter' | translate}}</td>
+              <td>{{measuringDocument.parameter}}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>

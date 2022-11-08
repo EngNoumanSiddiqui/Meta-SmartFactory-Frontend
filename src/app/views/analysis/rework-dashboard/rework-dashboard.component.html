@@ -1,0 +1,61 @@
+<div class="col-lg-12">
+  <div class="row ui-fluid  badge-light border p-2  mb-2">
+    <div class=" col-md d-flex">
+      <strong class="p-1 text-muted" style="align-self: center;"> {{'plant'|translate}}</strong>
+      <!-- <plant-auto-complete *ngIf="!filterModel.plantId" class="flex-grow-1" [addIfMissing]="false" [eventFire]="true"
+                           (selectedPlantEvent)="setSelectedPlant($event)"></plant-auto-complete> -->
+
+      <strong *ngIf="filterModel.plantId" class="flex-grow-1 text-muted" style="align-self: center; margin-left: 30px;"> {{selectedPlant.plantName}} </strong>
+    </div>
+    <div class="col-md d-flex">
+      <strong class="p-1 text-muted"> {{'workcenter'|translate}}</strong>
+      <workcenter-auto-complete class="flex-grow-1" [plantId]="filterModel.plantId"
+                                (selectedWorkCenterEvent)="setSelectedWorkCenter($event)">
+      </workcenter-auto-complete>
+
+
+    </div>
+    <div class="col-md d-flex">
+      <strong class="p-1 text-muted"> {{'workstation'|translate}}</strong>
+      <workstation-auto-complete class="flex-grow-1" [plantId]="filterModel.plantId"
+                                 (selectedWorkStationEvent)="setSelectedWorkstation($event)">
+      </workstation-auto-complete>
+
+    </div>
+    <div class="col-md ">
+
+      <p-calendar [(ngModel)]="dateRange" placeholder="{{'date-range'|translate}}" 
+                selectionMode="range" yearRange="1990:2100" appendTo="body"
+                 [numberOfMonths]="2" name="startDate" 
+                 [showIcon]="true" dateFormat="dd/mm/yy"
+                  required></p-calendar>
+
+    </div>
+    <div class="col-auto">
+
+      <button type="button" pButton class="ui-button-info   "
+              [disabled]="!dateRange||!dateRange[1]"
+              (click)="analyze()" label="{{'analyze' | translate}}">
+      </button>
+    </div>
+  </div>
+  <div class="row mb-2">
+    <div class="col-12 col-md-6 bg-white">
+      <app-scrap-causes [filterModel]="filterChangeData"></app-scrap-causes>
+    </div>
+    <div class="col-12 col-md-6 bg-white">
+      <app-daily-rework-graph [filterModel]="filterChangeData"></app-daily-rework-graph>
+    </div>
+  </div>
+  <div class="row ">
+    <div class="col-12 col-md-6 bg-white py-2">
+      <strong class="text-muted ">{{'list-of-material-with-rework-higher-than-1'|translate}}</strong>
+      <app-material-rework-list [filterModel]="filterChangeData" class="p-table-small"></app-material-rework-list>
+    </div>
+    <div class="col-12 col-md-6 bg-white">
+      <app-material-rework-graph [filterModel]="filterChangeData"></app-material-rework-graph>
+    </div>
+  </div>
+</div>
+
+

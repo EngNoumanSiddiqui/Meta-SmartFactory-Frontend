@@ -1,0 +1,123 @@
+<div class="animated fadeIn">
+    <div class="row">
+      <p-tabView class="col-md-12" [activeIndex]="activeTab">
+        <p-tabPanel header="{{ 'release' | translate }}">
+          <div class="card">
+            <div class="card-header">
+              <i class="fa fa-align-justify"></i> {{'quality-info-record' | translate}}
+            </div>
+            <div class="card-body">
+              <form #inspForm="ngForm">
+                <table class="table table-bordered">
+                  <tr>
+                    <td>{{'quality-info-record-code' | translate}}</td>
+                    <td>
+                      <input
+                        type="text" 
+                        id="qualityInfoRecordCode"
+                        name="qualityInfoRecordCode"
+                        [(ngModel)]="qualityInfoRecord.qualityInfoRecordCode"
+                        class="form-control"
+                      />
+                    </td>
+                  </tr>
+                  <tr>  
+                    <td>{{'material' | translate}}</td>
+                    <td>
+                      <div class="ui-fluid">
+                        <stock-auto-complete  [dropdown]="true"
+                          [selectedStockId]="qualityInfoRecord.stockId" (selectedStockEvent)="selectMaterialChanged($event)">
+                        </stock-auto-complete>
+                      </div>
+                    </td>
+                  </tr>  
+                  <!-- <tr>
+                    <td>{{'plant' | translate}}</td>
+                    <td class="display-flex">
+                      <plant-auto-complete [required]="true" class="flex-grow-1" [addIfMissing]="false" [eventFire]="true"
+                               (selectedPlantEvent)="setSelectedPlant($event)" [required]="true"></plant-auto-complete>
+                    </td>
+                  </tr> -->
+                  <tr>
+                    <td>{{'vendor' | translate}}</td>
+                    <td class="ui-fluid">
+                      <auto-complete  [dropdown]="true" [allElements]="actList" [itemName]="'actName'"
+                    [required]="true" (selectedEvent)="setSelectedVendor($event)"></auto-complete>
+                    </td>
+                  </tr>
+                    <tr>
+                      <td>{{'release-date' | translate}}</td>
+                      <td>
+                        <p-calendar class="start-date" name="releaseDate" showTime="true" timeFormat="HH:mm" [showIcon]="true" dateFormat="dd/mm/yy"
+                          [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                          [(ngModel)]="qualityInfoRecord.releaseDate" required></p-calendar>
+                      </td>
+                    </tr>
+                    <tr>
+                        <td>{{'release-quantity' | translate}}</td>
+                        <td>
+                          <input
+                            type="number"
+                            id="releaseQuantity"
+                            name="releaseQuantity"
+                            [(ngModel)]="qualityInfoRecord.releaseQuantity"
+                            class="form-control"
+                          />
+                        </td> 
+                      </tr>
+                    <tr> 
+                        <td>{{'quantity-unit' | translate}}</td>
+                        <td>
+                          <unit-auto-complete [addIfMissing]="true"
+                            (unitChangeEvent)="qualityInfoRecord.quantityUnit=$event;selectQuantityUnit($event)"
+                            [selectedUnit]="qualityInfoRecord.quantityUnit">
+                          </unit-auto-complete>
+                        </td>
+                      </tr>
+                      <tr>
+                    <td>{{'block-function' | translate}}</td>
+                    <td>
+                      <select id="blockFunction" name="blockFunction" class="form-control" [(ngModel)]="qualityInfoRecord.blockFunction" required>
+                        <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                        <option value="{{blockFunction}}" *ngFor="let blockFunction of blockFunctionLists">{{blockFunction}}
+                        </option>
+                      </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'block-reason' | translate}}</td>
+                    <td>
+                      <input
+                        type="text"
+                        id="blockReason"
+                        name="blockReason"
+                        [(ngModel)]="qualityInfoRecord.blockReason"
+                        class="form-control"
+                      />
+                    </td> 
+                  </tr>
+                </table>
+              </form>
+            </div>
+          </div>
+          <div class="row col-md-12">
+            <button 
+              type="submit"
+              class="btn btn-sm btn-primary"
+              [disabled]="!inspForm.form.valid"
+              (click)="save()"
+            >
+              <i class="fa fa-dot-circle-o"></i>
+              {{ "save" | translate }}
+            </button>
+          </div>
+        </p-tabPanel>
+        <p-tabPanel header="{{ 'inspection-control-data' | translate }}" [disabled]="!qualityInfoRecord.qualityInfoRecordId">
+          <ng-template pTemplate="content">
+            <new-inspection-control-data [qualityInfoRecordId]="qualityInfoRecord.qualityInfoRecordId"></new-inspection-control-data>
+          </ng-template>
+        </p-tabPanel>
+      </p-tabView>
+    </div>
+  </div>
+  

@@ -1,0 +1,171 @@
+
+<div class="animated fadeIn">
+  <div class="row col-md-12 p-0">
+    <p-tabView class="col-md-12">
+      <p-tabPanel header="{{'organization-information'| translate }}">
+        <div class="card">
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i>{{'organization-information' | translate}}
+          </div>
+          <div class="card-body">
+            <form #workCenterForm="ngForm">
+              <table class="table table-bordered">
+                <tbody *ngIf="data">
+                  <tr>
+                    <td width="35%">
+                      {{'organization-name' | translate}}
+                    </td>
+                    <td>{{data.organizationName}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'organization-code' | translate}}</td>
+                    <td>
+                      {{data.organizationCode}}
+                  </tr>
+                <tr>
+                  <td width="35%">
+                    {{'plant-name' | translate}}
+                  </td>
+                  <td>
+                    {{data.plantName}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'country' | translate}}</td>
+                  <td>{{data.countryName}}</td>
+                </tr>
+                <tr>
+                  <td>{{'city' | translate}}</td>
+                  <td>{{data.cityName}}</td>
+                </tr>
+                <tr>
+                  <td>{{'address' | translate}}</td>
+                  <td>{{data.address}}</td>
+                </tr>
+                </tbody>
+              </table>
+            </form>
+          </div>
+        </div>
+      </p-tabPanel>
+      <p-tabPanel header="{{'template-information'| translate }}">
+        <div class="card">
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i>{{'template-information' | translate}}
+          </div>
+          <div class="card-body">
+              <table class="table table-bordered">
+                <tbody>
+                <tr>
+                  <td width="35%">
+                    {{'prod-order-code-templete' | translate}}
+                  </td>
+                  <td>
+                    {{data.prodOrderCodeTemplete}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    {{'goods-movement-cod-templete' | translate}}
+                  </td>
+                  <td>
+                    {{data.goodsMovementCodTemplete}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'purchase-order-code-template' | translate}}</td>
+                  <td>
+                    {{data.purchaseOrderCodeTemplete}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'purchase-quotation-code-template' | translate}}</td>
+                  <td>
+                    {{data.purchaseQuotationCodeTemplete}}
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>{{'sales-order-code-template' | translate}}</td>
+                  <td>
+                    {{data.salesOrderCodeTemplete}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'sales-quotation-code-template' | translate}}</td>
+                  <td>
+                    {{data.salesQuotationCodeTemplete}}
+                  </td>
+                </tr>
+               
+                </tbody>
+              </table>
+          </div>
+        </div>
+      </p-tabPanel>
+      <p-tabPanel header="{{'schedule-information'| translate }}">
+        <div class="card">
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i>{{'schedule-information' | translate}}
+          </div>
+          <div class="card-body">
+              <table class="table table-bordered">
+                <tbody>
+                  <tr>
+                    <td width="35%">
+                      {{'check-avaiable-stock-for-requested-reservation' | translate}}</td>
+                    <td>
+                      <p-checkbox name="checkAvaiableStockForRequestedReservation" binary="true" [disabled]="true" [(ngModel)]="data.checkAvaiableStockForRequestedReservation"></p-checkbox>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'create-auto-prod-orders' | translate}}</td>
+                    <td>
+                      <p-checkbox name="createAutoProdOrders" binary="true" [disabled]="true" [(ngModel)]="data.createAutoProdOrders"></p-checkbox>
+                    </td>
+                  </tr>  
+                  <tr>
+                    <td>{{'deliver-manual-purchase-order' | translate}}</td>
+                    <td>
+                      <p-checkbox name="deliverManualPurchaseOrder" binary="true" [disabled]="true" [(ngModel)]="data.deliverManualPurchaseOrder"></p-checkbox>
+                    </td>
+                  </tr> 
+                  <tr>
+                    <td>{{'get-waiting-for-material-reservation-by-job-order' | translate}}</td>
+                    <td>
+                      <p-checkbox name="getWaitingForMaterialReservationByJobOrder" binary="true" [disabled]="true" [(ngModel)]="data.getWaitingForMaterialReservationByJobOrder"></p-checkbox>
+                    </td>
+                  </tr> 
+                  <tr>
+                    <td>{{'recheck-job-order-stock-has-un-reristricted-quantity' | translate}}</td>
+                    <td>
+                      <p-checkbox name="recheckJobOrderStockHasUnReristrictedQuantity" binary="true" [disabled]="true" [(ngModel)]="data.recheckJobOrderStockHasUnReristrictedQuantity"></p-checkbox>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'release-all-stock-from-reservation' | translate}}</td>
+                    <td>
+                      <p-checkbox name="releaseAllStockFromReservation" binary="true" [disabled]="true" [(ngModel)]="data.releaseAllStockFromReservation"></p-checkbox>
+                    </td>
+                  </tr> 
+                  <tr>
+                    <td>{{'release-all-stock-from-reservation-after-auto-schedule' | translate}}</td>
+                    <td>
+                      <p-checkbox name="releaseAllStockFromReservationAfterAutoSchedule" binary="true" [disabled]="true" [(ngModel)]="data.releaseAllStockFromReservationAfterAutoSchedule"></p-checkbox>
+                    </td>
+                  </tr> 
+                  <tr>
+                    <td>{{'sales-forecast-duration-day' | translate}}</td>
+                    <td>
+                      <input type="number" class="form-control" name="salesForecastDurationDay" [disabled]="true" [(ngModel)]="data.salesForecastDurationDay"/>
+                    </td>
+                  </tr> 
+                </tbody>
+              </table>
+          </div>
+        </div>
+      </p-tabPanel>
+    </p-tabView>
+  </div>
+</div>

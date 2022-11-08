@@ -1,0 +1,46 @@
+
+.jOrderParent{
+    list-style: none;
+    border-bottom: 1px solid grey;
+    padding: 0;
+    margin-bottom: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    flex-direction: column;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .jOrderParent li {
+    border-bottom: 1px solid grey;
+    padding: 0;
+    
+    width: 100%;
+    display: flex;
+    align-items: center;
+  }
+  
+  .jOrderParent li:last-child {
+    border-bottom: none;
+  }
+  
+  /* .jOrderParent li a{
+    padding: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 120px;
+    padding-left: 8px;
+  }
+  
+  .jOrderParent li span{
+    padding: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 120px;
+    padding-left: 8px;
+  } */

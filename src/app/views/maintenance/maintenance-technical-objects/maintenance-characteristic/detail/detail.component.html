@@ -1,0 +1,68 @@
+<!--<form #orderEdit="ngForm" >-->
+<div class="animated fadeIn">
+  <div class="row" *ngIf="detailCharacteristic">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          {{'maintenance-characteristic'|translate}}
+        </div>
+        <div class="card-body">
+          <table class="table table-bordered">
+            <tbody>
+            <tr>
+              <td width="35%">{{'characteristic' | translate}}</td>
+              <td>{{detailCharacteristic.characteristic}}</td>
+            </tr>
+
+            <tr>
+              <td>{{'valid-from' | translate}}</td>
+              <td>
+                {{detailCharacteristic.validFrom|date:'dd/MM/yyyy'}}
+              </td>
+            </tr>
+            <tr>
+              <td>{{'description' | translate}}</td>
+              <td>{{detailCharacteristic.description}}
+              </td>
+            </tr>
+            <tr>
+              <td>{{'data-type' | translate}}</td>
+              <td>{{detailCharacteristic.maintenanceCharacteristicDataType?.dataType}}
+              </td>
+            </tr>
+            <tr>
+              <td>{{'negative-values-allowed' | translate}}</td>
+              <td>
+                <p-checkbox name="negativeValuesAllowed" binary="true" [disabled]="true"
+                            [(ngModel)]="detailCharacteristic.negativeValuesAllowed"></p-checkbox>
+              </td>
+            </tr>
+            <tr>
+              <td>{{'case-sensitive' | translate}}</td>
+              <td>
+                <p-checkbox name="caseSensitive" binary="true" [disabled]="true"
+                            [(ngModel)]="detailCharacteristic.caseSensitive"></p-checkbox>
+              </td>
+            </tr>
+            <tr>
+              <td>{{'number-of-character' | translate}}</td>
+              <td>{{detailCharacteristic.numberOfCharacters}}</td>
+            </tr>
+            <tr>
+              <td>{{'decimal-places' | translate}}</td>
+              <td>{{detailCharacteristic.decimalPlaces}}</td>
+            </tr>
+            <tr>
+              <td>{{'unit-of-measures' | translate}}</td>
+              <td>{{detailCharacteristic.unitMeasure}}</td>
+            </tr>
+
+            </tbody>
+          </table>
+
+        </div>
+      </div>
+    </div>
+  </div><!--/.row-->
+</div>
+<!--</form>-->

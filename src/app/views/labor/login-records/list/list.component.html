@@ -1,0 +1,347 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+
+          <p-table #dt [columns]="selectedColumns" scrollable="true" scrollHeight="55vh" [rows]="pagination.rows"
+            [totalRecords]="pagination.totalElements" [value]="loginRecords" [(selection)]="selectedLoginRecords"
+            [(selection)]="selectedData" dataKey="workStationOperatorId">
+            <ng-template pTemplate="caption">
+              <div style="text-align:left">
+                <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header" maxSelectedLabels="0"
+                  selectedItemsLabel="{{'columns-selected'|translate}}" [style]="{minWidth: '200px'}"
+                  defaultLabel="Choose Columns">
+                  <ng-template let-col let-i="index" pTemplate="item">
+                    {{col.label|translate}}
+                  </ng-template>
+                </p-multiSelect>
+                <button pButton type="button" class="float-right" icon="fa fa-refresh" name="refresh"
+                  (click)="filter(pageFilter);"></button>
+                <button pButton style="margin-right: 5px" class="ui-button-success float-right"
+                  (click)="modalShow(null,'login',null)" label="{{'add-new-login'|translate}}"> </button>
+                <button pButton style="margin-right: 5px" class="ui-button-warning float-right" type="button"
+                  icon="fa fa-file-alt" iconPos="left" label="{{'export-all'|translate}}"
+                  (click)="exportCSV(false, 'csv')"></button>
+                <button pButton style="margin-right: 5px" class="ui-button-warning float-right" type="button"
+                  icon="fa fa-file" iconPos="left" label="{{'export-selected'|translate}}"
+                  (click)="exportCSV(true, 'csv')">
+                </button>
+
+              </div>
+              <!--<hr>-->
+            </ng-template>
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th style="width: 3em" rowspan="2">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <ng-container *ngFor="let col of columns; let i=index;" [ngSwitch]="col.field">
+                  <th *ngSwitchCase="'actualStartTime'" width="150px" style="cursor: pointer"
+                    [ngClass]="{'bg-selected-order':pageFilter.orderByProperty ==col.field}"
+                    (click)="reOrderData(i,col.field)"><i [ngClass]="'fa fa-sort-alpha-' + classReOrder[i]"></i>
+                    {{col.header|translate}}
+                  </th>
+                  <th *ngSwitchCase="'actualFinishTime'" width="150px" style="cursor: pointer"
+                    [ngClass]="{'bg-selected-order':pageFilter.orderByProperty ==col.field}"
+                    (click)="reOrderData(i,col.field)"><i [ngClass]="'fa fa-sort-alpha-' + classReOrder[i]"></i>
+                    {{col.header|translate}}
+                  </th>
+                  <th *ngSwitchDefault style="cursor: pointer">
+                    {{col.header|translate}}
+                  </th>
+                </ng-container>
+                <th width="80px" rowspan="2">{{'action' | translate}}</th>
+              </tr>
+              <tr>
+                <ng-container *ngFor="let col of columns" class="ui-fluid" [ngSwitch]="col.field">
+                  <th *ngSwitchCase="'loginWithRFID'">
+                    <select id="loginWithRFID" name="loginWithRFID" class="form-control"
+                      [(ngModel)]="pageFilter.loginWithRFID" (ngModelChange)="filter(pageFilter)">
+                      <option [value]="null"> {{'please-select' | translate}}</option>
+                      <option [value]="true"> {{'rf-id' | translate}}</option>
+                      <option [value]="false"> {{'password' | translate}}</option>
+                    </select>
+                  </th>
+                  <th *ngSwitchCase="'activeWorking'">
+                    <select id="activeWorking" name="activeWorking" class="form-control"
+                      [(ngModel)]="pageFilter.activeWorking" (ngModelChange)="filter(pageFilter)">
+                      <option [value]="null"> {{'please-select' | translate}}</option>
+                      <option [value]="true"> {{'login' | translate}}</option>
+                      <option [value]="false"> {{'logout' | translate}}</option>
+                    </select>
+                  </th>
+                  <th *ngSwitchCase="'shift'">
+                    <select id="shift" name="shift" class="form-control" [(ngModel)]="pageFilter.shiftId"
+                      (ngModelChange)="filter(pageFilter)">
+                      <option [value]="null"> {{'please-select' | translate}}</option>
+                      <option *ngFor="let shift of shiftList" [value]="shift.shiftId">{{shift.shiftName}}</option>
+                    </select>
+                  </th>
+                  <th *ngSwitchCase="'firstname'"></th>
+                  <th *ngSwitchCase="'lastname'"></th>
+                  <th *ngSwitchCase="'workStationOperatorId'">
+                    <input style="width: 100%" [(ngModel)]="pageFilter.workStationOperatorId" pInputText type="text"
+                      (input)="filterByColumn($event.target.value,'workStationOperatorId')">
+                  </th>
+                  <th *ngSwitchCase="'actualStartTime'" width="150px"></th>
+                  <th *ngSwitchCase="'actualFinishTime'" width="150px"></th>
+                  <th *ngSwitchCase="'workStation'"><input style="width: 100%" [(ngModel)]="pageFilter.workStationName"
+                      pInputText type="text" (input)="filterByColumn($event.target.value,'workStationName')"></th>
+                  <th *ngSwitchCase="'employee'"><input style="width: 100%" [(ngModel)]="pageFilter.employeeId"
+                      pInputText type="text" (input)="filterByColumn($event.target.value,'employeeId')"></th>
+                </ng-container>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr [pSelectableRow]="rowData">
+                <td style="width: 3em">
+                  <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                </td>
+                <ng-container *ngFor="let col of columns" style="cursor: pointer" [ngSwitch]="col.field">
+                  <td *ngSwitchCase="'shift'">
+                    <a href="javascript:;" (click)="openModal(dialogEnums.SHIFTSETTING, rowData[col.field]?.shiftId )">
+                      {{rowData[col.field]?.shiftName}}
+                    </a>
+                  </td>
+                  <td *ngSwitchCase="'workStation'">
+                    <a href="javascript:;"
+                      (click)="openModal(dialogEnums.WORKSTATION, rowData[col.field]?.workStationId )">
+                      {{rowData[col.field]?.workStationName}}
+                    </a>
+                  </td>
+                  <td *ngSwitchCase="'employee'">
+                    <a href="javascript:;" (click)="openModal(dialogEnums.STAFF, rowData[col.field]?.employeeId )">
+                      {{rowData[col.field]?.employeeId}}
+                    </a>
+                  </td>
+                  <td *ngSwitchCase="'firstname'">
+                    <a href="javascript:;" (click)="openModal(dialogEnums.STAFF, rowData.employee?.employeeId )">
+                      {{rowData.employee?.firstName}}
+                    </a>
+                  </td>
+                  <td *ngSwitchCase="'lastname'">
+                    <a href="javascript:;" (click)="openModal(dialogEnums.STAFF, rowData.employee?.employeeId )">
+                      {{rowData.employee?.lastName}}
+                    </a>
+                  </td>
+                  <td *ngSwitchCase="'loginWithRFID'">{{(rowData.loginWithRFID ? 'RFID' : 'PASSWORD')}}</td>
+                  <td *ngSwitchCase="'activeWorking'">{{(rowData.activeWorking ? 'LOGIN' : 'LOGOUT')}}</td>
+                  <td *ngSwitchCase="'actualStartTime'" width="150px">{{rowData[col.field] | date:'MM/dd/yyyy, HH:mm:ss'}}
+                  </td>
+                  <td *ngSwitchCase="'actualFinishTime'" width="150px">{{rowData[col.field] | date:'MM/dd/yyyy, HH:mm:ss'}}
+                  </td>
+                  <td *ngSwitchDefault>{{rowData[col.field]}}</td>
+                </ng-container>
+                <td width="80px">
+
+                  <button class="btn btn-sm btn-outline-danger" type="button" (click)="logoutModel(rowData)">
+                    <i class="fa fa-sign-out">
+                    </i></button>
+                  <!-- <button class="btn btn-sm btn-outline-danger" type="button" (click)="delete(rowData.employeeTitleId)">
+                        <i class="fa fa-trash"></i>
+                      </button> -->
+
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+          <br />
+          <div class="row">
+            <app-paging [showSearch]="false" [TotalElements]="pagination.totalElements"
+              [CurrentPage]="pagination.currentPage" [PageSize]="pagination.pageSize" [rows]="pagination.rows"
+              [TotalPageLinkButtons]="pagination.TotalPageLinkButtons"
+              [RowsPerPageOptions]="pagination.RowsPerPageOptions" (onPageChange)="myChanges($event)"></app-paging>
+            <span style="margin-left:2px; padding-top: 2px " class="text-muted">{{'total-records'|translate}}:
+              {{pagination?.totalElements}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--/.col-->
+  </div>
+</div>
+<ng-template [ngIf]="componentShowModal.modal==='login'">
+  <div bsModal [config]="{backdrop: 'static', show: true, keyboard: false}" #myModal="bs-modal" class="modal fade"
+    tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+    (onHidden)="componentShowModal.modal=null">
+    <div class="modal-dialog modal-success modal-md" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"> {{'login-record' | translate}}</h4>
+          <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="animated fadeIn">
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="card">
+                  <div class="card-header">
+                    <i class="fa fa-align-justify"></i> {{'add-login-record' | translate}}
+                  </div>
+                  <div class="card-body">
+                    <form #partForm="ngForm">
+                      <table class="table table-bordered">
+                        <tbody>
+                          <tr>
+                            <td>{{'shift' | translate}}</td>
+                            <td>
+                              <span *ngIf="shiftname">{{shiftname}}</span>
+                              <select *ngIf="!shiftname" id="shift" name="shift" class="form-control"
+                                [(ngModel)]="loginRecordDto.shiftId">
+                                <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                                <option *ngFor="let shift of shiftList" value="{{shift.shiftId}}">{{shift.shiftName}}
+                                </option>
+                              </select>
+                            </td>
+                          </tr>
+
+                          <tr>
+                            <td>{{'workstation' | translate}}</td>
+                            <td>
+                              <workstation-auto-complete [required]="true" [plantId]="selectedPlant?.plantId"
+                                [selectedWorkStationId]="loginRecordDto.workstationId"
+                                (selectedWorkStationEvent)="loginRecordDto.workstationId=$event.workStationId">
+                              </workstation-auto-complete>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>{{'employee' | translate}}</td>
+                            <td>
+                              <employee-auto-complete [required]="true" [selectedEmployee]="loginRecordDto.employee"
+                                (selectedEmployeeEvent)="setEmployee($event)"></employee-auto-complete>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>{{'option' | translate}}</td>
+                            <td>
+                              <p-radioButton name="group1" value="true" label="RFID"
+                                [(ngModel)]="loginRecordDto.loginWithRFID" inputId="opt1"></p-radioButton>
+                              <p-radioButton class="ml-2" name="group1" value="false" label="PASSWORD"
+                                [(ngModel)]="loginRecordDto.loginWithRFID" inputId="opt2"></p-radioButton>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td width="50%" *ngIf="loginRecordDto.loginWithRFID == 'true'">{{'enter-rfid' | translate}}
+                            </td>
+                            <td width="50%" *ngIf="loginRecordDto.loginWithRFID == 'false'">{{'enter-password' |
+                              translate}}</td>
+                            <td>
+                              <input id="password" name="password" type="password" [(ngModel)]="loginRecordDto.password"
+                                autocomplete="false" pInputText>
+
+                              <!-- <div style="color: red; font-size: 20px;" *ngIf="loginRecordDto.loginWithRFID == 'true'">
+                                                {{rfidStars(loginRecordDto.password)}}
+                                              </div> -->
+                            </td>
+                          </tr>
+                          <!-- <tr>
+                                          <td colspan="2">
+                                              <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i
+                                                      class="fa fa-ban"></i>
+                                                  {{'reset' | translate}}</button>
+                                              <button type="submit" class="btn btn-sm btn-primary"
+                                                  [disabled]="!partForm.form.valid" (click)="save()"><i
+                                                      class="fa fa-dot-circle-o"></i>
+                                                  {{'save' | translate}}</button>
+                                          </td>
+                                      </tr> -->
+                        </tbody>
+                      </table>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" style="background: rgb(38, 212, 105);
+        color: white;
+        font-size: medium;
+        width: 200px;" class="btn rounded btn-outline-primary" [disabled]="showLoader" (click)="save()">{{'login' |
+            translate}}</button>
+          <button type="button" style="background: red;color: white;" class="btn rounded btn-outline-secondary"
+            (click)="myModal.hide()">{{'close' | translate}}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template [ngIf]="componentShowModal.modal==='logout'">
+  <div bsModal [config]="{backdrop: 'static', show: true, keyboard: false}" #logoutModal="bs-modal" class="modal fade"
+    tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+    (onHidden)="componentShowModal.modal=null">
+    <div class="modal-dialog modal-success modal-md" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"> {{'login-record' | translate}}</h4>
+          <button type="button" class="close" (click)="logoutModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="animated fadeIn">
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="card">
+                  <div class="card-header">
+                    <i class="fa fa-align-justify"></i> {{'login-record' | translate}}
+                  </div>
+                  <div class="card-body">
+                    <table class="table table-borderless">
+                      <tbody>
+                        <tr>
+                          <td width="20%">{{'shift' | translate}}</td>
+                          <td>
+                            <a href="javascript:;"
+                              (click)="showDetailDialog(logoutRecordDto.shiftId, 'SHIFT')">{{logoutRecordDto.shiftName}}</a>
+                          </td>
+                        </tr>
+
+                        <tr>
+                          <td>{{'workstation' | translate}}</td>
+                          <td>
+                            <a href="javascript:;"
+                              (click)="showDetailDialog(logoutRecordDto.workstationId, 'WORKSTATION')">{{logoutRecordDto.workstationName}}</a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>{{'employee' | translate}}</td>
+                          <td>
+                            <a href="javascript:;"
+                              (click)="showDetailDialog(logoutRecordDto.employeeId, 'EMPLOYEE')">{{logoutRecordDto.employeeName}}</a>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <div class="col-md-8 offset-md-2 text-center">
+                      <h2 style="
+                            text-transform: uppercase;
+                            color: blue;
+                            font-size: large;
+                        ">Confirm to Logout this operator ?</h2>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" style="background: rgb(224, 128, 10);
+        color: white;
+        font-size: medium;
+        width: 200px;" class="btn rounded" [disabled]="showLoader" (click)="logout()">{{'logout' | translate}}</button>
+          <button type="button" style="background: red;color: white;" class="btn rounded btn-outline-secondary"
+            (click)="logoutModal.hide()">{{'close' | translate}}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<!-- /.modal -->
+<!-- /.modal-dialog -->
+<!-- /.modal-content -->

@@ -1,0 +1,162 @@
+<p-confirmDialog></p-confirmDialog>
+<div class="animated fadeIn">
+
+
+
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+
+        <div class="card-body">
+          <p-table #dt [columns]="selectedColumns" [value]="measuringDocuments" [rows]="pagination.rows"
+            [totalRecords]="pagination.totalElements" dataKey="measuringDocumentId"
+            [(selection)]="selectedMeasuringDocuments">
+
+            <ng-template pTemplate="caption">
+              <div style="text-align:left">
+                <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header" maxSelectedLabels="0"
+                  selectedItemsLabel="{{'columns-selected'|translate}}" [style]="{minWidth: '200px'}"
+                  defaultLabel="Choose Columns">
+                  <ng-template let-col let-i="index" pTemplate="item">
+                    {{col.label|translate}}
+                  </ng-template>
+                </p-multiSelect>
+                <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                  [(ngModel)]="pageFilter.startMeasurementDate" [showIcon]="true" dateFormat="dd/mm/yy" appendTo="body"
+                  showTime="true" placeholder="{{'start-date'|translate}}" (ngModelChange)="filter(pageFilter)">
+                </p-calendar>
+                <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                  [(ngModel)]="pageFilter.finishMeasurementDate" [showIcon]="true" dateFormat="dd/mm/yy" appendTo="body"
+                  showTime="true" placeholder="{{'start-date'|translate}}" (ngModelChange)="filter(pageFilter)">
+                </p-calendar>
+                <button pButton class="ui-button-success float-right" (click)="modalShow(null,'NEW',null)"
+                  label="{{'add-new'|translate}}"> </button>
+                <button pButton style="margin-right: 5px" class="ui-button-warning float-right" type="button"
+                  icon="fa fa-file-alt" iconPos="left" label="{{'export-all'|translate}}"
+                  (click)="dt.exportCSV()"></button>
+                <button pButton style="margin-right: 5px" class="ui-button-warning float-right" type="button"
+                  icon="fa fa-file" iconPos="left" label="{{'export-selected'|translate}}"
+                  (click)="dt.exportCSV({selectionOnly:true})"></button>
+              </div>
+              <!--<hr>-->
+
+            </ng-template>
+            <ng-template pTemplate="header" let-columns>
+
+              <tr>
+                <th style="width: 3em" rowspan="2">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th *ngFor="let col of columns let i=index" style="cursor: pointer"
+                  [ngClass]="{'bg-selected-order':pageFilter.orderByProperty ==col.field}"
+                  (click)="reOrderData(i,col.field)"><i [ngClass]="'fa fa-sort-alpha-' + classReOrder[i]"></i>
+                  {{col.header|translate}}
+                </th>
+                <th width="80px" rowspan="2">{{'action' | translate}}</th>
+              </tr>
+              <tr>
+                <th *ngFor="let col of columns" class="ui-fluid" [ngSwitch]="col.field">
+                  <input *ngSwitchDefault style="width: 100%" pInputText type="text" [(ngModel)]="pageFilter[col.field]"
+                    (input)="filterByColumn($event.target.value,col.field)">
+                </th>
+
+              </tr>
+
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr [pSelectableRow]="rowData">
+                <td style="width: 3em">
+                  <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                </td>
+                <td *ngFor="let col of columns" style="cursor: pointer"
+                  (click)="modalShow(rowData.measuringDocumentId,'DETAIL',rowData)" [ngSwitch]="col.field">
+
+
+                  <span *ngSwitchDefault> {{rowData[col.field]}}</span>
+
+                  <span *ngSwitchCase="'employee'"> {{rowData?.employee?.firstName ? rowData?.employee?.firstName : ''
+                    +'
+                    '+rowData?.employee?.lastName?rowData?.employee?.lastName: ''}}</span>
+                  <span *ngSwitchCase="'measurementDate'"> {{rowData.measurementDate|date:'dd/MM/yyyy'}}</span>
+                  <span *ngSwitchCase="'equipmentMeasuringPointId'">
+                    {{rowData?.equipmentMeasuringPoint?.equipmentMeasuringPointId}}</span>
+                  <span *ngSwitchCase="'maintenanceCharacteristic'">
+                    {{rowData?.equipmentMeasuringPoint?.maintenanceCharacteristic?.characteristic}}</span>
+                  <span *ngSwitchCase="'measurementPosition'">
+                    {{rowData?.equipmentMeasuringPoint?.measurementPosition}}</span>
+                  <span *ngSwitchCase="'equipment'"> {{rowData?.equipment?.equipmentName}}</span>
+                  <span *ngSwitchCase="'characteristicUnit'">
+                    {{rowData?.equipmentMeasuringPoint?.maintenanceCharacteristic?.unitMeasure}}</span>
+                  <span *ngSwitchCase="'equipmentCodeGroupHeader'">
+                    {{rowData?.equipmentCodeGroupHeader?.shortText}}</span>
+                  <span *ngSwitchCase="'equipmentCodeGroupHeader'">
+                    {{rowData?.equipmentMeasuringPoint?.equipmentCodeGroupHeader?.shortText}}</span>
+
+                </td>
+                <td width="80px">
+                  <button class="btn btn-sm btn-outline-danger" type="button"
+                    (click)="delete(rowData?.measurementDocumentId)">
+                    <i class="fa fa-trash"></i></button>
+                  <button class="btn btn-sm btn-outline-info" type="button"
+                    (click)="modalShow(rowData?.measurementDocumentId,'EDIT',rowData)">
+                    <i class="fa fa-edit"></i></button>
+                </td>
+              </tr>
+
+            </ng-template>
+          </p-table>
+          <br />
+
+          <div class="row">
+            <app-paging [TotalElements]="pagination.totalElements" [CurrentPage]="pagination.currentPage"
+              [PageSize]="pagination.pageSize" [rows]="pagination.rows"
+              [TotalPageLinkButtons]="pagination.TotalPageLinkButtons"
+              [RowsPerPageOptions]="pagination.RowsPerPageOptions" (onPageChange)="myChanges($event)"></app-paging>
+            <span style="margin-left:2px; padding-top: 2px " class="text-muted">{{'total-records'|translate}}:
+              {{pagination?.totalElements}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--/.col-->
+  </div>
+</div>
+<div bsModal [config]="{backdrop: 'static', keyboard: false}" #myModal="bs-modal" class="modal fade" tabindex="-1"
+  role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-success modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"> {{'measuring-document-information' | translate}}</h4>
+        <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <ng-template [ngIf]="measuringDocumentModal.modal=='NEW'">
+          <new-measuring-document (saveAction)="myModal.hide(); filter(pageFilter)"></new-measuring-document>
+        </ng-template>
+        <ng-template [ngIf]="measuringDocumentModal.modal=='EDIT'">
+          <measuring-document-edit [id]="measuringDocumentModal.id" (saveAction)="myModal.hide(); filter(pageFilter)">
+          </measuring-document-edit>
+        </ng-template>
+        <ng-template [ngIf]="measuringDocumentModal.modal=='DETAIL'">
+          <measuring-document-detail [data]="measuringDocumentModal.data"></measuring-document-detail>
+        </ng-template>
+
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary"
+          (click)="myModal.hide()">{{'close' | translate}}</button>
+        <button *ngIf="measuringDocumentModal.modal=='DETAIL'" type="button" class="btn rounded btn-primary"
+          (click)="measuringDocumentModal.modal='NEW'">{{'new' | translate}}</button>
+        <button *ngIf="measuringDocumentModal.modal=='DETAIL'" type="button" class="btn rounded btn-success"
+          (click)="showEditScreen()">{{'edit' | translate}}</button>
+
+
+      </div>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

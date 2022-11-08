@@ -1,0 +1,93 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">   
+        <div class="card">
+          <div class="">
+            <form #inspForm="ngForm">
+              <table class="table table-bordered">
+                <tr>
+                  <td>{{'defect-recording-id' | translate}}</td>
+                  <td>
+                    <input disabled
+                      type="text"
+                      id="defectRecordingId"
+                      name="defectRecordingId"
+                      [(ngModel)]="defectRecording.defectRecordingId"
+                      class="form-control"
+                    />
+                  </td>
+                </tr> 
+                <tr>
+                  <td>{{'defect-recording-code' | translate}}</td>
+                  <td>
+                    <input disabled
+                      type="text"
+                      id="defectRecordingCode"
+                      name="defectRecordingCode"
+                      [(ngModel)]="defectRecording.defectRecordingCode"
+                      class="form-control"
+                    />
+                  </td>
+                </tr> 
+                <tr>
+                  <td>{{'material' | translate}}</td>
+                  <td>
+                    <stock-auto-complete [dropdown]="true" [required]="false"
+                      [selectedStockId]="defectRecording.stockId"
+                      (selectedStockEvent)="defectRecording.stockId=$event.stockId" ></stock-auto-complete>
+                  </td>
+                </tr> 
+                <tr> 
+                  <td>{{'inspection-operation' | translate}}</td>
+                  <td> 
+                    <quality-inspection-operation-auto-complete
+                    [selectedInspectionOperationId]="defectRecording.inspectionOperationId"
+                     (selectedInspectionOperationEvent)="defectRecording.inspectionOperationId=$event.inspectionOperationId" [addIfMissing]="false"></quality-inspection-operation-auto-complete>
+                    <!-- <select id="inspectionOperationId" name="inspectionOperationId" class="form-control" [(ngModel)]="defectRecording.inspectionOperationId" required>
+                      <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                      <option value="{{inspectionOperation.inspectionOperationId}}" *ngFor="let inspectionOperation of inspectionOperations">{{inspectionOperation.inspectionOperationText}}
+                      </option>
+                    </select> -->
+                  </td>
+                </tr> 
+                <tr> 
+                  <td>{{'inspection-characteristic' | translate}}</td>
+                  <td> 
+                    <select id="inspectionCharacteristicId" name="inspectionCharacteristicId" class="form-control" [(ngModel)]="defectRecording.inspectionCharacteristicId" required>
+                      <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                      <option value="{{inspectionCharacteristic.inspectionCharacteristicId}}" *ngFor="let inspectionCharacteristic of inspectionCharacteristics">{{inspectionCharacteristic.inspectionCharacteristicName}}
+                      </option>
+                    </select>
+                  </td>
+                </tr> 
+                <tr> 
+                  <td>{{'defect-type' | translate}}</td>
+                  <td> 
+                    <select id="defectTypeId" name="defectTypeId" class="form-control" [(ngModel)]="defectRecording.defectTypeId" required>
+                      <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                      <option value="{{defectType.defectTypeId}}" *ngFor="let defectType of defectTypes">{{defectType.defectTypeText}}
+                      </option>
+                    </select>
+                  </td>
+                </tr> 
+                
+               
+               
+              </table>
+            </form>
+          </div>
+        </div>
+        <div class="row col-md-12">
+          <button
+            type="submit"
+            class="btn btn-sm btn-primary"
+            [disabled]="!inspForm.form.valid"
+            (click)="save()"
+          >
+            <i class="fa fa-dot-circle-o"></i>
+            {{ "save" | translate }}
+          </button>
+        </div>
+    </div>
+  </div>
+</div>

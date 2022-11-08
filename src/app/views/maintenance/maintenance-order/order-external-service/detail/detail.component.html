@@ -1,0 +1,69 @@
+<!--<form #orderEdit="ngForm" >-->
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12" *ngIf="data">
+      <div class="card">
+        <div class="card-header">
+          {{'maintenance-external-service'|translate}}
+        </div>
+        <div class="card-body">
+          <form #saleForm="ngForm" class="form-horizontal ui-fluid">
+            <table class="table table-bordered">
+              <tbody>
+              <tr>
+                <td width="35%">{{'maintenance-external-service-id' | translate}}</td>
+                <td>{{data.maintenanceExternalServicId}}
+                </td>
+              </tr>
+              <tr>
+                <td>{{'external-service' | translate}}</td>
+                <td>{{data?.externalService?.serviceName}}
+                </td>
+              </tr>
+              <tr>
+                <td>{{'quantity' | translate}}</td>
+                <td> {{data.quantity}}
+                </td>
+              </tr>
+              <tr>
+                <td>{{'quantity-unit' | translate}}</td>
+                <td> {{data.quantityUnit}}
+                </td>
+              </tr>
+              <tr>
+                <td>{{'gross-price' | translate}}</td>
+                <td> {{data.grossPrice}}</td>
+              </tr>
+              <tr>
+                <td>{{'currency' | translate}}</td>
+                <td> {{data.currency}}</td>
+              </tr>
+              <tr>
+                <td>{{'planned-start-date' | translate}}</td>
+                <td> {{data.plannedStartDate|date:'dd/MM/yyyy'}}</td>
+              </tr>
+              <tr>
+                <td>{{'planned-finish-date' | translate}}</td>
+                <td> {{data.plannedFinishDate|date:'dd/MM/yyyy'}}</td>
+              </tr>
+              <tr>
+                <td>{{'actual-start-date' | translate}}</td>
+                <td> {{data.actualStartDate|date:'dd/MM/yyyy'}}</td>
+              </tr>
+              <tr>
+                <td>{{'actual-finish-date' | translate}}</td>
+                <td> {{data.actualFinishDate|date:'dd/MM/yyyy'}}</td>
+              </tr>
+
+
+              </tbody>
+
+            </table>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div><!--/.row-->
+</div>
+<!--</form>-->

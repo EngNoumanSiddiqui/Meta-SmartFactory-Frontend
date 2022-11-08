@@ -1,0 +1,331 @@
+<div class="row col-md-12 badge-light border ml-0 p-3 align-items-center">
+    <div *ngFor="let skilltype of skillMatrixTypeList; let i=index;" [ngClass]="{'col-md-3': i==0, 'col-md-2': i==1}">
+        <p-radioButton name="skillMatrix" [value]="skilltype" label="{{skilltype}}" [(ngModel)]="skillMatrixType"
+                    inputId="opt{{i}}"  (ngModelChange)="onSkillTypeSelected($event)"></p-radioButton>
+    </div>
+
+    <div class="col-md-2" *ngIf="skillMatrixType =='MUDA'">
+        <stock-auto-complete  [plantId]="selectedPlant.plantId" [includeMaterials]="[3]" [selectedStock]="selectedMaterial" (selectedStockEvent)="materialSelected($event)" ></stock-auto-complete>
+    </div>
+    <div class="col-md-3">
+        <operation-auto-complete [plantId]="selectedPlant.plantId" *ngIf="skillMatrixType !=='EMPLOYEE_GENERAL_SKILL'" [selectedOperation]="selectedOperation" (selectedOperationEvent)="operationSelected($event)"></operation-auto-complete>
+    </div>
+    <div class="">
+        <button pButton  class="ui-button-primary" (click)="SaveChanges()" label="{{'save-changes'|translate}}"> </button>
+    </div>
+</div>
+<div class="card col-md-12 align-items-center p-0 m-0">
+    <div class="card-body col-md-12">
+        <table class="table table-bordered table-responsive" style="min-height: 400px;">
+            <tr>
+                <td style="width: 20em; font-weight: bold;">{{'categories' | translate}}</td>
+                <td style="padding: 0px; width: 100%;">
+                    <table class="table table-borderless table-right-side-bordered m-0">
+                        <tr>
+                            <td style="font-weight: bold; text-align: center;"
+                            *ngFor="let category of skillCategoryList; last as oLast; let skillindex=index;"
+                             [ngStyle]="{'width': skillCategoryList ? (category.skillMatrixList.length * 2) +'%' : '100%'}" 
+                             [ngClass]="{'bg-danger': skillMatrixType==='MUDA' && skillindex===0,
+                             'bg-warning': skillMatrixType==='MUDA' && skillindex===1,
+                             'bg-success': skillMatrixType==='MUDA' && skillindex===2}"
+                            >
+                                {{category.skillMatrixCategoryDescription}}
+                            </td>
+                        </tr>
+                    </table>
+                    
+                </td>
+                <td style="width: 15em; font-weight: bold; text-align: center; vertical-align: middle;" rowspan="3">
+                    {{skillMatrixType==='MUDA' ? 'Total Time (Minute)' : 'Total Value'}}
+                </td>
+                <td style="width: 15em; font-weight: bold; text-align: center; vertical-align: middle;" [attr.rowspan]="subOperations.length + 2" *ngIf="skillMatrixType==='MUDA'">
+                    Percentage
+                </td>
+                <!-- <td *ngIf="skillMatrixType==='MUDA' && subOperations.length== 0" style="padding: 0px;">
+                    <table class="table table-borderless table-right-side-bordered m-0">
+                        <tr>
+                            <td style="font-weight: bold; text-align: center;"
+                            *ngFor="let category of skillCategoryList; last as oLast; let skillindex=index;">
+                                {{category.skillMatrixCategoryDescription}} %
+                            </td>
+                        </tr>
+                    </table>
+                    
+                </td> -->
+            </tr>
+            <tr *ngIf="skillMatrixType==='MURI'">
+                <td style="font-weight: bold;">{{'proficiency' | translate}}</td>
+                <td style="padding: 0px;">
+                    <table class="table table-borderless table-right-side-bordered m-0">
+                        <tr>
+                            <td style="padding: 0px; " [ngStyle]="{'width': skillCategoryList ? lengthSize(skillCategoryList.length) +'em' : '100em'}" *ngFor="let category of skillCategoryList;">
+                                <table class="table table-borderless table-right-side-bordered m-0">
+                                    <tr>
+                                        <td class="p-2"
+                                        [ngStyle]="{'max-width': category.skillMatrixList ? childLengthSize(lengthSize(skillCategoryList.length),category.skillMatrixList.length) +'em' : '100em',
+                                        'width': category.skillMatrixList ? childLengthSize(lengthSize(skillCategoryList.length),category.skillMatrixList.length) +'em' : '100em'}"
+                                         *ngFor="let matrix of category.skillMatrixList; last as oLast">
+                                            <ng-template [ngIf]="matrix.maxProficiency && !matrix.minProficiency">{{matrix.maxProficiency}}</ng-template>
+                                            <ng-template [ngIf]="!matrix.maxProficiency && matrix.minProficiency">{{matrix.minProficiency}}</ng-template>
+                                            <ng-template [ngIf]="matrix.maxProficiency && matrix.minProficiency && skillMatrixType !== 'MURI'">({{matrix.minProficiency}} , {{matrix.maxProficiency}})</ng-template>
+                                            <ng-template [ngIf]="matrix.maxProficiency && matrix.minProficiency && skillMatrixType === 'MURI'">{{matrix.minProficiency}}</ng-template>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                       
+                    </table>
+                </td>
+            </tr>
+
+            <tr *ngIf="skillMatrixType==='MUDA'">
+                <td colspan="" style="padding: 0px;"></td>
+            </tr>
+            
+            <tr>
+                <td style="padding: 0px; vertical-align: middle;">
+                    <div class="text-right pr-3 pt-1" style="font-weight: bold;">{{'criteria' | translate}}</div>
+                    <div style="width: 100%; height: 1px; background-color: #5e7b8a; left: 0; top: 50%; transform: rotate(4deg);"></div>
+                    <div class="pl-3" style="font-weight: bold;">{{'operation-process' | translate}}</div>
+
+                </td>
+                <td style="padding: 0px;">
+                    <table class="table table-borderless table-right-side-bordered m-0">
+                        <tr>
+                            <td style="padding: 0px;" [ngStyle]="{'max-width': skillCategoryList ? (category.skillMatrixList.length * 2) +'%' : '100%'}" *ngFor="let category of skillCategoryList;">
+                                <table class="table table-borderless table-right-side-bordered m-0">
+                                    <tr>
+                                        <td class="p-2" 
+                                        style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer;" 
+                                        [ngStyle]="{'max-width': category.skillMatrixList ? childLengthSize((category.skillMatrixList.length * 2),category.skillMatrixList.length) + 5 +'em' : '100em',
+                                        'width': category.skillMatrixList ? childLengthSize((category.skillMatrixList.length * 2),category.skillMatrixList.length) + 5 +'em' : '100em',
+                                        'min-width': category.skillMatrixList ? childLengthSize((category.skillMatrixList.length * 2),category.skillMatrixList.length) + 5 +'em' : '100em'}"
+                                        *ngFor="let matrix of category.skillMatrixList; last as oLast"
+                                        data-toggle="tooltip" data-placement="top" title="{{matrix.skillMatrixName}}"
+                                        >
+                                           <span> {{matrix.skillMatrixName}}</span>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                       
+                    </table>
+                </td>
+                <td *ngIf="skillMatrixType==='MUDA' && subOperations.length== 0" style="padding: 0px;">
+                    <table class="table table-borderless table-right-side-bordered m-0">
+                        <tr>
+                            <td style="font-weight: bold; text-align: center;"
+                            *ngFor="let category of skillCategoryList; last as oLast; let skillindex=index;">
+                                {{category.skillMatrixCategoryDescription}} %
+                            </td>
+                        </tr>
+                    </table>
+                    
+                </td>
+            </tr> 
+            <ng-template [ngIf]="skillMatrixType !=='EMPLOYEE_GENERAL_SKILL'">
+                <tr *ngFor="let suboperation of subOperations; let subopIndex= index;">
+                    <td style="font-weight: bold; overflow: hidden;
+                    text-overflow: ellipsis;
+                    max-width: 150px;
+                    cursor: pointer;
+                    white-space: nowrap;"  data-toggle="tooltip" data-placement="top" title="{{suboperation.subOperationName}}">{{suboperation.subOperationName}}</td>
+                    <td style="padding: 0px;">
+                        <table class="table table-borderless m-0">
+                            <tr>
+                                <td style="padding: 0px;" [ngStyle]="{'width': skillCategoryList ? (category.skillMatrixList.length *2) +'%' : '100%'}" *ngFor="let category of skillCategoryList;let catIndex = index;">
+                                    <table class="table table-borderless m-0">
+                                        <tr>
+                                            <td style="padding: 0px;" [ngStyle]="{'max-width': category.skillMatrixList ? childLengthSize((category.skillMatrixList.length * 2),category.skillMatrixList.length) +'em' : '100em'}" *ngFor="let matrix of category.skillMatrixList;">
+                                                <table class="table table-borderless table-right-side-bordered m-0">
+                                                    <tr>
+                                                        <td style="padding: 0px;" [ngStyle]="{'width': getValueSKill(matrix.skillMatrixId, suboperation.subOperationId) ? lengthSize(getValueSKill(matrix.skillMatrixId, suboperation.subOperationId).length) +'%' : '100%'}"
+                                                         *ngFor="let keyValue of getValueSKill(matrix.skillMatrixId, suboperation.subOperationId) ;let i=index;">
+                                                         <ng-container *ngIf="skillMatrixType =='MUDA';else elsePart">
+                                                            <input *ngIf="skillMatrixType =='MURI'" [ngClass]="{'text-danger': catIndex === 0, 'text-warning': catIndex === 1, 'text-success': catIndex === 2, 'text-grey': catIndex >2}" name="interest{{i}}" [(ngModel)]="keyValue.interest" type="number" 
+                                                            min="0" class="form-control" style="border: none; border-right: 1px solid #c2cfd6;"
+                                                            (ngModelChange)="onInterestValueChanged($event , matrix.skillMatrixId, suboperation.subOperationId)"/>
+                                                            <input *ngIf="skillMatrixType =='MUDA'" style="border: none; border-right: 1px solid #c2cfd6;" [ngClass]="{'text-danger': catIndex === 0, 'text-warning': catIndex === 1, 'text-success': catIndex === 2, 'text-grey': catIndex >2}" name="interest{{i}}" [(ngModel)]="keyValue.interest" type="number" class="form-control"
+                                                            (ngModelChange)="onInterestValueChanged($event , matrix.skillMatrixId, suboperation.subOperationId)"/>
+                                                         </ng-container>
+
+                                                         <ng-template #elsePart>
+                                                            <input name="interest{{i}}" style="border: none; border-right: 1px solid #c2cfd6;" [(ngModel)]="keyValue.interest" type="number" min="0" class="form-control"
+                                                            (ngModelChange)="onInterestValueChanged($event , matrix.skillMatrixId, suboperation.subOperationId)"/>
+                                                         </ng-template>
+                                                         
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                           
+                        </table>
+    
+    
+    
+    
+                        <!-- <table class="table table-borderless table-right-side-bordered m-0">
+                            <tr>
+                                <td [ngStyle]="{'width': skillValueMatrixObj ? lengthSize(skillValueMatrixObj.length) +'%' : '100%'}" 
+                                *ngFor="let matrix of skillValueMatrixObj; last as oLast; let i=index;">
+                                    <input name="interest{{i}}" [value]="matrix.interest" type="number" [min]="matrix.minProficiency" [max]="matrix.maxProficiency" class="form-control" />
+                                </td>
+                            </tr>
+                        </table> -->
+                    </td>
+                    <ng-template [ngIf]="skillMatrixType ==='MURI'" [ngIfElse]="elseSection">
+                        <td [ngClass]="{
+                            'bg-success': getTotal(suboperation.subOperationId) >= 1 && getTotal(suboperation.subOperationId) <= 13,
+                            'bg-warning': getTotal(suboperation.subOperationId) >= 14 && getTotal(suboperation.subOperationId) <= 15,
+                            'bg-danger': getTotal(suboperation.subOperationId) >= 16
+                        }">
+                            <span class="text-bold">
+                                {{getTotal(suboperation.subOperationId)}}
+                            </span>
+                        </td>
+                    </ng-template>
+                    <ng-template #elseSection>
+                        <td>
+                            <span class="text-bold">
+                                {{getTotal(suboperation.subOperationId).toFixed(2)}}
+                            </span>
+                        </td>
+                    </ng-template>
+                    <ng-template [ngIf]="skillMatrixType ==='MUDA'">
+                        <td *ngIf="(subOperations.length-1) == subopIndex" style="padding: 0px;">
+                            <table class="table table-borderless table-right-side-bordered m-0">
+                                <tr>
+                                    <td style="font-weight: bold; text-align: center;"
+                                    *ngFor="let category of skillCategoryList; last as oLast; let skillindex=index;">
+                                        {{category.skillMatrixCategoryDescription}} %
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                        </td>
+                    </ng-template>
+
+                   
+                </tr>
+                
+            </ng-template>
+            <ng-template [ngIf]="skillMatrixType ==='EMPLOYEE_GENERAL_SKILL'">
+                <tr *ngFor="let employee of employeeList; let empIndex= index;">
+                    <td style="font-weight: bold; overflow: hidden;
+                    text-overflow: ellipsis;
+                    max-width: 150px;
+                    cursor: pointer;
+                    white-space: nowrap;"  data-toggle="tooltip" data-placement="top" title="{{employee.firstName}} {{employee.lastName}}">{{employee.firstName}} {{employee.lastName}}</td>
+                    <td style="padding: 0px;">
+                        <table class="table table-borderless m-0">
+                            <tr>
+                                <td style="padding: 0px;" [ngStyle]="{'width': skillCategoryList ? lengthSize(skillCategoryList.length) +'%' : '100%'}" *ngFor="let category of skillCategoryList;">
+                                    <table class="table table-borderless m-0">
+                                        <tr>
+                                            <td style="padding: 0px;" [ngStyle]="{'width': category.skillMatrixList ? lengthSize(category.skillMatrixList.length) +'%' : '100%'}" *ngFor="let matrix of category.skillMatrixList;">
+                                                <table class="table table-borderless table-right-side-bordered m-0">
+                                                    <tr>
+                                                        <td style="padding: 0px;" [ngStyle]="{'width': getEmpValueSKill(matrix.skillMatrixId, employee.employeeId) ? lengthSize(getEmpValueSKill(matrix.skillMatrixId, employee.employeeId).length) +'%' : '100%'}"
+                                                         *ngFor="let keyValue of getEmpValueSKill(matrix.skillMatrixId, employee.employeeId) ;let i=index;">
+                                                         <input style="border: none; border-right: 1px solid #c2cfd6;" name="interest{{i}}" [(ngModel)]="keyValue.interest" type="number" [min]="keyValue.minProficiency" [max]="keyValue.maxProficiency" class="form-control"
+                                                            (ngModelChange)="onInterestEmpValueChanged($event , matrix.skillMatrixId, employee.employeeId)"
+                                                        />
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                           
+                        </table>
+    
+    
+    
+    
+                        <!-- <table class="table table-borderless table-right-side-bordered m-0">
+                            <tr>
+                                <td [ngStyle]="{'width': skillValueMatrixObj ? lengthSize(skillValueMatrixObj.length) +'%' : '100%'}" 
+                                *ngFor="let matrix of skillValueMatrixObj; last as oLast; let i=index;">
+                                    <input name="interest{{i}}" [value]="matrix.interest" type="number" [min]="matrix.minProficiency" [max]="matrix.maxProficiency" class="form-control" />
+                                </td>
+                            </tr>
+                        </table> -->
+                    </td>
+                    <td>{{getTotalEmp(employee.employeeId).toFixed(2)}}</td>
+                </tr>
+            </ng-template>
+            <!-- <ng-template [ngIf]="skillMatrixType !=='EMPLOYEE_GENERAL_SKILL'">
+                <tr>
+                    <td colspan="2" style="text-align: right;">
+                        <b>Grand Total</b>
+                    </td>
+                    <td>{{calcuateGrandTotal()}}</td>
+                </tr>
+            </ng-template> -->
+            <ng-template [ngIf]="skillMatrixType =='MUDA'">
+                <tr>
+                    <td>
+                        <b>Total Time (Minute)</b>
+                    </td>
+                    <td style="padding: 0px;">
+                        <table class="table table-borderless table-right-side-bordered m-0">
+                            <tr style="height: 50px;">
+                                <td style="font-weight: bold; text-align: center;"
+                                *ngFor="let category of skillCategoryList; last as oLast; let skillindex=index;"
+                                 [ngStyle]="{'width': skillCategoryList ? (category.skillMatrixList.length * 2) +'%' : '100%'}"
+                                >
+                                    {{getTotalByCategory(category.skillMatrixCategoryId).toFixed(2)}}
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td><b>{{getAllTotal().toFixed(2)}}</b></td>
+                    <td style="padding: 0px;">
+                        <table class="table table-borderless table-right-side-bordered m-0">
+                            <tr style="height: 50px;">
+                                <td style="font-weight: bold; text-align: center;"
+                                *ngFor="let category of skillCategoryList; last as oLast; let skillindex=index;"
+                                >
+                                    {{getTotalPercentageByCategory(category.skillMatrixCategoryId)}}
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+
+                </tr>
+            </ng-template>
+
+           
+        </table>
+    </div>
+</div>
+<div class="row col-md-12" *ngIf="skillMatrixType ==='MURI'">
+    <div class="mt-2 card col-md-4">
+        <div class="card-body row col-md-12 p-4">
+            <div class="col-md-4 text-right">
+                <h4>{{'level-1' | translate}}</h4>
+                <h4>{{'level-2' | translate}}</h4>
+                <h4>{{'level-3' | translate}}</h4>
+            </div>
+            <div class="col-md-8">
+                <div class="bg-success" style="border: 1px solid;
+                border-color: black;
+                height: 22px"></div>
+                <div class="bg-warning" style="border: 1px solid;
+                border-color: black;
+                height: 22px"></div>
+                <div class="bg-danger" style="border: 1px solid;
+                border-color: black;
+                height: 22px"></div>
+            </div>
+        </div>
+    </div>
+</div>

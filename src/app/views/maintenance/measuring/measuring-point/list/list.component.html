@@ -1,0 +1,152 @@
+<p-confirmDialog></p-confirmDialog>
+<div class="animated fadeIn">
+
+
+
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+
+        <div class="card-body" >
+          <p-table #dt [columns]="selectedColumns" [value]="measuringPoints" [rows]="pagination.rows" [totalRecords]="pagination.totalElements" dataKey="equipmentMeasuringPointId" [(selection)]="selectedMeasuringPoints" >
+
+            <ng-template pTemplate="caption">
+              <div style="text-align:left">
+                <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header" maxSelectedLabels="0"  selectedItemsLabel="{{'columns-selected'|translate}}"
+                               [style]="{minWidth: '200px'}" defaultLabel="Choose Columns">
+                  <ng-template let-col let-i="index" pTemplate="item">
+                    {{col.label|translate}}
+                  </ng-template>
+                </p-multiSelect>
+                <button pButton  class="ui-button-success float-right" (click)="modalShow(null,'NEW',null)" label="{{'add-new'|translate}}"> </button>
+                <button pButton style="margin-right: 5px" class="ui-button-warning float-right" type="button"  icon="fa fa-file-alt" iconPos="left" label="{{'export-all'|translate}}" (click)="dt.exportCSV()"></button>
+                <button pButton style="margin-right: 5px" class="ui-button-warning float-right" type="button"  icon="fa fa-file" iconPos="left" label="{{'export-selected'|translate}}" (click)="dt.exportCSV({selectionOnly:true})"
+                ></button>
+              </div>
+              <!--<hr>-->
+
+            </ng-template>
+            <ng-template pTemplate="header" let-columns>
+
+              <tr >
+                <th style="width: 3em" rowspan="2">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th *ngFor="let col of columns let i=index" style="cursor: pointer" [ngClass]="{'bg-selected-order':pageFilter.orderByProperty ==col.field}" (click)="reOrderData(i,col.field)"><i [ngClass]="'fa fa-sort-alpha-' + classReOrder[i]"></i>
+                  {{col.header|translate}}
+                </th>
+                <th width="80px" rowspan="2">{{'action' | translate}}</th>
+              </tr>
+              <tr>
+                <th *ngFor="let col of columns" class="ui-fluid" [ngSwitch]="col.field">
+                  <input *ngSwitchDefault style="width: 100%"  pInputText type="text" [(ngModel)]="pageFilter[col.field]"
+                         (input)="filterByColumn($event.target.value,col.field)">
+
+                  <!--<input *ngSwitchCase="'decimalPlaces'" style="width: 100%" min="0"  type="number" [(ngModel)]="pageFilter[col.field]"-->
+                         <!--(input)="filterByColumn($event.target.value,col.field)">-->
+
+                  <!--<input *ngSwitchCase="'targetValue'" style="width: 100%" min="0"  type="number" [(ngModel)]="pageFilter[col.field]"-->
+                         <!--(input)="filterByColumn($event.target.value,col.field)">-->
+
+                  <!-- <p-checkbox *ngSwitchCase="'countBackwards'"  binary="true" (onChange)="filterByColumn($event,col.field)"
+                              [(ngModel)]="pageFilter[col.field]"></p-checkbox>
+               <p-checkbox *ngSwitchCase="'measuringPointIsCounter'"  binary="true" (onChange)="filterByColumn($event,col.field)"
+                              [(ngModel)]="pageFilter[col.field]"></p-checkbox> -->
+
+                </th>
+
+              </tr>
+
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr [pSelectableRow]="rowData">
+                <td style="width: 3em">
+                  <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                </td>
+                <td *ngFor="let col of columns" style="cursor: pointer" [ngSwitch]="col.field">
+
+
+                  <span *ngSwitchDefault (click)="modalShow(rowData.equipmentMeasuringPointId,'DETAIL',rowData)">  {{rowData[col.field]}}</span>
+                  <ng-container  *ngSwitchCase="'measuringPointIsCounter'">
+                    <p-checkbox name="counter" binary="true" [disabled]="true" [(ngModel)]="rowData.measuringPointIsCounter" (click)="modalShow(rowData.equipmentMeasuringPointId,'DETAIL',rowData)"></p-checkbox>
+                  </ng-container>
+                  <ng-container  *ngSwitchCase="'countBackwards'">
+                    <p-checkbox name="counter" binary="true" [disabled]="true" [(ngModel)]="rowData.countBackwards" (click)="modalShow(rowData.equipmentMeasuringPointId,'DETAIL',rowData)"></p-checkbox>
+                  </ng-container>
+                  <span *ngSwitchCase="'maintenanceCharacteristic'" (click)="modalShow(rowData.equipmentMeasuringPointId,'DETAIL',rowData)">  {{rowData.maintenanceCharacteristic?.characteristic}}</span>
+                  <a href="javascript:;" *ngSwitchCase="'maintenanceFunctionalLocation'" 
+                  (click)="showFunctionalLocationDetail(rowData.maintenanceFunctionalLocation?.maintenanceFunctionalLocationId)">  {{rowData.maintenanceFunctionalLocation?.description}}</a>
+                  <span *ngSwitchCase="'characteristicUnit'" (click)="modalShow(rowData.equipmentMeasuringPointId,'DETAIL',rowData)">  {{rowData.maintenanceCharacteristic?.unitMeasure}}</span>
+
+                  <a href="javascript:;" *ngSwitchCase="'codeGroup'" (click)="showEquipmentCodeGroupDetail(rowData.equipmentCodeGroupHeader?.equipmentCodeGroup?.equipmentCodeGroupId)">  {{rowData.equipmentCodeGroupHeader?.equipmentCodeGroup?.shortText}}</a>
+                  <a href="javascript:;" *ngSwitchCase="'equipment'" (click)="showEquipmentDetail(rowData.equipment?.equipmentId)">  {{rowData.equipment?.equipmentId}} - {{rowData.equipment?.equipmentName}}</a>
+                  <a href="javascript:;" *ngSwitchCase="'equipmentCodeGroupHeader'" (click)="showEquipmentCodeGroupHeaderDetail(rowData.equipmentCodeGroupHeader)">  {{rowData.equipmentCodeGroupHeader?.shortText}}</a>
+
+                </td>
+                <td width="80px" >
+                  <button class="btn btn-sm btn-outline-danger" type="button" (click)="delete(rowData.equipmentMeasuringPointId)">
+                    <i class="fa fa-trash"></i></button>
+                  <button class="btn btn-sm btn-outline-info" type="button" (click)="modalShow(rowData.equipmentMeasuringPointId,'EDIT',rowData)">
+                    <i class="fa fa-edit"></i></button>
+                </td>
+              </tr>
+
+            </ng-template>
+          </p-table>
+          <br/>
+
+          <div class="row">
+            <app-paging
+              [TotalElements]="pagination.totalElements"
+              [CurrentPage]="pagination.currentPage"
+              [PageSize]="pagination.pageSize"            [rows]="pagination.rows"
+              [TotalPageLinkButtons]="pagination.TotalPageLinkButtons"
+              [RowsPerPageOptions]="pagination.RowsPerPageOptions"
+              (onPageChange)="myChanges($event)"
+            ></app-paging>
+            <span style="margin-left:2px; padding-top: 2px " class="text-muted" >{{'total-records'|translate}}: {{pagination?.totalElements}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--/.col-->
+  </div>
+</div>
+<ng-template [ngIf]="measuringPointModal.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+      aria-hidden="true" (onHidden)="measuringPointModal.active=false;">
+    <div class="modal-dialog modal-success modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"> {{'measuring-point-information' | translate}}</h4>
+          <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <ng-template [ngIf]="measuringPointModal.modal=='NEW'">
+            <new-measuring-point (saveAction)="myModal.hide(); filter(pageFilter)"></new-measuring-point>
+          </ng-template>
+          <ng-template [ngIf]="measuringPointModal.modal=='EDIT'">
+            <measuring-point-edit [id]="measuringPointModal.id" (saveAction)="myModal.hide(); filter(pageFilter)"></measuring-point-edit>
+          </ng-template>
+          <ng-template [ngIf]="measuringPointModal.modal=='DETAIL'">
+            <measuring-point-detail  [data]="measuringPointModal.data" ></measuring-point-detail>
+          </ng-template>
+
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary" (click)="myModal.hide()">{{'close' | translate}}</button>
+          <button *ngIf="measuringPointModal.modal=='DETAIL'" type="button" class="btn rounded btn-primary" (click)="measuringPointModal.modal='NEW'">{{'new' | translate}}</button>
+          <button *ngIf="measuringPointModal.modal=='DETAIL'" type="button" class="btn rounded btn-success"
+                  (click)="measuringPointModal.modal='EDIT'">{{'edit' | translate}}</button>
+
+
+        </div>
+
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</ng-template>

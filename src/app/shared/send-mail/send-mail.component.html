@@ -1,0 +1,203 @@
+
+<ng-template [ngIf]="modal.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal" class="modal fade" tabindex="-1"
+  style="z-index: 1051;"
+       role="dialog" aria-labelledby="myModal" (onHidden)="modal.active=false; onHide.next(false);" aria-hidden="true">
+    <div class="modal-dialog modal-success" style="max-width: 70%;" role="document" >
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"> {{'print-document' | translate}}</h4>
+          <button type="button" class="close" (click)="myModal.hide(); onHide.next(false);" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <angular-editor id="selectedTemplatePrintText" name="selectedTemplatePrintText" 
+                [placeholder]="'Enter text here...'"
+                          [config]="editorViewConfig" [(ngModel)]="selectedTemplatePrintText"></angular-editor>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn rounded btn-primary" (click)="selectTemplate()"><i class="fa fa-file"></i>
+            {{'select' | translate}}</button>
+          <!-- <button type="button" class="btn rounded btn-warning" (click)="printPreview()"><i class="fa fa-file"></i>
+            {{'print-preview' | translate}}</button> -->
+        
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</ng-template>
+
+
+<ng-template [ngIf]="sendModal.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal" class="modal fade" tabindex="-1"
+       role="dialog" aria-labelledby="myModal" 
+       (onHidden)="sendModal.active=false; onHide.next(false);" aria-hidden="true">
+    <div class="modal-dialog modal-success" style="max-width: 60%;" role="document" >
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"> {{'print-document' | translate}}</h4>
+          <button type="button" class="close" (click)="myModal.hide(); onHide.next(false);" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="card col-md-12 p-0">
+            <div class="card-header">
+              {{'mail-informations' | translate}}
+            </div>
+              <div class="card-body">
+                <div class="row" *ngIf="loader">
+                  <div class="col-md-12">
+                    <p-progressBar mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>
+                  </div>
+                </div>
+                <form #mailForm="ngForm">
+                  <table class="table table-bordered">
+                    <tbody>
+                      <tr>
+                        <td>{{'from' | translate}}</td>
+                        <td>
+                          <input  type="text" disabled class="form-control" name="from" [(ngModel)]="mail.from" >
+                          <!-- <button *ngIf="!authenticated" class="btn btn-primary" (click)="signIn()">{{'login' |translate}}</button> -->
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>{{'to' | translate}}</td>
+                        <td>
+                          <input type="text" class="form-control" name="to" [(ngModel)]="mail.to" required>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>{{'cc' | translate}}</td>
+                        <td>
+                          <input type="text" class="form-control" name="cc" [(ngModel)]="mail.ccList">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>{{'bcc' | translate}}</td>
+                        <td>
+                          <input type="text" class="form-control" name="bcc" [(ngModel)]="mail.bccList">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>{{'subject' | translate}}</td>
+                        <td>
+                          <input type="text" class="form-control" name="subject" [(ngModel)]="mail.subject">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>{{'body' | translate}}</td>
+                        <td>
+                          <angular-editor [config]="editorConfig" 
+                          name="body" 
+                          [placeholder]="'Enter text here...'"
+                          [(ngModel)]="mail.body"></angular-editor>
+                          <!-- <textarea class="form-control" rows="5" [(ngModel)]="mail.body" name="body"></textarea> -->
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>{{'attachments' | translate}}</td>
+                        <td>
+                          <div class="d-flex">
+                            <div style="width:65%">
+                              <input type="file" #fileAttach class="form-control" name="attachment" (change)="onChange($event)" />
+                            </div>
+                            <button class="btn btn-light" type="button" (click)="fileAttach.click();">
+                              {{'update' | translate}}
+                            </button>
+                            <button class="btn btn-light" type="button" (click)="commonModal.active=true;">
+                              {{'select-template' | translate}}
+                            </button>
+                            <button class="btn btn-primary" type="button" (click)="addDocModal.active=true;">
+                              {{'preview' | translate}}
+                            </button>
+                          </div>
+                          
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="2">
+                          <button type="button" class="btn btn-danger" (click)="closeModal()">{{'close' | translate}}</button>
+                          <button type="button" class="ml-2 btn btn-primary" [disabled]="!mailForm.valid|| !mail.from || loader" (click)="sendMail()">{{'send-mail' | translate}}</button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </form>
+              </div>
+        
+        
+          </div>
+        </div>
+        <div class="modal-footer">
+          <!-- <button type="button" class="btn rounded btn-primary" (click)="pdfExport()"><i class="fa fa-file"></i>
+            {{'save-as-pdf' | translate}}</button>
+          <button type="button" class="btn rounded btn-warning" (click)="printPreview()"><i class="fa fa-file"></i>
+            {{'print-preview' | translate}}</button> -->
+        
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</ng-template>
+
+
+
+<ng-template [ngIf]="addDocModal.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal" class="modal fade"
+    (onHidden)="addDocModal.active=false;" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-success" style="max-width: 70%;" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"> {{'documentation'| translate}}</h4>
+          <button type="button" class="close" (click)="myModal.hide();" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <ngx-doc-viewer [url]="fileUrl" viewer="url"  style="width:100%;height:80vh;">
+          </ngx-doc-viewer>
+        </div>
+        <!--step2-->
+        <div class="modal-footer">
+          <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary"
+            (click)="myModal.hide();">{{'close' | translate}}
+          </button>
+          <!-- <button type="button" class="btn rounded btn-primary"
+                          (click)="myModal.hide();">{{'save' | translate}}
+                  </button> -->
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</ng-template>
+
+
+<ng-template [ngIf]="commonModal.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal" class="modal fade" tabindex="-1"
+      style="z-index: 1051;"
+       role="dialog" aria-labelledby="myModal" (onHidden)="commonModal.active=false;" aria-hidden="true">
+    <div class="modal-dialog modal-success modal-lg" role="document" >
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"> {{'common-template-information' | translate}}</h4>
+          <button type="button" class="close" (click)="myModal.hide();" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <choose-common-template-pane [commonTemplateType]="requestPrintDto.templateTypeCode" [choosePane]="true" (selectedEvent)="onSelectTemplate($event)"></choose-common-template-pane>
+        </div>
+        <!-- <div class="modal-footer">
+          <button type="button" class="btn rounded btn-primary" (click)="pdfExport()"><i class="fa fa-file"></i>
+            {{'save-as-pdf' | translate}}</button>
+          <button type="button" class="btn rounded btn-warning" (click)="printPreview()"><i class="fa fa-file"></i>
+            {{'print-preview' | translate}}</button>
+        
+        </div> -->
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</ng-template>

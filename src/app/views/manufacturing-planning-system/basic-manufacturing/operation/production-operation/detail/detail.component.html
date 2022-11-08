@@ -1,0 +1,173 @@
+<!--<form #orderEdit="ngForm" >-->
+<div class="animated fadeIn">
+  <div class="row" *ngIf="dataModel">
+    <div class="col-md-12">
+      <p-tabView>
+        <p-tabPanel header="{{'main' | translate}}">
+          <div class="card">
+            <div class="card-header">
+              {{'operation'|translate}}
+            </div>
+            <div class="card-body">
+              <form #saleForm="ngForm" class="form-horizontal ui-fluid">
+                <table class="table table-bordered">
+                  <tbody>
+                  <tr>
+                    <td>{{('operation'|translate)}}</td>
+                    <td>
+                      <a (click)="OpenOperationDetails(dataModel?.operation)" href="javascript:;">
+                      {{dataModel?.operation?.operationName}}
+                      </a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{('workstation'|translate)}}</td>
+                    <td>
+                      <a (click)="OpenWorkStationDetails(dataModel?.workStation)" href="javascript:;">
+                        {{dataModel.workStation?.workStationName}}
+                        </a>
+                     
+                    </td>
+                  </tr>
+                  <!-- <tr>
+                    <td>{{('material'|translate)}}</td>
+                    <td>
+
+                     {{dataModel.defaultStock?.stockName}} 
+                    </td>
+                  </tr> -->
+
+                  <tr>
+                    <td width="35%">{{'quantity' | translate}}</td>
+                    <td>{{dataModel.quantity}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{('parent'|translate)}}</td>
+                    <td style="padding: 0em 0.6em 0em 0.6em;">
+                      <table class="table table-borderless" style="margin-bottom: 0px;">
+                        <tr>   
+                          <td style="border-right: 1px solid #c8c8c8;">
+                            {{dataModel.parent ? 'Yes' : 'No' }}
+                          </td>
+                          <td style="border-right: 1px solid #c8c8c8;">{{('operation-order'|translate)}}</td>
+                          <td>
+                            {{dataModel.productionOrder}}
+                          </td>
+                        </tr>
+                      </table>
+                    </td> 
+                  </tr>
+                  <tr>
+                    <td>{{'needed-person' | translate}}</td>
+                    <td>{{dataModel.neededPerson}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'description' | translate}}</td>
+                    <td>{{dataModel.description}}
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+
+              </form>
+            </div>
+          </div>
+        </p-tabPanel>
+        <p-tabPanel header="{{'detail' | translate}}">
+          <table class="table table-bordered table-md">
+            <tbody>
+              <tr>
+                <td width="35%">{{'operation-repeat' | translate}}</td>
+                <td>
+                  {{dataModel.operationRepeat}}
+                </td>
+              </tr>
+              <tr>
+                <td width="35%">{{'process-control-frequency' | translate}}</td>
+                <td>
+                  {{dataModel.processControlFrequency}}
+                </td>
+              </tr>
+              <tr>
+                <td width="35%">{{'planned-cycle-quantity' | translate}}</td>
+                <td>
+                  {{dataModel.plannedCycleQuantity}}
+                </td>
+              </tr>
+              <tr>
+                <td width="35%">{{'single-duration' | translate}}</td>
+                <td> {{dataModel.ssingleDuration}}
+                </td>
+              </tr>
+              <tr>
+                <td width="35%">{{'single-setup-duration' | translate}}</td>
+                <td>{{dataModel.ssingleSetupDuration}}
+                </td>
+              </tr>
+              <tr>
+                <td width="35%">{{'single-total-duration' | translate}}</td>
+                <td>{{dataModel.ssingleTotalDuration}}
+                </td>
+              </tr>
+              <tr>
+                <td width="35%">{{'max-single-standby-duration' | translate}}</td>
+                <td>{{dataModel.smaxSingleStandbyDuration}}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </p-tabPanel>
+        <p-tabPanel header="{{'material-output' | translate}}">
+          <product-tree-component-list [detailMode]="true" [productTreeDetailId]="dataModel.productTreeDetailId" [tableData]="materialList"
+                                       (saveEvent)="materialList=$event;"></product-tree-component-list>
+        </p-tabPanel>
+        <p-tabPanel header="{{'component-input' | translate}}">
+          <product-tree-component-list [detailMode]="true" [productTreeDetailId]="dataModel.productTreeDetailId" [tableData]="componentList"
+                                       (saveEvent)="componentList=$event;"></product-tree-component-list>
+        </p-tabPanel>
+        <p-tabPanel header="{{'auxiliary-materials' | translate}}">
+          <product-tree-component-list [detailMode]="true"
+            [productTreeDetailId]="dataModel.productTreeDetailId" [tableData]="this.auxMaterialList"
+            (saveEvent)="this.auxMaterialList=$event"></product-tree-component-list>
+        </p-tabPanel>
+        <p-tabPanel header="{{'workstation-program' | translate}}">
+          <product-tree-workstation-program-list [tableData]="dataModel.productTreeDetailWorkstationProgramList" [detailMode]="true"
+                                                 [productTreeDetailOperationId]="dataModel.productTreeDetailOperationId"
+                                                 (saveEvent)="featuresUpdated($event)"
+          ></product-tree-workstation-program-list>
+        </p-tabPanel>
+        <p-tabPanel header="{{'cost' | translate}}">
+          <table class="table table-bordered table-md">
+            <tbody>
+              <tr>
+                <td width="35%">{{'fixed-cost' | translate}}</td>
+                <td>
+                  {{dataModel.fixedCost}}
+                </td>
+              </tr>
+              <tr>
+                <td width="35%">{{'labor-cost' | translate}}</td>
+                <td>{{dataModel.laborCost}}
+                </td>
+              </tr>
+              <tr>
+                <td width="35%">{{'variable-cost' | translate}}</td>
+                <td>{{dataModel.variableCost}}
+                </td>
+              </tr>
+              <tr>
+                <td>{{'currency' | translate}}</td>
+                <td>
+                  {{dataModel.currency}}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </p-tabPanel>
+      </p-tabView>
+    </div>
+  </div><!--/.row-->
+</div>
+<!--</form>-->

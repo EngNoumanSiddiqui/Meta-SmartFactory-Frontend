@@ -1,0 +1,84 @@
+<!--<form #orderEdit="ngForm" >-->
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          {{'scheduled-calls'|translate}}
+        </div>
+        <div class="card-body">
+          <form #saleForm="ngForm" class="form-horizontal ui-fluid">
+            <table class="table table-bordered">
+              <tbody>
+              <tr>
+                <td width="35%">{{'plan-date' | translate}}</td>
+                <td> 
+                  <p-calendar name="planDate" 
+                  [(ngModel)]="dataModel.planDate"
+                    [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                    [ngModelOptions]="{standalone: true}" [showIcon]="true" dateFormat="dd/mm/yy" required></p-calendar>
+                </td>
+              </tr>
+              <tr>
+                <td >{{'call-date' | translate}}</td>
+                <td>
+                  <p-calendar name="callDate" 
+                  [(ngModel)]="dataModel.callDate"
+                    [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                    [ngModelOptions]="{standalone: true}" [showIcon]="true" dateFormat="dd/mm/yy" required></p-calendar>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'completion-date' | translate}}</td>
+                <td>
+                  <p-calendar name="completionDate" 
+                  [(ngModel)]="dataModel.completionDate"
+                    [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                    [ngModelOptions]="{standalone: true}" [showIcon]="true" dateFormat="dd/mm/yy" required></p-calendar>
+
+                </td>
+              </tr>
+              <tr>
+                <td>{{'actual-cycle' | translate}}</td>
+                <td>
+                  <input type="number" [(ngModel)]="dataModel.actualCycle" class="form-control" name="actual-cycle" id="actual-cycle">
+                </td>
+              </tr>
+              <tr>
+                <td >{{'unit' | translate}}</td>
+                <td>
+                  <unit-auto-complete [addIfMissing]="true" (unitChangeEvent)="dataModel.unit=$event"></unit-auto-complete>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'scheduling-type' | translate}}</td>
+                <td>
+
+                </td>
+              </tr>
+
+              <tr>
+                <td >{{'scheduling-status' | translate}}</td>
+                <td>
+                </td>
+              </tr>
+              </tbody>
+
+            </table>
+
+          </form>
+        </div>
+        <div class="card-footer">
+          <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+            {{'reset' | translate}}
+          </button>
+          <button type="submit" class="btn btn-sm btn-primary" [disabled]="!saleForm.form.valid || !dataModel.maintenanceOrderPlanId"
+                  (click)="save()"><i class="fa fa-dot-circle-o"></i>
+            {{'save' | translate}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div><!--/.row-->
+</div>
+<!--</form>-->

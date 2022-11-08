@@ -1,0 +1,116 @@
+<p-confirmDialog></p-confirmDialog>
+
+<!--<form #orderEdit="ngForm" >-->
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i>{{'new-manual-job-order'| translate}}
+        </div>
+        <div class="card-body">
+          <form #manualJobOrderForm="ngForm" class="form-horizontal ui-fluid">
+             <table class="table table-bordered">
+              <tr  class="form-group">
+                <th width="30%"><label class="col-form-label" for="workStation">{{'work-station' | translate}}</label></th>
+                <td>
+                  <select id="workStation" name="workStation" class="form-control" [(ngModel)]="dataModel.workStation">
+                      <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                      <option *ngFor="let item of workStations" value="{{item.workStationId}}">{{item.workStationName}}</option>
+                  </select>
+                </td>
+              </tr>
+              
+              <tr  class="form-group">
+                <th width="30%"><label class="col-form-label" for="quantity">{{'quantity' | translate}}</label></th>
+                <td>
+                  <input id="quantity" style="width: 50%;" class="form-control"  name="quantity" [(ngModel)]="dataModel.quantity" required/>
+                </td>
+              </tr>
+
+              <tr  class="form-group">
+                <th width="30%"><label class="col-form-label" for="plannedTime">{{'planned-time' | translate}}</label></th>
+                <td>
+                  <div class="ui-g">
+                    <div class="ui-g-3">
+                      <div class="duration">
+                        <label class="col-form-label" for="plannedTimeDays">{{'days' | translate}}</label>
+                        <input id="plannedTimeDays" class="form-control"  name="plannedTimeDays" [(ngModel)]="plannedTime.days" required/>
+                      </div>
+                    </div>
+                    <div class="ui-g-3">
+                      <div class="duration">
+                        <label class="col-form-label" for="plannedTimeHours">{{'hours' | translate}}</label>
+                        <input id="plannedTimeHours" class="form-control"  name="plannedTimeHours" [(ngModel)]="plannedTime.hours" required/>
+                      </div>
+                    </div>
+                    <div class="ui-g-3">
+                      <div class="duration">
+                        <label class="col-form-label" for="plannedTimeMinutes">{{'minutes' | translate}}</label>
+                        <input id="plannedTimeMinutes" class="form-control"  name="plannedTimeMinutes" [(ngModel)]="plannedTime.minutes" required/>
+                      </div>
+                    </div>
+                    <div class="ui-g-3">
+                      <div class="duration">
+                        <label class="col-form-label" for="plannedTimeSeconds">{{'seconds' | translate}}</label>
+                        <input id="plannedTimeSeconds" class="form-control"  name="plannedTimeSeconds" [(ngModel)]="plannedTime.seconds" required/>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr  class="form-group maxStandbyTime">
+                <th width="30%"><label class="col-form-label" for="maxStandbyTime">{{'max-standby-time' | translate}}</label></th>
+                <td>
+                  <div class="ui-g">
+                    <div class="ui-g-3">
+                      <div class="duration">
+                        <label class="col-form-label" for="plannedTimeDays">{{'days' | translate}}</label>
+                        <input id="maxStandbyTimeDays" class="form-control"  name="maxStandbyTimeDays" [(ngModel)]="maxStandbyTime.days" required/>
+                      </div>
+                    </div>
+                    <div class="ui-g-3">
+                      <div class="duration">
+                        <label class="col-form-label" for="plannedTimeHours">{{'hours' | translate}}</label>
+                        <input id="maxStandbyTimeHours" class="form-control"  name="maxStandbyTimeHours" [(ngModel)]="maxStandbyTime.hours" required/>
+                      </div>
+                    </div>
+                    <div class="ui-g-3">
+                      <div class="duration">
+                        <label class="col-form-label" for="plannedTimeMinutes">{{'minutes' | translate}}</label>
+                        <input id="maxStandbyTimeMinutes" class="form-control"  name="maxStandbyTimeMinutes" [(ngModel)]="maxStandbyTime.minutes" required/>
+                      </div>
+                    </div>
+                    <div class="ui-g-3">
+                      <div class="duration">
+                        <label class="col-form-label" for="plannedTimeSeconds">{{'seconds' | translate}}</label>
+                        <input id="maxStandbyTimeSeconds" class="form-control"  name="maxStandbyTimeSeconds" [(ngModel)]="maxStandbyTime.seconds" required/>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+
+              <tr  class="form-group">
+                <th width="30%"><label class="col-form-label" for="description">{{'description' | translate}}</label></th>
+                <td>
+                 <textarea id="description" class="form-control" [(ngModel)]="dataModel.description" name="description"> </textarea>
+                </td>
+              </tr>
+            </table>
+          </form>
+        </div>
+        <div class="card-footer">
+          <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+            {{'reset' | translate}}
+          </button>
+          <button type="submit" class="btn btn-sm btn-primary"
+                  (click)="save()"><i class="fa fa-dot-circle-o"></i>
+            {{'save' | translate}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div><!--/.row-->
+</div>
+<!--</form>-->

@@ -1,0 +1,393 @@
+<div class="animated fadeIn">
+    <div class="row">
+        <div class="col-lg-12">
+            <p-tabView>
+                <p-tabPanel header="{{'pallet-table'|translate}}">
+                    <div class="card">
+                        <div class="card-body">
+                            <p-table #dt [columns]="selectedColumns" scrollable="true" scrollHeight="55vh" [value]="pallets"
+                                [rows]="pagination.rows" [totalRecords]="pagination.totalElements" dataKey="palletId"
+                                [(selection)]="selectedPallets">
+        
+                                <ng-template pTemplate="caption">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                                <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
+                                                    maxSelectedLabels="0" selectedItemsLabel="{{'columns-selected'|translate}}"
+                                                    [style]="{minWidth: '100%'}" defaultLabel="Choose Columns">
+                                                    <ng-template let-col let-i="index" pTemplate="item">
+                                                        {{col.label|translate}}
+                                                    </ng-template>
+                                                </p-multiSelect>
+                                        </div>
+                                        <div class="col-md-9" style="float:right">
+                                            <button pButton type="button" style="margin-left: 5px; margin-top: 1px;" class="float-right" icon="fa fa-refresh" name="refresh" (click)="filter(pageFilter)"></button>
+                                            <button pButton  class="ui-button-success float-right ml-1" (click)="modalShow(null,'NEW')" label="{{'add-new'|translate}}"> </button>
+                                            <!-- <button pButton class="ui-button-warning float-right ml-1" type="button"
+                                                icon="fa fa-file-alt" iconPos="left" label="{{'export-all'|translate}}"
+                                                (click)="dt.exportCSV()"></button>
+                                            <button pButton class="ui-button-warning float-right ml-1" type="button"
+                                                icon="fa fa-file" iconPos="left" label="{{'export-selected'|translate}}"
+                                                (click)="dt.exportCSV({selectionOnly:true})"></button> -->
+        
+                                            <p-splitButton [style]="{'margin-right' : '5px'}"  label="{{'export-selected'|translate}}" 
+                                            icon="fa fa-file" [model]="selecteMenuItems" 
+                                            styleClass="ui-button-warning float-right">
+                                            </p-splitButton>
+                                            <p-splitButton [style]="{'margin-right' : '5px'}"  label="{{'export-all'|translate}}" 
+                                            icon="fa fa-file-alt" [model]="menuItems" 
+                                            styleClass="ui-button-warning float-right"></p-splitButton>
+                                        </div>
+                                    </div>
+                                </ng-template>
+        
+                                <ng-template pTemplate="header" let-columns>
+        
+                                    <tr>
+                                        <th style="width: 3em" rowspan="2">
+                                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                                        </th>
+                                        <!-- [ngClass]="{'bg-selected-order':pageFilter.orderByProperty ==col.field}" -->
+                                        <th *ngFor="let col of columns; let i=index;" style="cursor: pointer" (click)="reOrderData(i,col.field)">
+                                            <i [ngClass]="'fa  fa-sort-alpha-' + classReOrder[i]" *ngIf="col.field === 'palletId'"></i>
+                                            {{col.header|translate}}
+                                        </th>
+                                        <th width="80px" rowspan="2">{{'action' | translate}}</th>
+                                    </tr>
+                                    <tr>
+                                        <th *ngFor="let col of columns" class="ui-fluid" [ngSwitch]="col.field">
+                                            <span *ngSwitchCase="'stockNo'"></span>
+                                            <span *ngSwitchCase="'stockName'"></span>
+                                            <span *ngSwitchCase="'wareHouseName'"></span>
+                                            <span *ngSwitchCase="'batch'"></span>
+                                            <span *ngSwitchCase="'createDate'"></span>
+                                            <span *ngSwitchCase="'unit'"></span>
+                                            <span *ngSwitchCase="'goodQuantity'"></span>
+                                            <span *ngSwitchCase="'palletStatus'">
+                                                <select class="form-control" [(ngModel)]="pageFilter[col.field]" (ngModelChange)="filter(pageFilter)" style="padding:0">
+                                                    <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                                                    <option value="{{pStatus}}" *ngFor="let pStatus of palletStatus" >{{pStatus}}</option>
+                                                </select>
+                                            </span>
+        
+                                            <span *ngSwitchCase="'palletPosition'">
+                                                <select class="form-control" [(ngModel)]="pageFilter[col.field]" (ngModelChange)="filter(pageFilter)" style="padding:0">
+                                                    <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                                                    <option value="{{palletPosition}}" *ngFor="let palletPosition of palletPositions" >{{palletPosition}}</option>
+                                                </select>
+                                            </span>
+        
+                                            <span *ngSwitchCase="'palletType'"></span>
+                                            <span *ngSwitchDefault>
+                                                <input style="width: 100%" [(ngModel)]="pageFilter[col.field]" pInputText
+                                                    type="text" (input)="filterByColumn($event.target.value,col.field)">
+                                            </span>
+        
+        
+                                        </th>
+        
+                                    </tr>
+        
+                                </ng-template>
+                                <ng-template pTemplate="body" let-rowData let-columns="columns">
+                                    <tr [pSelectableRow]="rowData">
+                                        <td style="width: 3em">
+                                            <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                                        </td>
+                                        <td *ngFor="let col of columns" style="cursor: pointer" [ngSwitch]="col.field">
+        
+                                            <a href="javascript:;" *ngSwitchCase="'palletId'" (click)="modalShow(rowData.palletId, 'DETAIL')">{{rowData.palletId}}</a>
+                                            <a href="javascript:;" *ngSwitchCase="'jobOrderId'" (click)="showDetailModal(col.field, rowData)">{{ rowData.jobOrder?.jobOrderId }}</a>
+                                            <a href="javascript:;" *ngSwitchCase="'stockNo'" (click)="showDetailModal(col.field, rowData)">{{ rowData.stock?.stockNo }}</a>
+                                            <a href="javascript:;" *ngSwitchCase="'stockName'" (click)="showDetailModal(col.field, rowData)">{{ rowData.stock?.stockName }}</a>
+                                            <a href="javascript:;" *ngSwitchCase="'wareHouseName'" (click)="showDetailModal(col.field, rowData)">{{ rowData.wareHouse?.wareHouseName}}</a>
+                                            <a href="javascript:;" *ngSwitchCase="'batch'" (click)="showDetailModal(col.field, rowData)">{{ rowData.batch}}</a>
+                                            <span *ngSwitchCase="'unit'" (click)="modalShow(rowData.palletId, 'DETAIL')">{{ rowData.stock?.baseUnit}}</span>
+        
+                                            <ng-container *ngSwitchCase="'palletType'">
+                                                <span *ngIf="rowData.goodQuantity > 0;else scrapQuantity" (click)="modalShow(rowData.palletId, 'DETAIL')">GOODS</span>
+                                                <ng-template #scrapQuantity>
+                                                    <span *ngIf="rowData.scrapQuantity > 0; else reworkQuantity" (click)="modalShow(rowData.palletId, 'DETAIL')">SCRAP</span>
+                                                </ng-template>
+                                                <ng-template #reworkQuantity>
+                                                    <span *ngIf="rowData.reworkQuantity > 0" (click)="modalShow(rowData.palletId, 'DETAIL')">REWORK</span>
+                                                </ng-template>
+                                            </ng-container>
+        
+                                            <ng-container *ngSwitchCase="'goodQuantity'">
+                                                <span *ngIf="rowData.goodQuantity > 0;else scrapQuantity" (click)="modalShow(rowData.palletId, 'DETAIL')">{{ rowData.goodQuantity }}</span>
+                                                <ng-template #scrapQuantity>
+                                                    <span *ngIf="rowData.scrapQuantity > 0; else reworkQuantity" (click)="modalShow(rowData.palletId, 'DETAIL')">{{ rowData.scrapQuantity}}</span>
+                                                </ng-template>
+                                                <ng-template #reworkQuantity>
+                                                    <span *ngIf="rowData.reworkQuantity > 0; else noQuantity" (click)="modalShow(rowData.palletId, 'DETAIL')">{{ rowData.reworkQuantity}}</span>
+                                                </ng-template>
+                                                <ng-template #noQuantity>
+                                                    <span (click)="modalShow(rowData.palletId, 'DETAIL')">0</span>
+                                                </ng-template>
+                                            </ng-container>
+                                            <span *ngSwitchCase="'createDate'" (click)="modalShow(rowData.palletId, 'DETAIL')">{{ rowData.createDate |date:'dd/MM/yyyy HH:mm':'-000'}}</span>
+                                            <span *ngSwitchDefault (click)="modalShow(rowData.palletId, 'DETAIL')">{{ rowData[col.field]}}</span>
+                                        </td>
+        
+                                        <td width="80px">
+                                            <div style="padding: 3px;">
+                                                <button class="btn btn-success" type="button"
+                                                (click)="printPallet(rowData)">{{'print'|translate}}</button>
+                                            </div>
+                                            
+
+                                                <div style="padding: 3px;">
+                                                    <button class="btn btn-sm btn-primary"
+                                                    *ngIf="!rowData.erpPalletPushSuccessful"
+                                                    type="button"
+                                                    tooltipPosition="top"
+                                                    pTooltip="{{'push-pallet-to-erp' | translate}}"
+                                                    (click)="pushPalletToErp(rowData.jobOrderOperationId)">
+                                                    <i class="fa fa-file"></i>
+                                                </button>
+                                                </div>
+                                                
+                                        </td>
+                                    </tr>
+        
+                                </ng-template>
+                            </p-table>
+                            <br />
+                            <div class="row">
+                                <app-paging [showSearch]="false" [TotalElements]="pagination.totalElements"
+                                    [CurrentPage]="pagination.currentPage" [PageSize]="pagination.pageSize"
+                                    [rows]="pagination.rows" [TotalPageLinkButtons]="pagination.TotalPageLinkButtons"
+                                    [RowsPerPageOptions]="pagination.RowsPerPageOptions" (onPageChange)="myChanges($event)">
+                                </app-paging>
+                                <span style="margin-left:2px; padding-top: 2px "
+                                    class="text-muted">{{'total-records'|translate}}: {{pagination?.totalElements}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </p-tabPanel>
+                <p-tabPanel header="{{'pallet-list'|translate}}">
+                    <div class="card">
+                        <div class="card-body">
+                            <p-table #dt [columns]="selectedPalletCols" scrollable="true" scrollHeight="55vh" [value]="tableData"
+                                [rows]="palletPagination.rows" [totalRecords]="palletPagination.totalElements" 
+                                dataKey="jobOrderOperationPalletId"
+                                [(selection)]="selectedTableData">
+                                <ng-template pTemplate="caption">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                                <p-multiSelect [options]="palletCols" [(ngModel)]="selectedPalletCols" optionLabel="header"
+                                                    maxSelectedLabels="0" selectedItemsLabel="{{'columns-selected'|translate}}"
+                                                    [style]="{minWidth: '100%'}" defaultLabel="Choose Columns">
+                                                    <ng-template let-col let-i="index" pTemplate="item">
+                                                        {{col.label|translate}}
+                                                    </ng-template>
+                                                </p-multiSelect>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                                <ng-template pTemplate="header" let-columns>
+                                    <tr>
+                                        <th style="width: 3em" rowspan="2">
+                                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                                        </th>
+                                        <!-- [ngClass]="{'bg-selected-order':pageFilter.orderByProperty ==col.field}" -->
+                                        <th *ngFor="let col of columns; let i=index;" style="cursor: pointer" 
+                                        (click)="reOrderPalletData(i,col.field)">
+                                            <i [ngClass]="'fa fa-sort-alpha-' + classReOrder[i]"></i>
+                                            {{col.header|translate}}
+                                        </th>
+                                        <!-- <th width="80px" rowspan="2">{{'action' | translate}}</th> -->
+                                    </tr>
+                                    <tr>
+                                        <th *ngFor="let col of columns" class="ui-fluid" [ngSwitch]="col.field">
+                                            <span *ngSwitchDefault>
+                                                <input style="width: 100%" [(ngModel)]="palletPageFilter[col.field]" pInputText
+                                                    type="text" (input)="filterByColumnPallet($event.target.value,col.field)">
+                                            </span>
+                                            <span  *ngSwitchCase="'jobOrderOperationPalletId'">
+                                                <input style="width: 100%" [(ngModel)]="palletPageFilter.jobOrderOperationPalletId" pInputText
+                                                    type="text" (input)="filterByColumnPallet($event.target.value,col.field)">
+                                            </span>
+                                            <span  *ngSwitchCase="'jobOrderOperationId'">
+                                                <input style="width: 100%" [(ngModel)]="palletPageFilter.jobOrderOperationId" pInputText
+                                                    type="text" (input)="filterByColumnPallet($event.target.value,col.field)">
+                                            </span> 
+                                                <p-calendar *ngSwitchCase="'plannedStartTime'" [(ngModel)]="pageFilter[col.field]" 
+                                                placeholder="{{'planned-start-date'|translate}}"
+                                                appendTo="body" yearRange="1990:2100" [monthNavigator]="true" [yearNavigator]="true"
+                                                 (ngModelChange)="filterPallet(this.palletPageFilter);"
+                                                dateFormat="dd-mm-yy">
+                                              </p-calendar>
+                                              <p-calendar *ngSwitchCase="'plannedFinishTime'" [(ngModel)]="pageFilter[col.field]" 
+                                              placeholder="{{'planned-finish-date'|translate}}"
+                                              appendTo="body" yearRange="1990:2100" [monthNavigator]="true" [yearNavigator]="true"
+                                               (ngModelChange)="filterPallet(this.palletPageFilter);"
+                                              dateFormat="dd-mm-yy">
+                                            </p-calendar>
+                                            <p-calendar *ngSwitchCase="'createDate'" [(ngModel)]="pageFilter[col.field]" 
+                                            placeholder="{{'create-date'|translate}}"
+                                            appendTo="body" yearRange="1990:2100" [monthNavigator]="true" [yearNavigator]="true"
+                                             (ngModelChange)="filterPallet(this.palletPageFilter);"
+                                            dateFormat="dd-mm-yy">
+                                          </p-calendar>
+                                            <span  *ngSwitchCase="'palletSetting'">
+                                                <input style="width: 100%" [(ngModel)]="palletPageFilter.palletSettingId" pInputText
+                                                    type="text" (input)="filterByColumnPallet($event.target.value,col.field)">
+                                            </span>
+        
+        
+                                        </th>
+        
+                                    </tr>
+        
+                                </ng-template>
+                                <ng-template pTemplate="body" let-rowData let-columns="columns">
+                                    <tr [pSelectableRow]="rowData">
+                                        <td style="width: 3em">
+                                            <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                                        </td>
+                                        <td *ngFor="let col of columns" [ngSwitch]="col.field">
+                                            <a *ngSwitchCase="'palletSetting'" href="javascript:;" 
+                                              (click)="showPalletDetails(rowData[col.field]?.palletSettingId)" >
+                                              {{rowData[col.field]?.palletSettingId}}
+                                            </a>
+                                            <a *ngSwitchCase="'palletName'" href="javascript:;" 
+                                              (click)="showPalletDetails(rowData.palletSetting?.palletSettingId)" >
+                                              {{rowData.palletSetting?.palletName}}
+                                            </a>
+                                            <a *ngSwitchCase="'stockNo'" href="javascript:;" 
+                                            (click)="showStockDetail(rowData.stock?.stockId)" >
+                                              {{rowData.stock?.stockNo}}
+                                            </a>
+                                            <a *ngSwitchCase="'stockName'" href="javascript:;" 
+                                            (click)="showStockDetail(rowData.stock?.stockId)" >
+                                              {{rowData.stock?.stockName}}
+                                            </a>
+                                            <a *ngSwitchCase="'workStationName'" href="javascript:;" 
+                                            (click)="showworkStationDetail(rowData.workStation?.workStationId)" >
+                                              {{rowData.workStation?.workStationName}}
+                                            </a>
+                                            <a *ngSwitchCase="'jobOrderOperationId'" href="javascript:;" 
+                                            (click)="showJobOrderOperationDetail(rowData.jobOrderOperation?.jobOrderOperationId)" >
+                                              {{rowData.jobOrderOperation?.jobOrderOperationId}}
+                                            </a>
+                                            <span *ngSwitchCase="'plannedStartTime'">
+                                              {{rowData.jobOrderOperation?.plannedStartTime | date:'dd/MM/yyyy HH:mm'}}
+                                            </span>
+                                            <span *ngSwitchCase="'plannedFinishTime'">
+                                                {{rowData.jobOrderOperation?.plannedFinishTime | date:'dd/MM/yyyy HH:mm'}}
+                                              </span>
+                                            
+                                            <span *ngSwitchCase="'createDate'">
+                                              {{rowData[col.field] | date:'dd/MM/yyyy HH:mm'}}
+                                            </span>
+                                            <span *ngSwitchDefault>{{rowData[col.field]}}</span>
+                                  
+                                          </td>
+                                    </tr>
+        
+                                </ng-template>
+                            </p-table>
+                            <br />
+                            <div class="row">
+                                <app-paging [showSearch]="false" [TotalElements]="palletPagination.totalElements"
+                                    [CurrentPage]="palletPagination.currentPage" [PageSize]="palletPagination.pageSize"
+                                    [rows]="palletPagination.rows" [TotalPageLinkButtons]="palletPagination.TotalPageLinkButtons"
+                                    [RowsPerPageOptions]="palletPagination.RowsPerPageOptions" (onPageChange)="myChangesPallet($event)">
+                                </app-paging>
+                                <span style="margin-left:2px; padding-top: 2px "
+                                    class="text-muted">{{'total-records'|translate}}: {{palletPagination?.totalElements}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </p-tabPanel>
+                <p-tabPanel header="{{'e-kanban'|translate}}">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row col-md-12 m-0 p-1">
+                                <ng-container *ngFor="let pallet of pallets">
+                                    <div class="col-lg-2 col-md-3 col-sm-4 col-6 px-1">
+                                        <div class="monitoring_block">
+                                            <div class="col-12 monitoring_span monitoring_span_setup_overtime p-2 text-center" >
+                                                {{pallet?.stock?.stockNo}}
+                                            </div>
+                                            <div class="col-12 bg-dark p-0">
+                                                <!-- <div class="col-12 display-6 text-white text-center" 
+                                                style="background-color: #414143; padding: 7px;border-bottom: 2px solid #1F1E21;">
+                                                    {{'material-name' | translate}} :
+                                                </div> -->
+                                                <div class="col-12 display-6 text-white text-center" 
+                                                style="background-color: #414143; padding: 7px;border-bottom: 2px solid #1F1E21;">
+                                                    {{pallet?.stock?.stockName}}
+                                                </div>
+                                                <!-- <div class="col-12 display-6 text-white text-center" 
+                                                style="background-color: #414143; padding: 7px;border-bottom: 2px solid #1F1E21;">
+                                                    {{'warehouse' | translate}} :
+                                                </div> -->
+                                                <div class="col-12 display-6 text-white text-center pt-2 pb-2" 
+                                                style="padding-top: 10px; padding-bottom: 10px; font-weight:600; border-bottom: 2px solid #1F1E21;">
+                                                    {{pallet?.wareHouse?.wareHouseName}}
+                                                </div>
+                                                <!-- <div class="col-12 display-6 text-white text-center" 
+                                                style="background-color: #414143; padding: 7px;border-bottom: 2px solid #1F1E21;">
+                                                    {{'pallet' | translate}} :
+                                                </div> -->
+                                                <div class="col-12 display-6 text-white text-center" 
+                                                style="background-color: #414143; padding: 7px;border-bottom: 2px solid #1F1E21;">
+                                                    {{pallet?.requirementPalletQuantityForForklift}} PACKING / {{pallet?.maxBoxQuantity}} BOXES / {{pallet?.goodQuantity}} PIECES
+                                                </div>
+                                                <div class="col-12 display-6 text-white text-center" 
+                                                style="background-color: #414143; padding: 7px;border-bottom: 2px solid #1F1E21;">
+                                                    Quantity : {{pallet?.goodQuantity}}
+                                                </div>
+                                                <div class="col-12 monitoring_span monitoring_span_prod p-2 text-center" >
+                                                    {{pallet?.palletPosition}}
+                                                </div>
+                                                <div class="col-12 display-6 text-white text-center" 
+                                                style="background-color: #414143; padding: 7px;border-bottom: 2px solid #1F1E21;">
+                                                    CARD ID : {{pallet?.palletId}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                </ng-container>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </p-tabPanel>
+            </p-tabView>
+
+            
+        </div>
+        <!--/.col-->
+    </div>
+</div>
+
+
+
+<div bsModal [config]="{backdrop: 'static', keyboard: false}" #myModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+    aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-success modal-lg"
+        role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"> {{'pallet-detail' | translate}}</h4>
+                <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <ng-template [ngIf]="palletModal.modal=='DETAIL'">
+                    <pallet-record-detail [palletId]="palletModal.id" (printPallet)="printPallet($event);"></pallet-record-detail>
+                </ng-template>
+                <ng-template [ngIf]="palletModal.modal=='NEW'">
+                    <pallet-record-new (saveAction)="myModal.hide(); search(pageFilter);"></pallet-record-new>
+                </ng-template>
+            </div>
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

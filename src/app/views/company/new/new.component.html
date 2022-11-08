@@ -1,0 +1,116 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-7">
+        <div class="card">
+            <div class="card-header">
+              {{'company-information' | translate}}
+            </div>
+            <div class="card-body">
+              <form #companyForm="ngForm">
+                <!-- <div class="form-group row">
+                  <label class="col-md-3 col-form-label" for="actNo"> {{'accountNo' | translate}}</label>
+                  <div class="col-md-9">
+    
+                    <div class="input-group">
+                      <input type="text" id="actNo" name="actNo" [(ngModel)]="customer.actNo"
+                             class="form-control" placeholder="{{'accountNo' | translate}}" >
+                      <span class="input-group-btn">
+                           <button type="button" class="btn btn-primary" data-toggle="modal"
+                                   (click)="op.toggle($event)"><i
+                             class="fa fa-question-circle"></i></button>
+                       </span>
+                      <p-overlayPanel #op [dismissable]="true" [showCloseIcon]="true" appendTo="body" baseZIndex="9999">
+                        <strong  class="border-bottom">{{'last-given-no'|translate}}</strong>
+                        <ng-container *ngFor="let st of lastAccountNos">
+                            <span class="d-block small border-bottom">
+                              {{st}}
+                            </span>
+                        </ng-container>
+                      </p-overlayPanel>
+                    </div>
+                  </div>
+                </div> -->
+    
+                <div class="form-group row">
+                  <label class="col-md-3 col-form-label" for="companyaddress">{{'address' | translate}}</label>
+                  <div class="col-md-9">
+                    <textarea type="text" id="companyaddress" name="companyaddress" [(ngModel)]="company.companyAddress" required
+                           class="form-control" placeholder="{{'company' | translate}} {{'address' | translate}}"></textarea>
+                  </div>
+                </div> 
+                <div class="form-group row">
+                  <label class="col-md-3 col-form-label" for="address">{{'address' | translate}} 2</label>
+                  <div class="col-md-9">
+                    <textarea type="text" id="address" name="address" [(ngModel)]="company.address" required
+                            class="form-control" placeholder="{{'address' | translate}}"></textarea>
+                  </div>
+                </div> 
+                <div class="form-group row"> 
+                    <label class="col-md-3 col-form-label" for="countryId">{{'country' | translate }}</label>
+                    <div class="col-md-9">
+                      <select id="countryId" name="countryId" class="form-control" required (change)="countrySelection($event)"
+                              [(ngModel)]="company.countryId">
+                        <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                        <option value="{{country.countryId}}" *ngFor="let country of countries">{{country.countryName}}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+      
+                  <div class="form-group row">
+                    <label class="col-md-3 col-form-label" for="cityId">{{'city' | translate }}</label>
+                    <div class="col-md-9">
+                      <select id="cityId" name="cityId" class="form-control" required [(ngModel)]="company.cityId"
+                              [disabled]="cityDisabled">
+                        <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                        <option value="{{city.cityId}}" *ngFor="let city of cities">{{city.cityName}}</option>
+                      </select>
+                    </div>
+                  </div>
+                <div class="form-group row">
+                  <label class="col-md-3 col-form-label" for="companyName">{{'company-name' | translate}}</label>
+                  <div class="col-md-9">
+                    <input type="text" id="companyName" name="companyName" [(ngModel)]="company.companyName" required
+                            class="form-control" placeholder="{{'company-name' | translate}}" />
+                  </div>
+                </div> 
+                <div class="form-group row">
+                  <label class="col-md-3 col-form-label" for="companyCode">{{'company-code' | translate}}</label>
+                  <div class="col-md-9">
+                    <input type="text" id="companyCode" name="companyCode" [(ngModel)]="company.companyCode" required
+                            class="form-control" placeholder="{{'company-code' | translate}}" />
+                  </div>
+                </div> 
+                <div class="form-group row">
+                  <label class="col-md-3 col-form-label" for="postcode">{{'post-code' | translate}}</label>
+                  <div class="col-md-9">
+                    <input type="text" id="postcode" name="postcode" [(ngModel)]="company.postcode" required
+                            class="form-control" placeholder="{{'post-code' | translate}}" />
+                  </div>
+                </div>  
+              </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md">
+        <div class="card">
+            <div class="card-header">
+              <i class="fa fa-align-justify"></i>{{'account-photo' | translate}}
+            </div>
+            <div class="card-body">
+              <table class="table table-bordered">
+                <tbody>
+                <tr align="center">
+                  <td class="text-center" colspan="2">
+                    <image-adder></image-adder>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+

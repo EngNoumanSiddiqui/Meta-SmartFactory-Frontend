@@ -1,0 +1,307 @@
+<p-confirmDialog></p-confirmDialog>
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+
+        <div class="card-body" >
+          <p-table #dt [columns]="selectedColumns" [value]="tableData" [rows]="pagination.rows" [totalRecords]="pagination.totalElements"
+                   dataKey="equipmentTaskId" [(selection)]="selectedData" scrollable="true" scrollHeight="55vh" >
+
+            <ng-template pTemplate="caption">
+              <div style="text-align:left">
+                <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header" maxSelectedLabels="0"  selectedItemsLabel="{{'columns-selected'|translate}}"
+                               [style]="{minWidth: '200px'}" defaultLabel="Choose Columns">
+                  <ng-template let-col let-i="index" pTemplate="item">
+                    {{col.label|translate}}
+                  </ng-template>
+                </p-multiSelect>
+                <button pButton  type="button" class="ui-button-warning float-right ml-1" label="{{'reset'  |translate}}" (click)="resetFilter()"></button>
+                <button pButton  class="ui-button-success float-right ml-1" (click)="modalShow(null,'NEW',null)" label="{{'add-new'|translate}}"> </button>
+                <button pButton class="ui-button-warning float-right ml-1" type="button"  icon="fa fa-file-alt" iconPos="left" label="{{'export-all'|translate}}" (click)="dt.exportCSV()"></button>
+                <button pButton  class="ui-button-warning float-right ml-1" type="button"  icon="fa fa-file" iconPos="left" label="{{'export-selected'|translate}}" (click)="dt.exportCSV({selectionOnly:true})"></button>
+                <button pButton  class="ui-button-primary float-right ml-1" type="button" [disabled]="checkSelectedData()" label="{{'maintenance-package'|translate}}" (click)="openMaintenanceDialog()"></button>
+              </div>
+              <!--<hr>-->
+
+            </ng-template>
+            <ng-template pTemplate="header" let-columns>
+
+              <tr >
+                <th style="width: 3em" rowspan="2">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th *ngFor="let col of columns let i=index" style="cursor: pointer" [ngClass]="{'bg-selected-order':pageFilter.orderByProperty ==col.field}" (click)="reOrderData(i,col.field)"><i [ngClass]="'fa fa-sort-alpha-' + classReOrder[i]"></i>
+                  {{col.header|translate}}
+                </th>
+                <th width="80px" rowspan="2">{{'action' | translate}}</th>
+              </tr>
+              <tr>
+                <th *ngFor="let col of columns" class="ui-fluid" [ngSwitch]="col.field">
+                  <input *ngSwitchDefault style="width: 100%"  pInputText type="text"[(ngModel)]="pageFilter[col.field]"  (input)="filterByColumn($event.target.value,col.field)">
+                  <input *ngSwitchCase="'equipment'" style="width: 100%"  pInputText type="text"
+                         [(ngModel)]="pageFilter.equipmentName"  (input)="filterByColumn($event.target.value,'equipmentName')">
+                  <input *ngSwitchCase="'equipmentPlannerGroup'" style="width: 100%"  pInputText type="text"
+                         [(ngModel)]="pageFilter.equipmentPlannerGroupId"  (input)="filterByColumn($event.target.value,'equipmentPlannerGroupId')">
+                  <input *ngSwitchCase="'maintenanceFunctionalLocation'" style="width: 100%"  pInputText type="text"
+                         [(ngModel)]="pageFilter.maintenanceFunctionalLocationId"  (input)="filterByColumn($event.target.value,'maintenanceFunctionalLocationId')">
+                  <input *ngSwitchCase="'maintenanceStrategy'" style="width: 100%"  pInputText type="text"
+                         [(ngModel)]="pageFilter.maintenanceStrategyId"  (input)="filterByColumn($event.target.value,'maintenanceStrategyId')">
+                  <input *ngSwitchCase="'maintenanceSystemCondition'" style="width: 100%"  pInputText type="text"
+                         [(ngModel)]="pageFilter.maintenanceSystemConditionId"  (input)="filterByColumn($event.target.value,'maintenanceSystemConditionId')">
+                  <input *ngSwitchCase="'planningPlant'" disabled style="width: 100%"  pInputText type="text"
+                         [(ngModel)]="pageFilter.planningPlantName"  (input)="filterByColumn($event.target.value,'planningPlantName')">
+                  <input *ngSwitchCase="'workStation'" style="width: 100%"  pInputText type="text"
+                         [(ngModel)]="pageFilter.workStationName"  (input)="filterByColumn($event.target.value,'workStationName')">
+
+                  <select *ngSwitchCase="'equipmentTaskType'"  name="equipmentTaskType" class="form-control" [(ngModel)]="pageFilter.equipmentTaskType"
+                          (ngModelChange)="filter(pageFilter)">
+                    <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                    <option *ngFor="let status of equipmentTaskTypes" value="{{status}}">{{status}}</option>
+                  </select>
+                </th>
+
+              </tr>
+
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+              <tr [pSelectableRow]="rowData">
+                <td style="width: 3em">
+                  <p-tableRadioButton [value]="rowData"></p-tableRadioButton>
+                </td>
+                <td>
+                  <a (click)="openDetailsOfSelectedRow(rowData); modalShow(rowData.equipmentTaskId,'DETAIL', rowData)">{{rowData[columns[0].field]}} - {{rowData?.taskDescription}}</a>
+                </td>
+                <td *ngFor="let col of columns.slice(1); let i=index;" style="cursor: pointer" [ngSwitch]="col.field">
+                  <a href="javascript:;" *ngSwitchCase="'equipment'" (click)="showEquipmentDetail(rowData[col.field]?.equipmentId)"> {{rowData[col.field]?.equipmentId}} - {{rowData[col.field]?.equipmentName}}</a>
+
+                  <a href="javascript:;" *ngSwitchCase="'equipmentPlannerGroup'" (click)="showEquipmentPlannerGroup(rowData[col.field].plannerGroupId)">{{rowData[col.field]?.plannerGroup}}</a>
+
+                  <a href="javascript:;" *ngSwitchCase="'maintenanceFunctionalLocation'" (click)="showMaintenanceFunctionalLocationDetail(rowData[col.field]?.maintenanceFunctionalLocationId)">{{rowData[col.field]?.description}}</a>
+
+                  <a href="javascript:;" *ngSwitchCase="'maintenanceStrategy'" (click)="showMaintenanceStrategyDetail(rowData[col.field]?.maintenanceStrategyId)">{{rowData[col.field]?.strategyName}}</a>
+
+                  <a href="javascript:;" *ngSwitchCase="'maintenanceSystemCondition'" (click)="showMaintenanceSystemConditionDetail(rowData[col.field]?.maintenanceSystemConditionId)">{{rowData[col.field]?.description}}</a>
+
+                  <a href="javascript:;" *ngSwitchCase="'planningPlant'" (click)="showPlanningPlantDetail(rowData[col.field]?.plantId)">{{rowData[col.field]?.plantName}}</a>
+
+                  <a href="javascript:;" *ngSwitchCase="'workStation'" (click)="showWorkStationDetail(rowData[col.field]?.workStationId)">{{rowData[col.field]?.workStationName}}</a>
+
+                  <span *ngSwitchDefault  (click)="modalShow(rowData.equipmentTaskId,'DETAIL', rowData)">{{rowData[col.field]}}</span>
+                </td>
+
+                <td width="80px" >
+                  <button class="btn btn-sm btn-outline-danger" type="button" (click)="delete(rowData.equipmentTaskId)">
+                    <i class="fa fa-trash"></i></button>
+                  <button class="btn btn-sm btn-outline-info" type="button" (click)="modalShow(rowData.equipmentTaskId,'EDIT',null)">
+                    <i class="fa fa-edit"></i></button>
+                  <!-- <button class="btn btn-sm btn-outline-primary" type="button" (click)="modalShow(rowData.equipmentTaskId,'DETAIL', rowData)">
+                    <i class="fa fa-info"></i></button> -->
+                </td>
+              </tr>
+
+            </ng-template>
+          </p-table>
+
+          <br/>
+          <div class="row">
+            <app-paging
+              [showSearch]="false"
+              [TotalElements]="pagination.totalElements"
+              [CurrentPage]="pagination.currentPage"
+              [PageSize]="pagination.pageSize"
+              [rows]="pagination.rows"
+              [TotalPageLinkButtons]="pagination.TotalPageLinkButtons"
+              [RowsPerPageOptions]="pagination.RowsPerPageOptions"
+              (onPageChange)="myChanges($event)"
+            ></app-paging>
+            <span style="margin-left:2px; padding-top: 2px " class="text-muted" >{{'total-records'|translate}}: {{pagination?.totalElements}}</span>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--/.col-->
+  </div>
+</div>
+<ng-template [ngIf]="modal.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal" (onHidden)="modal.active=false" class="modal fade"
+       tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog modal-success modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"> {{'equipment-task' | translate}}</h4>
+          <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <!--step2-->
+        <div class="modal-body">
+          <ng-template [ngIf]="equipmentModal.modal=='NEW'">
+            <equipment-task-new (saveAction)="myModal.hide(); filter(pageFilter);"></equipment-task-new>
+          </ng-template>
+          <!--sale-edit-component-->
+          <ng-template [ngIf]="equipmentModal.modal=='EDIT'">
+            <equipment-task-edit [id]="equipmentModal.id" (saveAction)="myModal.hide(); filter(pageFilter)"></equipment-task-edit>
+          </ng-template>
+          <!--sale-edit-component-->
+          <ng-template [ngIf]="equipmentModal.modal=='DETAIL'">
+            <equipment-task-detail [data]="equipmentModal.data"></equipment-task-detail>
+          </ng-template>
+        </div>
+        <!--step2-->
+        <div class="modal-footer">
+          <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary" (click)="myModal.hide()">{{'close' | translate}}</button>
+          <button *ngIf="equipmentModal.modal=='DETAIL'" type="button" class="btn rounded btn-primary" (click)="equipmentModal.modal='NEW'">{{'new' | translate}}</button>
+
+          <button *ngIf="equipmentModal.modal=='DETAIL'" type="button" class="btn rounded btn-success"
+                  (click)="equipmentModal.modal='EDIT'">{{'edit' | translate}}</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</ng-template>
+<ng-template [ngIf]="packageModal">
+    <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myPackageModal="bs-modal"
+    (onHidden)="packageModal=false;equimentoperationDtoList = [];equimentoperationForApiCallList = [];" class="modal fade"
+        tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-success modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title"> {{'maintenance-package' | translate}}</h4>
+            <button type="button" class="close" (click)="myPackageModal.hide()" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <!--step2-->
+          <div class="modal-body">
+              <div class="col-md-12">
+                  <form #transferDetailForm="ngForm" class="table-responsive">
+                    <table class="table table-bordered">
+                      <thead>
+                        <th>Operation Id</th>
+                        <th>Operation Description</th>
+                        <th *ngFor="let pckg of maintenanceStrgPackgList">
+                          {{pckg?.cycleShortText}}
+                        </th>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let item of equipmentTaskOperationList">
+                          <td>{{item?.equipmentTaskOperationId}}</td>
+                          <td>{{item?.equipmentOperation?.operationDescription}}</td>
+                          <td *ngFor="let pckg of maintenanceStrgPackgList">
+                            <div class="form-check">
+                              <input class="form-check-input largerCheckbox" type="checkbox"
+                                     (change)="addEquiptaskOperationStrtgCycle($event , pckg?.maintenanceStrategyPackageId, item?.equipmentTaskOperationId)"
+                                     [checked]="isMaintenanceStrtegyPresent(pckg?.maintenanceStrategyPackageId, item?.equipmentTask?.equipmentTaskId, item?.equipmentTaskOperationId)"
+                                     name="{{pckg?.maintenanceStrategyPackageId + item?.equipmentTaskOperationId}}"  id="{{pckg?.maintenanceStrategyPackageId + item?.equipmentTaskOperationId}}">
+                              <label class="form-check-label" for="{{pckg?.maintenanceStrategyPackageId}}">
+                              </label>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </form>
+                </div>
+          </div>
+          <div class="modal-footer">
+              <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary" (click)="myPackageModal.hide()">{{'close' | translate}}</button>
+              <button type="button" class="btn rounded btn-primary" (click)="submitEquiptaskOperationStrtgCycle(myPackageModal)">{{'save' | translate}}</button>
+            </div>
+        </div>
+      </div>
+    </div>
+</ng-template>
+
+<p-dialog header="{{'maintenance-package' | translate}}" [(visible)]="packageDialog" [style]="{width: '600px'}" #dial>
+    <!---------- MODEL #1 ------------->
+    <span>
+        <div class="form-group row">
+            <div class="col-md-12">
+              <form #transferDetailForm="ngForm">
+                <table class="table table-bordered  ">
+                  <tbody>
+                    <tr>
+                        <td>{{'package-number' | translate}}</td>
+                        <td>
+                          <input type="number" name="packageNumber" style="width: 100%" [(ngModel)]="packageDataModel.packageNumber"
+                          min="1" required/>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'cycle-length'|translate}}</td>
+                      <td>
+                          <input type="number" name="cycleLenght" style="width: 100%" [(ngModel)]="packageDataModel.cycleLenght"
+                          min="1" required/>
+                      </td>
+                    </tr>
+                    <tr>
+                        <td>{{'unit' | translate}}</td>
+                        <td>
+                          <div class="input-group">
+                            <select id="cyleUnit" name="cyleUnit" class="form-control" required
+                                                                [(ngModel)]="packageDataModel.cycleUnit">
+                              <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                              <option *ngFor="let st of unitList" value="{{st.unit}}">{{st.unit}}</option>
+                            </select>
+                            <!--
+                            <span class="input-group-btn">
+                               <button [disabled]="!isValidString(stock.stockName)" type="button" class="btn btn-primary" data-toggle="modal"
+                                       (click)="params.dialog.title = 'unit'; myModal.show()"><i
+                                 class="fa fa-plus-circle"></i>
+                               </button>
+                           </span>
+                            -->
+
+                          </div>
+                        </td>
+                      </tr>
+                    <tr>
+                      <td>{{'maintenance-cycle-text'| translate}}</td>
+                      <td>
+                          <input type="text" name="maintenanceCycleText" style="width: 100%" [(ngModel)]="packageDataModel.maintenanceCycleText"
+                          min="1" required/>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'cycle-short-text'|translate}}</td>
+                      <td>
+                          <input type="text" name="cycleShortText" style="width: 100%" [(ngModel)]="packageDataModel.cycleShortText"
+                          min="1" required/>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td >{{'hierarchy'|translate}}</td>
+                      <td class="ui-fluid">
+                          <input type="number" name="hierarchyText" style="width: 100%" [(ngModel)]="packageDataModel.hierarchy"
+                                  min="1" required/>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'hierarchy-text'|translate}}</td>
+                      <td>
+                          <input type="text" name="hierarchy" style="width: 100%" [(ngModel)]="packageDataModel.hierarchyText"
+                          min="1" required/>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colspan="2">
+                        <button class="btn btn-sm btn-danger" (click)="resetNewItemDetails()"><i class="fa fa-ban"></i>
+                          {{'reset' | translate}}
+                        </button>
+                        <button type="submit" class="btn btn-sm btn-primary"
+                                (click)="addMaintenanceStrategyPackage()"><i class="fa fa-dot-circle-o"></i>
+                          {{'add' | translate}}
+                        </button>
+                      </td>
+                      <!--[disabled]="!transferDetailForm.form.valid"-->
+                    </tr>
+                  </tbody>
+                </table>
+              </form>
+            </div>
+        </div>
+      </span>
+  </p-dialog>

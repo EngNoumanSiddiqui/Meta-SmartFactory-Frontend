@@ -1,0 +1,212 @@
+
+<p-confirmDialog></p-confirmDialog>
+
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+
+        <div class="card-body">
+
+          <p-table #dt [columns]="selectedColumns" scrollable="true" scrollHeight="55vh" [value]="customers" [rows]="pagination.rows"
+                   [totalRecords]="pagination.totalElements" dataKey="actId" [(selection)]="selectedCustomers" >
+
+            <ng-template pTemplate="caption">
+              <div style="text-align:left">
+                <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header" maxSelectedLabels="0"  selectedItemsLabel="{{'columns-selected'|translate}}"
+                               [style]="{minWidth: '200px'}" defaultLabel="Choose Columns">
+                  <ng-template let-col let-i="index" pTemplate="item">
+                    {{col.label|translate}}
+                  </ng-template>
+                </p-multiSelect>
+                <button pButton  type="button" class="ui-button-warning float-right ml-1" label="{{'reset'  |translate}}" (click)="resetFilter()"></button>
+                <button pButton  class="ui-button-success float-right ml-1" (click)="modalShow(null,'NEW', null)" label="{{'add-new'|translate}}"> </button>
+                <p-splitButton [style]="{'margin-right' : '5px'}"  label="{{'export-all'|translate}}" 
+                icon="fa fa-file-alt" [model]="menuItems" 
+                styleClass="ui-button-warning float-right">
+              </p-splitButton>
+              <p-splitButton [style]="{'margin-right' : '5px'}"  label="{{'export-selected'|translate}}" 
+                icon="fa fa-file" [model]="selecteMenuItems" 
+                styleClass="ui-button-warning float-right">
+              </p-splitButton>
+              </div>
+              <!--<hr>-->
+
+            </ng-template>
+            <ng-template pTemplate="header" let-columns>
+
+              <tr >
+                <th style="width: 3em" rowspan="2">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th *ngFor="let col of columns; let i=index;" style="cursor: pointer" [ngClass]="{'bg-selected-order':pageFilter.orderByProperty==col.field}" (click)="reOrderData(i,col.field)"><i [ngClass]="'fa  fa-sort-alpha-' + classReOrder[i]"></i>
+                {{col.header|translate}}
+              </th>
+                <th width="80px" rowspan="2">{{'action' | translate}}</th>
+              </tr>
+              <tr>
+                <th *ngFor="let col of columns" class="ui-fluid" [ngSwitch]="col.field">
+                  <span *ngSwitchCase="'gsm'" style="width: 100%"  ></span>
+                  <span *ngSwitchCase="'fax'" style="width: 100%"  ></span>
+                  <span *ngSwitchCase="'phone'" style="width: 100%"  ></span>
+                  <span *ngSwitchCase="'contactName'" style="width: 100%"  ></span>
+                  <span *ngSwitchCase="'email'" style="width: 100%"  ></span>
+
+                  <select *ngSwitchCase="'actTypeName'" id="actTypeName" name="actTypeName" class="form-control" [(ngModel)]="pageFilter.actTypeName" (ngModelChange)="filter(pageFilter)">
+                    <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                    <option *ngFor="let type of listActTypes" value="{{type.actTypeName}}">{{type.actTypeName}}</option>
+                  </select>
+
+                  <select *ngSwitchCase="'priority'"  [(ngModel)]="pageFilter.priority" id="priorityId" name="priorityId" class="form-control" (ngModelChange)="filter(pageFilter)">
+                    <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                    <option value="{{priority}}" *ngFor="let priority of commonPriorities">{{priority}}
+                    </option>
+                  </select>
+
+                  <select *ngSwitchCase="'actStatus'" id="actStatus" name="actStatus" class="form-control" [(ngModel)]="pageFilter.actStatus" (ngModelChange)="filter(pageFilter)">
+                    <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                    <option *ngFor="let status of listActStatus" value="{{status}}">{{status}}</option>
+                  </select>
+                  
+                  <select *ngSwitchCase="'accountPosition'" id="accountPosition" name="accountPosition" class="form-control" [(ngModel)]="pageFilter.accountPosition" (ngModelChange)="filter(pageFilter)">
+                    <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                    <option value="CUSTOMER">CUSTOMER</option>
+                    <option value="SUPPLIER">SUPPLIER</option>
+                    <option value="BOTH">BOTH</option>
+                  </select>
+                  <select *ngSwitchCase="'actType'" id="actTypeId" name="actTypeId" class="form-control" [(ngModel)]="pageFilter.actTypeName" (ngModelChange)="filter(pageFilter)">
+                    <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                    <option *ngFor="let type of listActTypes" value="{{type.actTypeName}}">{{type.actTypeName}}</option>
+                  </select>
+                  <!-- <select *ngSwitchCase="'accountPosition'" id="accountPosition" name="accountPosition" class="form-control" [(ngModel)]="pageFilter.accountPosition" (ngModelChange)="filter(pageFilter)">
+                    <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                    <option *ngFor="let position of listAccountPosition" value="{{position}}">{{position|translate}}</option>
+                  </select> -->
+                  <input *ngSwitchDefault style="width: 100%"  [(ngModel)]="pageFilter[col.field]" pInputText type="text" (input)="filterByColumn($event.target.value,col.field)">
+                </th>
+
+              </tr>
+
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr [pSelectableRow]="rowData" class="ui-fluid">
+                <td style="width: 3em">
+                  <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                </td>
+                <!--<td *ngFor="let col of columns" style="cursor: pointer" [routerLink]="['/customers/customerTransactions/'+rowData.actId]">-->
+                  <!--{{rowData[col.field]?((rowData[col.field]+'')|translate):'' }}-->
+                <!--</td>-->
+                <td *ngFor="let col of columns" [ngSwitch]="col.field">
+                 <span *ngSwitchDefault (click)="modalShow(rowData.actId,'DETAIL', rowData)">{{rowData[col.field] ? (rowData[col.field]) : '' }}</span> 
+                 
+                 <!-- <span *ngSwitchDefault (click)="modalShow(rowData.actId,'DETAIL')">
+                  {{rowData[col.objectField] ? (rowData[col.objectField][col.field]) : rowData[col.field] }}
+                 </span>  -->
+                 <a href="javascript:;" *ngSwitchCase="'actId'" (click)="modalShow(rowData.actId,'DETAIL', rowData)">
+                  {{rowData[col.field]?((rowData[col.field]+'')|translate):'' }}
+                 </a>
+                 <span *ngSwitchCase="'actType'" >{{rowData[col.field]?.actTypeName}}</span>
+                </td>
+                <td width="80px" >
+                  <button class="btn btn-sm btn-outline-danger" type="button" (click)="delete(rowData.actId)">
+                    <i class="fa fa-trash"></i></button>
+                  <button class="btn btn-sm btn-outline-info" type="button" (click)="modalShow(rowData.actId,'EDIT', rowData)">
+                    <i class="fa fa-edit"></i></button>
+                  <!--<button class="btn btn-sm btn-outline-warning" type="button"  pTooltip="{{'order-history'|translate}}"  tooltipPosition="top" [routerLink]="['/customers/customerTransactions/'+rowData.actId]">-->
+                    <!--<i class="fa fa-history"></i></button>-->
+                </td>
+              </tr>
+
+            </ng-template>
+          </p-table>
+
+<br/>
+          <div class="row">
+            <app-paging
+              [showSearch]="false"
+              [TotalElements]="pagination.totalElements"
+              [CurrentPage]="pagination.currentPage"
+              [PageSize]="pagination.pageSize"            [rows]="pagination.rows"
+              [TotalPageLinkButtons]="pagination.TotalPageLinkButtons"
+              [RowsPerPageOptions]="pagination.RowsPerPageOptions"
+              (onPageChange)="myChanges($event)"></app-paging>
+
+            <span style="margin-left:2px; padding-top: 2px " class="text-muted" >{{'total-records'|translate}}: {{pagination?.totalElements}}</span>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+    <!--/.col-->
+  </div>
+</div>
+
+<ng-template [ngIf]="modal.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal" (onHidden)="modal.active=false" class="modal fade"
+       tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+       aria-hidden="true">
+       <!-- [ngStyle]="{'max-width:900px': customerModal.modal!=='DETAIL'}" -->
+       <!-- [ngClass]="{'modal-lg': customerModal.modal==='DETAIL', 'modal-md': customerModal.modal!=='DETAIL'}" -->
+  <div class="modal-dialog modal-success modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"> {{'account-information' | translate}}</h4>
+        <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+       <ng-template [ngIf]="customerModal.modal=='NEW'">
+       <customer-new [plantId]="this.pageFilter.plantId" (saveAction)="onSaveSuccessful($event, myModal)"></customer-new>
+       </ng-template>
+        <ng-template [ngIf]="customerModal.modal=='EDIT'">
+       <customer-edit [plantId]="this.pageFilter.plantId" [id]="customerModal.id" (saveAction)="onSaveSuccessful($event, myModal)"></customer-edit>
+       </ng-template>
+       <ng-template [ngIf]="customerModal.modal=='CLONE'">
+        <customer-edit [CLONE]="true" [plantId]="this.pageFilter.plantId" [id]="customerModal.id" (saveAction)="onSaveSuccessful($event, myModal)"></customer-edit>
+        </ng-template>
+        <ng-template [ngIf]="customerModal.modal=='DETAIL'">
+       <customer-detail [id]="customerModal.id" ></customer-detail>
+       </ng-template>
+
+
+      </div>
+
+      <div class="modal-footer">
+          <div class="col-md-12 d-flex justify-content-center ">
+              <button *ngIf="customerModal.modal=='DETAIL'" type="button" class="btn rounded btn-outline-primary ml-2 mr-2"
+                (click)="customerModal.modal='NEW'">{{'add' | translate}} {{'new' | translate}}
+              </button>
+              <button *ngIf="customerModal.modal=='NEW' || customerModal.modal=='CLONE' || customerModal.modal=='EDIT'" 
+              type="button" class="btn rounded btn-outline-primary ml-2 mr-2"
+              (click)="SaveActionFire(false)">{{'save' | translate}}
+              </button>
+              <button  *ngIf="customerModal.modal=='NEW' || customerModal.modal=='CLONE' || customerModal.modal=='EDIT'" 
+                type="button" class="btn rounded btn-outline-primary ml-2 mr-2"
+                (click)="SaveActionFire(true)">{{'save' | translate}} & {{'new' | translate}}
+              </button>
+              
+              <button *ngIf="customerModal.modal=='DETAIL'" type="button" class="btn rounded btn-outline-success ml-2 mr-2"
+                      (click)="customerModal.modal='EDIT'">{{'edit' | translate}}
+              </button>
+              <button *ngIf="customerModal.modal=='DETAIL' || customerModal.modal=='EDIT'" pButton 
+              class="ui-button-primary ml-2 mr-2" label="{{'Clone'|translate}}"
+              [disabled]="selectedCustomers && selectedCustomers.length !=1" (click)="modalClone('CLONE',selectedCustomers)" >
+              </button>
+              <button type="button" class="btn rounded btn-outline-danger ml-2 mr-2"
+              (click)="myModal.hide()">{{'cancel' | translate}}
+            </button>
+          </div>
+        <!-- <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary"  (click)="myModal.hide()">{{'close' | translate}}</button>
+        <button *ngIf="customerModal.modal=='DETAIL'" type="button" class="btn rounded btn-primary" (click)="customerModal.modal='NEW'">{{'new' | translate}}</button>
+          <button *ngIf="customerModal.modal=='DETAIL'" type="button" class="btn rounded btn-success"
+                  (click)="customerModal.modal='EDIT'">{{'edit' | translate}}</button> -->
+
+
+      </div>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+</ng-template>

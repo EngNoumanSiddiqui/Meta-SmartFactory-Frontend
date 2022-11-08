@@ -1,0 +1,51 @@
+<div class="animated fadeIn">
+  <div class="row">
+      <div class="card">
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i>{{'initial-information' | translate}}
+          </div>
+          <div class="card-body">
+            <form #capacityForm="ngForm">
+            <table class="table table-bordered">
+              <tbody>
+              <tr>
+                <td>{{'plant' | translate}}</td>
+                <td>
+                    <div class="input-group">
+                      <select id="plantList" name="plantList" class="form-control" (ngModelChange)="onChangePlant($event)"
+                                  [(ngModel)]="workStation.plantId">
+                            <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                            <option *ngFor="let plant of plantList" value="{{plant.plantId}}">{{plant.plantName}}</option>
+                      </select>
+                    </div>
+                  </td>
+              </tr>
+              <tr>
+                  <td>{{'work-center' | translate}} </td>
+                  <td>
+                    <div class="input-group">
+                      <select id="workCenter" name="workCenter" class="form-control" [(ngModel)]="workStation.workCenterId" (ngModelChange)="onChangeWorkCentre($event)">
+                        <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                        <option *ngFor="let wl of workcenterList" value="{{wl.workCenterId}}">{{wl.workCenterName}}</option>
+                      </select>
+                    </div>
+                  </td>
+              </tr>
+              <tr>
+                <td>{{'work-center-category'|translate}}</td>
+                <td>
+                    <div class="input-group">
+                      <select id="workCenterIdx" name="workCenterIdx" (ngModelChange)="onChangeWorkCategory($event)" class="form-control" [(ngModel)]="workStation.workCategoryId">
+                        <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                        <option *ngFor="let wl of workStationCategoryList" value="{{wl.wsCatCode}}">{{wl.wsCatName}}</option>
+                      </select>
+                    </div>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+            </form>
+          </div>
+        </div>
+  </div>
+</div>

@@ -1,0 +1,206 @@
+<p-confirmDialog></p-confirmDialog>
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body" >
+          <p-table #dt [columns]="selectedColumns" scrollable="true" scrollHeight="55vh" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)"  
+           [value]="employees" [rows]="pagination.rows" [totalRecords]="pagination.totalElements" dataKey="employeeGenericGroupId" [(selection)]="selectedEmpGroup" >
+            <ng-template pTemplate="caption">
+              <div style="text-align:left">
+                <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header" maxSelectedLabels="0"  selectedItemsLabel="{{'columns-selected'|translate}}"
+                               [style]="{minWidth: '200px'}" defaultLabel="Choose Columns">
+                  <ng-template let-col let-i="index" pTemplate="item">
+                    {{col.label|translate}}
+                  </ng-template>
+                </p-multiSelect>
+                <button pButton  class="ui-button-success float-right" (click)="modalShow(null,'NEW')" label="{{'add-new'|translate}}"> </button>
+                <button pButton style="margin-right: 5px" class="ui-button-warning float-right" type="button"  icon="fa fa-file-alt" iconPos="left" label="{{'export-all'|translate}}" (click)="dt.exportCSV()"></button>
+                <button pButton style="margin-right: 5px" class="ui-button-warning float-right" type="button"  icon="fa fa-file" iconPos="left" label="{{'export-selected'|translate}}" (click)="dt.exportCSV({selectionOnly:true})"
+                ></button>
+                <button pButton style="margin-right: 5px" class="ui-button-success float-right" 
+                (click)="modalShow(selectedEmpGroup,'EXCHANGE-GROUP')" label="{{'exchange-groups'|translate}}" 
+                [disabled]="!enableExchangeGroup ? 'disabled': ''"> </button>
+                <button pButton style="margin-right: 5px" class="ui-button-primary float-right" 
+                (click)="modalShow(selectedEmpGroup[0].employeeGenericGroupId,'CLONE')" label="{{'clone'|translate}}" 
+                [disabled]="!(selectedEmpGroup && selectedEmpGroup.length ===1)"> </button>
+
+              </div>
+              <!--<hr>-->
+            </ng-template>
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th style="width: 3em" rowspan="2">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th *ngFor="let col of columns; let i=index;" style="cursor: pointer" [ngClass]="{'bg-selected-order':pageFilter.orderByProperty ==col.field}" (click)="reOrderData(i,col.field)">
+                <i [ngClass]="'fa  fa-sort-alpha-' + classReOrder[i]"></i>
+                  {{col.header|translate}}
+                </th>
+
+                <th width="80px" rowspan="2">{{'action' | translate}}</th>
+              </tr>
+              <tr>
+                <th *ngFor="let col of columns" class="ui-fluid" [ngSwitch]="col.field">
+                  <span *ngSwitchCase="'groupCode'"></span>
+                  <span *ngSwitchCase="'groupName'"></span>
+                  <span *ngSwitchCase="'plant'"></span>
+                  <select *ngSwitchCase="'groupType'" id="GroupType" name="GroupType" class="form-control"
+                  [(ngModel)]="pageFilter.groupType" (ngModelChange)="filterSubGroups(); filter(pageFilter);">
+                  <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                  <option *ngFor="let type of employeeGenericGroupTypes" [value]="(type.groupType.message) ? type.groupType.message: type.groupType">
+                    {{(type.groupType.message) ? type.groupType.message: type.groupType}}</option>
+                </select>
+                <select  *ngSwitchCase="'groupSubTypeEnum'"  id="GroupSubType" name="GroupSubType" class="form-control"
+                  [(ngModel)]="pageFilter.groupSubType" (ngModelChange)="filter(pageFilter)">
+                  <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                  <option *ngFor="let subGroup of filteredEmployeeSubGroup" [value]="subGroup.message">
+                    {{subGroup.message}}</option>
+                </select>
+                <select  *ngSwitchCase="'workUnderSupervision'"  id="workUnderSupervision" name="workUnderSupervision"
+                 class="form-control" [(ngModel)]="pageFilter.workUnderSupervision" 
+                 (ngModelChange)="filter(pageFilter)">
+                <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                <option [ngValue]="true">{{'yes' | translate}}</option>
+                <option [ngValue]="false">{{'no' | translate}}</option>
+              </select>
+
+                  <input *ngSwitchDefault style="width: 100%" [(ngModel)]="pageFilter[col.field]"  pInputText type="text" (input)="filterByColumn($event.target.value,col.field)">
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr [pSelectableRow]="rowData">
+                <td style="width: 3em">
+                  <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                </td>
+                <td *ngFor="let col of columns" style="cursor: pointer" (click)="modalShow(rowData.employeeGenericGroupId,'DETAIL')" [ngSwitch]="col.field">
+                  <span *ngSwitchCase="'groupType'">{{(rowData[col.field].message)? rowData[col.field].message: rowData[col.field]}}</span>
+                  <span *ngSwitchCase="'groupSubTypeEnum'">{{(rowData[col.field].message)? rowData[col.field].message: rowData[col.field]}}</span>
+                  <span *ngSwitchCase="'plant'">{{rowData?.plant?.plantName}}</span>
+                  <span *ngSwitchCase="'referenceItemDto'">{{rowData?.referenceItemDto?.itemName}}</span>
+                  <span *ngSwitchCase="'workUnderSupervision'">
+                    {{(rowData[col.field]) ? ('yes'|translate) : ('no' | translate)}}
+                  </span>
+                  <span *ngSwitchDefault>{{rowData[col.field]}}</span>
+
+                </td>
+                <td width="80px" >
+                  <button class="btn btn-sm btn-outline-danger" type="button" (click)="delete(rowData.employeeGenericGroupId)">
+                    <i class="fa fa-trash"></i></button>
+                  <button class="btn btn-sm btn-outline-info" type="button" 
+                  (click)="modalShow(rowData.employeeGenericGroupId,'EDIT')">
+                    <i class="fa fa-edit"></i></button>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+          <br/>
+          <div class="row">
+            <app-paging
+              [TotalElements]="pagination.totalElements"
+              [CurrentPage]="pagination.currentPage"
+              [PageSize]="pagination.pageSize"            [rows]="pagination.rows"
+              [TotalPageLinkButtons]="pagination.TotalPageLinkButtons"
+              [RowsPerPageOptions]="pagination.RowsPerPageOptions"
+              (onPageChange)="myChanges($event)"
+            ></app-paging>
+            <span style="margin-left:2px; padding-top: 2px " class="text-muted" >{{'total-records'|translate}}: {{pagination?.totalElements}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--/.col-->
+  </div>
+</div>
+<div bsModal [config]="{backdrop: 'static', keyboard: false}" #myModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true" (onHidden)="employeeGroupModal.id=null; employeeGroupModal.modal=null;">
+  <div class="modal-dialog modal-success modal-md" style="max-width: 90%;" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"> {{'group-code-information' | translate}}</h4>
+        <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <ng-template [ngIf]="employeeGroupModal.modal=='NEW'">
+        <p-tabView>
+            <p-tabPanel header="Group Defination">
+              <emp-gen-group-new (saveAction)="myModal.hide(); filter(pageFilter)"></emp-gen-group-new>
+            </p-tabPanel>
+            <!--new change affect-->
+            <!--
+              <p-tabPanel header="Shift Defination">
+                  <new-shift-defination (saveAction)="myModal.hide(); filter(pageFilter)"></new-shift-defination>
+              </p-tabPanel>
+              <p-tabPanel header="Exception">
+                  <new-exception (saveAction)="myModal.hide(); filter(pageFilter)"></new-exception>
+              </p-tabPanel>
+            -->
+            <!--new change affect-->
+        </p-tabView>
+      </ng-template>
+      <ng-template [ngIf]="employeeGroupModal.modal=='EDIT'">
+        <p-tabView>
+            <p-tabPanel header="Group Defination">
+              <emp-gen-group-edit [id]="employeeGroupModal.id" 
+              (saveAction)="myModal.hide(); filter(pageFilter); this.selectedEmpGroup=[];"></emp-gen-group-edit>
+            </p-tabPanel>
+            <!--new change affect-->
+            <!--
+               <p-tabPanel header="Shift Defination">
+                <edit-shift-defination (saveAction)="myModal.hide(); filter(pageFilter)"></edit-shift-defination>
+              </p-tabPanel>
+              <p-tabPanel header="Exception">
+                  <edit-exception-defination (saveAction)="myModal.hide(); filter(pageFilter)"></edit-exception-definition>
+              </p-tabPanel>
+            -->
+          <!--new change affect-->
+        </p-tabView>
+      </ng-template>
+      <ng-template [ngIf]="employeeGroupModal.modal=='CLONE'">
+        <p-tabView>
+            <p-tabPanel header="Group Defination">
+              <emp-gen-group-edit [isCloned]="true" [id]="employeeGroupModal.id" 
+              (saveAction)="myModal.hide(); filter(pageFilter); this.selectedEmpGroup=[];"></emp-gen-group-edit>
+            </p-tabPanel>
+            <!--new change affect-->
+            <!--
+               <p-tabPanel header="Shift Defination">
+                <edit-shift-defination (saveAction)="myModal.hide(); filter(pageFilter)"></edit-shift-defination>
+              </p-tabPanel>
+              <p-tabPanel header="Exception">
+                  <edit-exception-defination (saveAction)="myModal.hide(); filter(pageFilter)"></edit-exception-definition>
+              </p-tabPanel>
+            -->
+          <!--new change affect-->
+        </p-tabView>
+      </ng-template>
+      <ng-template [ngIf]="employeeGroupModal.modal=='DETAIL'">
+        <p-tabView>
+            <p-tabPanel header="Group Defination">
+              <emp-gen-group-detail [id]="employeeGroupModal.id" (saveAction)="myModal.hide(); filter(pageFilter)"></emp-gen-group-detail>
+            </p-tabPanel>
+        </p-tabView>
+      </ng-template>
+
+      <ng-template [ngIf]="employeeGroupModal.modal=='EXCHANGE-GROUP'">
+        <p-tabView>
+            <p-tabPanel header="Group Defination">
+              <emp-exchnage-group [exchangeGroup]="employeeGroupModal.id" (saveAction)="myModal.hide(); filter(pageFilter)"></emp-exchnage-group>
+            </p-tabPanel>
+        </p-tabView>
+      </ng-template>
+
+      <div class="modal-footer">
+        <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary" (click)="myModal.hide()">{{'close' | translate}}</button>
+        <button *ngIf="employeeGroupModal.modal=='DETAIL' || employeeGroupModal.modal=='EDIT'" 
+          type="button" class="btn rounded btn-primary" (click)="employeeGroupModal.modal='CLONE'">
+          {{'clone' | translate}}
+        </button>
+        <button *ngIf="employeeGroupModal.modal=='DETAIL'" type="button" class="btn rounded btn-info" (click)="employeeGroupModal.modal='NEW'">{{'new' | translate}}</button>
+        <button *ngIf="employeeGroupModal.modal=='DETAIL'" type="button" class="btn rounded btn-success" (click)="employeeGroupModal.modal='EDIT'">{{'edit' | translate}}</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

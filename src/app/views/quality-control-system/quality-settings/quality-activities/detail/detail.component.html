@@ -1,0 +1,35 @@
+<div class="animated fadeIn">
+    <div class="col-md-12">
+      <div class="card" *ngIf="qualityActivity">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i> {{'activity-details' | translate}}
+        </div>
+        <div class="card-body">
+          <form #stockForm="ngForm">
+            <table class="table table-striped table-outline">
+              <tbody>
+                <tr>
+                  <td width="30%" class="text-bold">{{'activity-id' | translate}} <span style="width: 0 !important;" class="float-right">:</span> </td>
+                  <td>{{qualityActivity.qualityActivityTypeId}}</td>
+                </tr>
+                <tr>
+                  <td class="text-bold">{{'activity-code' | translate}} <span style="width: 0 !important;" class="float-right">:</span> </td>
+                  <td>{{qualityActivity.qualityActivityTypeCode}}</td>
+                </tr>
+                <tr>
+                  <td width="30%" class="text-bold">{{'activity-name' | translate}} <span style="width: 0 !important;" class="float-right">:</span> </td>
+                  <td>{{qualityActivity.qualityActivityTypeName}}</td>
+                </tr>
+                <tr>
+                  <td width="30%" class="text-bold">{{'short-text' | translate}} <span style="width: 0 !important;" class="float-right">:</span> </td>
+                  <td>{{qualityActivity.qualityActivityTypeShortText}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  

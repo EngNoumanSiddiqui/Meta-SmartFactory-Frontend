@@ -1,0 +1,118 @@
+<div class="ui-inputgroup  d-flex ui-fluid">
+  <!-- <p-autoComplete [disabled]="disabled" [(ngModel)]="selectedParity" 
+    [suggestions]="filteredParity"
+    (completeMethod)="searchParity($event)" field="parityName" 
+    [dropdown]="dropdown" [required]="required"
+    [forceSelection]="true" dataKey="parityId" 
+    placeholder="{{placeholder|translate}}" [minLength]="1"
+    name="parity" (onDropdownClick)="handleDropdownClickForBatch()" 
+    (ngModelChange)="onChangeParity($event)">
+ 
+    <ng-template let-cur pTemplate="item">
+      <div class="ui-helper-clearfix d-flex">
+          <div class="text-bold">{{cur.parityCode}}</div>
+          <div>| {{cur.parityName}}</div>
+      </div>
+  </ng-template>
+  </p-autoComplete> -->
+
+  <p-autoComplete [(ngModel)]="selectedParity" [suggestions]="filteredParity" (completeMethod)="searchParity($event)"
+    field="parityName" dataKey="parityCode" [dropdown]="dropdown" [required]="required" [forceSelection]="true"
+    placeholder="{{placeholder|translate}}" [minLength]="1" name="parityName"
+    (onDropdownClick)="handleDropdownClickForBatch()" (ngModelChange)="onChangeParity($event)">
+    <ng-template let-cur pTemplate="item">
+      <div class="ui-helper-clearfix d-flex">
+          <div class="text-bold">{{cur.parityCode}}</div>
+          <div>| {{cur.parityName}}</div>
+      </div>
+    </ng-template>
+</p-autoComplete>
+  <button [disabled]="disabled" *ngIf="addIfMissing" pButton icon="fa fa-plus-circle" (click)="modalShow()"></button>
+</div>
+
+
+<ng-template [ngIf]="modal.active">
+
+
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal" class="modal fade"
+    (onHidden)="modal.active=false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-success modal-md" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            <span>{{'parity' |translate}}</span>
+          </h4>
+          <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+
+          <div class="animated fadeIn">
+            <div class="row">
+
+              <div class="col-lg-12">
+                <div class="card">
+                  <div class="card-header">
+                    <i class="fa fa-align-justify"></i> {{'parity-information' | translate}}
+                  </div>
+                  <div class="card-body">
+                    <form #currencyForm="ngForm">
+                      <table class="table table-bordered ui-fluid">
+                        <tbody>
+
+                          <tr>
+                            <td>{{'parity-code' | translate}}</td>
+                            <td>
+                              <input type="text" id="parityCode" name="parityCode"
+                                [(ngModel)]="requestParityDto.parityCode" class="form-control"
+                                placeholder="{{'parity-code' | translate}}" required>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>{{'parity-name' | translate}}</td>
+                            <td>
+                              <input type="text" id="parityName" name="parityName"
+                                [(ngModel)]="requestParityDto.parityName" class="form-control"
+                                placeholder="{{'parity-name' | translate}}" required>
+                            </td>
+                          </tr>
+                        
+
+                          <tr>
+                            <td>{{'plant' | translate}}</td>
+                            <td>
+                              {{this.selectedPlant?.plantName}}
+                            </td>
+                          </tr>
+
+                          <tr>
+                            <td colspan="2">
+                              <!-- <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i
+                                  class="fa fa-ban"></i>
+                                {{'reset' | translate}}
+                              </button> -->
+                              <button type="submit" class="btn btn-sm btn-primary" 
+                              [disabled]="!currencyForm.form.valid"
+                                (click)="saveParity(myModal)"><i class="fa fa-dot-circle-o"></i>
+                                {{'save' | translate}}
+                              </button>
+
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+      </div> <!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
+</ng-template>

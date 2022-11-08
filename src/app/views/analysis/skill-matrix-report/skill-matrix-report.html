@@ -1,0 +1,55 @@
+<div class="card" id="print-section">
+
+    <div class="col-lg-12">
+
+        <div class="row ui-fluid  badge-light border p-2  ">
+            <div class=" col-md-2">
+                <select name="grouptype" class="form-control" [(ngModel)]="filterCon.group" (ngModelChange)="onGroupChanged($event)" required>
+                    <option [value]="null"> {{'select-group-type' | translate}}</option>
+                    <option *ngFor="let status of skillMatrixGroupTypes" value="{{status}}">{{status}}</option>
+                </select>
+            </div>
+
+            <div class=" col-md-2" *ngIf="filterCon.group">
+                <select name="analyzeType" class="form-control" [(ngModel)]="filterCon.skillType" (ngModelChange)="isLoading = false;" required>
+                    <option [value]="null" selected> {{'select-analyze-type' | translate}}</option>
+                    <option value="WORKSTATION">WORKSTATION</option>
+                    <option value="EMPLOYEE">EMPLOYEE</option>
+                </select>
+            </div>
+           
+            <div class="col-md-2">
+                <p-calendar [showIcon]="true" dateFormat="dd.mm.yy" [monthNavigator]="true" [yearNavigator]="true"
+                    yearRange="1990:2100" [(ngModel)]="filterCon.startDate" placeholder="{{'start-date'|translate}}" required>
+                </p-calendar>
+            </div>
+
+            <div class="col-md-2">
+                <p-calendar [showIcon]="true" dateFormat="dd.mm.yy" [monthNavigator]="true" [yearNavigator]="true"
+                    yearRange="1990:2100" [(ngModel)]="filterCon.finishDate" placeholder="{{'end-date'|translate}}" required>
+                </p-calendar>
+            </div>
+            <div class="col-md-auto">
+
+                <button type="button" pButton class="ui-button-info   "
+                    [disabled]="!filterCon.finishDate||!filterCon.startDate || !filterCon.group"
+                    (click)="analyze()" label="{{'analyze' | translate}}">
+                </button>
+
+            </div>
+        </div>
+
+        <ng-container *ngIf="(tempFilter.group == 'MURI')  && (filterData && filterData.length > 0)">
+            <employee-skill-matrix [filterData]="filterData" [matrixFilter]="tempFilter"></employee-skill-matrix>
+        </ng-container>
+
+        <ng-container *ngIf="tempFilter.group == 'MUDA'">
+            <workstation-skill-matrix [filterData]="filterData" [matrixFilter]="tempFilter"></workstation-skill-matrix>
+        </ng-container>
+
+        <div class="row text-center noData" *ngIf="!filterData || filterData.length <= 0">
+            <strong class=""><i class="fa fa-warning "></i>{{'NO_SKILL_MATRIX_FOUND'|translate}}!</strong>
+        </div>
+    </div>
+
+</div>

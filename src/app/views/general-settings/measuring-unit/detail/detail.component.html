@@ -1,0 +1,67 @@
+<div class="animated fadeIn">
+  <div class="row">
+
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i> {{'measuring-unit-details' | translate}}
+        </div>
+        <div class="card-body">
+          <table class="table table-outline table-striped">
+            <tbody *ngIf="measuringUnitDetail">
+            <tr>
+              <td width="30%" class="text-bold">{{'stock-unit-measure-id' | translate}} <span class="float-right">:</span></td>
+              <td>{{measuringUnitDetail.stockUnitMeasureId}}</td>
+            </tr>
+            <tr>
+              <td class="text-bold"> {{'STOCK' | translate}}<span class="float-right">:</span></td>
+              <td>{{measuringUnitDetail.stock?.stockName}}</td>
+            </tr>
+
+            <tr>
+              <td class="text-bold">{{'workstation' | translate}}<span class="float-right">:</span></td>
+              <td>{{measuringUnitDetail.workStation?.workStationName}}</td>
+            </tr>
+            <tr>
+              <td class="text-bold">{{'equipment' | translate}}<span class="float-right">:</span></td>
+              <td>
+                {{measuringUnitDetail.equipment?.equipmentName}}
+                <!-- <a href="javascript:;" (click)="showPlantDetail(wareHouse.plantId)"> {{wareHouse.plantName}}</a></td> -->
+            </tr>
+            <tr>
+              <td class="text-bold">{{'unit-type' | translate}}<span class="float-right">:</span></td>
+              <td>{{measuringUnitDetail.unitType }}</td>
+            </tr>
+            <tr>
+              <td class="text-bold">{{'base-unit' | translate}}<span class="float-right">:</span></td>
+               <td>{{measuringUnitDetail.baseUnit}}</td>
+              </tr>
+            <tr>
+              <td class="text-bold">{{'numerator' | translate}}<span class="float-right">:</span></td>
+              <td>{{measuringUnitDetail.numerator}}</td>
+            </tr>
+           
+            <tr>
+              <td class="text-bold">{{'denominator' | translate}}<span class="float-right">:</span></td>
+              <td>{{measuringUnitDetail.denominator }}</td>
+            </tr>
+            <tr>
+              <td class="text-bold">{{'alternative-unit' | translate}}<span class="float-right">:</span></td>
+              <td>{{measuringUnitDetail.alternativeUnit}}</td>
+            </tr>
+          
+           
+            <!-- <tr>
+              <td class="text-bold">{{'create-date' | translate}}<span class="float-right">:</span></td>
+              <td>{{(measuringUnitDetail.createDate) ? (measuringUnitDetail.createDate | date:'shortDate') : '' }}</td>
+            </tr> -->
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</div>

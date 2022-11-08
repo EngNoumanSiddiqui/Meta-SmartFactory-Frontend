@@ -1,0 +1,90 @@
+<!--<form #orderEdit="ngForm" >-->
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <p-tabView>
+        <p-tabPanel header="{{'task-operation' | translate}}" [selected]="index == 1">
+          <div class="card">
+            <div class="card-header">
+              {{'task-operation'|translate}}
+            </div>
+            <div class="card-body">
+              <form #saleForm="ngForm" class="form-horizontal ui-fluid">
+                <table class="table table-bordered">
+                  <tbody>
+                    <tr>
+                      <td width="35%">{{'equipment-operation' | translate}}</td>
+                      <td>
+                        <equipment-operation-auto-complete [required]="true" [addIfMissing]="true"
+                          (selectedEquipmentOperationEvent)="setSelectedEquipmentOperation($event)">
+                        </equipment-operation-auto-complete>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'operation-order' | translate}}</td>
+                      <td><input class="form-control" [(ngModel)]="dataModel.operationOrder" type="number" min="0"
+                          name="operationOrder" />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'work' | translate}}</td>
+                      <td><input class="form-control" [(ngModel)]="dataModel.work" type="number" min="0" name="work" />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'work-unit' | translate}}</td>
+                      <td>
+                        <unit-auto-complete [addIfMissing]="true" (unitChangeEvent)="dataModel.workUnit=$event">
+                        </unit-auto-complete>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'duration' | translate}}</td>
+                      <td>
+                        <input class="form-control" [(ngModel)]="dataModel.duration" type="number" min="0"
+                          name="duration" />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'duration-unit' | translate}}</td>
+                      <td>
+                        <unit-auto-complete [addIfMissing]="true" (unitChangeEvent)="dataModel.durationUnit=$event">
+                        </unit-auto-complete>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>{{'cost-rate' | translate}}</td>
+                      <td>
+                        <input class="form-control" [(ngModel)]="dataModel.costRate" type="number" min="0"
+                          name="costRate" />
+                      </td>
+                    </tr>
+                  </tbody>
+
+                </table>
+
+              </form>
+            </div>
+            <div class="card-footer">
+              <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+                {{'reset' | translate}}
+              </button>
+              <button type="submit" class="btn btn-sm btn-primary"
+                [disabled]="!saleForm.form.valid || !dataModel.equipmentOperationId" (click)="save()"><i
+                  class="fa fa-dot-circle-o"></i>
+                {{'save' | translate}}
+              </button>
+            </div>
+          </div>
+        </p-tabPanel>
+        <p-tabPanel header="{{'component' | translate}}" [selected]="index == 2" [disabled]="index === 1">
+          <task-operation-component-list *ngIf="dataModel.equipmentTaskOperationId"
+            [equipmentTaskOperationId]="dataModel.equipmentTaskOperationId"></task-operation-component-list>
+        </p-tabPanel>
+      </p-tabView>
+    </div>
+  </div>
+  <!--/.row-->
+</div>
+<!--</form>-->

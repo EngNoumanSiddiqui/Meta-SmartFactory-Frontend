@@ -1,0 +1,86 @@
+<div class="row  mb-1 p-2 ">
+  <div class="d-flex pb-3">
+    <strong class=" col-2 text-muted"> {{'production-state'|translate}}</strong>
+    <div class="col-2 font_size_11"><span class="legend-box production"></span> {{'PRODUCTION'|translate}}</div>
+    <div class="col font_size_11"><span class="legend-box stop"></span> {{'STOP'|translate}}</div>
+    <div class="col-3 font_size_11"><span class="legend-box unknown_stopped"></span> {{'UNKNOWN STOP'|translate}}</div>
+    <div class="col-2 font_size_11"><span class="legend-box setup"></span> {{'SETUP'|translate}}</div>
+    <div class="col-3 font_size_11"><span class="legend-box setup_overtime"></span> {{'SETUP_OVERTIME'|translate}}</div>
+    <div class="col-2 font_size_11"><span class="legend-box closed_black"></span> {{'CLOSED'|translate}}</div>
+  </div>
+  <div class="d-flex col-6">
+  <span class="col-5"></span>
+  <div class="col-4 font_size_11"><span class="legend-box waiting_for_job"></span> {{'WAITING FOR JOB'|translate}}</div>
+  <div class="col-5 font_size_11"><span class="legend-box waiting_for_labor"></span> {{'WAITING_FOR_LABOR'|translate}}</div>
+  <div class="col-6 font_size_11"><span class="legend-box waiting_for_maintenance"></span> {{'WAITING_FOR_MAINTENANCE'|translate}}</div>
+  <div class="col-5 font_size_11"><span class="legend-box waiting_for_quality"></span> {{'WAITING_FOR_QUALITY'|translate}}</div>
+</div>
+
+</div>
+<!--endof legend area-->
+
+<!--chart drawing begin-->
+<div class="row  status-container" [style.minHeight]="'100px'"
+  [style.height]="(vLHeight)? vLHeight+20+'px': containerHeight +'px'"
+  (resized)="onResizeContainer($event)">
+
+  <!--here we draw shiftArray.length vertical lines for hour 00:00 to 24:00-->
+  <!--on left side we left leftVlOffset px, this leftVlOffset px will be used to draw workstations label-->
+  <ng-container *ngFor="let item of shiftArray; let index=index;">
+    <div class="vl vl-bolder" [style.height]="vLHeight+'px'"
+      [style.minHeight]="(vLHeight)? vLHeight+'px': containerHeight +'px'"
+      [ngStyle]="{'left':((chartWidth/(shiftArray.length-1))*index+leftVlOffset)+'px'}"
+      [ngClass]="{'vl-bolder':(index%2)==0}"></div>
+
+  </ng-container>
+  <!--        <div class="vl vl-bolder" [ngStyle]="{'left':((chartWidth/6)*0+leftVlOffset)+'px'}"></div>-->
+  <!--        <div class="vl" [ngStyle]="{'left':((chartWidth/6)*1+leftVlOffset)+'px'}"></div>-->
+
+  <!--end of vertical lines-->
+
+  <!--horizontal line begin-->
+  <div class="hl" [style.left]="leftVlOffset+'px'" [style.minHeight]="(vLHeight)? vLHeight+'px': containerHeight +'px'"
+    [style.maxHeight]="'600px'" [ngStyle]="{'width':(chartWidth+2)+'px'}"></div>
+  <!--horizontal line end-->
+
+  <!--here we draw x axes horizontal label that defined in hourArray -->
+
+  <ng-container *ngFor="let item of shiftArray; let index=index;">
+    <span class="position-absolute hour-span hour-bold" [style.top]="(vLHeight)? vLHeight+'px': containerHeight +'px'"
+      [ngClass]="{'hour-bold':(index%2)==0}"
+      [ngStyle]="{'left':((chartWidth/(shiftArray.length-1))*index+leftHourOffset)+'px'}">{{item}}</span>
+  </ng-container>
+
+  <ng-container *ngFor="let item of workstationStatusArray; let index=index;">
+    <span class="position-absolute" [style.left]="xLabelLeftOffset+'px'"
+      [style.top]="((index*barRowHeight)+(barMargin*1.8))+'px'">
+      <a href="javascript:;" (click)="showWorkStationDetailModal(item)">{{item.workstationName.length>20?item.workstationName.substring(0,20):item.workstationName}}</a>
+      <span *ngIf="item.workstationName.length>20" style="cursor: pointer" [pTooltip]="item.workstationName ">...</span>
+    </span>
+    <div class="position-absolute" [ngStyle]="{'top':((index*barRowHeight)+barMargin)+'px'}">
+
+      <ng-container *ngFor="let aItem of item.states">
+        <span [style.height]="barHeight+'px'"
+        [pTooltip]="showWorkStationStatusToolTip(aItem, 's')" [escape]="false" tooltipPosition="top"
+        [tooltipZIndex]="9999999"
+        [style.left]="getLeft(aItem)"
+        [style.width]="getWidth(aItem)"
+          class="position-absolute span_opacity" [ngClass]="{
+                  'span_waiting': aItem.s=='WAITING_FOR_JOB',
+                  'span_waiting_for_labor': aItem.s=='WAITING_FOR_LABOR',
+                  'span_waiting_for_maintenance': aItem.s=='WAITING_FOR_MAINTENANCE',
+                  'span_waiting_for_quality': aItem.s=='WAITING_FOR_QUALITY',
+                  'span_production': aItem.s=='PRODUCTION',
+                  'span_setup': aItem.s=='SETUP',
+                  'span_setup_overtime': aItem.s=='SETUP_OVERTIME',
+                  'span_stop': aItem.s=='STOPPED',
+                  'span_unknown_stopped': aItem.s=='UNKNOWN_STOPPED',
+                  'closed_black': aItem.s=='CLOSED'
+                  }"></span>
+
+      </ng-container>
+
+    </div>
+  </ng-container>
+
+</div>

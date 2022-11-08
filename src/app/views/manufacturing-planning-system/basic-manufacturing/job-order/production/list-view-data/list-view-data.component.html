@@ -1,0 +1,276 @@
+<div class="row col-md-12 p-0">
+  <div class="col-md-2 d-flex flex-column mt-2 p-0 ">
+    <Label class="mb-0 mt-1">{{'material-type'|translate}}</Label>
+    <p-dropdown [options]="stockTypes" [(ngModel)]="selectedType" 
+      (ngModelChange)="onStockTypeChange($event)" dataKey="value"
+      filterBy="name" optionLabel="name" name="stockType"
+      placeholder="{{'filter-by-type'|translate}}">
+    </p-dropdown>
+    <Label class="mb-0 mt-2">{{'material'|translate}}</Label>
+    <p-dropdown [options]="tableData" [(ngModel)]="selectedStock" (ngModelChange)="onStockChange($event)" dataKey="stockId"
+    filterBy="value.stockNo,value.stockName" optionLabel="stockName" name="stock" [filter]="true" [showClear]="true" placeholder="{{'search-stock'|translate}}">
+      <ng-template let-stock pTemplate="item">
+        {{stock.value.stockNo}} | {{stock.value.stockName}}
+      </ng-template>
+    </p-dropdown>
+
+    <hr class="col mt-3 mb-2">
+    <div class="field-checkbox">
+      <p-checkbox [(ngModel)]="totalAmountChecked" [binary]="true" [inputId]="totalAmountId"></p-checkbox>
+      <label [for]="totalAmountId">{{'total-amount' |translate}}</label>
+    </div>
+    <div class="field-checkbox">
+      <p-checkbox [(ngModel)]="incommingAmountChecked" [binary]="true" [inputId]="incommingAmountId"></p-checkbox>
+      <label [for]="incommingAmountId">{{'incomming-amount' |translate}}</label>
+    </div>
+    <div class="field-checkbox">
+      <p-checkbox [(ngModel)]="outgoingAmountChecked" [binary]="true" [inputId]="outgoingAmountId"></p-checkbox>
+      <label [for]="outgoingAmountId">{{'outgoing-amount' |translate}}</label>
+    </div>
+    <div class="field-checkbox">
+      <p-checkbox [(ngModel)]="totalProductionChecked" [binary]="true" [inputId]="totalProductionId"></p-checkbox>
+      <label [for]="totalProductionId">{{'total-production' |translate}}</label>
+    </div>
+
+    <hr class="col mt-1 mb-2">
+
+    <div class="field-checkbox">
+      <p-checkbox [(ngModel)]="reOrderPointChecked" [binary]="true" [inputId]="reOrderPointId"></p-checkbox>
+      <label [for]="reOrderPointId">Reorder Point</label>
+    </div>
+    <hr class="col mt-1 mb-2">
+    <div class="field-checkbox">
+      <p-checkbox [(ngModel)]="totalCostChecked" [binary]="true" [inputId]="totalCostId"></p-checkbox>
+      <label [for]="reOrderPointId">{{'total-cost' |translate}}</label>
+    </div>
+    <!-- <div class="field-checkbox">
+      <p-checkbox [(ngModel)]="fixedCostChecked" [binary]="true" [inputId]="fixedCostId"></p-checkbox>
+      <label [for]="reOrderPointId">{{'fixed-cost' |translate}}</label>
+    </div>
+    <div class="field-checkbox">
+      <p-checkbox [(ngModel)]="laborCostChecked" [binary]="true" [inputId]="laborCostId"></p-checkbox>
+      <label [for]="reOrderPointId">{{'labor-cost' |translate}}</label>
+    </div>
+    <div class="field-checkbox">
+      <p-checkbox [(ngModel)]="variableCostChecked" [binary]="true" [inputId]="variableCostId"></p-checkbox>
+      <label [for]="reOrderPointId">{{'variable-cost' |translate}}</label>
+    </div> -->
+    <div class="field-checkbox">
+      <p-checkbox [(ngModel)]="totalProfitChecked" [binary]="true" [inputId]="totalProfitId"></p-checkbox>
+      <label [for]="reOrderPointId">{{'total-profit' |translate}}</label>
+    </div>
+
+   
+    <!-- <div class="field-radiobutton">
+
+      <p-radioButton name="listViewData1" value="totalAmount" [(ngModel)]="showBy" inputId="listViewData1"></p-radioButton>
+      <label class="mr-2" for="listViewData1">Total Amount</label>
+    </div>
+    <div class="field-radiobutton">
+        <p-radioButton name="listViewData2" value="incommingAmount" [(ngModel)]="showBy" inputId="listViewData2"></p-radioButton>
+        <label class="mr-2" for="listViewData2">Incomming Amount</label>
+    </div>
+    <div class="field-radiobutton">
+        <p-radioButton name="listViewData3" value="outgoingAmount" [(ngModel)]="showBy" inputId="listViewData3"></p-radioButton>
+        <label class="mr-2" for="listViewData3">Outgoing Amount</label>
+    </div>
+    <div class="field-radiobutton">
+      <p-radioButton name="listViewData4" value="totalProduction" [(ngModel)]="showBy" inputId="listViewData4"></p-radioButton>
+      <label class="mr-2" for="listViewData4">Total Production</label>
+    </div> -->
+  </div>
+  <div class="col-md-10 p-0" *ngIf="filteredTableData">
+    <p-table #dt [columns]="scrollableCols" [frozenColumns]="frozenCols" 
+    [value]="filteredTableData" frozenWidth="300px" scrollHeight="55vh" scrollable="true"
+       dataKey="" >
+      <ng-template pTemplate="colgroup" let-columns>
+        <colgroup>
+            <col *ngFor="let col of columns" style="width:100px">
+        </colgroup>
+    </ng-template>
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <ng-container *ngFor="let col of columns" [ngSwitch]="col.field">
+            
+            <th *ngSwitchCase="'stockNo'" rowspan="2">{{'stock-no' |translate}}</th>
+            <th *ngSwitchCase="'stockName'" rowspan="2">{{'stock-name' |translate}}</th>
+            <ng-container *ngSwitchCase="'reorderPoint'">
+              <th rowspan="2"  *ngIf="reOrderPointChecked" >{{'reorder-point' |translate}}</th>
+            </ng-container>
+          </ng-container>
+          <!-- <th rowspan="2">{{'stock-no' |translate}}</th>
+          <th rowspan="2" >{{'stock-name' |translate}}</th>
+          <th rowspan="2" *ngIf="reOrderPointChecked" >{{'reorder-point' |translate}}</th> -->
+          <ng-container *ngIf="filteredTableData && filteredTableData.length" >
+            <th style="height:35px;" *ngFor="let shift of filteredTableData[0]?.children; let i=index;" 
+            [ngStyle]="{'width': getwidth}"
+            [attr.colspan]="getcolspan">
+              <span *ngIf="shift.shiftStartDate; else groupDate">
+                {{shift.shiftStartDate | date:'dd-MM-yyyy HH:mm'}}
+              </span>
+              <ng-template #groupDate>
+                {{shift.groupDate | date:'dd-MM-yyyy'}}
+              </ng-template>
+            </th>
+          </ng-container>
+        </tr>
+        <tr>
+          <!-- <th style="width: 120px">{{'stock-no' |translate}}</th>
+          <th style="width: 120px">{{'stock-name' |translate}}</th> -->
+          
+          <ng-template [ngIf]="filteredTableData && filteredTableData.length" >
+            <ng-container *ngFor="let shift of filteredTableData[0]?.children; let i=index;">
+              <th style="height:45px;" *ngIf="totalAmountChecked">
+                {{'total-amount' |translate}}
+              </th>
+              <th style="height:45px;" *ngIf="incommingAmountChecked">
+                {{'incomming-amount' |translate}}
+              </th>
+              <th style="height:45px;" *ngIf="outgoingAmountChecked">
+                {{'outgoing-amount' |translate}}
+              </th>
+              <th style="height:45px;" *ngIf="totalProductionChecked">
+                {{'total-production' |translate}}
+              </th>
+              <th style="height:45px;" *ngIf="totalCostChecked">
+                {{'total-cost' |translate}}
+              </th>
+             
+              <th style="height:45px;" *ngIf="totalProfitChecked">
+                {{'total-profit' |translate}}
+              </th>
+            
+            </ng-container>
+          </ng-template>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData let-columns="columns" let-ri="rowIndex">
+        <tr style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; word-break: break-all; max-height: 50px;">
+          <ng-container *ngFor="let col of columns" [ngSwitch]="col.field">
+            <td *ngSwitchCase="'stockNo'">
+              <a href="javascript:;"
+              (click)="showMaterialDetailDialog(rowData.stockId)">{{ rowData.stockNo }}</a>
+            </td>
+            <td style="white-space: nowrap;
+            overflow: hidden;
+            word-break: break-all;
+            text-overflow: ellipsis;" *ngSwitchCase="'stockName'">
+              <a href="javascript:;"
+              (click)="showMaterialDetailDialog(rowData.stockId)">{{ rowData.stockName }}</a>
+            </td>
+            <ng-container *ngSwitchCase="'reorderPoint'">
+              <td  *ngIf="reOrderPointChecked" >
+                {{ rowData.stockStrategy?.reorderPoint }}
+              </td>
+            </ng-container>
+          </ng-container>
+          
+          <ng-container *ngFor="let shift of rowData.children; let i=index;">
+            <ng-container *ngIf="totalAmountChecked">
+              <td style="width:78px;height:50px;" [ngStyle]="{
+                'background-color': (rowData.stockStrategy?.reorderPoint > (shift.totalAmount || shift.sumTotalAmount)) ? 'red': '',
+                'color': (rowData.stockStrategy?.reorderPoint > (shift.totalAmount || shift.sumTotalAmount)) ? 'white': ''}"
+              >
+                {{shift.totalAmount || shift.sumTotalAmount}}
+              </td>  
+            </ng-container>
+            <ng-container *ngIf="incommingAmountChecked">
+              <td style="width:78px;height:50px;">
+                {{shift.incomingAmount || shift.sumIncomingAmount}}
+              </td>
+            </ng-container>
+            <ng-container *ngIf="outgoingAmountChecked">
+              <td style="width:78px;height:50px;">
+                {{shift.outgoingAmount || shift.sumOutgoingAmount}}
+              </td>
+            </ng-container>
+            <ng-container *ngIf="totalProductionChecked">
+              <td style="width:78px;height:50px;">
+                {{shift.totalProduction || shift.sumTotalProduction}}
+              </td>
+            </ng-container>
+            <td style="width:78px;height:50px;" *ngIf="totalCostChecked">
+              {{shift.totalCost || shift.sumTotalCost}}
+            </td>
+            
+            <td style="width:78px;height:50px;" *ngIf="totalProfitChecked">
+              {{shift.totalProfit || shift.sumTotalProfit}}
+            </td>
+          </ng-container>
+          
+        </tr>
+        <!-- <tr>
+          <ng-container *ngFor="let shift of rowData?.children; let i=index;">
+            <ng-container *ngIf="totalAmountChecked">
+              <td [ngStyle]="{
+                'background-color': (rowData.stockStrategy?.reorderPoint > (shift.totalAmount || shift.sumTotalAmount)) ? 'red': '',
+                'color': (rowData.stockStrategy?.reorderPoint > (shift.totalAmount || shift.sumTotalAmount)) ? 'white': ''
+              }">
+                {{shift.totalAmount || shift.sumTotalAmount}}
+              </td>  
+            </ng-container>
+            <ng-container *ngIf="incommingAmountChecked">
+              <td>
+                {{shift.incomingAmount || shift.sumIncomingAmount}}
+              </td>
+            </ng-container>
+            <ng-container *ngIf="outgoingAmountChecked">
+              <td>
+                {{shift.outgoingAmount || shift.sumOutgoingAmount}}
+              </td>
+            </ng-container>
+            <ng-container *ngIf="totalProductionChecked">
+              <td>
+                {{shift.totalProduction || shift.sumTotalProduction}}
+              </td>
+            </ng-container>
+            <td *ngIf="totalCostChecked">
+              {{shift.totalCost || shift.sumTotalCost}}
+            </td>
+            <td *ngIf="fixedCostChecked">
+              {{shift.fixedCost || shift.sumFixedCost}}
+            </td>
+            <td *ngIf="laborCostChecked">
+              {{shift.laborCost || shift.sumLaborCost}}
+            </td>
+            <td *ngIf="variableCostChecked">
+              {{shift.variableCost || shift.sumVariableCost}}
+            </td>
+            <td *ngIf="totalProfitChecked">
+              {{shift.totalProfit || shift.sumTotalProfit}}
+            </td>
+            
+          </ng-container>
+        </tr> -->
+      </ng-template>
+
+    </p-table>
+
+    <!-- <div style="overflow-x: scroll;">
+      <table class="table table-sm table-bordered table-responsive-sm">
+        <tr style="background-color: #dadada;">
+          <td>{{'stock-no' |translate}}</td>
+          <td>{{'stock-name' |translate}}</td>
+          <ng-container *ngFor="let shift of getShiftDateLength; let i=index;">
+            <td>{{'shift-start-date' |translate}} {{i+1}}</td>
+          </ng-container>
+        </tr>
+        <ng-container *ngFor="let stock of getUniqueStockList; let stockIndex=index;">
+          <tr>
+            <td rowspan="2">{{stock.stockNo}}</td>
+            <td rowspan="2">{{stock.stockName}}</td>
+            <ng-container *ngFor="let shiftIndex of getShiftDateLength;let i=index;">
+              <td>{{getShiftDate(stock.stockId, i, stockIndex) | date: 'dd/MM/yyyy HH:mm'}}</td>
+            </ng-container>
+          </tr>
+          <tr>
+            <ng-container *ngFor="let shiftIndex of getShiftDateLength; let i=index;">
+              <td>{{getData(stock.stockId, i, stockIndex)}}</td>
+            </ng-container>
+          </tr>
+        </ng-container>
+      </table>
+    </div> -->
+  </div>
+  
+</div>

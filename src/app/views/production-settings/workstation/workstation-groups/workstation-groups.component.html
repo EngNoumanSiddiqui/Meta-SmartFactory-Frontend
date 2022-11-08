@@ -1,0 +1,100 @@
+<div class="col-md-12">
+  <div class="card">
+    <div class="card-header">
+      {{'material-groups' | translate}}
+      <div class="card-actions" *ngIf="!isDetails">
+        <button type="button" class="btn btn-primary" data-toggle="modal"
+              (click)="newWorkstationGroup()"  ><i class="fa fa-plus"></i></button>
+      </div>
+    </div>
+    <div class="card-body m-0 p-0">
+
+      <p-table [value]="workstationGroupList" [autoLayout]="true">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>{{'workstation-material-group-id' |translate}}</th>
+            <th>{{'stock-group-id' | translate}}</th>
+            <th>{{'stock-group-code' |translate}}</th>
+            <th>{{'workstation-no' |translate}}</th>
+            <th>{{'workstation-name' |translate}}</th>
+            <th *ngIf="!isDetails">{{'action' |translate}}</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-person let-rowIndex="rowIndex">
+          <tr>
+            <td>{{person.workstationMaterialGroupId}}</td>
+            <td>{{person.stockGroupId}}</td>
+            <td>{{person.stockGroupCode}}</td>
+            <td>{{person.workStationNo}}</td>
+            <td>{{person.workStationName}}</td>
+            <td *ngIf="!isDetails" width="70px">
+              <div style="display:inline-flex">
+                <button class="btn btn-sm btn-outline-info float-left" (click)="editWorkstationGroup(rowIndex)"><i
+                    class="fa fa-edit"></i></button>
+                <button class="btn btn-sm btn-outline-danger float-right"
+                  (click)="removeWorkstationGroup(rowIndex)"><i
+                    class="fa fa-close"></i></button>
+              </div>
+            </td>
+          </tr>
+
+
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage" let-columns>
+          <tr *ngIf="!workstationGroupList || workstationGroupList.length==0">
+            <td colspan="10" class="noData text-center">
+              <strong class=""><i class="fa fa-warning "></i>{{'NO_DATA_FOUND'|translate}}!</strong>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+       
+    </div>
+  </div>
+</div>
+
+
+<ng-template [ngIf]="dialog.active">
+  <p-dialog header="{{'workstation-material-group' | translate}}" [(visible)]="dialog.active"
+  [style]="{'min-width': '800px','width': '900px'}"   
+  [maximizable]="true" #dial
+    [contentStyle]="{'min-height':'400px'}" modal="true" dismissableMask="true" (onHidden)="this.dialog.active=false;">
+  <div class="col-md-12">
+      <form #contactPersonForm="ngForm">
+          <table class="table table-bordered table-condensed">
+            <tbody>
+              <tr>
+                <td>{{'workstation-no'|translate}}</td>
+                <td>{{workstationGroup.workStationNo}}</td>
+              </tr>
+              <tr>
+                <td>{{'workstation-name'|translate}}</td>
+                <td>{{workstationGroup.workStationName}}</td>
+              </tr>
+              <tr>
+                <td>{{'stock-group-code'|translate}}</td>
+                <td>
+                  <material-group-auto-complete [selectedMaterialGroupNo]="workstationGroup.stockGroupCode"
+                  (selectedMaterialGroupEvent)="workstationGroup.stockGroupId=$event?.stockGroupId; workstationGroup.stockGroupCode=$event?.groupCode;"></material-group-auto-complete>
+                </td>
+              </tr>
+
+              <tr>
+                <td colspan="2">
+                  <button type="reset" class="btn btn-sm btn-danger" (click)="reset()">
+                    {{'reset' | translate}}
+                  </button>
+                  <button type="submit" class="btn btn-sm btn-primary" [disabled]="!contactPersonForm.form.valid || !workstationGroup.stockGroupId" 
+                  (click)="saveWorkstationGroup()"><i
+                      class="fa fa-dot-circle-o"></i>
+                    {{'save' | translate}}
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </form>
+  </div>
+  </p-dialog>
+</ng-template>

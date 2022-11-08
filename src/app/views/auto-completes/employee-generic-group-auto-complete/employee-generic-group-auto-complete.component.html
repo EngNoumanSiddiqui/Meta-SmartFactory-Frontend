@@ -1,0 +1,20 @@
+<div class="  d-flex ui-fluid">
+<p-autoComplete [(ngModel)]="selectedEmployeeGenericGroup" [suggestions]="filteredEmployee" 
+(completeMethod)="searchEmployee($event)" field="groupName" appendTo="body" [baseZIndex]="99999" [dropdown]="dropdown" [required]="required"  
+dataKey="employeeGenericGroupId" [forceSelection]="true" 
+       placeholder="{{placeholder | translate}}" [minLength]="1" name="groupName"
+       [disabled]="disabled" (onDropdownClick)="handleDropdownClickForEmployee()" (ngModelChange)="onChangeEmployee($event)">
+  <ng-template let-em pTemplate="item">
+    <div class="ui-helper-clearfix" style="border-bottom:1px solid #D5D5D5">
+      <div style="font-size:14px;float:left;margin: 5px 0 0 2px">{{em.employeeGenericGroupId}}</div>
+      <div style="font-size:14px;float:right;margin:5px 2px 0 0">{{em.groupCode +' '+em.groupName}}</div>
+    </div>
+  </ng-template>
+  <!-- <ng-template let-em pTemplate="selectedItem">
+    <div class="ui-helper-clearfix" style="border-bottom:1px solid #D5D5D5">
+      <div style="font-size:14px;float:left;margin: 5px 0 0 2px">{{em.employeeGenericGroupId}}</div>
+      <div style="font-size:14px;float:right;margin:5px 2px 0 0">{{em.groupCode +' '+em.groupName}}</div>
+    </div>
+  </ng-template> -->
+</p-autoComplete>
+</div>

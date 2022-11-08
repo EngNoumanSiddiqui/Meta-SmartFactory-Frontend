@@ -1,0 +1,49 @@
+<div class="col-md-12" *ngIf="jobOrder">
+
+  <table class="table ui-fluid">
+    <tbody>
+
+    <tr>
+      <td>Name</td>
+      <td>{{jobOrder?.data?.name}}</td>
+    </tr>
+    <tr>
+      <td>WorkStation</td>
+      <td>
+        <auto-complete [disabled]="jobOrder.status!='PLANNED'" [allElements]="workstations"
+                       [itemName]="'workStationName'" [dropdown]="true"
+                       [selectedEl]="selectedWorkStation"
+                       (selectedEvent)="setSelectedWorkstation($event)"></auto-complete>
+      </td>
+    </tr>
+    <tr>
+      <td>{{'start-date'|translate}}</td>
+      <td>
+        <p-calendar [disabled]="jobOrder.status!='PLANNED'" [(ngModel)]="tempModel.startDate" showTime="showTime"
+                    hourFormat="24" [monthNavigator]="true"
+                    [yearNavigator]="true" yearRange="2018:2100"
+                    [showIcon]="true" [disabledDays]="[0,6]" dateFormat="yy-mm-dd"></p-calendar>
+
+      </td>
+    </tr>
+    <tr>
+      <td>{{'end-date'|translate}}</td>
+      <td>
+        <p-calendar [disabled]="jobOrder.status!='PLANNED'" [(ngModel)]="tempModel.endDate" showTime="showTime"
+                    hourFormat="24" [monthNavigator]="true"
+                    [yearNavigator]="true" yearRange="2018:2100"
+                    [showIcon]="true" [disabledDays]="[0,6]" dateFormat="yy-mm-dd"></p-calendar>
+
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <div class="row">
+    <button pButton label="close" class="float-left ui-button-primary btn-margin-2" (click)="close()"></button>
+    <button pButton *ngIf="jobOrder.status=='PLANNED'" label="save"
+            class=" float-right ui-button-success btn-margin-2" (click)="save()"
+            [disabled]="!tempModel.resourceId"></button>
+    <button pButton *ngIf="jobOrder.status=='PLANNED'" label="delete" class="float-right ui-button-danger btn-margin-2"
+            (click)="delete()"></button>
+  </div>
+</div>

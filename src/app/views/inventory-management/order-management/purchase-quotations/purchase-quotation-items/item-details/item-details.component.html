@@ -1,0 +1,73 @@
+<!--<form #orderEdit="ngForm" >-->
+  <div class="animated fadeIn">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            {{'purchase-quotation' | translate}}
+          </div>
+          <div class="card-body" >
+            <table class="table table-md table-responsive-sm table-striped table-outline mb-0">
+                <tbody >
+                  <tr>
+                    <td class="text-bold">{{'purchase_quotation_detail_id' | translate}} <span class="float-right">:</span></td>
+                    <td>{{purchaseQuotationDto.purchaseQuotationDetailId}}</td>
+                    <td width="20%" class="text-bold">{{'stock-number' | translate}}<span class="float-right">:</span></td>
+                    <td width="30%">{{purchaseQuotationDto.stock?.stockNo}}</td>
+                  </tr>
+                <tr>
+                  <td width="20%" class="text-bold">{{'purchase_quotation_id' | translate}} <span class="float-right">:</span></td>
+                  <td width="25%">{{purchaseQuotationDto.purchaseQuotation?.purchaseQuotationId}}</td>
+                  <td class="text-bold">{{'stock-name' | translate}}<span class="float-right">:</span></td>
+                  <td>{{purchaseQuotationDto.stock?.stockName}}</td>
+                </tr>
+                <tr>
+                  <td class="text-bold">{{'plant' | translate}}<span class="float-right">:</span></td>
+                  <td>{{purchaseQuotationDto.plant?.plantName}}</td>
+                  <td class="text-bold">{{'batch' | translate}}<span class="float-right">:</span></td>
+                  <td>{{purchaseQuotationDto.batch}}</td>
+                </tr>
+                <tr>
+                  <td class="text-bold">{{'base-unit' | translate}}<span class="float-right">:</span></td>
+                  <td>{{purchaseQuotationDto.baseUnit}}</td>
+                  <td class="text-bold">{{'order-unit' | translate}}<span class="float-right">:</span></td>
+                  <td>{{purchaseQuotationDto.orderUnit}}</td>
+                </tr>
+                <tr>
+                  <td class="text-bold">{{'request-quantity' | translate}}<span class="float-right">:</span></td>
+                  <td>{{purchaseQuotationDto.requestedQuantity}}</td>
+                  <td class="text-bold">{{'quoted-quantity' | translate}}<span class="float-right">:</span></td>
+                  <td>{{purchaseQuotationDto.quotedQuantity}}</td>
+                </tr>
+                <tr>
+                  <td class="text-bold">{{'net-price' | translate}}<span class="float-right">:</span></td>
+                  <td>{{purchaseQuotationDto.netPrice}}</td>
+                  <td class="text-bold">{{'delivery-cost' | translate}}<span class="float-right">:</span></td>
+                  <td>{{purchaseQuotationDto.deliveryCost}}</td>
+                </tr>
+                <tr>
+                  <td class="text-bold">{{'purchase-price' | translate}}<span class="float-right">:</span></td>
+                  <td style="max-width: 260px;">{{purchaseQuotationDto.effectivePrice}}</td>
+                  <td class="text-bold">{{'status' | translate}}<span class="float-right">:</span></td>
+                  <td>{{purchaseQuotationDto.purchaseQuotationDetailStatus}}</td>
+                </tr>
+                <tr>
+                  <td class="text-bold">{{'order-date' | translate}}<span class="float-right">:</span></td>
+                  <td>{{purchaseQuotationDto.createDate|date:"dd/MM/yyyy HH:mm" }}</td>
+                  <td class="text-bold">{{'delivery-date' | translate}}<span class="float-right">:</span></td>
+                  <td>{{purchaseQuotationDto.deliveryDate|date:"dd/MM/yyyy HH:mm" }}</td>
+                </tr>
+                <tr>
+                
+                </tr>
+                <!-- <tr>
+                  <td class="text-bold">{{'delivery-completion-date' | translate}}<span class="float-right">:</span></td>
+                  <td>{{porderItemDetails.deliveryCompletionDate|date:"dd/MM/yyyy" }}</td>
+                </tr> -->
+                </tbody>
+            </table>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>

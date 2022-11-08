@@ -1,0 +1,53 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i> {{'scrap' | translate}}  {{'details' | translate}}
+        </div>
+        <div class="card-body">
+          <form #partForm="ngForm">
+          <table class="table table-bordered">
+            <tbody>
+            <tr>
+              <td width="30%" *ngIf="part.typeScrap">{{'scrap-code' | translate}}*</td>
+              <td width="30%" *ngIf="part.typeRework">{{'rework-code' | translate}}*</td>
+              <td><input type="text" name="scrapCode" required class="form-control" [(ngModel)]="part.scrapCode"/> </td>
+            </tr>
+            <tr>
+              <td>{{'type-scrap' | translate}}*</td>
+              <!-- <td *ngIf="part.typeRework">{{'type-rework' | translate}}*</td> -->
+               <td>
+                 <p-checkbox name="typeScrap" (ngModelChange)="ontypeScrapchanged($event)"  [(ngModel)]="part.typeScrap" binary="true"></p-checkbox>
+               </td>
+               
+            </tr>
+            <tr>
+              <td *ngIf="part.typeScrap">{{'scrap-description' | translate}}*</td>
+              <td *ngIf="part.typeRework">{{'rework-description' | translate}}*</td>
+              <td><input type="text" required  class="form-control" name="scrapDescription" [(ngModel)]="part.scrapDescription"/>  </td>
+            </tr>
+            <tr>
+              <td>{{'type-rework' | translate}}</td>
+               <td>
+                 <p-checkbox name="typeRework" (ngModelChange)="ontypeReworkchanged($event)" [(ngModel)]="part.typeRework" binary="true"></p-checkbox>
+               </td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+                  {{'reset' | translate}}</button>
+                <button type="submit" class="btn btn-sm btn-primary" [disabled]="!partForm.form.valid" (click)="save()"><i class="fa fa-dot-circle-o"></i>
+                  {{'save' | translate}}</button>
+                <!--<button type="button" class="btn btn-sm btn-secondary float-right" (click)="goPage()">
+                  <i class="icon-arrow-left-circle"></i> {{'cancel' | translate}} </button>-->
+              </td>
+            </tr>
+            </tbody>
+          </table>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

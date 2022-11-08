@@ -1,0 +1,97 @@
+<div class="animated fadeIn" >
+  <div class="row" *ngIf="saleOrder">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          {{'order-detail' | translate}}
+        </div>
+        <div class="card-body" >
+            <table class="table table-md table-responsive-sm table-striped table-outline mb-0">
+                <tbody >
+                  <tr>
+                    <td class="text-bold">{{'quotation-detail-id' | translate}} <span class="float-right">:</span></td>
+                    <td>{{saleOrder.quotationDetailId}}</td>
+                    <td width="20%" class="text-bold">{{'stock-number' | translate}}<span class="float-right">:</span></td>
+                    <td width="30%">
+                      <a href="javascript:;" 
+                      (click)="showDetailDialog(saleOrder.stock?.stockId, 'STOCK')">{{saleOrder.stock?.stockNo}}</a>
+                    </td>
+                  </tr>
+                <tr>
+                  <td width="20%" class="text-bold">{{'quotation-id' | translate}} <span class="float-right">:</span></td>
+                  <td width="25%">
+                         {{saleOrder.orderQuotationId}}
+                  </td>
+                  <td class="text-bold">{{'stock-name' | translate}}<span class="float-right">:</span></td>
+                  <td>
+                    <a href="javascript:;" 
+                    (click)="showDetailDialog(saleOrder.stock?.stockName, 'STOCK')">{{saleOrder.stock?.stockName}}</a>
+                  </td>
+                </tr>
+                <!-- <tr>
+                  <td class="text-bold">{{'plant' | translate}}<span class="float-right">:</span></td>
+                  <td colspan="3">
+                    <a href="javascript:;" 
+                      (click)="showDetailDialog(saleOrder.plant?.plantId, 'PLANT')">
+                       {{saleOrder.plant?.plantName}}
+                    </a>
+                  </td>
+                 
+                </tr> -->
+                <tr>
+                  <td class="text-bold">{{'base-unit' | translate}}<span class="float-right">:</span></td>
+                  <td>{{saleOrder.baseUnit}}</td>
+                  <td class="text-bold">{{'dimension-unit' | translate}}<span class="float-right">:</span></td>
+                  <td>{{saleOrder.dimensionUnit}}</td>
+                </tr>
+                <tr>
+                  <td class="text-bold">{{'height' | translate}}<span class="float-right">:</span></td>
+                  <td>{{saleOrder.height}}</td>
+                  <td class="text-bold">{{'width' | translate}}<span class="float-right">:</span></td>
+                  <td>{{saleOrder.width}}</td>
+                </tr>
+                <tr>
+                  <td class="text-bold">{{'quantity' | translate}}<span class="float-right">:</span></td>
+                  <td>{{saleOrder.quantity}}</td>
+                  <td class="text-bold">{{'cost-price' | translate}}<span class="float-right">:</span></td>
+                  <td>{{saleOrder.costPrice}}</td>
+                </tr>
+                <tr>
+                 
+                  <td class="text-bold">{{'status' | translate}}<span class="float-right">:</span></td>
+                  <td>{{saleOrder.orderDetailQuotationStatus}}</td>
+                  <td class="text-bold">{{'discount' | translate}}<span class="float-right">:</span></td>
+                  <td>{{saleOrder.discount}}</td>
+                </tr>
+                <tr>
+                 
+                  <td class="text-bold">{{'priority' | translate}}<span class="float-right">:</span></td>
+                  <td>{{saleOrder.priority}}</td>
+                  <td class="text-bold">{{'sales-price' | translate}}<span class="float-right">:</span></td>
+                  <td >{{saleOrder.salePrice}}</td>
+                </tr>
+                <tr>
+                  <td class="text-bold">{{'order-date' | translate}}<span class="float-right">:</span></td>
+                  <td>{{saleOrder.createDate|date:"dd/MM/yyyy HH:mm" }}</td>
+                  <td class="text-bold">{{'delivery-date' | translate}}<span class="float-right">:</span></td>
+                  <td>{{saleOrder.deliveryDate|date:"dd/MM/yyyy" }}</td>
+                </tr>
+                <tr>
+                
+                </tr>
+                <!-- <tr>
+                  <td class="text-bold">{{'delivery-completion-date' | translate}}<span class="float-right">:</span></td>
+                  <td>{{saleOrder.deliveryCompletionDate|date:"dd/MM/yyyy" }}</td>
+                </tr> -->
+                </tbody>
+            </table>
+        </div>
+        <!-- <div class="card-footer">
+          <button type="button" pButton class="ui-button-info"
+            (click)="OpenDetailPROrder()" label="{{'view-full-details' | translate}}">
+          </button>
+        </div> -->
+        </div>
+      </div>
+    </div>
+</div>

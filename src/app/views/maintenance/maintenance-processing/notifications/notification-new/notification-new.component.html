@@ -1,0 +1,215 @@
+<div class="row ui-fluid">
+
+  <div class="col-lg-12">
+    <form #notificationForm="ngForm">
+      <div class="card" style="margin: 0px;">
+        <div class="card-header">
+          {{'maintenance-notification-information'|translate}}
+        </div>
+        <div class="card-body">
+
+          <table class="table table-bordered m-0">
+            <tbody>
+              <tr>
+                <td width="50%">
+                  <table class="table table-bordered m-0">
+                    <tr>
+                      <td width="15%">{{'notification-type' | translate}}</td>
+                      <td width="35%" class="ui-fluid">
+
+                        <select id="notificationType" name="notificationType" class="form-control" [(ngModel)]="dataModel.maintenanceNotificationType">
+                     
+                          <option [ngValue]="null">{{ "please-select" | translate }}</option>
+                          <option *ngFor="let maintenanceNotificationType of maintenanceNotificationTypes" value="{{maintenanceNotificationType}}">
+                            {{maintenanceNotificationType}}
+                          </option>
+                        </select>
+
+
+             
+                      </td>
+
+                    </tr>
+                    <tr>
+                      <td>{{'functional-location' | translate}}</td>
+                      <td>
+                        <select id="functionalLocations" name="functionalLocations" class="form-control"
+                          [(ngModel)]="dataModel.maintenanceFunctionalLocationId">
+                          <option [value]="null">{{'please-select-functional-location' | translate}}</option>
+                          <option *ngFor="let item of functionalLocations"
+                            value="{{item.maintenanceFunctionalLocationId}}">
+                            {{item.description}}
+                          </option>
+                        </select>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>{{'equipment' | translate}}</td>
+                      <td>
+                        <equipment-auto-complete [plantId]="selectedPlant?.plantId"
+                          [selectedEquipmentId]="dataModel.equipmentId"
+                          (selectedEquipmentEvent)="setSelectedEquipment($event)"></equipment-auto-complete>
+
+                      </td>
+
+
+                    </tr>
+                    <tr>
+                      <td>{{'plant' | translate}}</td>
+                      <td>
+                        <span
+                          *ngIf="dataModel.mainPlantId && selectedPlant && dataModel.mainPlantId=== selectedPlant.plantId">{{selectedPlant.plantName}}</span>
+                        <plant-auto-complete *ngIf="!dataModel.mainPlantId && !selectedPlant"
+                          [selectedPlantId]="dataModel.mainPlantId" (selectedPlantEvent)="setSelectedPlant($event)"
+                          [eventFire]="true"></plant-auto-complete>
+
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'workstation' | translate}}</td>
+                      <td>
+                        <workstation-auto-complete [selectedWorkStationId]="dataModel.workStationId"
+                          (selectedWorkStationEvent)="dataModel.workStationId=$event.workStationId">
+                        </workstation-auto-complete>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td width="15%">{{'planner-group' | translate}}</td>
+                      <td width="35%">
+                        <planner-group-auto-complete [plantId]="selectedPlant?.plantId"
+                          [selectedPlannerGroup]="dataModel.equipmentPlannerGroup"
+                          (selectedPlannerGroupEvent)="dataModel.equipmentPlannerGroupId=$event.plannerGroupId">
+                        </planner-group-auto-complete>
+                      </td>
+                    </tr>
+             
+                    <tr>
+                      <td>{{'breakdown' | translate}}</td>
+                      <td>
+                        <p-checkbox class="form-control" [(ngModel)]="dataModel.breakdown" name="breakdown"
+                          binary="true" required></p-checkbox>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'problem-definition' | translate}}</td>
+                      <td>
+                        <textarea type="text" class="form-control" [(ngModel)]="dataModel.problemDefination"
+                          name="definition" ></textarea>
+                      </td>
+
+                    </tr>
+                    <!-- <tr *ngIf="dataModel.breakdown">
+                      <td>{{'breakdown-duration' | translate}}</td>
+                      <td>
+                        <input type="number" name="breakdownDuration" class="form-control"
+                          [(ngModel)]="dataModel.breakdownDuration" name="breakdownDuration"
+                          [required]="dataModel.breakdown" />
+                      </td>
+
+                    </tr> -->
+                    <!-- <tr *ngIf="dataModel.breakdown=== false">
+                            <td>{{'malfunction-end' | translate}}</td>
+                            <td>
+                              <p-calendar [(ngModel)]="dataModel.malfunctionEnd" name="malfunctionEnd" [readonlyInput]="true"
+                                          [showTime]="true" [showIcon]="true"></p-calendar>
+                            </td>
+                          </tr> -->
+                  </table>
+                </td>
+                <td>
+                  <table class="table table-bordered m-0">
+                    <tr>
+                      <td>{{'priority' | translate}}</td>
+                      <td>
+                        <select id="priority" name="priority" class="form-control" [(ngModel)]="dataModel.priority">
+                          <option [ngValue]="null">{{'please-select' | translate}}</option>
+                          <option *ngFor="let item of priority" value="{{item.value}}">{{item.label}}</option>
+                        </select>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td width="15%">{{'catalog/code-group' | translate}}</td>
+                      <td>
+                        <select id="catalog" name="catalog" class="form-control" [(ngModel)]="dataModel.notificationNo">
+                          <option [ngValue]="null">{{'please-select' | translate}}</option>
+                          <option *ngFor="let item of catalogs" value="{{item.equipmentCodeGroupHeaderId}}">
+                            {{item.equipmentCodeGroupHeaderId}} - {{item.codeGroup}}
+                          </option>
+                        </select>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td width="15%">{{'abc-indicator' | translate}}</td>
+                      <td>
+                        <select id="abcIndicators" name="abcIndicators" class="form-control"
+                          [(ngModel)]="dataModel.equipmentABCIndicatorId">
+                          <option [ngValue]="null">{{'please-select' | translate}}</option>
+                          <option *ngFor="let item of abcIndicators" value="{{item.equipmentAbcIndicatorId}}">
+                            {{item.equipmentAbcIndicatorDescription}}
+                          </option>
+                        </select>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'reported-by' | translate}}</td>
+                      <td>
+                        <employee-auto-complete [selectedEmployee]="dataModel.reportedby"
+                          (selectedEmployeeEvent)="onReportBySelected($event)">
+                        </employee-auto-complete>
+
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'response-by' | translate}}</td>
+                      <td>
+                        <employee-auto-complete [selectedEmployee]="dataModel.responseby"
+                          (selectedEmployeeEvent)="onResponseBySelected($event)">
+                        </employee-auto-complete>
+
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'required-start' | translate}}</td>
+                      <td>
+                        <p-calendar [(ngModel)]="dataModel.requiredStart" name="requiredStart" [showTime]="true"
+                          [showIcon]="true"></p-calendar>
+                      </td>
+                      </tr>
+                      <tr>
+                      <td>{{'required-end' | translate}}</td>
+                      <td>
+                        <p-calendar [(ngModel)]="dataModel.requiredEnd" name="requiredEnd" dateFormat="dd.mm.yy"
+                          [showIcon]="true"></p-calendar>
+                      </td>
+                    </tr>
+
+                    <tr *ngIf="dataModel.breakdown">
+                      <td>{{'malfunction-start' | translate}}</td>
+                      <td>
+                        <p-calendar [(ngModel)]="dataModel.malfunctionStart" name="malfunctionStart"
+                          [readonlyInput]="true" [showTime]="true" [showIcon]="true"></p-calendar>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="row col-md-12">
+        <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+          {{'reset' | translate}}
+        </button>
+        <button type="submit" class="btn btn-sm btn-primary" [disabled]="!notificationForm.form.valid ||
+                  !dataModel.equipmentId || !dataModel.workStationId" (click)="save()"><i class="fa fa-dot-circle-o"></i>
+          {{'save' | translate}}
+        </button>
+      </div>
+    </form>
+  </div>
+
+</div>

@@ -1,0 +1,54 @@
+<div class="animated fadeIn">
+  <div class="col-md-12" (onChange)="handleChange($event)">
+    <div class="card" *ngIf="inspectionCharOp">
+      <div class="card-header">
+        <i class="fa fa-align-justify"></i> {{'inspection-plan-operation-detail' | translate}}
+      </div>
+      <div class="card-body">
+        <form #stockForm="ngForm">
+          <table class="table table-striped table-outline">
+            <tbody>
+              <tr>
+                <td width="30%" class="text-bold">{{'inspection-plan-operation-id' | translate}} <span style="width: 0 !important;" class="float-right">:</span> </td>
+                <td>{{inspectionCharOp.inspectionCharacteristicOperationId}}</td>
+              </tr>
+              <tr>
+                <td width="30%" class="text-bold">{{'inspection-plan-operation-code' | translate}} <span style="width: 0 !important;" class="float-right">:</span> </td>
+                <td>{{inspectionCharOp.inspectionCharacteristicOperationCode}}</td>
+              </tr>
+            <tr>
+              <td width="30%" class="text-bold">{{'inspection-characteristic' | translate}} <span style="width: 0 !important;" class="float-right">:</span> </td>
+              <td>{{inspectionCharOp.qualityInspectionCharacteristic?.inspectionCharacteristicName}}</td>
+            </tr>
+            <tr>
+              <td class="text-bold">{{'inspection-operation' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+              <td>{{inspectionCharOp.qualityInspectionPlanOperation?.inspectionPlanOperationCode}}</td>
+            </tr>
+            <tr>
+              <td class="text-bold">{{'inspection-method' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+              <td>{{inspectionCharOp.qualityInspectionMethod?.inspectionMethodName}}</td>
+            </tr>
+            <tr>
+              <td class="text-bold">{{'sampling-procedure' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+              <td>{{inspectionCharOp.qualitySamplingProcedure?.samplingProcedureName}}</td>
+            </tr>
+            <tr>
+              <td class="text-bold">{{'lower-specific' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+              <td>{{inspectionCharOp.lowerSpecificLimit}}</td>
+            </tr>
+            <tr>
+              <td class="text-bold">{{'upper-limit' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+              <td>{{inspectionCharOp.upperLimit}}</td>
+            </tr>
+            <tr>
+              <td class="text-bold">{{'short-text' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+              <td>{{inspectionCharOp.shortText}}</td>
+            </tr>
+            </tbody>
+          </table>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+

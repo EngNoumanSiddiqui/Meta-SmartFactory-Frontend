@@ -1,0 +1,175 @@
+<!--<form #orderEdit="ngForm" >-->
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12" *ngIf="data">
+
+          <div class="card">
+            <div class="card-header">
+              {{'maintenance-operation'|translate}}
+            </div>
+            <div class="card-body">
+              <table class="table m-0" style="border-top: 5px solid white;">
+                <tbody>
+                  <tr>
+                    <td width="50%">
+                <table class="table table-bordered">
+                  <tbody>
+                  <tr>
+                    <td class="font-weight-bold" width="35%">{{'maintenance-operation-id' | translate}}</td>
+                    <td>{{data.maintenanceOperationId}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="font-weight-bold">{{'equipment-operation' | translate}}</td>
+                    <td>
+                      <a href="javascript:;" 
+                      (click)="showDetailModal(data?.equipmentOperation?.equipmentOperationId,
+                       modalType.EQUIPMENTOPERATION)">
+                       {{data?.equipmentOperation?.operationCode}}
+                      </a>
+                      
+                    </td>
+                   
+                  </tr>
+                  <tr>
+                    <td class="font-weight-bold">{{'equipment' | translate}}</td>
+                    <td> 
+                      <a href="javascript:;" 
+                      (click)="showDetailModal(data.equipment?.equipmentId,
+                       modalType.EQUIPMENT)">
+                       {{data.equipment?.equipmentName}}
+                      </a>
+                      
+                    </td>
+                  
+                  </tr>
+
+                  <tr>
+                    <td class="font-weight-bold">{{'planning-plant' | translate}}</td>
+                    <td> 
+                      <a href="javascript:;" 
+                      (click)="showDetailModal(data.planningPlant?.plantId,
+                       modalType.PLANT)">
+                       {{data.planningPlant?.plantName}}
+                      </a>
+                    </td>
+                   
+                  </tr>
+                  <tr>
+                    <td class="font-weight-bold">{{'workstation' | translate}}</td>
+                    <td> 
+                      <a href="javascript:;" 
+                      (click)="showDetailModal(data.workstation?.workStationId,
+                       modalType.WORKSTATION)">
+                       {{data.workstation?.workStationName}}
+                      </a>
+                      </td>
+                 
+                  </tr>
+                  <tr>
+                    <td class="font-weight-bold">{{'maintenance-activity-type' | translate}}</td>
+                    <td> 
+                      <a href="javascript:;" 
+                      (click)="showDetailModal(data.maintenanceActivityType?.maintenanceActivityTypeId,
+                       modalType.MAINTENANCEACTIVITYTYPE)">
+                       {{data.maintenanceActivityType?.description}}
+                      </a>
+                      
+                    </td>
+                   
+                  </tr>
+                  <tr>
+                    <td class="font-weight-bold">{{'work' | translate}}</td>
+                    <td> {{data.work}}</td>
+                  
+                  </tr>
+                  <tr>
+                    <td class="font-weight-bold">{{'work-unit' | translate}}</td>
+                    <td> {{data.workUnit}}</td>
+                   
+                  </tr>
+                 
+                  <!-- <tr>
+                    <td>{{'no-of-person' | translate}}</td>
+                    <td> {{data.numberOfperson}}</td>
+                  </tr> -->
+                 
+                  <!-- <tr>
+                    <td>{{'actual-start-date' | translate}}</td>
+                    <td> {{data.actualStartDate|date:'dd-MM-yyyy'}}</td>
+                  </tr>
+                  <tr>
+                    <td>{{'actual-finish-date' | translate}}</td>
+                    <td> {{data.actualFinishDate|date:'dd-MM-yyyy'}}</td>
+                  </tr> -->
+
+                  </tbody>
+
+                </table>
+                </td>
+                <td>
+                  <table class="table table-bordered">
+                    <tbody>
+                      <tr>
+                        <td class="font-weight-bold" width="35%">{{'actual-work' | translate}}</td>
+                        <td> {{data.actualWork}}</td>
+                      </tr>
+                      <tr>
+                        <td class="font-weight-bold">{{'actual-work-unit' | translate}}</td>
+                        <td> {{data.actualWorkUnit}}</td>
+                      </tr>
+                      <tr>
+                        <td class="font-weight-bold">{{'duration' | translate}}</td>
+                        <td> {{data.duration}}</td>
+                      </tr>
+                      <!-- <tr>
+                        <td class="font-weight-bold">{{'duration-unit' | translate}}</td>
+                        <td> {{data.durationUnit}}</td>
+                      </tr> -->
+                      <tr>
+                        <td class="font-weight-bold">{{'index-no' | translate}}</td>
+                        <td> {{data.indexNo}}</td>
+                      </tr>
+                      <tr>
+                        <td class="font-weight-bold">{{'planned-start-date' | translate}}</td>
+                        <td> {{data.plannedStartDate | date:'short'}}</td>
+                      </tr>
+                      <tr>
+                        <td class="font-weight-bold">{{'planned-finish-date' | translate}}</td>
+                        <td> {{data.plannedFinishDate | date:'short'}}</td>
+                      </tr>
+                      <tr *ngIf="data.maintenanceOrder?.maintenanceStatus==='COMPLETED' || data.maintenanceOrder?.maintenanceStatus==='INPROCESS'">
+                        <td class="font-weight-bold">{{'actual-start-date' | translate}}</td>
+                        <td> {{data.actualStartDate | date:'short'}}</td>
+                      </tr>
+                      <tr *ngIf="data.maintenanceOrder?.maintenanceStatus==='COMPLETED'">
+                        <td class="font-weight-bold">{{'actual-finish-date' | translate}}</td>
+                        <td> {{data.actualFinishedDate | date:'short'}}</td>
+                      </tr>
+                      <tr>
+                        <td class="font-weight-bold">{{'employee-name' | translate}}</td>
+                        <td> 
+                          <a href="javascript:;" 
+                          (click)="showDetailModal(data.maintenanceEmployee?.employeeId,
+                           modalType.STAFF)">
+                           {{data.maintenanceEmployee?.firstName}} {{data.maintenanceEmployee?.lastName}}
+                          </a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="font-weight-bold">{{'result-note' | translate}}</td>
+                        <td> {{data.resultNote}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+                </tr>
+                </tbody>
+                </table>
+            </div>
+          </div>
+
+    </div>
+  </div><!--/.row-->
+</div>
+<!--</form>-->

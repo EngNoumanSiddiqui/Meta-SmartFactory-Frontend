@@ -1,0 +1,528 @@
+
+<div class="animated fadeIn">
+  <div class="row col-md-12 p-0">
+    <p-tabView class="col-md-12">
+      <p-tabPanel header="{{'plant-information'| translate }}">
+        <div class="card">
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i>{{'plant-information' | translate}}
+          </div>
+          <div class="card-body">
+            <form #workCenterForm="ngForm">
+              <table class="table table-bordered">
+                <tbody *ngIf="plant">
+                <tr>
+                  <td width="35%">
+                    {{'plant-name' | translate}}
+                  </td>
+                  <td>
+                    {{plant.plantName}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'plant-code' | translate}}</td>
+                  <td>
+                    {{plant.plantCode}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'country' | translate}}</td>
+                  <td>{{plant.countryName}}</td>
+                </tr>
+                <tr>
+                  <td>{{'city' | translate}}</td>
+                  <td>{{plant.cityName}}</td>
+                </tr>
+                <tr>
+                  <td>{{'address' | translate}}</td>
+                  <td>{{plant.address}}</td>
+                </tr>
+                <tr>
+                  <td>{{'company-name' | translate}}</td>
+                  <td>{{plant.companyName}}</td>
+                </tr>
+                <tr>
+                    <td>{{'company-code' | translate}}</td>
+                    <td>{{plant.companyCode}}</td>
+                  </tr>
+                <tr>
+                    <td>{{'company-address' | translate}}</td>
+                    <td>{{plant.companyAddress}}</td>
+                </tr>
+             
+                </tbody>
+              </table>
+            </form>
+          </div>
+        </div>
+      </p-tabPanel>
+      <p-tabPanel header="{{'template-information'| translate }}">
+        <div class="card">
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i>{{'template-information' | translate}}
+          </div>
+          <div class="card-body">
+              <table class="table table-bordered">
+                <tbody>
+                <tr>
+                  <td width="35%">
+                    {{'prod-order-code-templete' | translate}}
+                  </td>
+                  <td>
+                    {{plant.prodOrderCodeTemplete}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    {{'goods-movement-cod-templete' | translate}}
+                  </td>
+                  <td>
+                    {{plant.goodsMovementCodTemplete}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'purchase-order-code-template' | translate}}</td>
+                  <td>
+                    {{plant.purchaseOrderCodeTemplete}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'purchase-quotation-code-template' | translate}}</td>
+                  <td>
+                    {{plant.purchaseQuotationCodeTemplete}}
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>{{'sales-order-code-template' | translate}}</td>
+                  <td>
+                    {{plant.salesOrderCodeTemplete}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'sales-order-ref-code-template' | translate}}</td>
+                  <td>
+                   {{plant.salesOrderRefCodeTemplete}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'sales-quotation-code-template' | translate}}</td>
+                  <td>
+                    {{plant.salesQuotationCodeTemplete}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'factory-calender-code-template' | translate}}</td>
+                  <td>
+                    {{plant.factoryCalenderCode}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'integration-url' | translate}}</td>
+                  <td>
+                    {{plant.integrationUrl}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'lang-code' | translate}}</td>
+                  <td>
+                    {{plant.langCode}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{ "currency" | translate }}</td>
+                  <td>
+                    {{plant.currency}}
+                  </td>
+                </tr>
+
+                </tbody>
+              </table>
+          </div>
+        </div>
+      </p-tabPanel>
+      <p-tabPanel header="{{'schedule-information'| translate }}">
+        <div class="row col-md-12 m-0 p-0">
+          <div class="col-md-6 p-0 pr-3">
+            <div class="card">
+              <div class="card-header">
+                <i class="fa fa-align-justify"></i>{{'planning' | translate}}
+              </div>
+              <div class="card-body">
+                <table class="table table-bordered">
+                  <tbody>
+                    <tr>
+                      <td width="60%">{{'combine-production-order-auto' | translate}}</td>
+                      <td>
+                        <p-checkbox name="combineProductionOrderAuto" binary="true" disabled
+                        [(ngModel)]="plant.combineProductionOrderAuto"></p-checkbox>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'create-auto-prod-orders' | translate}}</td>
+                      <td>
+                        <p-checkbox name="createAutoProdOrders" binary="true" disabled [(ngModel)]="plant.createAutoProdOrders"></p-checkbox>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'reorder-day-range' | translate}}</td>
+                      <td>
+                        {{plant.reorderDayRange}}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'reorder-range-week' | translate}}</td>
+                      <td>
+                        {{plant.reorderRangeWeek}}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td >{{'demand-planning' | translate}}</td>
+                      <td>
+                          <p-checkbox name="demandPlanning" binary="true" disabled  [(ngModel)]="plant.demandPlanning"></p-checkbox>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'shift-target-quantity' | translate}}</td>
+                      <td>
+                        {{plant.shiftTargetQuantity}}
+                      </td>
+                    </tr>
+                    <tr>
+                        <td>{{'sales-forecast-duration-day' | translate}}</td>
+                      <td>
+                        {{plant.salesForecastDurationDay}}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header">
+                <i class="fa fa-align-justify"></i>{{'setup' | translate}}
+              </div>
+              <div class="card-body">
+                <table class="table table-bordered">
+                  <tbody>
+                    <tr>
+                      <td width="60%">{{'schedule_same_equipment_short_setup_duration_min' | translate}}</td>
+                      <td>
+                        {{plant.scheduleSameEquipmentShortSetupDurationMin}}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'schedule_same_equipment_setup_duration' | translate}}</td>
+                      <td>
+                        <p-checkbox name="scheduleSameEquipmentSetupDurationCheck" binary="true" disabled
+                        [(ngModel)]="plant.scheduleSameEquipmentSetupDurationCheck"></p-checkbox>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header">
+                <i class="fa fa-align-justify"></i>{{'parametric-criterias' | translate}}
+              </div>
+              <div class="card-body">
+                <table class="table table-bordered">
+                  <tbody>
+                    <tr>
+                      <td width="60%">{{'prod-order-start-before-day' | translate}}</td>
+                      <td>
+                        {{plant.prodOrderStartBeforeDay}}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td width="60%">{{'processing-jobs-max-latency-day' | translate}}</td>
+                      <td>
+                        {{plant.processingJobsMaxLatencyDay}}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td width="60%">{{'planned-jobs-max-latency-day' | translate}}</td>
+                      <td>
+                        {{plant.plannedJobsMaxLatencyDay}}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'wait-semi-product-percentage' | translate}}</td>
+                      <td>
+                        {{plant.waitSemiProductPercentage}}
+                      </td>
+
+                    </tr>
+                    <tr>
+                      <td>{{'schedule-allocation-limit-day' | translate}}</td>
+                      <td>
+                        {{plant.scheduleAllocationLimitDay}}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'schedule_order_no_max_iteration_count' | translate}}</td>
+                      <td>
+                        {{plant.scheduleOrderNoMaxIterationCount}}
+                      </td>
+
+                    </tr>
+
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 p-0">
+            <div class="card">
+              <div class="card-header">
+                <i class="fa fa-align-justify"></i>{{'reservation' | translate}}
+              </div>
+              <div class="card-body">
+                <table class="table table-bordered">
+                  <tbody>
+                    <tr>
+                      <td width="60%">
+                        {{'check-avaiable-stock-for-requested-reservation' | translate}}</td>
+                      <td>
+                        <p-checkbox name="checkAvaiableStockForRequestedReservation" binary="true" disabled [(ngModel)]="plant.checkAvaiableStockForRequestedReservation"></p-checkbox>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'get-waiting-for-material-reservation-by-job-order' | translate}}</td>
+                      <td>
+                        <p-checkbox name="getWaitingForMaterialReservationByJobOrder" binary="true" disabled [(ngModel)]="plant.getWaitingForMaterialReservationByJobOrder"></p-checkbox>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'deliver-manual-purchase-order' | translate}}</td>
+                      <td>
+                        <p-checkbox name="deliverManualPurchaseOrder" binary="true" disabled [(ngModel)]="plant.deliverManualPurchaseOrder"></p-checkbox>
+                      </td>
+
+                    </tr>
+                    <tr>
+                      <td>{{'auto-purchase-period-days' | translate}}</td>
+                      <td>
+                        {{plant.autoPurchasePeriodDays}}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'recheck-job-order-stock-has-un-reristricted-quantity' | translate}}</td>
+                      <td>
+                        <p-checkbox name="recheckJobOrderStockHasUnReristrictedQuantity" binary="true" disabled [(ngModel)]="plant.recheckJobOrderStockHasUnReristrictedQuantity"></p-checkbox>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'release-all-stock-from-reservation' | translate}}</td>
+                      <td>
+                        <p-checkbox name="releaseAllStockFromReservation" binary="true" disabled [(ngModel)]="plant.releaseAllStockFromReservation"></p-checkbox>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'release-all-stock-from-reservation-after-auto-schedule' | translate}}</td>
+                      <td>
+                        <p-checkbox name="releaseAllStockFromReservationAfterAutoSchedule" binary="true" disabled [(ngModel)]="plant.releaseAllStockFromReservationAfterAutoSchedule"></p-checkbox>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'load-job-force-stock-reservation-change' | translate}}</td>
+                      <td>
+                        <p-checkbox name="loadJobForceStockReservationChange" binary="true" disabled
+                        [(ngModel)]="plant.loadJobForceStockReservationChange"></p-checkbox>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'schedule-release-reservation-limit-day' | translate}}</td>
+                      <td>
+                        {{plant.scheduleReleaseReservationLimitDay}}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'request-reservation-delay-day' | translate}}</td>
+                      <td>
+                        {{plant.requestReservationDelayDay}}
+                      </td>
+
+                    </tr>
+                    <tr>
+                      <td >{{'alert-late-purchase-order' | translate}}</td>
+                      <td>
+                        <p-checkbox name="alertLatePurchaseOrder" binary="true" disabled [(ngModel)]="plant.alertLatePurchaseOrder"></p-checkbox>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'alert-semifinish-late-work-order' | translate}}</td>
+                      <td>
+                        <p-checkbox name="alertSemifinishLateWorkOrder" binary="true" disabled [(ngModel)]="plant.alertSemifinishLateWorkOrder"></p-checkbox>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'schedule-pallet-box' | translate}}</td>
+                      <td>
+                        <p-checkbox name="schedulePalletBox" binary="true" disabled [(ngModel)]="plant.schedulePalletBox"></p-checkbox>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'min-pallet-usage-for-planning-job' | translate}}</td>
+                      <td>
+                        {{plant.minPalletUsageForPlanningJob}}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'schedule-confirmed-purchase-delay-day' | translate}}</td>
+                      <td>
+                        {{ plant.scheduleConfirmedPurchaseDelayDay}}
+                      </td>
+                    </tr>
+
+
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header">
+                <i class="fa fa-align-justify"></i>{{'actual-case-scheduling' | translate}}
+              </div>
+              <div class="card-body">
+                <table class="table table-bordered">
+                  <tbody>
+                    <tr>
+                      <td width="60%">{{'schedule_actual_case_wait_purchase' | translate}}</td>
+                      <td>
+                        <p-checkbox name="scheduleActualCaseWaitPurchase" binary="true" disabled
+                        [(ngModel)]="plant.scheduleActualCaseWaitPurchase"></p-checkbox>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'schedule_actual_case_wait_semi_product' | translate}}</td>
+                      <td>
+                        <p-checkbox name="scheduleActualCaseWaitSemiProduct" binary="true" disabled
+                        [(ngModel)]="plant.scheduleActualCaseWaitSemiProduct"></p-checkbox>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'schedule_actual_case_wait_request_reservation' | translate}}</td>
+                      <td>
+                        <p-checkbox name="scheduleActualCaseWaitRequestReservation" binary="true" disabled
+                        [(ngModel)]="plant.scheduleActualCaseWaitRequestReservation"></p-checkbox>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'schedule_actual_case_wait_equipment' | translate}}</td>
+                      <td>
+                        <p-checkbox name="scheduleActualCaseWaitEquipment" binary="true" disabled
+                        [(ngModel)]="plant.scheduleActualCaseWaitEquipment"></p-checkbox>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </p-tabPanel>
+      <p-tabPanel header="{{'general-settings'| translate }}">
+        <div class="card">
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i>{{'general-settings' | translate}}
+          </div>
+          <div class="card-body">
+              <table class="table table-bordered">
+                <tbody>
+                  <tr>
+                    <td width="35%">{{'panel-master' | translate}}</td>
+                    <td>
+                        <p-checkbox name="panelMaster" binary="true" disabled  [(ngModel)]="plant.panelMaster"></p-checkbox>
+                    </td>
+                </tr>
+                <tr>
+                  <td width="35%">{{'auto-pallet-confirm' | translate}}</td>
+                  <td>
+                      <p-checkbox name="autoPalletConfirm" binary="true" disabled  [(ngModel)]="plant.autoPalletConfirm"></p-checkbox>
+                  </td>
+              </tr>
+              <tr>
+                <td width="35%">{{'check-previous-job-order-completed' | translate}}</td>
+                <td>
+                    <p-checkbox name="checkPreviousJobOrderCompleted" binary="true" disabled  [(ngModel)]="plant.checkPreviousJobOrderCompleted"></p-checkbox>
+                </td>
+              </tr>
+              <tr>
+
+                <td width="35%">{{'auto-erp-workorder-confirmation' | translate}}</td>
+                <td>
+                    <p-checkbox name="autoErpWorkorderConfirmation" binary="true" disabled  [(ngModel)]="plant.autoErpWorkorderConfirmation"></p-checkbox>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'erp-support' | translate}}</td>
+                <td>
+                  <p-checkbox name="erpSupport" binary="true" disabled
+                  [(ngModel)]="plant.erpSupport"></p-checkbox>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'update-workstation-based-on-erp' | translate}}</td>
+                <td>
+                  <p-checkbox name="updateWsBaseOnOnlyErp" binary="true" disabled
+                  [(ngModel)]="plant.updateWsBaseOnOnlyErp"></p-checkbox>
+                </td>
+              </tr>
+
+        
+                </tbody>
+              </table>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i>{{'material-handling' | translate}}
+          </div>
+          <div class="card-body">
+            <table class="table table-bordered">
+              <tbody>
+                <tr>
+                  <td width="35%">{{'confirm-onsite-transfer-auto' | translate}}</td>
+                  <td>
+                      <p-checkbox name="confirmOnsiteTransferAuto" binary="true" disabled  [(ngModel)]="plant.confirmOnsiteTransferAuto"></p-checkbox>
+                  </td>
+                </tr>
+                <tr>
+                  <td width="35%">{{'skip-onsite-transfer' | translate}}</td>
+                  <td>
+                      <p-checkbox name="skipOsiteTransfer" binary="true" disabled  [(ngModel)]="plant.skipOsiteTransfer"></p-checkbox>
+                  </td>
+                </tr>
+                <tr>
+
+                  <td width="35%">{{'create-auto-pallet-for-end-job' | translate}}</td>
+                  <td>
+                      <p-checkbox name="createAutoPalletForEndJob" binary="true" disabled  [(ngModel)]="plant.createAutoPalletForEndJob"></p-checkbox>
+                  </td>
+                </tr>
+                <tr>
+                  <td width="35%">{{'create-auto-stock-transfer-notification' | translate}}</td>
+                  <td>
+                      <p-checkbox name="createAutoStockTransferNotification" binary="true" disabled  [(ngModel)]="plant.createAutoStockTransferNotification"></p-checkbox>
+                  </td>
+
+                </tr>
+                <tr>
+
+                  <td>{{'move-stock-after-completed-operation' | translate}}</td>
+                  <td>
+                    <p-checkbox name="moveStockAfterCompletedOperation" binary="true" disabled
+                    [(ngModel)]="plant.moveStockAfterCompletedOperation"></p-checkbox>
+                  </td>
+                </tr>
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+    </p-tabPanel>
+    </p-tabView>
+  </div>
+</div>

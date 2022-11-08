@@ -1,0 +1,9 @@
+<div class="d-flex ui-fluid">
+    <div *ngIf="requestSent"><i class="fa fa-spinner fa-pulse"></i></div>
+    <p-autoComplete [(ngModel)]="selectedJobOrder" [suggestions]="filteredJobOrder"
+        (completeMethod)="searchWorkStation($event)" field="jobOrderId" [dropdown]="dropdown" [required]="required"
+         dataKey="jobOrderId" placeholder="{{placeholder|translate}}" [minLength]="1"
+        name="workStation" [disabled]="disabled" (onDropdownClick)="handleDropdownClickForJobOrder()"
+        (ngModelChange)="onChangeJobOrder($event)" [style]="{maxWidth: '100%'}">
+    </p-autoComplete>
+</div>

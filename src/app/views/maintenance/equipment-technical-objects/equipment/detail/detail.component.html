@@ -1,0 +1,152 @@
+<div class="animated fadeIn">
+  <div class="row" *ngIf="equipment">
+
+    <div class="col-lg-6">
+      <div class="col-lg-12">
+        <div class="card">
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i> {{'equipment-master'| translate}}
+          </div>
+          <div class="card-body">
+            <table class="table table-bordered">
+              <tbody >
+                <tr>
+                  <td width="35%">{{'EquipmentId' | translate}}</td>
+                  <td>{{equipment.equipmentId}}</td>
+                </tr>
+                <tr>
+                  <td width="35%">{{'parent-equipment' | translate}}</td>
+                  <td>{{equipment.parentEquipment?.equipmentNo}} {{equipment.parentEquipment?.equipmentName}}</td>
+                </tr>
+              <tr>
+                <td width="35%">{{'no' | translate}}</td>
+                <td>{{equipment.equipmentNo}}</td>
+              </tr>
+              <tr>
+                <td> {{'name' | translate}} </td>
+                <td>{{equipment.equipmentName}}</td>
+              </tr>
+
+
+              <tr>
+                <td>{{'description' | translate}} </td>
+                <td>{{equipment.description}}</td>
+              </tr>
+
+              <tr>
+                <td>{{'valid-from' | translate}}</td>
+                <td>{{equipment.validFrom|date:'dd-MM-yyy'}}</td>
+              </tr>
+              <tr>
+                <td>{{'category' |translate}}</td>
+                <td>{{equipment?.equipmentCategory?.equipmentCategory}}</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-12">
+        <div class="card">
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i> {{'location'| translate}}
+          </div>
+          <div class="card-body">
+            <table class="table table-bordered">
+              <tbody >
+                <tr>
+                  <td width="35%"> {{'functional-location' | translate}}</td>
+                  <td>{{equipment.maintenanceFuntionalLocation?.description}}</td>
+                </tr>
+              <tr>
+                <td width="35%"> {{'abc-indicator' | translate}}</td>
+                <td>{{equipment.equipmentABCIndicator?.equipmentAbcIndicatorType}}</td>
+              </tr>
+              <tr>
+                <td> {{'planning-plant' | translate}} </td>
+                <td>{{equipment.planningPlant?.plantName}}</td>
+              </tr>
+
+
+              <tr>
+                <td>{{'planner-group' | translate}} </td>
+                <td>{{equipment.equipmentPlannerGroup?.plannerGroup}}</td>
+              </tr>
+
+              <tr>
+                <td>{{'maintenance-workstation' | translate}}</td>
+                <td>{{equipment.maintenanceWorkstation?.workStationName}}</td>
+              </tr>
+              <tr>
+                <td>{{'maintenance-workstation-plant' |translate}}</td>
+                <td>{{equipment?.maintenanceWorkstationPlant?.plantName}}</td>
+              </tr>
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i> {{'general'| translate}}
+        </div>
+        <div class="card-body">
+          <table class="table table-bordered">
+            <tbody >
+            <tr>
+              <td width="35%">{{'object-type' | translate}}</td>
+              <td>{{equipment.equipmentObjectType?.equipmentObjectType}}</td>
+            </tr>
+            <tr>
+              <td> {{'weight' | translate}} </td>
+              <td>{{equipment.weight}}</td>
+            </tr>
+
+
+            <tr>
+              <td>{{'weight-unit' | translate}} </td>
+              <td>{{equipment.weightUnit}}</td>
+            </tr>
+
+            <tr>
+              <td>{{'manufacturer' | translate}}</td>
+              <td>{{equipment.manufacturer?.actName}}</td>
+            </tr>
+            <tr>
+              <td>{{'model' |translate}}</td>
+              <td>{{equipment.modelNumber}}</td>
+            </tr>
+            <tr>
+              <td>{{'manufacturer-part-no' |translate}}</td>
+              <td>{{equipment.manufacturerPartNo}}</td>
+            </tr>
+            <tr>
+              <td>{{'manufacturer-serial-no' |translate}}</td>
+              <td>{{equipment.manufacturerSerialNo}}</td>
+            </tr>
+            <tr>
+              <td>{{'manufacturer-month' |translate}}</td>
+              <td>{{equipment.manufacturerMonth}}</td>
+            </tr>
+            <tr>
+              <td>{{'manufacturer-year' |translate}}</td>
+              <td>{{equipment.manufacturerYear}}</td>
+            </tr>
+            <tr>
+              <td>{{'manufacturer-country' |translate}}</td>
+              <td>{{equipment.manufacturerCountry?.countryName}}</td>
+            </tr>
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    </div>
+
+
+</div>

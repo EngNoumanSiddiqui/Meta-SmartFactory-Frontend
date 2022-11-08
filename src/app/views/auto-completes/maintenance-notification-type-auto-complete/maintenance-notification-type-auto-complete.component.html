@@ -1,0 +1,40 @@
+
+    <div class="ui-inputgroup  d-flex ui-fluid">
+      <p-autoComplete  [(ngModel)]="selectedMaintenanceNotificationType" [suggestions]="filteredMaintenanceNotificationType"
+                       (completeMethod)="searchMaintenanceNotificationType($event)" field="description"
+                       [dropdown]="dropdown" [required]="required" [forceSelection]="true" dataKey="maintenanceNotificationTypeId"
+                       placeholder="{{placeholder|translate}}" [minLength]="1" name="code"
+                       (onDropdownClick)="handleDropdownClickForMaintenanceNotificationType()" (ngModelChange)="onChangeMaintenanceNotificationType($event)" >
+      </p-autoComplete>
+      <button *ngIf="addIfMissing" pButton icon="fa fa-plus-circle"
+              (click)="modalShow()">
+      </button>
+    </div>
+
+
+     <ng-template [ngIf]="modal.active">
+
+<div bsModal [config]="{backdrop: 'static',  show: true}" #myModal="bs-modal" class="modal fade" (onHidden)="modal.active=false"
+           tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+           aria-hidden="true">
+        <div class="modal-dialog modal-success modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">
+                <span >{{'new-maintenance-notification-type' | translate}}</span>
+              </h4>
+              <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+
+              <maintenance-notification-type-new  (saveAction)="setMaintenanceNotificationType($event);myModal.hide()"></maintenance-notification-type-new>
+
+
+            </div>
+          </div> <!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div><!-- /.modal -->
+
+    </ng-template>

@@ -1,0 +1,87 @@
+<div class="card">
+    <span class="card-header">{{ "QUALITY_SCREEN" | translate }}</span>
+    <div class="card-body">
+        <table class="table table-bordered" style="table-layout: fixed; width: 100%;">
+            <tbody>
+                <tr>
+                    <td colspan="2">
+                        <span class="text-bold">{{ "material-name" | translate }}:</span>
+                        {{stock.stockNo}} | {{stock.stockName}}
+                    </td>
+                    <td colspan="2">
+                        <span class="text-bold">{{ "plant" | translate }}: </span>
+                        {{stock.plantName}}
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="2">
+                        <span class="text-bold">{{ "base-unit" | translate }}: </span>
+                        {{stock.baseUnit}}
+                    </td>
+                    <td colspan="2"></td>
+                </tr>
+
+                <tr>
+                    <td><span class="text-bold">{{ "GR_PROCESSING_TIME" | translate }}: </span></td>
+                    <td>{{stock?.stockQuality?.grProcessingTime}}</td>
+
+                    <td><span class="text-bold">{{ "INSPECTION_INTERVAL" | translate }}: </span></td>
+                    <td>{{stock?.stockQuality?.inspectionInterval}}</td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+    <div style="margin: 0 1.5em;">
+        <div class="card" style="margin-bottom: 0;">
+            <span class="card-header">{{ "INSPECTION_SETUP" | translate }}
+                <!-- <button style="float: right;" type="button" class="btn btn-primary" data-toggle="modal" (click)="showDialogToAdd()" [disabled]="inspectionSetupList.length > 0">
+                    <i class="fa fa-plus-circle"></i>
+                </button> -->
+            </span>
+
+            <div class="card-body">
+                <table class="table" style="table-layout: fixed; width: 100%;">
+                    <thead>
+                        <th>{{'inspection-type' | translate}}</th>
+                        <th>{{'POST_TO_INSPECTION_STOP' | translate}}</th>
+                        <th>{{'INSPECTION_WITH_TASK_LIST' | translate}}</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{stock?.stockQuality?.requestCreateStockQualityInspectionSetupDto.inspectionType}}</td>
+                            <td>{{stock?.stockQuality?.requestCreateStockQualityInspectionSetupDto.postToInspectionStock}}</td>
+                            <td>{{stock?.stockQuality?.requestCreateStockQualityInspectionSetupDto.inspectionWithTaskList}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="card-header">
+            <span>{{ "PROCUREMENT_DATA" | translate }}</span>
+        </div>
+        <table class="table table-bordered">
+            <tbody>
+                <tr>
+                    <td>{{'QM_CONTROL_KEY' | translate}}</td>
+                    <td>{{stock?.stockQuality?.qualityControlKeyId}}</td>
+                </tr>
+
+                <tr>
+                    <td>{{'TARGET_QM_SYSTEM' | translate}}</td>
+                    <td>{{stock?.stockQuality?.qualitySystemId}}</td>
+                </tr>
+                <tr><td colspan="2" style="border: none;"></td></tr>
+                <tr>
+                    <td>{{'TECHNOLOGICAL_SCRAP_PERCENTAGE' | translate}}</td>
+                    <td>{{stock.techScrapPercentage}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>

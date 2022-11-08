@@ -1,0 +1,77 @@
+<!--chart drawing begin-->
+<div class="row  status-container" [style.minHeight]="'120px'" [style.maxHeight]="'250px'" [style.height]="(vLHeight)? vLHeight+'px': '270'" style="overflow-y: scroll;"
+     (resized)="onResizeContainer($event)">
+
+  <!--here we draw shiftArray.length vertical lines for hour 00:00 to 24:00-->
+  <!--on left side we left leftVlOffset px, this leftVlOffset px will be used to draw workstations label-->
+  <ng-container *ngFor="let item of shiftArray; let index=index;">
+    <div class="vl vl-bolder" [style.height]="vLHeight+'px'" [style.minHeight]="(vLHeight)? vLHeight+'px': '300px'"  [ngStyle]="{'left':((chartWidth/(shiftArray.length-1))*index+leftVlOffset)+'px'}"
+         [ngClass]="{'vl-bolder':(index%2)==0}"></div>
+
+  </ng-container>
+  <!--        <div class="vl vl-bolder" [ngStyle]="{'left':((chartWidth/6)*0+leftVlOffset)+'px'}"></div>-->
+  <!--        <div class="vl" [ngStyle]="{'left':((chartWidth/6)*1+leftVlOffset)+'px'}"></div>-->
+
+  <!--end of vertical lines-->
+
+  <!--horizontal line begin-->
+  <div class="hl" [style.left]="leftVlOffset+'px'" [style.minHeight]="(vLHeight)? vLHeight+'px': '300px'" [style.maxHeight] = "'600px'" [ngStyle]="{'width':(chartWidth+2)+'px'}"></div>
+  <!--horizontal line end-->
+
+  <!--here we draw x axes horizontal label that defined in hourArray -->
+
+  <ng-container *ngFor="let item of shiftArray; let index=index;">
+        <span class="position-absolute hour-span hour-bold" [style.top]="(vLHeight)? vLHeight+'px': '300px'"
+              [ngClass]="{'hour-bold':(index%2)==0}"
+              [ngStyle]="{'left':((chartWidth/(shiftArray.length-1))*index+leftHourOffset)+'px'}"
+        >{{item}}</span>
+  </ng-container>
+  <!--        <span class="position-absolute hour-span hour-bold" [ngStyle]="{'left':(leftHourOffset)+'px'}">06:00</span>-->
+  <!--        <span class="position-absolute hour-span" [ngStyle]="{'left':((chartWidth/6)+leftHourOffset)+'px'}">10:00</span>-->
+  <!--        <span class="position-absolute hour-span hour-bold" [ngStyle]="{'left':((chartWidth/6)*2+leftHourOffset)+'px'}">14:00</span>-->
+  <!--        <span class="position-absolute hour-span" [ngStyle]="{'left':((chartWidth/6)*3+leftHourOffset)+'px'}">18:00</span>-->
+  <!--        <span class="position-absolute hour-span hour-bold" [ngStyle]="{'left':((chartWidth/6)*4+leftHourOffset)+'px'}">22:00</span>-->
+  <!--        <span class="position-absolute hour-span" [ngStyle]="{'left':((chartWidth/6)*5+leftHourOffset)+'px'}">02:00</span>-->
+  <!--        <span class="position-absolute hour-span hour-bold" [ngStyle]="{'left':((chartWidth/6)*6+leftHourOffset)+'px'}">06:00</span>-->
+  <!--end of x axes horizontal labels-->
+
+
+  <ng-container *ngFor="let item of workstationStatusArray; let index=index;">
+
+        <span class="position-absolute"
+              [style.left]="xLabelLeftOffset+'px'"
+              [style.top]="((index*barRowHeight)+(barMargin*1.8))+'px'">
+
+              <a href="javascript:;" (click)="showWsDetail(item.workstationId)" [pTooltip]="item.workstationName" tooltipPosition="top">
+                  {{item.workstationName && item.workstationName.length>9?item.workstationName.substring(0,7):item.workstationName}}
+                  <span *ngIf="item.workstationName && item.workstationName.length>9" 
+                    style="cursor: pointer">...</span>
+                </a>
+          <!-- {{item.workstationName.length>20?item.workstationName.substring(0,20):item.workstationName}}
+          <span *ngIf="item.workstationName.length>20" style="cursor: pointer" [pTooltip]="item.workstationName " >...</span> -->
+        </span>
+    <div class="position-absolute" [ngStyle]="{'top':((index*barRowHeight)+barMargin)+'px'}">
+
+      <ng-container *ngFor="let aItem of item.productionStateList">
+            <span [style.height]="barHeight+'px'"
+                  [style.left]="((aItem.o*chartWidth)+leftVlOffset+1)+'px'"
+                  [pTooltip]="showWorkStationStatusToolTip(aItem, 's')" [escape]="false" tooltipPosition="top"
+                  [style.width]="(((chartWidth*aItem.ds) + ((aItem.o*chartWidth)+leftVlOffset+1)) > (chartWidth + leftVlOffset) ? ((chartWidth + leftVlOffset) - ((aItem.o*chartWidth)+leftVlOffset+1)):  chartWidth*aItem.ds)+'px'"
+                  class="position-absolute span_opacity" [ngClass]="{
+                               'span_waiting': aItem.s=='WAITING_FOR_JOB',
+                               'span_waiting_for_labor': aItem.s=='WAITING_FOR_LABOR',
+                               'span_waiting_for_maintenance': aItem.s=='WAITING_FOR_MAINTENANCE',
+                               'span_waiting_for_quality': aItem.s=='WAITING_FOR_QUALITY',
+                               'span_production': aItem.s=='PRODUCTION',
+                               'span_setup': aItem.s=='SETUP',
+                               'span_setup_overtime': aItem.s=='SETUP_OVERTIME',
+                               'span_stop': aItem.s=='STOPPED',
+                               'closed_black': aItem.s=='CLOSED',
+                               'span_unknown_stopped': aItem.s=='UNKNOWN_STOPPED'
+                               }"></span>
+
+      </ng-container>
+    </div>
+    <!-- <workstation-status-item [machineStatesTotalDurationList]="item.machineStatesTotalDurationList"></workstation-status-item> -->
+  </ng-container>
+</div>

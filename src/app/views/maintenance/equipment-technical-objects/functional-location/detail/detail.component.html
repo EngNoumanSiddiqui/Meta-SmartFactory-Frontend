@@ -1,0 +1,132 @@
+<div class="animated fadeIn">
+  <div class="row" *ngIf="data">
+
+    <div class="col-lg-6">
+      <div class="col-lg-12">
+        <div class="card">
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i> {{'functional-location-master'| translate}}
+          </div>
+          <div class="card-body">
+            <table class="table table-bordered">
+              <tbody >
+              <tr>
+                <td width="35%">{{'functional-location-id' | translate}}</td>
+                <td>{{data.maintenanceFunctionalLocationId}}</td>
+              </tr>
+              <tr>
+                <td>{{'description' | translate}} </td>
+                <td>{{data.description}}</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-12">
+        <div class="card">
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i> {{'location'| translate}}
+          </div>
+          <div class="card-body">
+            <table class="table table-bordered">
+              <tbody >
+                <tr>
+                  <td width="35%">{{'parent-functional-location' | translate}}</td>
+                  <td>{{data.parentId}}</td>
+                </tr>
+              <tr>
+                <td> {{'abc-indicator' | translate}}</td>
+                <td>{{data.equipmentABCIndicator?.equipmentAbcIndicatorType}}</td>
+              </tr>
+
+              <tr>
+                <td>{{'workstation' | translate}}</td>
+                <td>{{data.workStation?.workStationName}}</td>
+              </tr>
+
+              <tr>
+                <td>{{'maintenance-workstation-plant' |translate}}</td>
+                <td>{{data?.mainPlant?.plantName}}</td>
+              </tr>
+
+
+              <tr>
+                <td>{{'planner-group' | translate}} </td>
+                <td>{{data?.equipmentPlannerGroup?.plannerGroup}}</td>
+              </tr>
+              <tr>
+                <td> {{'planning-plant' | translate}} </td>
+                <td>{{data?.planningPlant?.plantName}}</td>
+              </tr>
+
+
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i> {{'general'| translate}}
+        </div>
+        <div class="card-body">
+          <table class="table table-bordered">
+            <tbody >
+            <tr>
+              <td width="35%">{{'object-type' | translate}}</td>
+              <td>{{data.equipmentObjectType?.equipmentObjectType}}</td>
+            </tr>
+            <tr>
+              <td> {{'weight' | translate}} </td>
+              <td>{{data.weight}}</td>
+            </tr>
+
+
+            <tr>
+              <td>{{'weight-unit' | translate}} </td>
+              <td>{{data.weightUnit}}</td>
+            </tr>
+
+            <tr>
+              <td>{{'manufacturer' | translate}}</td>
+              <td>{{data.manufacturer?.actName}}</td>
+            </tr>
+            <tr>
+              <td>{{'model' |translate}}</td>
+              <td>{{data.modelNumber}}</td>
+            </tr>
+            <tr>
+              <td>{{'manufacturer-part-no' |translate}}</td>
+              <td>{{data.manufpartNo}}</td>
+            </tr>
+            <tr>
+              <td>{{'manufacturer-serial-no' |translate}}</td>
+              <td>{{data.manufserialNo}}</td>
+            </tr>
+            <tr>
+              <td>{{'inventory-no' |translate}}</td>
+              <td>{{data.invertoryNo}}</td>
+            </tr>
+            <tr>
+              <td>{{'general-date' |translate}}</td>
+              <td>{{data.generalDate|date:'dd-MM-yyyy'}}</td>
+            </tr>
+            <tr>
+              <td>{{'manufacturer-country' |translate}}</td>
+              <td>{{data.manufacturerCountry?.countryName}}</td>
+            </tr>
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</div>

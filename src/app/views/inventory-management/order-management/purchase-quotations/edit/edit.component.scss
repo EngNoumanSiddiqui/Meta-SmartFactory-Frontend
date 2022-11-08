@@ -1,0 +1,11 @@
+::ng-deep .remove-scroll{
+    overflow: hidden;
+    .ng-trigger-animation,
+    .ui-dialog-content {
+        overflow: initial;
+    }
+}
+
+::ng-deep .custom-dialog{
+    background: #fff;
+}

@@ -1,0 +1,327 @@
+<p-confirmDialog [baseZIndex]="99999"></p-confirmDialog>
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body" >
+          <p-table #dt [columns]="selectedColumns" scrollable="true" scrollHeight="55vh"
+           [value]="takenShiftList" [rows]="20" dataKey="shiftId"  [paginator]="true">
+
+            <ng-template pTemplate="caption">
+              <div class="ui-helper-clearfix" style="text-align:left">
+                <button pButton  class="ui-button-success float-right"  label="{{'add-new'|translate}}" (click)="modalShow()"> </button>
+                <button pButton style="margin-right: 5px" class="ui-button-warning float-right" type="button"  icon="fa fa-file-alt" iconPos="left" label="{{'export-all'|translate}}" (click)="dt.exportCSV()"></button>
+                <button pButton style="margin-right: 5px" class="ui-button-warning float-right" type="button"  icon="fa fa-file" iconPos="left" label="{{'export-selected'|translate}}" (click)="dt.exportCSV({selectionOnly:true})"
+                ></button>
+              </div>
+              <!--<hr>-->
+
+            </ng-template>
+            <ng-template pTemplate="header" let-columns>
+
+              <tr >
+                <th style="width: 3em" rowspan="2">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th *ngFor="let col of selectedColumns" ><i [ngClass]="'fa fa-sort-alpha-'"></i>
+                  {{col.header|translate}}
+                </th>
+                <th width="80px" rowspan="2">{{'action' | translate}}</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-shift let-rowData let-i="rowIndex">
+              <tr [pSelectableRow]="rowData" class="ui-fluid">
+                <td style="width: 3em">
+                  <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                </td>
+                <td (click)="editModal(i, true)">{{shift.shiftNo}}</td>
+                <td (click)="editModal(i, true)">{{shift.shiftName}}</td>
+                <td (click)="editModal(i, true)">{{shift.shiftOrderNo}}</td>
+                <td>
+                  <a href="javascript:;" (click)="showPlant(shift.plant?.plantId)">
+                    {{shift.plant?.plantName}}
+                  </a>
+                </td>
+                <td (click)="editModal(i, true)">{{shift.startTime}}</td>
+                <td (click)="editModal(i, true)">{{shift.endTime}}</td>
+                <td (click)="editModal(i, true)">{{shift.description}}</td>
+                <td (click)="editModal(i, true)">{{shift.maxChangeOverCount}}</td>
+                <!-- <td>
+                  <input type="time" style="background-color: white;" disabled="true" id="actName2" name="actName2"  [(ngModel)]="shift.startTime"
+                    class="form-control" placeholder=" {{'start-time' | translate}}">
+                </td>
+                <td>
+                  <input type="time" style="background-color: white;" disabled="true" id="endtime" name="endtime"  [(ngModel)]="shift.endTime"
+                    class="form-control" placeholder=" {{'start-time' | translate}}">
+                </td> -->
+                <td width="80px" >
+                  <button class="btn btn-sm btn-outline-danger" type="button">
+                    <i class="fa fa-trash" (click)="deleteShiftSetting(rowData.shiftId)"></i></button>
+                  <button class="btn btn-sm btn-outline-info" type="button" (click)="editModal(i)">
+                    <i class="fa fa-edit"></i></button>
+                </td>
+              </tr>
+
+            </ng-template>
+          </p-table>
+
+
+          <br/>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div bsModal [config]="{backdrop: 'static', keyboard: false}" #myModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-success modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{'new-shift-setting' | translate}}</h4>
+        <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #customerForm="ngForm">
+          <div class="form-group row align-items-center">
+            <label class="col-md-3 col-form-label" for="plantid"> {{'plant' | translate}} </label>
+            <div class="col-md-9">
+              <span *ngIf="shiftRequestDto.plantId && selectedPlant && shiftRequestDto.plantId=== selectedPlant.plantId">
+                <a href="javascript:;" (click)="showPlant(selectedPlant?.plantId)">
+                  {{selectedPlant?.plantName}}
+                </a>
+              </span>
+              <plant-auto-complete *ngIf="!shiftRequestDto.plantId && !selectedPlant"
+                    [selectedPlantId]="shiftRequestDto.plantId" (selectedPlantEvent)="shiftRequestDto.plantId=$event.plantId" [eventFire]="true"></plant-auto-complete>
+              <!-- <plant-auto-complete [selectedPlantId]="shiftRequestDto.plantId"  [required]="true" [addIfMissing]="true"
+                      (selectedPlantEvent)="shiftRequestDto.plantId=$event.plantId" [eventFire]="true"></plant-auto-complete> -->
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label" for="actNo"> {{'shift-no' | translate}} </label>
+            <div class="col-md-9">
+              <input type="text" id="actNo" name="actNo" [(ngModel)]="shiftRequestDto.shiftNo"
+                     class="form-control" placeholder="{{'shift-no' | translate}}" >
+              <!--<span class="help-block">This is a help text</span>-->
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label" for="actName"> {{'shift-name' | translate}} </label>
+            <div class="col-md-9">
+              <input type="text" id="actName" name="actName" [(ngModel)]="shiftRequestDto.shiftName"
+                     class="form-control" placeholder="{{'shift-name' | translate}}" required>
+              <!--<span class="help-block">This is a help text</span>-->
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label" for="shiftorderno"> {{'shift-order-no' | translate}} </label>
+            <div class="col-md-9">
+              <input type="number" id="shiftorderno" name="shiftorderno" [(ngModel)]="shiftRequestDto.shiftOrderNo"
+                     class="form-control" placeholder="{{'shift-order-no' | translate}}">
+              <!--<span class="help-block">This is a help text</span>-->
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label" for="starttime">{{'start-time' | translate}} </label>
+            <div class="col-md-9 ui-fluid">
+              <p-calendar name="starttime" placeholder="{{'start-time' | translate}}" required [(ngModel)]="shiftRequestDto.startTime" [timeOnly]="true"></p-calendar>
+              <!-- <input type="time" id="actName2" name="actName2"  [(ngModel)]="shiftRequestDto.startTime"
+                     class="form-control" placeholder=" {{'start-time' | translate}}"> -->
+              <!--<span class="help-block">This is a help text</span>-->
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label" for="finishtime">{{'finish-time' | translate}} </label>
+            <div class="col-md-9 ui-fluid">
+              <p-calendar  name="finishtime" placeholder="{{'finish-time' | translate}}" required [(ngModel)]="shiftRequestDto.endTime" [timeOnly]="true"></p-calendar>
+              <!-- <input type="time" id="contactName" name="contactName"  [(ngModel)]="shiftRequestDto.endTime"
+                     class="form-control" placeholder="{{'finish-time' | translate}}"> -->
+              <!--<span class="help-block">This is a help text</span>-->
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label" for="description"> {{'description' | translate}} </label>
+            <div class="col-md-9">
+              <textarea type="text" id="description" name="description" [(ngModel)]="shiftRequestDto.description"
+                     class="form-control" placeholder="{{'description' | translate}}"> </textarea>
+              <!--<span class="help-block">This is a help text</span>-->
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label" for="maxChangeOverCount"> {{'schedule-max-change-over-count' | translate}} </label>
+            <div class="col-md-9">
+              <input type="number" id="maxChangeOverCount" name="maxChangeOverCount" [(ngModel)]="shiftRequestDto.maxChangeOverCount"
+                     class="form-control" placeholder="{{'schedule-max-change-over-count' | translate}}">
+              <!--<span class="help-block">This is a help text</span>-->
+            </div>
+          </div>
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary"  (click)="myModal.hide()">{{'close' | translate}}</button>
+        <button type="button" class="btn btn-success" (click)="saveShiftSetting(myModal);">{{'save' | translate}}</button>
+      </div>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div bsModal [config]="{backdrop: 'static', keyboard: false}" #myModalEdit="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-success modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" *ngIf="!isDetailMode">{{'edit-shift-setting' | translate}}</h4>
+        <h4 class="modal-title" *ngIf="isDetailMode">{{'shift-setting-information' | translate}}</h4>
+        <button type="button" class="close" (click)="myModalEdit.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #customerForm="ngForm" *ngIf="!isDetailMode;else DetailTable">
+
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label" for="plantid"> {{'plant' | translate}} </label>
+            <div class="col-md-9">
+              <span *ngIf="shiftRequestDto.plantId && selectedPlant && shiftRequestDto.plantId=== selectedPlant.plantId">
+                <a href="javascript:;" (click)="showPlant(selectedPlant?.plantId)">
+                  {{selectedPlant?.plantName}}
+                </a>
+              </span>
+              <plant-auto-complete *ngIf="!shiftRequestDto.plantId && !selectedPlant"
+                    [selectedPlantId]="shiftRequestDto.plantId" (selectedPlantEvent)="shiftRequestDto.plantId=$event.plantId" [eventFire]="true"></plant-auto-complete>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label" for="shiftNo1"> {{'shift-no' | translate}} </label>
+            <div class="col-md-9">
+              <input type="text"  name="shiftNo1" [(ngModel)]="updateShiftData.shiftNo"
+                     class="form-control" placeholder="{{'shift-no' | translate}}" required>
+              <!--<span class="help-block">This is a help text</span>-->
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label" for="shiftName"> {{'shift-name' | translate}} </label>
+            <div class="col-md-9">
+              <input type="text"  name="shiftName" [(ngModel)]="updateShiftData.shiftName"
+                     class="form-control" placeholder="{{'shift-name' | translate}}" required>
+              <!--<span class="help-block">This is a help text</span>-->
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label" for="shiftOrderNo"> {{'shift-order-no' | translate}} </label>
+            <div class="col-md-9">
+              <input type="number" id="shiftOrderNo" name="shiftOrderNo" [(ngModel)]="updateShiftData.shiftOrderNo"
+                     class="form-control" placeholder="{{'shift-order-no' | translate}}">
+              <!--<span class="help-block">This is a help text</span>-->
+            </div>
+          </div>
+
+          <div class="form-group row">
+              <label class="col-md-3 col-form-label" for="startTimeForUpdate">{{'start-time' | translate}} </label>
+              <div class="col-md-9 ui-fluid">
+                <p-calendar name="startTimeForUpdate" placeholder="{{'start-time' | translate}}" required [(ngModel)]="updateShiftData.startTime" [timeOnly]="true"></p-calendar>
+                <!-- <input type="time" id="actName2" name="actName2"  [(ngModel)]="updateShiftData.startTime"
+                       class="form-control" placeholder=" {{'start-time' | translate}}"> -->
+                <!--<span class="help-block">This is a help text</span>-->
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label class="col-md-3 col-form-label" for="finishTimeForUpdate">{{'finish-time' | translate}} </label>
+              <div class="col-md-9 ui-fluid">
+                <p-calendar  name="finishTimeForUpdate" placeholder="{{'finish-time' | translate}}" required [(ngModel)]="updateShiftData.endTime" [timeOnly]="true"></p-calendar>
+                <!-- <input type="time" id="contactName" name="contactName"  [(ngModel)]="updateShiftData.endTime"
+                       class="form-control" placeholder="{{'finish-time' | translate}}"> -->
+                <!--<span class="help-block">This is a help text</span>-->
+              </div>
+            </div>
+
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label" for="description"> {{'description' | translate}} </label>
+            <div class="col-md-9">
+              <textarea type="text"  name="description" [(ngModel)]="updateShiftData.description"
+                     class="form-control" placeholder="{{'description' | translate}}"> </textarea>
+              <!--<span class="help-block">This is a help text</span>-->
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label" for="maxChangeOverCount"> {{'schedule-max-change-over-count' | translate}} </label>
+            <div class="col-md-9">
+              <input type="number" name="maxChangeOverCount" [(ngModel)]="shiftRequestDto.maxChangeOverCount"
+                     class="form-control" placeholder="{{'schedule-max-change-over-count' | translate}}">
+              <!--<span class="help-block">This is a help text</span>-->
+            </div>
+          </div>
+
+        </form>
+        <ng-template #DetailTable>
+          <table class="table table-bordered ui-fluid">
+            <tr>
+                <td width="30%">{{'plant'|translate}}</td>
+                <td>
+                  <a href="javascript:;" (click)="openPlantModal(selectedPlant.plantId)">
+                    {{selectedPlant.plantName}}</a>
+                </td>
+            </tr>
+            <tr>
+              <td>{{'shift-id'|translate}}</td>
+              <td>{{updateShiftData.shiftId}}</td>
+          </tr>
+            <tr>
+                <td>{{'shift-no'|translate}}</td>
+                <td>{{updateShiftData.shiftNo}}</td>
+            </tr>
+            <tr>
+                <td>{{'shift-name'|translate}}</td>
+                <td>{{updateShiftData.shiftName}}</td>
+            </tr>
+            <tr>
+              <td>{{'shift-order-no'|translate}}</td>
+              <td>{{updateShiftData.shiftOrderNo}}</td>
+            </tr>
+            <tr>
+                <td>{{'start-time'|translate}}</td>
+                <td>{{updateShiftData.startTime}}</td>
+            </tr>
+            <tr>
+                <td>{{'finish-time'|translate}}</td>
+                <td>{{updateShiftData.endTime}}</td>
+            </tr>
+            <tr>
+                <td>{{'description'|translate}}</td>
+                <td>{{updateShiftData.description}}</td>
+            </tr>
+            <tr>
+                <td>{{'schedule-max-change-over-count'|translate}}</td>
+                <td>{{updateShiftData.maxChangeOverCount}}</td>
+            </tr>
+
+          </table>
+        </ng-template>
+      </div>
+      <div class="modal-footer" *ngIf="isDetailMode">
+        <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary"
+          (click)="myModalEdit.hide();">{{'close' | translate}}</button>
+        <button type="button" class="btn rounded btn-primary"
+          (click)="myModalEdit.hide(); modalShow();">{{'new' | translate}}</button>
+        <button type="button" class="btn rounded btn-success"
+          (click)="editModal(editID) ">{{'edit' | translate}}</button>
+      </div>
+      <div class="modal-footer" *ngIf="!isDetailMode">
+        <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary"  (click)="myModalEdit.hide()">{{'close' | translate}}</button>
+        <button type="button" class="btn btn-success" (click)="updateShiftSettings(myModalEdit);">{{'save' | translate}}</button>
+      </div>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

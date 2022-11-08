@@ -1,0 +1,349 @@
+<!--<form #orderEdit="ngForm" >-->
+<div class="animated fadeIn">
+  <div class="row" *ngIf="detailData">
+    <div class="col-md-12">
+      <p-tabView [activeIndex]="activeTabIndex" (activeIndexChange)="activeTabIndex=$event">
+        <p-tabPanel header="{{'maintenance-order'|translate}}">
+          <div class="card">
+            <div class="card-header">
+              {{'maintenance-order'|translate}}
+            </div>
+            <div class="card-body">
+              <form #saleForm="ngForm" class="form-horizontal ui-fluid">
+                <table class="table table-bordered m-0">
+                  <tbody>
+                    <tr>
+                      <td>
+                        <div class="card" style="margin: 0px;">
+                          <!-- <div class="card-header">
+                          {{'maintenance-order-information'|translate}}
+                        </div> -->
+                          <div class="card-body">
+                            <table class="table table-bordered m-0">
+                              <tr>
+                                <td width="35%">{{'maintenance-order-id' | translate}}</td>
+                                <td>{{detailData.maintenanceId}} </td>
+                              </tr>
+                              <tr>
+                                <td>{{'functional-location' | translate}}</td>
+                                <td> <span class="bg-readonly form-control"
+                                    *ngIf="dataModel.maintenanceFunctionalLocationId"
+                                    (click)="modalShow('FUNCTIONAL_LOCATION')">{{dataModel.maintenanceFunctionalLocationId}}</span>
+                                  <span class="bg-readonly form-control"
+                                    *ngIf="!dataModel.maintenanceFunctionalLocationId"
+                                    (click)="modalShow('FUNCTIONAL_LOCATION')">
+                                    {{'choose-functional-location' |translate}}</span>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>{{'equipment' | translate}}</td>
+                                <td>
+                                  <equipment-auto-complete [plantId]="selectedPlant?.plantId"
+                                    (selectedEquipmentEvent)="setSelectedEquipment($event)"
+                                    [selectedEquipment]="detailData.equipment"
+                                    [disabled]="(dataModel.maintenanceStatus==='COMPLETED') && detailData.equipment">
+                                  </equipment-auto-complete>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>{{'maintenance-order-type' | translate}}</td>
+                                <td>
+                                  <select id="maintenanceOrderType" name="maintenanceOrderType" class="form-control"
+                                    [(ngModel)]="dataModel.maintenanceOrderType">
+
+                                    <option [ngValue]="null">{{ "please-select" | translate }}</option>
+                                    <option *ngFor="let maintenanceOrderType of maintenanceOrderTypes"
+                                      value="{{maintenanceOrderType}}">
+                                      {{maintenanceOrderType}}
+                                    </option>
+                                  </select>
+                                </td>
+                              </tr>
+
+                              <tr>
+                                <td>{{'notification' | translate}}</td>
+                                <td><span class="bg-readonly form-control" *ngIf="dataModel.maintenanceNotificationId"
+                                    (click)="modalShow('NOTIFICATION')">{{dataModel.maintenanceNotificationId}}</span>
+                                  <span class="bg-readonly form-control" *ngIf="!dataModel.maintenanceNotificationId"
+                                    (click)="modalShow('NOTIFICATION')">{{'choose-notification'}}</span>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>{{'planning-plant' | translate}}</td>
+                                <td>
+                                  <span
+                                    *ngIf="dataModel.planningPlantId && selectedPlant && dataModel.planningPlantId=== selectedPlant.plantId">{{selectedPlant.plantName}}</span>
+                                  <plant-auto-complete *ngIf="!selectedPlant"
+                                    [selectedPlantId]="dataModel.planningPlantId"
+                                    (selectedPlantEvent)="setSelectedPlanningPlant($event)" [eventFire]="true">
+                                  </plant-auto-complete>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>{{'equipment-planner-group' | translate}}</td>
+                                <td>
+                                  <planner-group-auto-complete [plantId]="selectedPlant?.plantId" [addIfMissing]="true"
+                                    [disabled]="(dataModel.maintenanceStatus==='COMPLETED') && detailData.plannerGroup"
+                                    [selectedPlannerGroup]="detailData.plannerGroup"
+                                    (selectedPlannerGroupEvent)="setSelectedPlannerGroup($event)">
+                                  </planner-group-auto-complete>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>{{'workstation' | translate}}</td>
+                                <td>
+                                  <workstation-auto-complete [selectedWorkStation]="detailData.mainWorkStation"
+                                    [disabled]="(dataModel.maintenanceStatus==='COMPLETED') && detailData.mainWorkStation"
+                                    (selectedWorkStationEvent)="setSelectedWorkstation($event)">
+                                  </workstation-auto-complete>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>{{'maintenance-system-condition' | translate}}</td>
+                                <td>
+                                  <maintenance-system-condition-auto-complete [addIfMissing]="true"
+                                    [selectedMaintenanceSystemCondition]="detailData.maintenanceSystemCondition"
+                                    (selectedMaintenanceSystemConditionEvent)="setSelectedSystemCondition($event)">
+                                  </maintenance-system-condition-auto-complete>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>{{'maintenance-activity-type' | translate}}</td>
+                                <td>
+                                  <select id="maintenanceActivityType" name="maintenanceActivityType"
+                                    class="form-control" [(ngModel)]="dataModel.maintenanceActivityType">
+
+                                    <option [ngValue]="null">{{ "please-select" | translate }}</option>
+                                    <option *ngFor="let maintenanceActivityType of maintenanceActivityTypes"
+                                      value="{{maintenanceActivityType}}">
+                                      {{maintenanceActivityType}}
+                                    </option>
+                                  </select>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>{{'maintenance-category' | translate}}</td>
+                                <td>
+                                  <maintenance-category-auto-complete [addIfMissing]="true"
+                                    [selectedMaintenanceCategory]="detailData.maintenanceCategory"
+                                    (selectedMaintenanceCategoryEvent)="setSelectedCategory($event)">
+                                  </maintenance-category-auto-complete>
+                                </td>
+                              </tr>
+
+                            </table>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="card" style="margin: 0px;">
+                          <!-- <div class="card-header">
+                          {{'information-order'|translate}}
+                        </div> -->
+                          <div class="card-body">
+                            <table class="table table-bordered m-0">
+                              <tr>
+                                <td>{{'status' | translate}}</td>
+                                <td>
+                                  <select name="maintenanceStatus" class="form-control"
+                                    [(ngModel)]="dataModel.maintenanceStatus" (ngModelChange)="statusChanged($event)"
+                                    [disabled]="dataModel.maintenanceStatus === 'COMPLETED' ">
+                                    <option [value]="null"> {{'select-status' | translate}}</option>
+                                    <option *ngFor="let status of maintenanceStatusList" [value]="status">
+                                      {{status|translate}}</option>
+                                  </select>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>{{'priority' | translate}}</td>
+                                <td>
+                                  <select name="priority" class="form-control"
+                                    [disabled]="dataModel.maintenanceStatus==='COMPLETED'"
+                                    [(ngModel)]="dataModel.priority">
+                                    <option [value]="null"> {{'priority' | translate}}</option>
+                                    <option value="VERY_HIGH">{{'VERY_HIGH'|translate}}</option>
+                                    <option value="HIGH">{{'HIGH'|translate}}</option>
+                                    <option value="MEDIUM">{{'MEDIUM'|translate}}</option>
+                                    <option value="LOW">{{'LOW'|translate}}</option>
+                                  </select>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>{{'date-priority' | translate}}</td>
+                                <td>
+                                  <select name="datePriority" class="form-control" [(ngModel)]="dataModel.datePriority">
+                                    <option [value]="null"> {{'priority' | translate}}</option>
+                                    <option value="VERY_HIGH">{{'VERY_HIGH'|translate}}</option>
+                                    <option value="HIGH">{{'HIGH'|translate}}</option>
+                                    <option value="MEDIUM">{{'MEDIUM'|translate}}</option>
+                                    <option value="LOW">{{'LOW'|translate}}</option>
+                                  </select>
+                                </td>
+                              </tr>
+                              <!-- <tr>
+                              <td>{{'assembly' | translate}}</td>
+                              <td><input class="form-control" [(ngModel)]="dataModel.assembly"
+                                         name="assembly"/>
+                              </td>
+                            </tr> -->
+                              <tr>
+                                <td>{{'problem-definition' | translate}}</td>
+                                <td><input class="form-control" [(ngModel)]="dataModel.problemDefination"
+                                    [disabled]="dataModel.maintenanceStatus==='COMPLETED'" name="problemDefination" />
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>{{'response-by' | translate}}</td>
+                                <td>
+                                  <employee-auto-complete [required]="dataModel.maintenanceStatus==='INPROCESS'"
+                                    [disabled]="dataModel.maintenanceStatus==='COMPLETED'"
+                                    [selectedEmployee]="dataModel.responseby"
+                                    (selectedEmployeeEvent)="setSelectedEmployee($event)"></employee-auto-complete>
+
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>{{'address' | translate}}</td>
+                                <td><input class="form-control" [(ngModel)]="dataModel.address" type="text"
+                                    name="address" />
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>{{'date-revision' | translate}}</td>
+                                <td><input class="form-control" [(ngModel)]="dataModel.dateRevision"
+                                    name="dateRevision" />
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>{{'date-basic-start' | translate}}</td>
+                                <td>
+                                  <p-calendar [(ngModel)]="dataModel.dateBasicStart" name="dateBasicStart"
+                                    [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                                    [showIcon]="true" [showTime]="true" dateFormat="dd/mm/yy"></p-calendar>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>{{'date-basic-finish' | translate}}</td>
+                                <td>
+                                  <p-calendar [(ngModel)]="dataModel.datebasicFinish" name="datebasicFinish"
+                                    [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                                    [showIcon]="true" [showTime]="true" dateFormat="dd/mm/yy"></p-calendar>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>{{'maintenance-reason' | translate}}</td>
+                                <td>
+                                  <maintenance-reason-auto-complete [addIfMissing]="true"
+                                    [disabled]="dataModel.maintenanceStatus==='COMPLETED'"
+                                    [selectedMaintenanceReason]="detailData.maintenanceReason"
+                                    (selectedMaintenanceReasonEvent)="setSelectedReason($event)">
+                                  </maintenance-reason-auto-complete>
+                                </td>
+                              </tr>
+                              <tr *ngIf="dataModel.maintenanceStatus!=='OUTSTANDING'">
+                                <td>{{'actual-start-date' | translate}}</td>
+                                <td>
+                                  <p-calendar [(ngModel)]="dataModel.actualStartDate" name="actualstartdate"
+                                    [disabled]="dataModel.maintenanceStatus==='COMPLETED'"
+                                    [required]="actionType==='INPROCESS'" [monthNavigator]="true" [showTime]="true"
+                                    [yearNavigator]="true" yearRange="1990:2100" [showIcon]="true"
+                                    dateFormat="dd/mm/yy"></p-calendar>
+                                </td>
+                              </tr>
+                              <tr *ngIf="dataModel.maintenanceStatus==='COMPLETED'">
+                                <td>{{'actual-finish-date' | translate}}</td>
+                                <td>
+                                  <p-calendar [(ngModel)]="dataModel.actualFinishDate" name="actualfinishdate"
+                                    [disabled]="dataModel.maintenanceStatus==='COMPLETED'" [monthNavigator]="true"
+                                    [showTime]="true" [yearNavigator]="true" yearRange="1990:2100" [showIcon]="true"
+                                    dateFormat="dd/mm/yy"></p-calendar>
+                                </td>
+                              </tr>
+                            </table>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </form>
+            </div>
+            <div class="card-footer">
+              <button type="button" class="btn btn-sm btn-danger" (click)="cancel()"><i class="fa fa-ban"></i>
+                {{'cancel' | translate}}
+              </button>
+              <button type="submit" class="btn btn-sm btn-primary" [disabled]="!saleForm.form.valid||!dataModel.equipmentId||!dataModel.plannerGroupId
+              ||!dataModel.maintenanceSystemConditionId ||!dataModel.maintenanceCategoryId
+              ||!dataModel.maintenanceReasonId" (click)="save()"><i class="fa fa-dot-circle-o"></i>
+                {{'save' | translate}}
+              </button>
+            </div>
+          </div>
+        </p-tabPanel>
+        <p-tabPanel [disabled]="dataModel.maintenanceOrderId == null" header="{{'operation'|translate}}">
+          <maintenance-order-operation-list [maintenanceOrderId]="dataModel.maintenanceOrderId"
+            [maintenanceStatus]="dataModel.maintenanceStatus" [equipmentId]="dataModel.equipmentId"
+            [equipmentName]="dataModel.equipmentName" [mainWorkStationId]="dataModel.mainWorkStationId"
+            [mainWorkStationName]="dataModel.mainWorkStationName"
+            [maintenanceActivityType]="dataModel.maintenanceActivityType"
+            [fromOutStandToProcess]="fromOutStandToProcess" (operationAddedEvent)="operationList=$event;">
+          </maintenance-order-operation-list>
+        </p-tabPanel>
+        <p-tabPanel [disabled]="dataModel.maintenanceOrderId == null" header="{{'component'|translate}}">
+          <maintenance-order-component-list [maintenanceOrderId]="dataModel.maintenanceOrderId">
+          </maintenance-order-component-list>
+        </p-tabPanel>
+        <p-tabPanel header="{{'Document'|translate}}">
+          <div class="card">
+            <div class="card-header">
+              <i class="fa fa-align-justify"></i>{{ "documentation" | translate }}
+            </div>
+            <div class="card-body">
+              <table class="table table-bordered">
+                <tbody>
+                  <tr align="center">
+                    <td class="text-center" colspan="2">
+                      <image-adder [isFile]="true"></image-adder>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </p-tabPanel>
+      </p-tabView>
+    </div>
+  </div>
+  <!--/.row-->
+</div>
+<!--</form>-->
+<ng-template [ngIf]="modal.active">
+
+
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal" class="modal fade"
+    (onHidden)="modal.active=false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-success modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            <span *ngIf="modal.type=='FUNCTIONAL_LOCATION'">{{'functional-location' | translate}}</span>
+            <span *ngIf="modal.type=='NOTIFICATION'">{{'notification' | translate}}</span>
+          </h4>
+          <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+
+          <choose-location-pane *ngIf="modal.type=='FUNCTIONAL_LOCATION'"
+            (selectedEvent)="setSelectedFunctionalLocation($event);myModal.hide()"></choose-location-pane>
+
+          <choose-notification-pane *ngIf="modal.type=='NOTIFICATION'"
+            (selectedEvent)="setSelectedNotification($event, myModal);"></choose-notification-pane>
+
+        </div>
+      </div> <!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
+</ng-template>

@@ -1,0 +1,23 @@
+<div class="animated fadeIn">
+
+<p-tabView *ngIf="customerId">
+  <p-tabPanel header="{{'account'|translate}}">
+    <customer-detail [id]="customerId" ></customer-detail>
+  </p-tabPanel>
+  <p-tabPanel header="{{'orders'|translate}}">
+    <div class="row">
+
+      <div class="col-md-4 pr-1">
+        <customer-all-orders [actId]="customerId" (selectedOrderDetailEvent)="setSelectedOrderDetail($event)"></customer-all-orders>
+      </div>
+
+      <div class="col-md-8" *ngIf="orderDetail">
+        <order-detail-plan #orderDetailPlan  [orderDetailId]="orderDetail.orderDetailId" [stockName]="orderDetail.stockName"></order-detail-plan>
+      </div>
+    </div>
+  </p-tabPanel>
+  <p-tabPanel header="{{'transfers'|translate}}">
+    <customer-transfer-list [customerId]="customerId"></customer-transfer-list>
+  </p-tabPanel>
+</p-tabView>
+</div>

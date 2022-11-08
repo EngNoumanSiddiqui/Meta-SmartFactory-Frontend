@@ -1,0 +1,143 @@
+<div class="row">
+  <div class="col-md-12">
+    <ng-template [ngIf]="myItems && myItems.length > 0">
+      <p-tabView>
+        <p-tabPanel header="{{'report'|translate}}">
+          <p-table #dt [columns]="cols" [value]="myItems" [rows]="20" [paginator]="true" dataKey="shiftDate"
+              [autoLayout]="true" [(selection)]="selectedOees" [style]="{'width': '100%'}">
+
+              <ng-template pTemplate="caption">
+                <div class="ui-helper-clearfix" style="text-align:left">
+                  <button pButton style="margin-right: 5px" class="ui-button-info float-left" type="button"
+                    icon="fa fa-file-alt" iconPos="left" label="{{'export-image'|translate}}"
+                    (click)="exportAsPng('print-section')"></button>
+
+                  <button pButton style="margin-right: 5px" class="ui-button-warning float-right" type="button"
+                    icon="fa fa-file-alt" iconPos="left" label="{{'export-all'|translate}}"
+                    (click)="dt.exportCSV()"></button>
+                  <button pButton style="margin-right: 5px" class="ui-button-warning float-right" type="button"
+                    icon="fa fa-file" iconPos="left" label="{{'export-selected'|translate}}"
+                    (click)="dt.exportCSV({selectionOnly:true})">
+                  </button>
+                </div>
+                <!--<hr>-->
+                <ng-template pTemplate="colgroup" let-columns>
+                  <colgroup>
+                    <col *ngFor="let col of columns">
+                  </colgroup>
+                </ng-template>
+
+              </ng-template>
+              <ng-template pTemplate="header" let-columns>
+
+                <tr>
+                  <th style="width: 3em">
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                  </th>
+                  <th *ngFor="let col of columns" [ngSwitch]="col.field">
+                    <span *ngSwitchDefault> {{col.header|translate}} </span>
+                    <div *ngSwitchCase="'oee1'" style="display:inline-block;position:relative;cursor: pointer">
+                      <p-overlayPanel #op [dismissable]="true" appendTo="body" baseZIndex="9999">
+                        OEE1=Availability x Actual Performance x Quality
+                      </p-overlayPanel>
+                      <span (mouseenter)="op.show($event)" (mouseleave)="op.hide()">{{col.header|translate}}%</span>
+                    </div>
+                    <div *ngSwitchCase="'oee2'" style="display:inline-block;position:relative;cursor: pointer">
+                      <p-overlayPanel #op2 [dismissable]="true" appendTo="body" baseZIndex="9999">
+                        OEE2=Availability x Work Performance x Quality
+                      </p-overlayPanel>
+                      <span (mouseenter)="op2.show($event)" (mouseleave)="op2.hide()">{{col.header|translate}}%</span>
+
+
+                    </div>
+                  </th>
+                </tr>
+
+              </ng-template>
+              <ng-template pTemplate="body" let-rowData let-columns="columns">
+                <tr [pSelectableRow]="rowData">
+                  <td style="width: 3em">
+                    <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                  </td>
+                  <td *ngFor="let col of columns" style="cursor: pointer" [ngSwitch]="col.field">
+
+                    <span *ngSwitchCase="'shiftStartDate'"> {{(rowData[col.field])|date:'dd/MM/yyyy HH:mm'}}</span>
+                    <span *ngSwitchCase="'recordDate'"> {{(rowData[col.field])|date:'dd/MM/yyyy HH:mm'}}</span>
+                    <span *ngSwitchCase="'rangeStart'"> {{(rowData[col.field])|date:'dd/MM/yyyy HH:mm'}}</span>
+                    <span *ngSwitchCase="'rangeEnd'"> {{(rowData[col.field])|date:'dd/MM/yyyy HH:mm'}}</span>
+                    <span *ngSwitchDefault> {{rowData[col.field]}}</span>
+                  </td>
+                </tr>
+
+              </ng-template>
+          </p-table>
+        </p-tabPanel>
+
+        <p-tabPanel header="{{'oee1'|translate}}">
+          <div class="row orange-border">
+            <div class=" mybadge "><span class="text-white ">{{'oee1'|translate}}</span></div>
+            <div class="col-11">
+              <p-chart type="line" [data]="oee1Data" [options]="options"></p-chart>`
+            </div>
+          </div>
+        </p-tabPanel>
+        <p-tabPanel header="{{'oee2'|translate}}">
+          <div class="row blue-border">
+            <div class=" mybadge "><span class="text-white ">{{'oee2'|translate}}</span></div>
+            <div class="col-11">
+              <p-chart type="line" [data]="oee2Data" [options]="options"></p-chart>`
+            </div>
+          </div>
+        </p-tabPanel>
+        <p-tabPanel header="{{'teep'|translate}}">
+          <div class="row red-border">
+            <div class=" mybadge "><span class="text-white ">{{'teep'|translate}}</span></div>
+            <div class="col-11">
+              <p-chart type="line" [data]="teepData" [options]="options"></p-chart>`
+            </div>
+          </div>
+        </p-tabPanel>
+
+        <p-tabPanel header="{{'quality'|translate}}">
+          <div class="row green-border">
+            <div class=" mybadge "><span class="text-white ">{{'quality'|translate}}</span></div>
+            <div class="col-11">
+              <p-chart type="line" [data]="qualityData" [options]="options"></p-chart>`
+            </div>
+          </div>
+        </p-tabPanel>
+        <p-tabPanel header="{{'availability'|translate}}">
+          <div class="row purple-border">
+            <div class=" mybadge "><span class="text-white ">{{'availability'|translate}}</span></div>
+            <div class="col-11">
+              <p-chart type="line" [data]="availabilityData" [options]="options"></p-chart>`
+            </div>
+          </div>
+        </p-tabPanel>
+
+        <p-tabPanel header="{{'actual-performance'|translate}}">
+          <div class="row purple-border">
+            <div class=" mybadge "><span class="text-white ">{{'actual-performance'|translate}}</span></div>
+            <div class="col-11">
+              <p-chart type="line" [data]="actualPerformanceData" [options]="options"></p-chart>`
+            </div>
+          </div>
+        </p-tabPanel>
+
+        <p-tabPanel header="{{'worked-performance'|translate}}">
+          <div class="row purple-border">
+            <div class=" mybadge "><span class="text-white ">{{'worked-performance'|translate}}</span></div>
+            <div class="col-11">
+              <p-chart type="line" [data]="workPerformanceData" [options]="options"></p-chart>`
+            </div>
+          </div>
+        </p-tabPanel>
+
+      </p-tabView>
+    </ng-template>
+
+    <div class="row text-center noData" *ngIf="!isLoading() && (!myItems|| myItems.length==0)">
+      <strong class=""><i class="fa fa-warning "></i>{{'NO_WORK_DETAIL_FOUND'|translate}}!</strong>
+    </div>
+  </div>
+</div>

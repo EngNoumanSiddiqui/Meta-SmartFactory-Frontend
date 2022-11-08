@@ -1,0 +1,96 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-lg-12">
+      <table class="table border-0 bg-light">
+        <tbody>
+        <tr>
+          <td width="30%">
+            <p-radioButton id="fixedRadioBut" name="group1" value="1" label="{{'fixed-tariff'|translate|uppercase}}"
+                           inputId="fixedTariff" [(ngModel)]="selectedTariff" (click)="textEditable(1)"></p-radioButton>
+                           
+          </td>
+          <td>
+            <span>{{'unit-cost'|translate}}/kWh</span>
+            <div class="d-block">
+              <input class="fixedUnitText" type="text" name="unitCost" [disabled]="fixedTariff"
+                     [(ngModel)]="fixedUnitCost"/>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <p-radioButton name="group1" value="2" label="{{'time-use-of-tariff'|translate|uppercase}}"
+                           [(ngModel)]="selectedTariff" inputId="timeTariff" (click)="textEditable(2)"></p-radioButton>
+          </td>
+          <td>
+            <p-dropdown [options]="timePeriods" [(ngModel)]="selectedTimePeriod" placeholder="{{'select-time-period'|translate}}"
+                        optionLabel="period" [showClear]="true" [disabled]="timeTariff"
+                        (onChange)="selectedIteration()"></p-dropdown>
+                        
+            <table class="d-block">
+              <tr *ngIf="selectedTariff ===2 && takenTimePeriodData.length > 0">
+                <th></th>
+                <th>{{'start-time'|translate}}</th>
+                <th>{{'end-time'|translate}}</th>
+                <th>{{'unit-cost'|translate}}</th>
+              </tr>
+              <ng-container *ngFor="let number of takenTimePeriodData; let i = index">
+                <tr class="timeTariffTable">
+                  <td><strong class="col-form-label">{{'period'|translate}}-{{i + 1}}</strong></td>
+                  <td><input type="time" min="00:00" max="23:59" name="startTime"
+                             [(ngModel)]="takenTimePeriodData[i].startTime" [disabled]="timeTariff" required/></td>
+                  <td><input type="time" name="endTime" min={{takenTimePeriodData[i].startTime}}
+                             [(ngModel)]="takenTimePeriodData[i].endTime" [disabled]="timeTariff" required/></td>
+                  <td><input type="any" name="unitCost1" [(ngModel)]="takenTimePeriodData[i].unitCost"
+                             [disabled]="timeTariff" required/></td>
+                </tr>
+
+              </ng-container>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <p-radioButton name="group1" value="3" label="{{'step-by-tariff'|translate|uppercase}}"
+                           [(ngModel)]="selectedTariff" inputId="stepTariff" (click)="textEditable(3)"></p-radioButton>
+          </td>
+          <td>
+            <p-dropdown class="ui-fluid" [options]="steps" [(ngModel)]="selectedStep" placeholder="{{'select-step'|translate}}"
+                        optionLabel="step" [showClear]="true" [disabled]="stepTariff"
+                        (onChange)="selectedIteration2()"></p-dropdown>
+            <table class="d-block">
+              <tr *ngIf="selectedTariff ===3 && takenStepData.length > 0">
+                <th></th>
+                <th>{{'start-value'|translate}} kWh</th>
+                <th>{{'end-value'|translate}} kWh</th>
+                <th>{{'unit-cost'|translate}}</th>
+              </tr>
+              <ng-container *ngFor="let number of takenStepData, let i=index">
+                <tr class="stepTariffTable" *ngIf="selectedTariff ===3">
+                  <td><strong class="col-form-label">STEP-{{i + 1}}</strong></td>
+                  <td><input type="number" name="stepStart" [(ngModel)]="takenStepData[i].stepStart"
+                             [disabled]="true" required/></td>
+                  <td><input type="number" name="stepEnd" [(ngModel)]="takenStepData[i].stepEnd"
+                             [disabled]="stepTariff" (keyup)="setStepStart(i)" required/></td>
+                  <td><input type="text" name="unitCost1" [(ngModel)]="takenStepData[i].unitCost"
+                             [disabled]="stepTariff" required/></td>
+                </tr>
+              </ng-container>
+            </table>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+
+    </div>
+    <div class="col-lg-12">
+      <div class="col-lg-12 d-flex card-footer">
+        <strong> {{'currency'|translate}}: </strong>
+        <input style=" width:200px" type="text" name="currency" class="form-control ml-2" [(ngModel)]="settingsData.currency">
+        <button class="btn btn-primary ml-2" type="button" (click)="save()">{{'save'|translate}}</button>
+      </div>
+
+    </div>
+  </div>
+
+</div>

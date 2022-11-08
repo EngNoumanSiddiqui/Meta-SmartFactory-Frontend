@@ -1,0 +1,79 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div>
+        <div class="card">
+          <div class="card-body">
+            <form #inspForm="ngForm">
+              <table class="table table-bordered">
+                <tr>
+                  <td>{{'inspection-control-data-id'}}</td>
+                  <td>{{inspectionControlData.inspectionControlDataId}}</td>
+                </tr>
+                <tr>
+                  <td>{{'inspection-control-data-code'}}</td>
+                  <td>
+                    <input
+                      type="text"
+                      id="inspectionControlDataCode"
+                      name="inspectionControlDataCode"
+                      [(ngModel)]="inspectionControlData.inspectionControlDataCode"
+                      class="form-control"
+                      required
+                    />
+                    </td>
+                </tr>
+                <tr>
+                  <td>{{'inspection-control-certificate' | translate}}</td>
+                  <td>
+                    <quality-inspect-data-control-certificate-auto-complete [addIfMissing]="true" (selectedinspectionControlDataCertificationEvent)="selectinspectionControlData($event)"></quality-inspect-data-control-certificate-auto-complete>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'vendor-source-inspection' | translate}}</td>
+                  <td>
+                    <quality-vendor-source-inspec-auto-complete [addIfMissing]="true" (selectedVendorSourceInspecEvent)="selectVendorSource($event)"></quality-vendor-source-inspec-auto-complete>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'lead-time' | translate}}</td>
+                  <td>
+                    <input
+                      type="number"
+                      id="leadTime"
+                      name="leadTime"
+                      [(ngModel)]="inspectionControlData.leadTime"
+                      class="form-control"
+                      required
+                    />
+                  </td>
+                </tr>
+                <!-- <tr>
+                  <td>{{'certificate-control' | translate}}</td>
+                  <td>
+                    <select id="certificateControl" name="certificateControl" class="form-control" [(ngModel)]="inspectionControlData.certificateControl" required>
+                      <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                      <option value="{{certificateControl}}" *ngFor="let certificateControl of certificateControlList">{{certificateControl}}
+                      </option>
+                    </select>
+                  </td>
+                </tr> -->
+              </table>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="row col-md-12">
+        <button
+          type="submit"
+          class="btn btn-sm btn-primary"
+          [disabled]="!inspForm.form.valid"
+          (click)="save()"
+        >
+          <i class="fa fa-dot-circle-o"></i>
+          {{ "save" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,56 @@
+<div class="animated fadeIn">
+    <div class="col-md-12">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>{{'job-order-id' | translate}}</th>
+                    <th>{{'planned-quantity' | translate}}</th>
+                    <th>{{'input' | translate}}</th>
+                    <th>{{'output' | translate}}</th>
+                    <th>{{'status' | translate}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{jobOrder.jobOrderId}}</td>
+                    <td>{{jobOrder.plannedQuantity}}</td>
+                    <td>
+                        <span>
+                            <span *ngFor="let item of jobOrder.jobOrderStockUseList; last as isLast">
+                                <span>{{item.stockName}}</span>
+                                <span *ngIf="!isLast">, </span>
+                            </span>
+                        </span>
+                    </td>
+                    <td>
+                        <span>
+                            <span *ngFor="let item of jobOrder.jobOrderStockProduceList; last as isLast">
+                                <span>{{item.stockName}}</span>
+                                <span *ngIf="!isLast">, </span>
+                            </span>
+                        </span>
+                    </td>
+                    <td>{{jobOrder.jobOrderStatus}}</td>
+                </tr>
+            </tbody>
+
+        </table>
+    </div>
+
+    <div class="col-md-12">
+        <p-tabView>
+            <p-tabPanel header="{{'produced'|translate}}">
+                <end-job-produced [jobOrder]="jobOrder"></end-job-produced>
+            </p-tabPanel>
+            <p-tabPanel header="{{'scrap'|translate}}">
+                scrap
+            </p-tabPanel>
+            <p-tabPanel header="{{'rework'|translate}}">
+                rework
+            </p-tabPanel>
+            <p-tabPanel header="{{'stop'|translate}}">
+                stop
+            </p-tabPanel>
+        </p-tabView>
+    </div>
+</div>

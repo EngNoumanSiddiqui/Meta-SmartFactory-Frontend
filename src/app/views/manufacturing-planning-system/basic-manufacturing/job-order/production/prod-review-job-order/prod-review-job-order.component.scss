@@ -1,0 +1,96 @@
+
+.input-tooltip{
+    padding: 0.3em 0.6em 0.3em 0.6em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 120px;
+  }
+
+  .input-space{
+    padding: 0.6em;
+    height: 22px;
+  }
+
+  .jOrderParent{
+    list-style: none;
+    border-bottom: 1px solid grey;
+    padding: 0;
+    margin-bottom: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    flex-direction: column;
+  }
+  
+  .jOrderParent li {
+    border-bottom: 1px solid grey;
+    padding: 0;
+    
+    width: 100%;
+    display: flex;
+    align-items: center;
+  }
+
+  .jOrderParent li:last-child {
+    border-bottom: none;
+  }
+
+  .jOrderParent li a{
+    padding: 3px;
+  }
+
+  .jOrderParent li span{
+    padding: 3px;
+  }
+
+  // p-treetabletoggler >
+// .tooltip.tooltip-top,
+// .tooltip.tooltip-bottom,
+// .tooltip.tooltip-left,
+// .tooltip.tooltip-right {
+//   z-index: 100000;
+// }
+
+// [data-toggle="tooltip"] {
+//     background-color: black;
+// }
+:host ::ng-deep .ui-treetable-scrollable-header-box {
+  margin-right: 0px !important;
+}
+.container_components {
+  max-height: 42px;
+  overflow: hidden;
+  /* display: list-item; */
+}
+
+.btn-sm, .btn-group-sm > .btn {
+  padding: 0 0.3rem;
+}
+
+ .show_components {
+  overflow: visible;
+  max-height: 100%;
+}
+.tooltip-inner {
+    background-color: #00acd6 !important;
+    /*!important is not necessary if you place custom.css at the end of your css calls. For the purpose of this demo, it seems to be required in SO snippet*/
+    color: #fff;
+  }
+  
+  .tooltip.top .tooltip-arrow {
+    border-top-color: #00acd6;
+  }
+  
+  .tooltip.right .tooltip-arrow {
+    border-right-color: #00acd6;
+  }
+  
+  .tooltip.bottom .tooltip-arrow {
+    border-bottom-color: #00acd6;
+  }
+  
+  .tooltip.left .tooltip-arrow {
+    border-left-color: #00acd6;
+  }

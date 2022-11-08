@@ -1,0 +1,17 @@
+<div class="col-md-10 text-left mb-2">
+  <!-- [style]="{'min-height': '100px'}" -->
+    <p-fileUpload name="demo[]" [files]="this.uploadedFiles" dragHighlight="true"
+      customUpload="true" (uploadHandler)="myUploader($event)" [multiple]="true"
+      accept="image/*,.pdf,.doc,.docx,.xlsx,.xls,.csv,.txt" maxFileSize="100000000">
+        <ng-template pTemplate="content">
+            <ul *ngIf="uploadedFiles.length">
+                <li *ngFor="let file of uploadedFiles">{{file.name}} - {{file.size}} bytes</li>
+            </ul>
+        </ng-template>
+    </p-fileUpload>
+</div>
+<div class="col-md-2" style="height: 50px">
+  <p-progressSpinner *ngIf="showUploadSpin" [style]="{width: '40px', height: '40px'} "></p-progressSpinner>
+</div>
+
+

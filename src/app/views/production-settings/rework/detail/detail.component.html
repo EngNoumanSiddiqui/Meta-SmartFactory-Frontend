@@ -1,0 +1,114 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i> {{'scrap' | translate}} {{'details' | translate}}
+        </div>
+        <div class="card-body">
+          <table class="table table-bordered">
+            <tbody *ngIf="scrap">
+              <tr>
+                <td width="18%">{{'plant' | translate}}</td>
+                <td width="33%">
+                  <a href="javascript:;" (click)="showPlantDetailModal(scrap.plant)">{{scrap.plant?.plantName}}</a>
+                </td>
+                <td>{{'material-name' | translate}}</td>
+                <td>
+                  <a href="javascript:;"
+                    (click)="showMaterialDetailModal(scrap.material)">{{scrap.material?.stockName}}</a>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'job-order-scrap' | translate}}</td>
+                <td>
+                  <a href="javascript:;" (click)="showJobOrderDetailModal(scrap.jobOrder)">
+                    {{scrap.jobOrder?.jobOrderId}}</a>
+                </td>
+                <td>{{'job-order-operation' | translate}}</td>
+                <td>
+                  <a href="javascript:;" (click)="showJobOrderOperationDetailModal(scrap.jobOrderOperation)">
+                    {{scrap.jobOrderOperation?.operationId}}</a>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'batch' | translate}}</td>
+                <td>
+                  <a href="javascript:;" (click)="showBatchDetailModal(scrap.batch)">{{scrap.batch}}</a>
+                </td>
+                <td>{{'quantity' | translate}}</td>
+                <td>
+                  {{scrap.quantity}}
+                </td>
+              </tr>
+             
+              <tr>
+                <td>{{'scrap' | translate }} {{'type' | translate}}</td>
+                <td>
+                  {{scrap.scrapType?.scrapCode}}
+                </td>
+                <td>{{'quantity' | translate}} {{'unit' | translate}}</td>
+                <td>
+                  {{scrap.quantityUnit}}
+                </td>
+              </tr>
+              <tr>
+                <td>{{'scrap' | translate }} {{'cause' | translate}}</td>
+                <td>
+                  {{scrap.scrapCause?.scrapCauseName}}
+                </td>
+               
+                <td>{{'warehouse' | translate}}</td>
+                <td>
+                  <a href="javascript:;"
+                    (click)="showWarehouseDetailModal(scrap.wareHouse)">{{scrap.wareHouse?.wareHouseName}}</a>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'operator' | translate}}</td>
+                <td>
+                  <a href="javascript:;" (click)="showOperatorDetailModal(scrap.operator)">
+                    {{scrap.operator?.firstName}} {{scrap.operator?.lastName}}</a>
+                </td>
+
+                <td>{{'workstation' | translate }}</td>
+                <td>
+                  <a href="javascript:;" (click)="showWorkstationDetailModal(scrap.workstation)">
+                    {{scrap.workstation?.workStationName}}</a>
+                </td>
+
+              </tr>
+              <tr>
+                <td>{{'employee-login-date' | translate }}</td>
+                <td>{{scrap.employeeLoginDate| date:'dd/MM/yyyy HH:mm'}}</td>
+                <td>{{'shift-name' | translate}}</td>
+                <td><a href="javascript:;" (click)="showShiftDetailDialog(scrap.shift?.shiftId,'DETAIL')">{{scrap?.shift?.shiftName}}</a></td>
+              </tr>
+
+              <tr>
+                <td>{{'status' | translate}}</td>
+                <td>
+                 {{scrap.reworkStatus}}
+                </td>
+                <td>{{'create-date' | translate}}</td>
+                <td>{{scrap.createDate | date:'dd/MM/yyyy HH:mm'}}</td>
+              </tr>
+
+              <tr>
+                <td>{{'reference-id' | translate }}</td>
+                <td>
+                  {{scrap.jobOrderOperation?.referenceId}}
+                </td>
+                <td>{{'description' | translate }}</td>
+                <td>
+                  {{scrap.description}}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

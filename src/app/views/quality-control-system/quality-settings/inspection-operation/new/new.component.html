@@ -1,0 +1,77 @@
+<div class="animated fadeIn">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i> {{'inspection-operation-information' | translate}}
+          </div>
+          <div class="card-body">
+            <form #inspForm="ngForm">
+              <table class="table table-bordered">
+                <tr>
+                  <td>{{'inspection-operation-code' | translate}}</td>
+                  <td>
+                    <input
+                      type="text"
+                      id="inspectionOperationCode"
+                      name="inspectionOperationCode"
+                      [(ngModel)]="inspectionOperation.inspectionOperationCode"
+                      class="form-control"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                    <td>{{'inspection-operation-name' | translate}}</td>
+                    <td>
+                      <input
+                        type="text"
+                        id="inspectionOperationName"
+                        name="inspectionOperationName"
+                        [(ngModel)]="inspectionOperation.inspectionOperationName"
+                        class="form-control"
+                        required
+                      />
+                    </td>
+                  </tr>
+                <tr>
+                <tr>
+                  <td>{{'description' | translate}}</td>
+                  <td>
+                    <input
+                      type="text" 
+                      id="inspectionOperationText"
+                      name="inspectionOperationText"
+                      [(ngModel)]="inspectionOperation.inspectionOperationText"
+                      class="form-control"
+                    />
+                  </td>
+                </tr>
+              </table>
+            </form>
+          </div>
+        </div>
+        <div class="row col-md-12">
+            <button
+            type="submit"
+            class="btn btn-sm btn-danger"
+            [disabled]="!inspForm.form.valid" 
+            (click)="reset()"
+          >
+          <i class="fa fa-ban" aria-hidden="true"></i>
+            {{ "reset" | translate }}
+          </button>
+          <button
+            type="submit"
+            class="btn btn-sm btn-primary"
+            [disabled]="!inspForm.form.valid"
+            (click)="save()"
+          >
+            <i class="fa fa-dot-circle-o"></i>
+            {{ "save" | translate }}
+          </button>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+  

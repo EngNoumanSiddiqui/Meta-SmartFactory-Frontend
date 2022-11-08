@@ -1,0 +1,336 @@
+<div class="animated fadeIn">
+    <div class="col-md-12 ">
+      <div class="mb-2 p-0 ">
+        <table class="table table-md table-responsive-sm  table-striped table-outline mb-0">
+          <tbody *ngIf="saleOrder">
+          <tr>
+            <td width="20%" class="text-bold">{{'quotation-id' | translate}}<span class="float-right">:</span></td>
+            <td width="30%">{{saleOrder.quotationId}}</td>
+            <td width="20%" class="text-bold">{{'quotation-no' | translate}}<span class="float-right">:</span></td>
+            <td width="30%">{{saleOrder.quotationNo}}</td>
+          </tr>
+          <tr>
+            <td class="text-bold">{{'cost-center' | translate}}<span class="float-right">:</span></td>
+            <td>
+              <a href="javascript:;" (click)="showDetailDialog(saleOrder?.costCenter?.costCenterId, 'COSTCENTER')">
+                {{saleOrder?.costCenter?.costCenterName}}
+              </a>
+            </td>
+
+            <td class="text-bold">{{'customer-name' | translate}}<span class="float-right">:</span></td>
+            <td ><a href="javascript:;" (click)="showDetailDialog(saleOrder.act?.actId, 'CUSTOMER')"> {{saleOrder.act?.actName}}</a></td>
+            <!-- <td width="20%" class="text-bold">{{'document-no' | translate}}<span class="float-right">:</span></td>
+            <td width="25%">{{saleOrder.}}</td> -->
+          </tr>
+          <tr>
+            <td class="text-bold">{{'parity' | translate}}<span class="float-right">:</span></td>
+            <td>{{saleOrder.parity}}</td>
+            <td class="text-bold">{{'status' | translate}}<span class="float-right">:</span></td>
+            <td>{{saleOrder.orderQuotationStatus}}</td>
+          </tr>
+          <tr>
+            <td class="text-bold">{{'order-id' | translate}}<span class="float-right">:</span></td>
+            <td>
+              <a href="javascript:;" (click)="showDetailDialog(saleOrder.order?.orderId, 'ORDER')"> {{saleOrder.order?.orderId}}</a>
+            </td>
+            <td class="text-bold">{{'order-no' | translate}}<span class="float-right">:</span></td>
+            <td>
+              <a href="javascript:;" (click)="showDetailDialog(saleOrder.order?.orderId, 'ORDER')"> {{saleOrder.order?.orderNo}}</a>
+            </td>
+          </tr>
+          <!-- <tr>
+            <td class="text-bold">{{'customer-order-no' | translate}}<span class="float-right">:</span></td>
+            <td colspan="3">
+              {{saleOrder.customerOrderNo}}
+            </td>
+          </tr> -->
+          <tr>
+            <td class="text-bold">{{'valid-from' | translate}}<span class="float-right">:</span></td>
+            <td>{{saleOrder.validFrom |date:"dd/MM/yyyy" }}</td>
+
+            <td class="text-bold">{{'valid-to' | translate}}<span class="float-right">:</span></td>
+            <td>{{saleOrder.validTo |date:"dd/MM/yyyy" }}</td>
+          </tr>
+          <tr *ngIf="saleOrder.orderQuotationStatus==='CANCELLED'">
+            <td class="text-bold">{{'reject-reason' | translate}}<span class="float-right">:</span></td>
+            <td colspan="3">{{saleOrder.rejectReason}}</td>
+            <td class="text-bold">{{'hts-status' | translate}}<span class="float-right">:</span></td>
+            <td>{{saleOrder.orderQuotationStatus === 'REQUESTED' ? 'CALCULATING_COST' : (saleOrder.orderQuotationStatus === 'CONFIRMED' ? 'OFFER_SENT' : '')}}</td>
+          </tr>
+          <tr>
+            <td class="text-bold">{{'quotation-date' | translate}}<span class="float-right">:</span></td>
+            <td>{{saleOrder.quotationDate|date:"dd/MM/yyyy" }}</td>     
+            <td class="text-bold">{{'customer-order-no' | translate}}<span class="float-right">:</span></td>
+            <td>{{saleOrder.customerOrderNo}}</td>         
+          </tr>
+          <tr>
+            <td class="text-bold">{{'description' | translate}}<span class="float-right">:</span></td>
+            <td>
+              <textarea style="background-color: #ffffff;" class="form-control" [(ngModel)]="saleOrder.description" disabled></textarea>
+            </td>
+            
+            <td class="text-bold">{{'note' | translate}}<span class="float-right">:</span></td>
+            <td>
+              <textarea style="background-color: #ffffff;" class="form-control" [(ngModel)]="saleOrder.note" disabled></textarea>
+            </td>
+          </tr>
+
+          
+          <tr>
+            <td colspan="4">
+              <div class="row align-items-center col-md-12 justify-content-between">
+                <div class="col-md-2 p-0 d-flex justify-content-between">
+                  <div class="text-bold">
+                    {{'total-net-price' | translate}}<span class="float-right">:</span>
+                  </div>
+                  <div>
+                    {{saleOrder?.totalNetPrice | number}}
+                  </div>
+                </div>
+                <div class="col-md-2 p-0 d-flex justify-content-between">
+                  <div class="text-bold">
+                    {{'total-discount-price' | translate}}<span class="float-right">:</span>
+                  </div>
+                  <div>
+                    {{saleOrder?.totalDiscountPrice | number}}
+                  </div>
+                </div>
+                <div class="col-md-2 p-0 d-flex justify-content-between">
+                  <div class="text-bold">
+                    {{'total-vat-price' | translate}}<span class="float-right">:</span>
+                  </div>
+                  <div>
+                    {{saleOrder?.totalVatPrice | number}}
+                  </div>
+                </div>
+                <div class="col-md-2 p-0 d-flex justify-content-between">
+                  <div class="text-bold">
+                    {{'total-sales-price' | translate}}<span class="float-right">:</span>
+                  </div>
+                  <div>
+                    {{saleOrder?.totalSalesPrice | number}}
+                  </div>
+                </div>
+                <div class="col-md-2 p-0 d-flex justify-content-between">
+                  <div class="text-bold">
+                    {{'currency' | translate}}<span class="float-right">:</span>
+                  </div>
+                  <div *ngIf="selectedCustomer$ | async as selectedCustomer">
+                    {{selectedCustomer?.contractDto?.currency ? selectedCustomer?.contractDto?.currency : '' }}
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <!-- <tr>
+            <td width="20%" class="text-bold">{{'total-net-price' | translate}}<span class="float-right">:</span></td>
+            <td  width="30%">
+              {{(saleOrder?.totalNetPrice ? saleOrder?.totalNetPrice: TotalNetPrice)  | number:'1.2-2'}}
+            </td>
+            <td width="20%" class="text-bold">{{'total-vat-price' | translate}}<span class="float-right">:</span></td>
+            <td  width="30%">
+              {{(saleOrder?.totalVatPrice ? saleOrder?.totalVatPrice : TotalVatPrice) | number:'1.2-2'}}
+            </td>
+          </tr>
+          <tr>
+            <td width="20%" class="text-bold">{{'total-sales-price' | translate}}<span class="float-right">:</span></td>
+            <td  width="30%">
+              {{(saleOrder?.totalSalesPrice ? saleOrder?.totalSalesPrice : TotalSalesPrice) | number:'1.2-2'}}
+            </td>
+          </tr> -->
+          
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="col-md-12" *ngFor="let rowData of saleOrder?.orderQuotationDetailList; let index=index;">
+      <p-tabView>
+        <p-tabPanel header="{{'sales-quotations-items'|translate}}">
+
+          <div class="table-responsive">
+            <table class="table table-sm table-outline mb-0">
+              <thead style="background-color: rgb(242 242 242);">
+                <tr >
+                  <th>{{'quotation-detail-id' | translate}}</th>
+                  <th>{{'quotation-detail-no' | translate}}</th>
+                  <th>{{'material-no' |translate}}</th>
+                  <th>{{'stock-name' |translate}}</th>
+                  <!-- <th>{{'height' |translate}}</th>
+                  <th>{{'width' |translate}}</th>
+                  <th>{{'dimension-unit' |translate}}</th> -->
+                  <!-- <th>{{'direct-production' |translate}}</th> -->
+                  <th>{{'quantity' |translate}}</th>
+                  <th>{{'base-unit' |translate}}</th>
+                  <!-- <th>{{'planned-quantity' |translate}}</th> -->
+                  <!-- placed produced-quantity -->
+                  <!-- <th>{{'produced-quantity' |translate}}</th> -->
+                  <!-- <th>{{'delivered-quantity' |translate}}</th> -->
+                  <!-- <th>{{'batch' |translate}}</th> -->
+                  <th>{{'status' |translate}}</th>
+                  <!-- <th>{{'storage-location' |translate}}</th> -->
+                  <th>{{'delivery-date' |translate}}</th>
+                  <!-- <th>{{'delivery-complete-date'|translate}}</th> -->
+                  <!-- <th>{{'plant-name' |translate}}</th> -->
+                  <th>{{'priority' |translate}}</th>
+                  <th>{{'sales-price' |translate}}</th>
+                  <th>{{'currency' |translate}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr (click)="params.orderDetail=rowData" style="cursor: pointer" >
+                  <td>{{rowData.quotationDetailId}}</td>
+                  <td>{{rowData.quotationDetailNo}}</td>
+                  <td>
+                    <a href="javascript:;" (click)="showDetailDialog(rowData.stock?.stockId, 'STOCK')">
+                      {{ rowData.stock?.stockNo}}
+                    </a>
+                  </td>
+                  <!-- <td><a href="javascript:;" (click)="showDetailDialog(rowData.stockId, 'STOCK')"> {{ (rowData.reservationList && (rowData.reservationList.length > 0)) ? rowData.reservationList[0]?.materialNo : ''}}</a></td> -->
+                  <td><a href="javascript:;" (click)="showDetailDialog(rowData.stock?.stockId, 'STOCK')">{{rowData.stock?.stockName}}</a></td>
+                  <!-- <td>{{rowData.height}}</td>
+                  <td>{{rowData.width}}</td>
+                  <td>{{rowData.dimensionUnit}}</td> -->
+                  <!-- <td>
+                    <p-checkbox name="{{'direcProd' + ri}}"  [(ngModel)]="rowData.directProduction" [binary]="true"></p-checkbox>
+                  </td> -->
+                  <td>{{rowData.quantity}}</td>
+                  <td>{{rowData.baseUnit }}</td>
+                  <!-- <td>{{rowData.plannedQuantity}}</td> -->
+                  <!-- placed produced-quantity -->
+                  <!-- <td>{{rowData.completedQuantity}}</td> -->
+                  <!-- <td>{{rowData.deliveredQuantity}}</td> -->
+                  <!-- <td><a href="javascript:;" (click)="showDetailDialog(rowData.batch, 'BATCH')"> {{rowData.batch}}</a></td> -->
+                  <td class="font-weight-bold " style="font-size: 10px;">{{rowData.orderDetailQuotationStatus}}</td>
+                  <!-- <td><a href="javascript:;" (click)="showDetailDialog(rowData.warehouseId, 'WAREHOUSE')"> {{rowData.warehouseName}}</a></td> -->
+
+                  <td>{{rowData.deliveryDate |date:"dd/MM/yyyy" }}</td>
+                  <!-- <td>{{rowData.deliveryCompletionDate | date:"dd/MM/yyyy"}}</td> -->
+                  <!-- <td><a href="javascript:;" (click)="showDetailDialog(rowData.plant?.plantId, 'PLANT')"> {{rowData.plant?.plantId}}</a></td> -->
+                  <td>{{rowData.priority}}</td>
+                  <td>{{rowData.salePrice }}</td>
+                  <td>{{rowData.currency }}</td>
+                  <!-- <td>
+                    <div #container style="display:inline-block;position:relative">
+                    <button *ngIf="rowData.orderDetailStatus=='COMPLETED' ||rowData.orderDetailStatus=='PARTIAL_DELIVERED'"
+                            class="btn btn-sm btn-outline-success" pTooltip="{{'transfer'|translate}}" [appendTo]="container" tooltipPosition="left"
+                            (click)="params.transferObj=saleOrder;params.title='goods-movement-information';myModal.show();"><i
+                      class="fa fa-truck"></i></button>
+
+                    <button class="btn btn-sm btn-outline-info" pTooltip="{{'job-orders'|translate}}"
+                            (click)="params.title='job-order';myModal.show();"  [appendTo]="container" tooltipPosition="left"><i
+                      class="fa fa-leaf"></i></button>
+                    </div>
+                  </td> -->
+                </tr>
+                <tr>
+                  <td colspan="11">
+                    <span class="text-bold">{{'description'| translate}}</span>:
+                    <textarea rows="6" style="background-color: #ffffff; width: 50%;" class="form-control" [(ngModel)]="rowData.description" disabled></textarea>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </p-tabPanel>
+        <p-tabPanel header="{{'pricing'|translate}}">
+          <table class="table table-sm table-responsive-lg table-responsive-sm table-responsive-md table-outline mb-0">
+            <thead style="background-color: rgb(242 242 242);">
+              <tr>
+                <th>{{'quotation-detail-id' | translate}}</th>
+                <th>{{'material-no' |translate}}</th>
+                <th>{{'stock-name' |translate}}</th>
+                <th>{{'quantity' |translate}}</th>
+                <th>{{'unit-net-price' |translate}}</th>
+                <th>{{'net-price' |translate}}</th>
+                <th>{{'discount' |translate}}</th>
+                <th>{{'vat' |translate}}</th>
+                <th>{{'delivery-cost' |translate}}</th>
+                <th>{{'sales-price' |translate}}</th>
+                <th>{{'currency' |translate}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{{rowData.quotationDetailId}}</td>
+                <td>
+                  <a href="javascript:;" (click)="showDetailDialog(rowData.stock?.stockId, 'STOCK')">
+                    {{ rowData.stock?.stockNo }}
+                  </a>
+                </td>
+                <td>
+                  <a href="javascript:;" (click)="showDetailDialog(rowData.stock?.stockId, 'STOCK')"> {{rowData.stock?.stockNo}}</a>
+                </td>
+                <td>{{rowData.quantity}}</td>
+                <td>{{rowData.unitNetPrice}}</td>
+                <td>{{rowData.netPrice}}</td>
+                <td>{{rowData.discount}}</td>
+                <td>{{rowData.vatPrice}}</td>
+                <td>{{rowData.deliveryCost}}</td>
+                <td>{{rowData.salePrice}}</td>
+                <td>{{rowData.currency}}</td>
+                  
+              </tr>
+            </tbody>
+          </table>
+        </p-tabPanel>
+        <p-tabPanel header="{{'document'| translate }}">
+          <div class="card">
+            <div class="card-header">
+              <i class="fa fa-align-justify"></i>{{'other-details' | translate}}
+            </div>
+            <div class="card-body">
+              <table class="table table-bordered">
+                <tbody>
+                <tr align="center">
+                  <td class="text-center" colspan="2">
+                    <image-viewer></image-viewer>
+                  </td>
+                </tr>
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </p-tabPanel>
+      </p-tabView>
+    </div>
+    <div class="col-md-12 d-flex mr-1 mt-5">
+      <button type="button" class="btn btn-sm btn-primary mr-1"
+        (click)="createProforma(myModal)"><i class="fa fa-file"></i>
+        {{'create-proforma' | translate}}
+      </button>
+    </div>
+</div>
+
+
+<div bsModal [config]="{backdrop: 'static', keyboard: false}" #myModal="bs-modal" [config]="{ show: false}"
+  (onHidden)="params.dialog.active=false" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-success" role="document"
+  [ngClass]="{'modal-lg': params.dialog.title !== 'invoice', 'modal-md': params.dialog.title === 'invoice'}" 
+  >
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"> {{params.dialog.title | translate}}</h4>
+        <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <!--step2-->
+      <div class="modal-body">
+        <ng-container *ngIf="params.dialog.title == 'invoice'">
+          <invoice-new [referenceId]="saleOrder['quotationNo']||null" 
+          [invoiceType]="'SALES_ORDER_PROFORMA'" [plantId]="selectedPlant?.plantId" 
+          [organizationId]="selectedOrganization?.organizationId"
+          [actualAmount]="saleOrder?.totalSalesPrice"
+          [postingDate]="today"
+          (saveAction)="myModal.hide();" 
+          ></invoice-new>
+        </ng-container>
+
+      </div>
+    
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+

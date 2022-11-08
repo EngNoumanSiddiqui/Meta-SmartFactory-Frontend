@@ -1,0 +1,140 @@
+<div class="row">
+  <p-tabView class="col-md-12">
+    <p-tabPanel header="{{'RFQ'|translate}}">
+      <image-upload-v2 [tableType]="tableType" [referenceId]="referenceId"
+      [articleType]="'SALES_ORDER_DETAIL_RFQ'"
+        (imageUrlList)="onrfqImageUrlListChanged($event)"></image-upload-v2>
+      <!--image shower on carrusel-->
+      <div *ngIf="rfqImageList && rfqImageList.length>0" class="row  align-items-end" style="height: 450px;">
+        <div class="col-md-12" style="text-align: -webkit-center;">
+          <carousel [interval]="0" [(activeSlide)]="activerfqSlideIndex">
+            <slide *ngFor=" let im of rfqImageList; let index=index" style="height: 400px">
+              <img *ngIf="(im.extension==='jpg')||(im.extension==='png')||(im.extension==='jpeg'); else fileLink"
+                [src]="im.path" [alt]="im.title" style="display: block;  max-height: 400px; max-width: 100%">
+              <ng-template #fileLink>
+                <!-- <a href="{{im.path}}" download="{{im.fileName}}">{{im.fileName}}</a> -->
+
+                <ngx-doc-viewer [url]="im.path" viewer="google" style="width:100%;height:396px;">
+                </ngx-doc-viewer>
+                <!-- <pdf-viewer [src]="im.path"
+              [original-size]="false" [autoresize]="true" style="width: 570px; max-height: 450px; overflow-y: scroll; display: block;"
+        ></pdf-viewer> -->
+              </ng-template>
+            </slide>
+          </carousel>
+          <div class="row">
+            <div style="margin: 10px 10px 0 20px; height: 50px">
+              <button [disabled]="showDeleteSpin" type="button" class="btn btn-danger" (click)="deleteRFQMedia()">
+                <i *ngIf="showDeleteSpin" class="fa fa-spinner fa-spin"></i>
+                {{'delete'|translate}}
+              </button>
+              <button [disabled]="showConfirmSpin" type="button" class="ml-2 btn btn-primary" 
+              (click)="confirmedRFQMedia()">
+              <i *ngIf="showConfirmSpin" class="fa fa-spinner fa-spin"></i>
+                {{'confirmed'|translate}}
+              </button>
+            </div>
+
+            <!-- <div style="height: 50px">
+              <p-progressSpinner *ngIf="showDeleteSpin" [style]="{width: '40px', height: '40px'} "></p-progressSpinner>
+            </div> -->
+          </div>
+
+        </div>
+
+
+
+
+
+      </div>
+
+      <!--image title and description-->
+      <div *ngIf="rfqImageList && rfqImageList.length>0" class="row">
+
+        <div class="col-md-12 form-group">
+          <input class="form-control" name="mf3" type="text" placeholder="{{'title' | translate}}"
+            [(ngModel)]="rfqImageList[activerfqSlideIndex].title" />
+        </div>
+        <div class="col-md-12 form-group">
+          <textarea class="form-control" name="mf4" placeholder="{{'description' | translate}}"
+            [(ngModel)]="rfqImageList[activerfqSlideIndex].description" rows="3"></textarea>
+
+        </div>
+      </div>
+
+      <!--image shower on carrusel-->
+      <div *ngIf="(!rfqImageList || rfqImageList.length===0)"
+        class="row">
+        <div class="col-12">
+          <img [src]="'assets/img/logo.png'" style=" width: 200px">
+        </div>
+      </div>
+    </p-tabPanel>
+    <p-tabPanel header="{{'CONFIRMED'|translate}}">
+      <image-upload-v2 [tableType]="tableType" [referenceId]="referenceId"
+      [articleType]="'SALES_ORDER_DETAIL_CONFIRMED'"
+        (imageUrlList)="onConfirmImageUrlListChanged($event)"></image-upload-v2>
+
+
+         <!--image shower on carrusel-->
+      <div *ngIf="confirmImageList && confirmImageList.length>0" class="row  align-items-end" style="height: 450px;">
+        <div class="col-md-12" style="text-align: -webkit-center;">
+          <carousel [interval]="0" [(activeSlide)]="activeConfirmSlideIndex">
+            <slide *ngFor=" let im of confirmImageList; let index=index" style="height: 400px">
+              <img *ngIf="(im.extension==='jpg')||(im.extension==='png')||(im.extension==='jpeg'); else fileLink"
+                [src]="im.path" [alt]="im.title" style="display: block;  max-height: 400px; max-width: 100%">
+              <ng-template #fileLink>
+                <!-- <a href="{{im.path}}" download="{{im.fileName}}">{{im.fileName}}</a> -->
+
+                <ngx-doc-viewer [url]="im.path" viewer="google" style="width:100%;height:396px;">
+                </ngx-doc-viewer>
+                <!-- <pdf-viewer [src]="im.path"
+              [original-size]="false" [autoresize]="true" style="width: 570px; max-height: 450px; overflow-y: scroll; display: block;"
+        ></pdf-viewer> -->
+              </ng-template>
+            </slide>
+          </carousel>
+          <div class="row">
+            <div style="margin: 10px 10px 0 20px; height: 50px">
+              <button [disabled]="showDeleteSpin" type="button" class="btn btn-danger" (click)="deleteConfirmMedia()">
+                {{'delete'|translate}}
+              </button>
+            </div>
+
+            <div style="height: 50px">
+              <p-progressSpinner *ngIf="showDeleteSpin" [style]="{width: '40px', height: '40px'} "></p-progressSpinner>
+            </div>
+          </div>
+
+        </div>
+
+
+
+
+
+      </div>
+
+      <!--image title and description-->
+      <div *ngIf="confirmImageList && confirmImageList.length>0" class="row">
+
+        <div class="col-md-12 form-group">
+          <input class="form-control" name="mf3" type="text" placeholder="{{'title' | translate}}"
+            [(ngModel)]="confirmImageList[activeConfirmSlideIndex].title" />
+        </div>
+        <div class="col-md-12 form-group">
+          <textarea class="form-control" name="mf4" placeholder="{{'description' | translate}}"
+            [(ngModel)]="confirmImageList[activeConfirmSlideIndex].description" rows="3"></textarea>
+
+        </div>
+      </div>
+
+      <!--image shower on carrusel-->
+      <div *ngIf="(!confirmImageList || confirmImageList.length===0)"
+        class="row">
+        <div class="col-12">
+          <img [src]="'assets/img/logo.png'" style=" width: 200px">
+        </div>
+      </div>
+    </p-tabPanel>
+  </p-tabView>
+</div>

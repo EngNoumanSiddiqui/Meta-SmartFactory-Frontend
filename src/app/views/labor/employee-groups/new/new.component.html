@@ -1,0 +1,50 @@
+<div class="animated fadeIn">
+  <div class="row">
+      <div class="">
+          <!-- <div class="card-header">
+            <i class="fa fa-align-justify"></i>{{'group-definition' | translate}}
+          </div> -->
+          <div class="card-body p-2">
+            <form #empGroupCodeForm="ngForm">
+            <table class="table table-bordered">
+            <tbody>
+              <tr>
+                  <td>{{'group-name'|translate}}</td>
+                  <td><input type="text" class="form-control"  required name="GroupName" [(ngModel)]="empGroupCode.groupName" /> </td>
+              </tr>
+              <tr>
+                <td>{{'group-code'|translate}}</td>
+                <td><input type="text" class="form-control" name="GroupCode" [(ngModel)]="empGroupCode.groupCode" /> </td>
+             </tr>
+             <tr>
+              <td>{{'group-members'|translate}}</td>
+              <td>
+                <p-pickList
+                [source]="sourceEmployeeList"
+                [target]="targetEmployeeList"
+                sourceHeader="Available Employee"
+                targetHeader="Selected Employee">
+                <ng-template let-emp pTemplate="item">
+                          <div class="ui-helper-clearfix">
+                              <div style="font-size:14px;float:right;margin:15px 5px 0 0">{{emp.firstName}}-{{emp.lastName}}</div>
+                          </div>
+                </ng-template>
+                </p-pickList>
+              </td>
+             </tr>
+             <tr>
+              <td colspan="2">
+                <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+                  {{'reset' | translate}}</button>
+                <button type="submit" class="btn btn-sm btn-primary"  [disabled]="!empGroupCodeForm.form.valid"  (click)="save()"><i class="fa fa-dot-circle-o"></i>
+                  {{'save' | translate}}
+                </button>
+              </td>
+            </tr>
+            </tbody>
+            </table>
+            </form>
+          </div>
+        </div>
+  </div>
+</div>

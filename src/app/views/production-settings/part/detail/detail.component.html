@@ -1,0 +1,51 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i> {{'part' | translate}}  {{'details' | translate}}
+        </div>
+        <div class="card-body">
+          <table class="table table-bordered">
+            <tbody *ngIf="part">
+            <tr>
+              <td width="30%">{{'part-code' | translate}}</td>
+              <td>{{part.partCode}} </td>
+            </tr>
+            <tr>
+              <td>{{'part-name' | translate}}</td>
+              <td>{{part.partName}} </td>
+            </tr>
+            <tr>
+              <td>{{'supplier' | translate}}</td>
+              <td>{{part.supplier}}  </td>
+            </tr>
+            <tr>
+              <td>{{'description' | translate}}</td>
+              <td> {{part.description}}</td>
+            </tr>
+            <tr>
+              <td>{{'quantity' | translate}}</td>
+              <td> {{part.quantity}} </td>
+            </tr>
+            <tr>
+              <td>{{'unit' | translate}}</td>
+              <td> {{part.unit}} </td>
+            </tr>
+            <tr>
+              <td>{{'cost' | translate}}</td>
+              <td> {{part.amount}} </td>
+            </tr>
+            <tr>
+              <td>{{'life' | translate}}</td>
+              <td> {{part.lifeTime}} </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

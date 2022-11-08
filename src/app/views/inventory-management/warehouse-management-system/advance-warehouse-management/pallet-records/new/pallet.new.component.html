@@ -1,0 +1,145 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <p-tabView class="col-md-12">
+      <p-tabPanel header="{{'pallet-details' | translate}}">
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-header">
+              <i class="fa fa-align-justify"></i> {{'new' | translate}} {{'pallet' | translate}}
+            </div>
+            <div class="card-body">
+              <form #warehouseForm="ngForm">
+                <table class="table table-bordered">
+                  <tbody>
+                    <tr>
+
+                      <td>{{'job-order-id'|translate}}</td>
+                      <td>
+                        <job-order-autocomplete [jobOrderStatus]="'PROCESSING'" [plantId]="selectedPlant?.plantId"
+                          (selectedJobOrderEvent)="setSelectedJbOrder($event)"></job-order-autocomplete>
+                      </td>
+
+                      <td>{{'material'|translate}}</td>
+                      <td>
+                        <!-- {{selectedMaterial?.stockName}} -->
+                        <stock-auto-complete [dropdown]="true" [required]="false" [plantId]="selectedPlant.plantId" [includeMaterials]="includeMaterials"
+                          [selectedStockId]="palletDto.stockId" (selectedStockEvent)="setSelectedStockEvent($event)">
+                        </stock-auto-complete>
+
+                      </td>
+                    </tr>
+
+                    <tr>
+
+                      <td>{{'job-order-operation'|translate}}</td>
+                      <td>
+                        <p-dropdown [options]="jobOrderOperations" (onChange)="setSelectedJobOrderOperation($event.value)"
+                          placeholder="Select a Operation" optionLabel="operationName" [style]="{width: '100%'}">
+                        </p-dropdown>
+                      </td>
+
+                      <td>{{'cycle-quantity'|translate}}</td>
+                      <td>
+                        <input name="cycle-quantity" class="form-control" type="number" [(ngModel)]="palletDto.cycleQuantity"
+                          required />
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>
+                        <span *ngIf="palletType==='GOODS'">{{'good-quantity' | translate}}</span>
+                        <span *ngIf="palletType==='SCRAP'">{{'scrap-quantity' | translate}}</span>
+                        <span *ngIf="palletType==='REWORK'">{{'rework-quantity' | translate}}</span>
+                      </td>
+                      <td>
+                        <input *ngIf="palletType==='GOODS'" name="good" class="form-control" type="number"
+                          [(ngModel)]="palletDto.goodQuantity" required />
+                        <input *ngIf="palletType==='SCRAP'" name="scrap" class="form-control" type="number"
+                          [(ngModel)]="palletDto.scrapQuantity" required />
+                        <input *ngIf="palletType==='REWORK'" name="rework" class="form-control" type="number"
+                          [(ngModel)]="palletDto.reworkQuantity" required />
+                      </td>
+                      <td>{{'variety'|translate}}</td>
+                      <td>
+                        <select class="form-control" name="variety" [(ngModel)]="palletDto.variety">
+
+                          <option *ngFor="let variety of varieties" [value]="variety">{{variety}}</option>
+                        </select>
+                      </td>
+                      
+                    </tr>
+                    <tr>
+                      <td>{{'quantity-unit' | translate}}</td>
+                      <td>
+                      {{quantityUnit}}
+                      </td>
+                     
+                      <td>{{'max-box-quantity'|translate}}</td>
+                      <td>
+                        <input type="number" class="form-control" name="maxBoxQuantity"  
+                        [(ngModel)]="palletDto.maxBoxQuantity"/>
+                      </td>
+                  </tr>
+                  <tr>
+                    <td>{{'pallet-type'|translate}}</td>
+                    <td>
+                      <select id="palletType" name="palletType" [(ngModel)]="palletType"
+                        (ngModelChange)="onPalletTypeChanged($event)" class="form-control">
+                        <option [value]="null"> {{ "please-select" | translate }}</option>
+                        <option [value]="'GOODS'">GOODS</option>
+                        <option [value]="'SCRAP'">SCRAP</option>
+                        <option [value]="'REWORK'">REWORK</option>
+                      </select>
+
+                    </td>
+                    <td>{{'requirement-pallet-quantity-for-forklift'|translate}}</td>
+                    <td>
+                      <input type="number" class="form-control" name="requirementPalletQuantityForForklift"  
+                      [(ngModel)]="palletDto.requirementPalletQuantityForForklift"/>
+                    </td>
+                  </tr>
+
+                    <tr>
+                      <td>{{'warehouse' | translate}}</td>
+                      <td>
+                        <warehouse-auto-complete [plantId]="selectedPlant?.plantId" [type]="palletType"
+                          (selectedWareHouseEvent)="palletDto.wareHouseId=$event.wareHouseId;"></warehouse-auto-complete>
+                      </td>
+                      <td>{{'batch' | translate}}</td>
+                      <td>{{palletDto.batch}}</td>
+                    </tr>
+                    <tr>
+                      <td>{{'pallet-setting' | translate}}</td>
+                      <td> <select id="palletSetting" name="palletSetting" [(ngModel)]="palletDto.palletSettingId"
+                          class="form-control">
+                          <option [value]="null"> {{ "please-select" | translate }}</option>
+                          <option *ngFor="let item of palletSettingList" [value]="item.palletSettingId">{{item.palletName}}
+                          </option>
+                        </select>
+
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td colspan="4">
+                        <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+                          {{'reset' | translate}}</button>
+                        <button type="submit" class="btn btn-sm btn-primary" [disabled]="!warehouseForm.valid"
+                          (click)="save()" style="margin-left: 5px;"><i class="fa fa-dot-circle-o"></i>
+                          {{'save' | translate}}</button>
+
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </form>
+            </div>
+          </div>
+        </div>
+      </p-tabPanel>
+      <p-tabPanel header="{{'pallet-log-details' | translate}}">
+
+      </p-tabPanel>
+    </p-tabView>
+  </div>
+</div>

@@ -1,0 +1,134 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <p-tabView class="col-md-12">
+      <p-tabPanel header="{{ 'main' | translate }}">
+        <div class="card">
+          <div class="card-body">
+            <form #inspForm="ngForm">
+              <table class="table table-bordered">
+                <tr>
+                  <td>{{'insp-char-id' | translate}}</td>
+                  <td>
+                    <input
+                      type="text"
+                      id="inspCharId"
+                      name="inspCharId"
+                      [(ngModel)]="inspChar.inspectionCharacteristicId"
+                      class="form-control"
+                      disabled="true"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'insp-char-code' | translate}}</td>
+                  <td>
+                    <input
+                      type="text"
+                      id="inspCharCode"
+                      name="inspCharCode"
+                      [(ngModel)]="inspChar.inspectionCharacteristicCode"
+                      class="form-control"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'insp-char-name' | translate}}</td>
+                  <td>
+                    <input
+                      type="text"
+                      id="inspCharName"
+                      name="inspCharName"
+                      [(ngModel)]="inspChar.inspectionCharacteristicName"
+                      class="form-control"
+                      required
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'plant' | translate}}</td>
+                  <td>
+                    <span style="width: 100%;" *ngIf="selectedPlant"> {{selectedPlant.plantName}}</span>
+                    <plant-auto-complete *ngIf="!selectedPlant" [addIfMissing]="false" [selectedPlantId]="inspChar.plantId"
+                      (selectedPlantEvent)="inspChar.plantId = $event.plantId" [selectedPlant]="inspChar.plantId"></plant-auto-complete>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'insp-char-type' | translate}}</td>
+                  <td>
+                    <select id="inspCharType" name="inspCharType" class="form-control" [(ngModel)]="inspChar.qualityInspectionCharacteristicType">
+                      <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                      <option value="{{inspCharType}}" *ngFor="let inspCharType of inspCharTypeList">{{inspCharType}}
+                      </option>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'shortText' | translate}}</td>
+                  <td>
+                    <input
+                      type="text"
+                      id="shortText"
+                      name="shortText"
+                      [(ngModel)]="inspChar.inspectionCharacteristicShortText"
+                      class="form-control"
+                  />
+                  </td>
+                </tr>
+               
+                <tr>
+                  <td>{{'valid-from' | translate}}</td>
+                  <td>
+                    <p-calendar class="valid-from" name="validFrom" [showIcon]="true" dateFormat="dd/mm/yy"
+                      [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                      [readonlyInput]="true" [showTime]="true"
+                      [(ngModel)]="inspChar.validFrom" required></p-calendar>
+                  </td>
+                </tr>
+              </table>
+            </form>
+          </div>
+        </div>
+      </p-tabPanel>
+      <p-tabPanel header="{{ 'control-indicator' | translate }}">
+        <div class="col-md-12">
+          <div class="">
+            <list-control-indicator [inspectionCharacteristicId]="inspChar.inspectionCharacteristicId" 
+            [qualityCharacteristicControlIndicatorList]="inspChar.qualityCharacteristicControlIndicatorList"
+            (saveEvent)="inspChar.qualityCharacteristicControlIndicatorList=$event" 
+            ></list-control-indicator>
+          </div>
+        </div>
+      </p-tabPanel>
+      <p-tabPanel header="{{ 'inspection-method' | translate }}">
+        <div class="col-md-12">
+          <div class="card">
+            <quality-inspection-characteristic-method-list [inspectionCharacteristicId]="inspChar.inspectionCharacteristicId" 
+            [tableData]="inspChar.qualityInspectionCharacteristicMethodList"
+            (saveEvent)="inspChar.qualityInspectionCharacteristicMethodList=$event"></quality-inspection-characteristic-method-list>
+          </div>
+        </div>
+      </p-tabPanel>
+      <p-tabPanel header="{{ 'catalogs' | translate }}">
+        <div class="col-md-12">
+          <div class="card">
+            <quality-inspection-characteristic-catalog-group-list [inspectionCharacteristicId]="inspChar.inspectionCharacteristicId"
+            [tableData]="inspChar.qualityCatalogGroupList"
+            (saveEvent)="inspChar.qualityCatalogGroupList=$event"></quality-inspection-characteristic-catalog-group-list>
+          </div>
+        </div>
+      </p-tabPanel>
+
+      <div class="row col-md-12">
+        <button
+          type="submit"
+          class="btn btn-sm btn-primary"
+          [disabled]="!inspForm.form.valid"
+          (click)="save()"
+        >
+          <i class="fa fa-dot-circle-o"></i>
+          {{ "save" | translate }}
+        </button>
+      </div>
+    </p-tabView>
+  </div>
+</div>

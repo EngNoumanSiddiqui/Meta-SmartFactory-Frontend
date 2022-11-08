@@ -1,0 +1,153 @@
+<div class="card">
+  <div class="col-lg-12">
+    <div class="row ui-fluid  badge-light border p-2 ">
+
+      <div class="col-md-auto">
+        <strong class="p-1 text-muted" style="align-self: center;"> {{'plant'|translate}} : </strong>
+       <strong *ngIf="filterCon.plantId" class="flex-grow-1 text-muted" style="align-self: center; margin-left: 30px;"> {{plant.plantName}} </strong>
+      </div>
+      <div class="col-md-3">
+        <!-- <strong class="p-1 text-muted" style="align-self: center;"> {{'workcenter'|translate}} : </strong> -->
+        <workcenter-auto-complete [plantId]="filterCon.plantId" (selectedWorkCenterEvent)="setSelectedWorkCenter($event)">
+        </workcenter-auto-complete>
+
+      </div>
+
+
+      <!-- <div class="col-md-2">
+        <p-dropdown [options]="shiftListDto" [style]="{'width':'100%'}" [(ngModel)]="filterCon.shiftId"
+          optionLabel="shiftName" (onChange)="setSelectedShift($event.value)"></p-dropdown>
+      </div> -->
+      <div class="col d-flex ">
+        <strong class="mr-1">{{'start-date'|translate}}</strong>
+        <span >{{filterCon.startDate|date:'dd.MM.yyyy HH:mm'}}</span>
+
+      </div>
+
+
+      <div class="col d-flex ">
+        <strong class="mr-1">{{'finish-date'|translate}}</strong>
+        <p-calendar [showIcon]="true" dateFormat="dd/mm/yy" showTime="true"
+                    [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100" (ngModelChange)="changeStart()"
+                    [(ngModel)]="filterCon.finishDate" placeholder="{{'end-date'| translate}}"></p-calendar>
+      </div>
+      <div class="col-md-auto">
+
+        <button type="button" pButton class="ui-button-info   "
+          [disabled]="!filterCon.workcenterId || !filterCon.finishDate" (click)="analyze()"
+          label="{{'analyze' | translate}}">
+        </button>
+
+      </div>
+    </div>
+    <br>
+    <p-tabView>
+      <p-tabPanel header="{{'quantity'|translate}}" [selected]="true">
+        <ng-template pTemplate="content">
+          <div class="row" *ngFor="let workstation of workCenterAnalysis">
+              <quantity-state-line-graph class="col-md-12" [quantityData]="workstation"></quantity-state-line-graph>
+          </div>
+          <div *ngFor="let workstation of workCenterAnalysis" class="row  mt-4">
+            <quantity-state-graph class="col-md-12" [quantityData]="workstation"></quantity-state-graph>
+          </div>
+        </ng-template>
+      </p-tabPanel>
+      <p-tabPanel header="{{'machine-state'|translate}}">
+
+          <!--legend area-->
+          <div class="row d-flex justify-content-around mt-4">
+            <div class=""><span class="legend-box closed"></span> {{'Closed'|translate}}</div>
+            <div class=""><span class="legend-box running"></span> {{'Running'|translate}}</div>
+            <div class=""><span class="legend-box standby"></span> {{'StandBy'|translate}}</div>
+            <div class=""><span class="legend-box machineSetup"></span> {{'Setup'|translate}}</div>
+            <div class=""><span class="legend-box machineStop"></span> {{'Stopped'|translate}}</div>
+          </div>
+          <!--endof legend area-->
+          <hr>
+          <!--chart drawing begin-->
+         <ng-template [ngIf]="workCenterAnalysis && workCenterAnalysis.length > 0">
+          <ng-container *ngFor="let workcenter of workCenterAnalysis">
+            <machine-status-item [workstationAnl]="workcenter"></machine-status-item>
+            <div class="row mt-3">
+              <workstation-status-item class="col-md-12" [workstations]="workcenter"></workstation-status-item>
+            </div>
+          </ng-container>
+         </ng-template>
+          <!--chart drawing end-->
+
+      </p-tabPanel>
+      <p-tabPanel header="{{'production-state'|translate}}">
+         <!--legend area-->
+         <ng-template pTemplate="content">
+        <div class="row d-flex justify-content-around mt-4">
+          <div class=""><span class="legend-box"></span> <strong>{{'production-state-label'|translate}}</strong></div>
+          <div class=""><span class="legend-box production"></span> {{'PRODUCTION'|translate}}</div>
+          <div class=""><span class="legend-box stop"></span> {{'STOP'|translate}}</div>
+          <div class=""><span class="legend-box unknown_stopped"></span> {{'UNKNOWN_STOPPED'|translate}}</div>
+          <div class=""><span class="legend-box setup"></span> {{'SETUP'|translate}}</div>
+          <div class=""><span class="legend-box setup_overtime"></span> {{'SETUP_OVERTIME'|translate}}</div>
+          <div class=""><span class="legend-box closed_black"></span> {{'CLOSED'|translate}}</div>
+        </div>
+    
+        <div class="row d-flex pt-1 justify-content-around mt-4">
+          <div style="width:100px"></div>
+          <div class=""><span class="legend-box waiting_for_job"></span> {{'WAITING_FOR_JOB'|translate}}</div>
+          <div class=""><span class="legend-box waiting_for_labor"></span> {{'WAITING_FOR_LABOR'|translate}}</div>
+          <div class=""><span class="legend-box waiting_for_maintenance"></span> {{'WAITING_FOR_MAINTENANCE'|translate}}</div>
+          <div class=""><span class="legend-box waiting_for_quality"></span> {{'WAITING_FOR_QUALITY'|translate}}</div>
+        </div>
+        <!--endof legend area-->
+        <hr>
+          <!--chart drawing begin-->
+         <ng-template [ngIf]="workCenterAnalysis && workCenterAnalysis.length > 0">
+          <ng-container *ngFor="let workcenter of workCenterAnalysis">
+            <production-status-item [workstationAnl]="workcenter"></production-status-item>
+            <div class="row mt-3">
+              <production-state-graph class="col-md-12" [workstations]="workcenter"></production-state-graph>
+            </div>
+          </ng-container>
+         </ng-template>
+          <!--chart drawing end-->
+         </ng-template>
+      </p-tabPanel>
+      <p-tabPanel header="{{'stops'|translate}}">
+         <!--chart drawing begin-->
+
+         <ng-template pTemplate="content" >
+          <ng-container *ngFor="let workcenter of workCenterAnalysis">
+              <stop-state-list-item [workstationAnl]="workcenter" (setStopList)="stoplist=$event"></stop-state-list-item>
+            <div class="row mt-3">
+              <stop-state-graph  class="col-md-12" [workCenterAnalysis]="workcenter" [stopList]="stoplist"></stop-state-graph>
+            </div>
+          </ng-container>
+         </ng-template>
+          <!--chart drawing end-->
+      </p-tabPanel>
+      <p-tabPanel header="{{'bottlenecks'|translate}}">
+         <!--chart drawing begin-->
+         <ng-template pTemplate="content">
+          <ng-container *ngFor="let workcenter of workCenterAnalysis">
+            <div class="row">
+              <bottleneck-list [workstationAnl]="workcenter"></bottleneck-list>
+            </div>
+            <div class="col-md-12 mt-1">
+              <bottleneck-stop-state-list-item [workstationAnl]="workcenter"
+                                               (setStopList)="bottleneckList=$event"></bottleneck-stop-state-list-item>
+            </div>
+            <div class="row mt-3">
+              <capacity-throughput-graph class="col-md-12"
+                                         [workCenterAnalysis]="workcenter"></capacity-throughput-graph>
+            </div>
+            <div class="row mt-3">
+              <bottleneck-stop-state-graph class="col-md-12"
+                                           [workCenterAnalysis]="workcenter"></bottleneck-stop-state-graph>
+            </div>
+          </ng-container>
+         </ng-template>
+          <!--chart drawing end-->
+      </p-tabPanel>
+    </p-tabView>
+
+  </div>
+  <br><br>
+</div>

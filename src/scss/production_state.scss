@@ -1,0 +1,115 @@
+
+ //production state
+.waiting_for_job{
+  border: 1px solid #fbe55f;
+  background-color: #fbe55f;
+}
+
+.waiting_for_labor{
+  border: 1px solid #8b8872;
+  background-color: #8b8872;
+}
+
+.waiting_for_maintenance{
+  border: 1px solid #5c3c64;
+  background-color: #5c3c64;
+}
+
+.waiting_for_quality{
+  border: 1px solid #e9c4a7;
+  background-color: #e9c4a7;
+}
+
+.production{
+  border: 1px solid #3ab54a;
+  background-color: #3ab54a;
+}
+
+
+.unknown_stopped{
+  border: 1px solid #ff1304;
+  background-color: #ff1304;
+}
+
+.stop{
+  border: 1px solid #b70b00;
+  background-color: #b70b00;
+}
+
+.setup{
+  border: 1px solid #20a8d8;
+  background-color: #20a8d8;
+}
+
+.setup_overtime{
+  border: 1px solid #806bf8;
+  background-color: #806bf8;
+}
+
+
+ .span_opacity {
+   opacity: 0.75;
+ }
+
+ .span_production {
+   background-color: #3ab54a;
+ }
+
+ .span_planned{
+   background-color: #0072bc;
+ }
+
+ .span_stop{
+   background-color: #b70b00;
+ }
+
+
+ .span_unknown_stopped{
+   background-color: #ff1304;
+ }
+
+
+ .closed_black{
+   background-color: black;
+   border: 1px solid black;
+   opacity: inherit;
+ }
+
+ .span_default_job_order{
+   background-color: #a0a0a0;
+ }
+
+ .span_waiting{
+   background-color: #fbe55f;
+ }
+
+ .span_setup{
+   background-color: #20a8d8;
+ }
+
+ .span_setup_overtime {
+   background-color: #806bf8;
+ }
+
+ .span_maintenance {
+   background-color: #f7941d;
+ }
+
+
+ .span_waiting_for_labor {
+  background-color: #8b8872;
+}
+
+.span_waiting_for_maintenance {
+  background-color: #5c3c64;
+}
+
+.span_waiting_for_quality {
+  background-color: #e9c4a7;
+}
+
+
+
+
+
+

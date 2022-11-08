@@ -1,0 +1,20 @@
+.modal-content{
+  min-width:900px;
+  min-height: 400px;
+}
+
+.modal-dialog {
+  max-width: 1100px;
+  margin: 10px auto;
+  height: auto;
+}
+:host ::ng-deep .ng-valid[required],
+:host ::ng-deep .ng-valid.required  {
+  border-left: 3px solid #42A948; /* green */
+}
+:host ::ng-deep .ng-invalid:not(form)  {
+  border-left: 3px solid #d87426; /* red */
+}
+body #pass .pi{
+  font-size: 25px !important;
+}

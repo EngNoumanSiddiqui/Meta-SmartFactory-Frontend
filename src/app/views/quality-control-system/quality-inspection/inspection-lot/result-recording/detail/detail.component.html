@@ -1,0 +1,65 @@
+<div class="animated fadeIn">
+    <div class="col-md-12">
+      <div>
+        <div class="card" *ngIf="resultRecording">
+        <div class="card-header">
+            <i class="fa fa-align-justify"></i> {{'inspection-lot-result-recording-details' | translate}}
+        </div>
+        <div class="card-body">
+            <form #stockForm="ngForm">
+            <table class="table table-striped table-outline">
+                <tbody>
+                <tr>
+                <td width="30%" class="text-bold">{{'result-recording-id' | translate}} <span style="width: 0 !important;" class="float-right">:</span> </td>
+                <td>{{resultRecording.resultRecordingId}}</td>
+                </tr>
+                <tr>
+                <td width="30%" class="text-bold">{{'inspection-characteristic' | translate}} <span style="width: 0 !important;" class="float-right">:</span> </td>
+                <td>{{resultRecording.inspectionCharacteristic}}</td>
+                </tr>
+                <tr>
+                <td class="text-bold">{{'specifications' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                <td>{{resultRecording.specifications}}</td>
+                </tr>
+                <tr>
+                <td class="text-bold">{{'record-type' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                <td>{{resultRecording.recordType}}</td>
+                </tr>
+                <tr>
+                <td class="text-bold">{{'inspect' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                <td>{{resultRecording.inspect}}</td>
+                </tr>
+                <tr>
+                <td class="text-bold">{{'inspected' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                <td>{{resultRecording.inspected}}</td>
+                </tr>
+                <tr>
+                <td class="text-bold">{{'result' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                <td>{{resultRecording.result}}</td>
+                </tr>
+                <tr>
+                <td class="text-bold">{{'defect' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                <td>{{resultRecording.defect}}</td>
+                </tr>
+                <tr>
+                <td class="text-bold">{{'attribute' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                <td>{{resultRecording.attribute}}</td>
+                </tr>
+                <tr>
+                <td class="text-bold">{{'inspection-description' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                <td>{{resultRecording.inspectionDescription}}</td>
+                </tr>
+                <tr>
+                <td class="text-bold">{{'valuation' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                <td>{{resultRecording.valuation}}</td>
+                </tr>
+                </tbody>
+            </table>
+            </form>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  

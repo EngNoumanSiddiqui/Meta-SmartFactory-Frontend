@@ -1,0 +1,188 @@
+<div class="animated fadeIn position-relative">
+  <div class="d-flex badge-light border align-items-center flex-lg-row flex-wrap mx-auto p-2 ui-fluid">
+    
+    <div class="col-md-2 px-1 ui-fluid">
+      <select name="searchplanned" class="form-control"
+        [(ngModel)]="searchBy" (ngModelChange)="onSearchByChanged($event)">
+        <option [value]="'searchbyscheduled'"> {{'search-scheduled' | translate}}</option>
+        <option [value]="'searchbyerp'"> {{'search-erp' | translate}}</option>
+      </select>
+    </div>
+    <ng-template [ngIf]="searchBy==='searchbyscheduled'">
+      <div class="col-md-2 px-1 ui-fluid" >
+        <p-calendar [(ngModel)]="filterSchedule.startDate"
+                    [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                    [showIcon]="true" dateFormat="dd/mm/yy" appendTo="body"
+                    placeholder="{{'start-date'|translate}}"></p-calendar>
+      </div>
+      <div class="col-md-2 px-1 ui-fluid" >
+        <p-calendar [(ngModel)]="filterSchedule.finishDate"
+                    [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                    placeholder="{{'finish-date'|translate}}" appendTo="body"
+                    [showIcon]="true" dateFormat="dd/mm/yy">
+        </p-calendar>
+      </div>
+    </ng-template>
+    <ng-template [ngIf]="searchBy==='searchbyerp'">
+      <div class="col-md-2 px-1 ui-fluid" >
+        <p-calendar [(ngModel)]="filterSchedule.erpStartDate"
+                    [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                    [showIcon]="true" dateFormat="dd/mm/yy" appendTo="body"
+                    placeholder="{{'start-date'|translate}}"></p-calendar>
+      </div>
+      <div class="col-md-2 px-1 ui-fluid" >
+        <p-calendar [(ngModel)]="filterSchedule.erpFinishDate"
+                    [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                    placeholder="{{'finish-date'|translate}}" appendTo="body"
+                    [showIcon]="true" dateFormat="dd/mm/yy">
+        </p-calendar>
+      </div>
+    </ng-template>
+    <div class="col-md-2 px-1 ui-fluid">
+        <p-dropdown [options]="workcenterTypes" [(ngModel)]="selectedWorkCenterTypes" placeholder="{{'select-workcenter-types' | translate}}" 
+          optionLabel="workCenterTypeName" [filter]="true" (onChange)="workcenterTypeChanged($event)"></p-dropdown>
+    </div>
+
+    <div class="col px-1 ui-fluid">
+        <p-dropdown [options]="workcenters" [(ngModel)]="selectedWorkCenters" placeholder="{{'select-workcenters' | translate}}" 
+          optionLabel="workCenterName" [filter]="true" (onChange)="workcenterChanged($event)"></p-dropdown>
+    </div>
+    <div class="col px-1 ">
+      <select class="form-control" [(ngModel)]="filterSchedule.scheduleProdOrderType">
+        <option [value]="'ALL'">ALL</option>
+        <option [value]="'STANDARD'">STANDARD</option>
+        <option [value]="'FORECAST'">FORECAST</option>
+        <option [value]="'ALL'">ALL</option>
+      </select>
+    </div>
+
+    <div class="col mx-2">
+      <button pButton label="{{'load-data'|translate}}" class="ui-button-success"
+         (click)="loadData()"></button>
+    </div>
+  </div>
+
+  <div class="d-flex align-items-center badge-light border flex-lg-row flex-wrap mx-auto p-2 ui-fluid">
+    <div style="width: 10%;" class="mx-2">
+      <select class="form-control" [(ngModel)]="presetView">
+        <option [value]="'hourAndDay'">Hourly</option>
+        <option [value]="'dayAndWeek'">Daily</option>
+        <option [value]="'weekAndMonth'">Weekly</option>
+        <option [value]="'monthAndYear'">Monthly</option>
+      </select>
+    </div>
+
+    <!-- <div class="d-flex flex-row flex-wrap align-items-center mx-2">
+      <label class="sel-event float-left">
+        <p-checkbox [(ngModel)]="shiftWeekend" binary="true"></p-checkbox>
+        {{'shift-weekend'|translate}}
+      </label>
+    </div> -->
+    <!--<div class="selected-workcenter">-->
+
+    <!--<strong style="margin-left: 5px">{{'loaded-work-center'|translate}}: <label class="sel-event">{{-->
+    <!--loadedWorkCenter|| 'None' }}</label></strong>-->
+    <!--</div>-->
+
+    <div style="width: 250px" class="mx-2">
+      <p-calendar [(ngModel)]="calendarDate" (ngModelChange)="onDateChange($event)" [readonlyInput]="true"
+        [monthNavigator]="true" [yearNavigator]="true" yearRange="2018:2100" [showIcon]="true" dateFormat="dd-mm-yy"
+        placeholder="{{'navigate-to-date'|translate}}">
+        <ng-template pTemplate="date" let-date>
+          <span [ngClass]="{'dirty-day':containDate(date)}">{{date.day}}</span>
+        </ng-template>
+      </p-calendar>
+
+    </div>
+    <div class="mx-2">
+      <input type="text" pInputText placeholder="Filter task by name" (input)="filterEvents('name', $event.target.value)" />
+    </div>
+    <div class="mx-2">
+      <button pButton label="{{'save-changes'|translate}}" class="ui-button-info  " (click)="saveChanges()"></button>
+    </div>
+    <div class="mx-2">
+      <button pButton data-ref="exportButton" id="b-button-18" class="ui-button-warning float-right ml-1" type="button"
+        icon="fa fa-file-alt" iconPos="left" label="{{'export-pdf'|translate}}" (click)="exportToPDF()"></button>
+    </div>
+    <div class="mx-2">
+      <button pButton data-ref="exportButton" id="b-button-18" class="ui-button-warning float-right ml-1" type="button"
+        icon="fa fa-file-alt" iconPos="left" label="{{'export-excel'|translate}}" (click)="exportToExcel()"></button>
+    </div>
+
+
+  </div>
+
+  <div class="row">
+
+    <div class="col-md-12" id="app">
+      <div class="row text-center noData" *ngIf="!showLoader&&resources.length<1">
+        <strong class=""><i class="fa fa-warning "></i>{{'NO_DATA_FOUND'|translate}}!</strong>
+      </div>
+
+      <scheduler *ngIf="!showLoader&&resources.length>0" #scheduler [autoHeight]=false
+        [frameHeight]="200"
+        [barMargin]="barMargin" [createEventOnDblClick]="false" [events]="events" [eventEdit]="false" [resources]="resources"
+        [enableDeleteKey]="false" [featuretimeRanges]="timeRanges" [startDate]="startDate" [viewPreset]="presetView"
+        [filter]="true" [stripe]="true" [endDate]="endDate" [columns]="columns"
+        [pdfExport]="pdfExport" [excelExporter]="excelExporter" [validateDelete]="validateDelete"
+        [eventDragCreate]="false" [eventEdit]="true" [eventContextMenu]="eventContextMenu"
+        [showAddEventInContextMenu]="false" [showRemoveRowInContextMenu]="false" eventStyle="border"
+        [eventTooltip]="eventTooltip"
+        [nonWorkingTime]="true" [eventRenderer]="eventRenderer" [eventResize]="false" [eventDrag]="eventDrag"
+        (onSchedulerEventSelected)="onSchedulerEventSelected($event)"
+        (onSchedulerEventDropped)="onSchedulerEventDropped($event)"
+        (onSchedulerEventUpdated)="onSchedulerEventUpdated($event)"
+        (onSchedulerEventDbClicked)="onSchedulerEventDbClicked($event)">
+
+      </scheduler>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<div bsModal [config]="{backdrop: 'static', keyboard: false}" #allocationModal="bs-modal" class="modal fade" tabindex="-1"
+  role="dialog" aria-labelledby="allocationModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-success modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"> {{ allocationParams.dialog.title | translate}}</h4>
+        <button type="button" class="close" (click)="allocationModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p-chart type="bar" [data]="barData" [options]="options" [height]="'350px'"></p-chart>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!--<div bsModal [config]="{backdrop: 'static', keyboard: false}" #myModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"-->
+<!--aria-hidden="true">-->
+<!--<div class="modal-dialog modal-success " role="document">-->
+<!--<div class="modal-content">-->
+<!--<div class="modal-header">-->
+<!--&lt;!&ndash;<h4 *ngIf="my" class="modal-title"> {{'create-job-order-manual' | translate}}</h4>&ndash;&gt;-->
+<!--<h4 class="modal-title"> {{'job-order-edit' | translate}}</h4>-->
+<!--<button type="button" class="close" (click)="myModal.hide()" aria-label="Close">-->
+<!--<span aria-hidden="true">&times;</span>-->
+<!--</button>-->
+<!--</div>-->
+<!--<div class="modal-body">-->
+<!--&lt;!&ndash;<ng-template [ngIf]="m"></ng-template>&ndash;&gt;-->
+<!--&lt;!&ndash;<manuel-job-order></manuel-job-order>&ndash;&gt;-->
+
+<!--<event-edit [jobOrder]="selectedRecord" [workstations]="workstations"-->
+<!--(closeAction)="myModal.hide()" (deleteAction)="deleteEvent($event)"-->
+<!--(saveAction)="saveEvent($event)"></event-edit>-->
+
+<!--</div>-->
+
+
+<!--</div>&lt;!&ndash; /.modal-content &ndash;&gt;-->
+<!--</div>&lt;!&ndash; /.modal-dialog &ndash;&gt;-->
+<!--</div>&lt;!&ndash; /.modal &ndash;&gt;-->

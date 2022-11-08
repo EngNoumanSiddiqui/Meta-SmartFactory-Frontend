@@ -1,0 +1,33 @@
+<div class="animated fadeIn">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fa fa-align-justify"></i> {{'account-contact-information' | translate}}
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <tbody *ngIf="detailResult">
+                            <tr>
+                                <td width="30%">{{'name' | translate}}</td>
+                                <td>{{detailResult.name}} </td>
+                            </tr>
+                            <tr>
+                                <td>{{'email' | translate}}</td>
+                                <td>{{detailResult?.email}} </td>
+                            </tr>
+                            <tr>
+                                <td>{{'phone' | translate}}</td>
+                                <td>{{detailResult?.phone}} </td>
+                            </tr>
+                            <tr>
+                                <td>{{'mobile' | translate}}</td>
+                                <td>{{detailResult?.mobile}} </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

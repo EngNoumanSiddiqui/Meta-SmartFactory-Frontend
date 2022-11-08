@@ -1,0 +1,76 @@
+
+<div class="card">
+
+<div class="col-md-12">
+
+  <div class="row" style="padding:5px 0 5px 0">
+    <div class="col-md-5 d-flex">
+      <button pButton style="margin-right: 5px; width: 280px;" class="ui-button-info float-left" type="button"  icon="fa fa-file-alt"
+      iconPos="left" label="{{'export-image'|translate}}" (click)="exportAsPng('all-stop-section')"></button>
+      <select class="form-control" (change)="onChangeStop($event.target.value)">
+        <option [value]="null">Please Select</option>
+        <option value="PLANNED">Planned Stops</option>
+        <option value="UNPLANNED">Unplanned Stops</option>
+      </select>
+    </div>
+  </div>
+  <div class="row" id="all-stop-section" *ngIf="display">
+
+    <div class="col-md-6">
+
+      <div class="card">
+        <div class="card-header">{{'today-stops'|translate}}</div>
+        <div class="card-block">
+          <stop-analysis [injected]="thisDay"></stop-analysis>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">{{'yesterday-stops'|translate}}</div>
+        <div class="card-block">
+          <stop-analysis [injected]="yesterday"></stop-analysis>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="col-md-6">
+
+      <div class="card">
+        <div class="card-header">{{'this-week-stops'|translate}}</div>
+        <div class="card-block">
+          <stop-analysis [injected]="thisWeek"></stop-analysis>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">{{'last-week-stops'|translate}}</div>
+        <div class="card-block" style="overflow: auto;">
+          <stop-analysis [widthExtendable]="true" [injected]="lasWeek" ></stop-analysis>
+        </div>
+      </div>
+
+    </div>
+
+    <div [ngClass]="{'col-md-6' : (thisMonth.length > 5 && thisMonth.length < 10) && (lastMonth.length > 5 && lastMonth.length < 10), 'col-md-4' : (thisMonth.length < 5 && lastMonth.length < 5), 'col-md-12' : (thisMonth.length >= 10) || (lastMonth.length >=10)}">
+
+      <div class="card">
+        <div class="card-header">{{'this-month-stops'|translate}}</div>
+        <div class="card-block">
+          <stop-analysis [injected]="thisMonth"></stop-analysis>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">{{'last-month-stops'|translate}}</div>
+        <div class="card-block">
+          <stop-analysis [injected]="lastMonth"></stop-analysis>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+</div>

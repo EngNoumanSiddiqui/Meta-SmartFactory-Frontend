@@ -1,0 +1,216 @@
+<!--<form #orderEdit="ngForm" >-->
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <p-tabView>
+        <p-tabPanel [header]="
+        (this.dataModel.direction === 1) ?
+          ('new-material' | translate) : ((this.dataModel.direction === -1) ? ('new-component' | translate): ('new-auxiliary-material' | translate) )
+        ">
+          <div class="card">
+            <div class="card-header">
+              {{'component'|translate}}
+            </div>
+            <div class="card-body">
+              <form #saleForm="ngForm" class="form-horizontal ui-fluid">
+                <table class="table table-bordered">
+                  <tbody>
+
+
+                  <tr>
+                    <td width="40%">{{'direction'|translate}}</td>
+                    <td>
+                      <select  [(ngModel)]="dataModel.direction" class="form-control" name="direction" required>
+                        <option  *ngIf="this.dataModel.direction === 1" [value]='1'>{{'MATERIAL'}}</option> <!-- [disabled]="dataModel.direction===-1 || dataModel.productTreeDetailComponentId!==null" -->
+                        <option  *ngIf="this.dataModel.direction === -1" [value]='-1'>{{'COMPONENT'}}</option>
+                        <option *ngIf="this.dataModel.direction === 0" [value]='0'>{{'AUXULIARY-MATERIAL'}}</option>
+                      </select>
+                    </td>
+                  </tr>
+                  
+                  <tr>
+                    <td>
+                      <!-- {{dataModel.direction==1? ('material'|translate):('component'|translate)}}
+                         {{dataModel.direction==0? ('auxilary'|translate):(''|translate)}}-->
+                      {{dataModel.direction==1? ('material'|translate) :(''|translate)}}
+                      {{dataModel.direction==-1? ('component'|translate):(''|translate)}}
+                      {{dataModel.direction==0? ('auxilary'|translate):(''|translate)}}
+
+                    </td>
+
+                    
+
+                    <td>
+                      <span *ngIf="dataModel.component" class="p-2 rounded bg-readonly" (click)="myModal.show();">{{dataModel.component?.stockNo}} | {{dataModel.component?.stockName}}
+                        <i class="fa fa-share-alt text-success" *ngIf="dataModel.component.productTreeId"> </i>
+                      </span>
+                      <span *ngIf="!dataModel.component" class="p-2 rounded  bg-readonly" (click)="myModal.show()">{{'click-to-select'|translate}}</span>
+                    </td>
+                  </tr>
+
+                  
+
+                  <tr *ngIf="dataModel.direction==0">
+                      <td width="35%">{{'number-of-edge' | translate}}</td>
+                      <td><input type="number" min="0" class="form-control" [(ngModel)]="dataModel.numberOfEdge"
+                                id="numberOfEdge" name="numberOfEdge" required/>
+                      </td>
+                    </tr>
+                  <tr *ngIf="dataModel.direction==0">
+                        <td width="35%">{{'aux-name-feature' | translate}}</td>
+                        <td>
+                          <!-- <textarea type="text" min="0" class="form-control" [(ngModel)]="dataModel.auxfeature"
+                                   name="quantity" required/>
+                             -->
+
+                             <textarea type="text" id="address" name="auxfeature" [(ngModel)]="dataModel.auxfeature" required
+                              class="form-control"></textarea>
+
+                        </td>
+                      </tr>
+
+
+                  <tr>
+                    <ng-container *ngIf="manualProdOrder;else noManualProdOrder" >
+                      <td width="40%">
+                        <div class="d-flex justify-content-around align-items-center">
+                          {{'base-quantity' | translate}}:
+                          <input type="number" min="0" style="width:55%" class="form-control" [(ngModel)]="dataModel.baseQuantity"
+                          (ngModelChange)="dataModel.quantity=(saleOrderQuantity? saleOrderQuantity: (quantity||1))*dataModel.baseQuantity;"
+                                    name="basequantity"/>
+                        </div>
+                      </td>
+                      <td >
+                        <div class="d-flex justify-content-around align-items-center">
+                          {{'quantity' | translate}}:
+                          <input type="number" min="0" style="width:70%" class="form-control" [(ngModel)]="dataModel.quantity"
+                          name="quantity" (ngModelChange)="onMaterialQuantityChangedProd($event)" required/>
+                        </div>
+                      </td>
+                    </ng-container>
+                    <ng-template #noManualProdOrder>
+                      <td width="35%">{{'quantity' | translate}}</td>
+                      <td><input type="number" min="0" class="form-control" [(ngModel)]="dataModel.quantity"
+                                 name="quantity" (ngModelChange)="onMaterialQuantityChanged($event)" required/>
+                      </td>
+                    </ng-template>
+
+                  </tr>
+
+
+                  <tr>
+                    <td>{{'quantity-unit' | translate}}</td>
+                    <td>{{dataModel.quantityUnit}}</td>
+                  </tr>
+                  <tr *ngIf="manualProdOrder">
+                    <td width="35%">{{'material-cost-rate' | translate}}</td>
+                    <td><input type="number" min="0" class="form-control"
+                      [(ngModel)]="dataModel.materialCostRate"
+                               name="materialCostRate" (ngModelChange)="onMaterialCostRateChanged($event)" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="35%">{{'material-cost' | translate}}</td>
+                    <td><input type="number" min="0" class="form-control" [(ngModel)]="dataModel.materialCost"
+                               name="materialCost" (ngModelChange)="dataModel.scrapCost=dataModel.materialCost;" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="35%">{{'scrap-cost' | translate}}</td>
+                    <td><input type="number" min="0" class="form-control" [(ngModel)]="dataModel.scrapCost"
+                               name="scrapCost"/>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'currency' | translate}}</td>
+                    <td>
+                      <currency-auto-complete [selectedCurrency]="dataModel.currency" (selectedCurrencyEvent)="dataModel.currency=$event?.currencyCode"></currency-auto-complete>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{ "extra-production-percentage" | translate }}</td>
+                    <td>
+                      <input type="number" id="extraProductionPercentage" name="extraProductionPercentage" class="form-control"
+                        [(ngModel)]="dataModel.extraProductionPercentage"/>
+                    </td>
+                  </tr>
+                  <tr >
+                    <td width="35%">{{'position' | translate}}</td>
+                    <td><input type="text" class="form-control" [(ngModel)]="dataModel.position"
+                      name="position"/>
+                  </td>
+                  </tr>
+                  <tr *ngIf="manualProdOrder">
+                    <td width="35%">{{'description' | translate}}</td>
+                    <td>
+                      <textarea class="form-control"
+                      [(ngModel)]="dataModel.description" name="description" ></textarea>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+
+              </form>
+            </div>
+            <div class="card-footer">
+              <!--<button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>-->
+              <!--{{'reset' | translate}}-->
+              <!--</button>-->
+              <button type="submit" class="btn btn-sm btn-primary" [disabled]="!saleForm.form.valid"
+                      (click)="save()"><i class="fa fa-dot-circle-o"></i>
+                {{'save' | translate}}
+              </button>
+            </div>
+          </div>
+        </p-tabPanel>
+        <p-tabPanel header="{{'features' | translate}}">
+          <product-tree-component-feature-list [tableData]="dataModel.productTreeDetailComponentFeatureList"
+                                               [productTreeDetailComponentId]="dataModel.productTreeDetailComponentId"
+                                               (saveEvent)="featuresUpdated($event)"
+          ></product-tree-component-feature-list>
+        </p-tabPanel>
+      </p-tabView>
+    </div>
+  </div><!--/.row-->
+</div>
+<!--</form>-->
+<!------------------------- Modals ---------------------------------------->
+<div bsModal [config]="{backdrop: 'static', keyboard: false}" #myModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-success modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          <!-- {{dataModel.direction==1? ('material'|translate):('component'|translate)}}
+           -->
+          {{dataModel.direction==1? ('material'|translate) :(''|translate)}}
+          {{dataModel.direction==-1? ('component'|translate):(''|translate)}}
+          {{dataModel.direction==0? ('auxilary'|translate):(''|translate)}}
+
+        </h4>
+        <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <!---------- MODEL #Stocks ------------->
+      <!--[(visible)]="display"-->
+      <div class="modal-body">
+        <div class="form-group row">
+          <!--keep the modal open!!!!!-->
+          <div class="col-md-12">
+            <choose-stock-pane [plantId]="plant?.plantId" [direction]="dataModel.direction" [isAuxiliaryMaterial]="direction === 0 ? true : false" (selectedEvent)="setSelectedStock($event);myModal.hide()"></choose-stock-pane>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="myModal.hide()">{{'close' | translate}}</button>
+      </div>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<!--already done it seems-->

@@ -1,0 +1,143 @@
+
+<div bsModal [config]="{backdrop: 'static', keyboard: false}" #myModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog  modal-lg modal-success" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          <i class="fa fa-align-justify"></i> {{'profile-information' | translate}}
+        </h4>
+        <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <div class=" form-group row">
+
+
+
+            <div class="col-md-12">
+              <table class="table table-bordered ">
+                <tbody>
+
+                <tr>
+                  <td colspan="2" align="center">
+                    <div *ngIf="picture" class="row" style="margin-bottom: 5px">
+                      <img [src]="picture" style="display: block;  height: 200px; max-width: 100%">
+                    </div>
+                    <div *ngIf="!picture" class="row" style="margin-bottom: 5px">
+                      <img [src]="'assets/img/avatars/avatar.png'" style="display: block;  height: 200px; max-width: 100%">
+                    </div>
+                    <media-chooser  (mediaIdEvent)="setLoadedImage($event)" [accept]="'image/*'" [picture]="picture"
+                                    [referenceId]="staff.employeeId" [tableType]="tableTypeForImg"></media-chooser>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td> {{'first-name' | translate}}</td>
+                  <td><input type="text" style="width: 100%" class="form-control" [(ngModel)]="staff.firstName"/></td>
+                </tr>
+
+                <tr>
+                  <td>{{'last-name' | translate}}</td>
+                  <td><input type="text" style="width: 100%" class="form-control" [(ngModel)]="staff.lastName"/></td>
+                </tr>
+
+                <tr>
+                  <td width="30%" >{{'email' | translate}}</td>
+                  <td><input required type="email" style="width: 100%" class="form-control" [(ngModel)]="staff.email"
+                             pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$" name="email"/>
+                  </td>
+                </tr>
+
+                <tr class="ui-fluid">
+                  <td>{{'birth-date' |translate}}</td>
+                  <td>
+                    <p-calendar [showIcon]="true" [(ngModel)]="staff.birthDate" name="birthDate"
+                                [monthNavigator]="true" [yearNavigator]="true" yearRange="1960:2100"
+                                dateFormat="dd/mm/yy"></p-calendar>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'mobile' | translate}}</td>
+                  <td><input type="text" class="form-control" style="width: 100%" class="form-control" [(ngModel)]="staff.gsm"/></td>
+                </tr>
+                <tr>
+                  <td>{{'phone' | translate}}</td>
+                  <td><input type="text" style="width: 100%" class="form-control" [(ngModel)]="staff.phone"/></td>
+                </tr>
+
+
+                <tr>
+                  <td>{{'blood-type' | translate}}</td>
+                  <td>
+                    <div class="input-group">
+
+                      <select id="bloodGroup" name="bloodGroup" class="form-control" [(ngModel)]="staff.bloodGroup">
+                        <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                        <option *ngFor="let blood of BloodList" value="{{blood}}">{{blood}}</option>
+                      </select>
+
+                    </div>
+                  </td>
+                </tr>
+
+
+                <tr>
+                  <td>{{'address' |translate}} - 1</td>
+                  <td><input type="text" style="width: 100%" class="form-control" [(ngModel)]="staff.address1"/></td>
+                </tr>
+                <tr>
+                  <td>{{'address' |translate}} - 2</td>
+                  <td><input type="text" style="width: 100%" class="form-control" [(ngModel)]="staff.address2"/></td>
+                </tr>
+
+                <tr>
+                  <td>{{'country' |translate}}</td>
+                  <td>
+                    <div class="input-group">
+                      <select id="countryIdx" name="countryIdx" class="form-control" (change)="countrySelection($event)"
+                              [(ngModel)]="staff.countryId">
+                        <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                        <option value="{{country.countryId}}" *ngFor="let country of CountryList">{{country.countryName}}
+                        </option>
+                      </select>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'city' | translate}}</td>
+                  <td>
+                    <div class="input-group">
+                      <select id="cityIdx" name="cityIdx" class="form-control" [(ngModel)]="staff.cityId"
+                              [disabled]="!staff.countryId">
+                        <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                        <option value="{{city.cityId}}" *ngFor="let city of CityList">{{city.cityName}}</option>
+                      </select>
+                    </div>
+                  </td>
+                </tr>
+
+                </tbody>
+              </table>
+            </div>
+
+
+            </div>
+
+
+      </div>
+
+      <div class="modal-footer">
+        <button pButton type="button" class="ui-button-info" (click)="save()"
+                label="{{'save'|translate}}"></button>
+      </div>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+

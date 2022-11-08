@@ -1,0 +1,38 @@
+<table class="table table-bordered ui-fluid">
+    <tr>
+        <td width="30%">{{'plant'|translate}}</td>
+        <td>
+            <a href="javascript:;" (click)="openPlantModal(responseShiftDto.plant.plantId)">
+            {{responseShiftDto.plant.plantName}}</a>
+        </td>
+    </tr>
+    <tr>
+        <td>{{'shift-no'|translate}}</td>
+        <td>{{responseShiftDto.shiftNo}}</td>
+    </tr>
+    <tr>
+        <td>{{'shift-name'|translate}}</td>
+        <td>{{responseShiftDto.shiftName}}</td>
+    </tr>
+    <tr>
+        <td>{{'shift-order-no'|translate}}</td>
+        <td>{{responseShiftDto.shiftOrderNo}}</td>
+    </tr>
+    <tr>
+        <td>{{'start-time'|translate}}</td>
+        <td>{{responseShiftDto.startTime}}</td>
+    </tr>
+    <tr>
+        <td>{{'finish-time'|translate}}</td>
+        <td>{{responseShiftDto.endTime}}</td>
+    </tr>
+    <tr>
+        <td>{{'description'|translate}}</td>
+        <td>{{responseShiftDto.description}}</td>
+    </tr>
+    <tr>
+      <td>{{'schedule-max-change-over-count'|translate}}</td>
+      <td>{{responseShiftDto.maxChangeOverCount}}</td>
+    </tr>
+
+</table>

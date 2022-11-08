@@ -1,0 +1,345 @@
+<p-confirmDialog [autoZIndex]="true" [baseZIndex]="999999"></p-confirmDialog>
+<div class="animated fadeIn">
+
+
+  <div class="col-lg-12">
+    <div class="row badge-light border p-2  align-items-center">
+
+
+
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <p-table #dt [columns]="selectedColumns" [value]="stockTypes" scrollable="true" scrollHeight="62vh"
+            dataKey="stockTypeId">
+            <ng-template pTemplate="caption">
+              <div class="d-flex justify-content-end" style="text-align:left; align-items: center;  flex-wrap: wrap;">
+
+                <p-splitButton [style]="{'margin-right' : '5px'}" label="{{'export-all'|translate}}"
+                  icon="fa fa-file-alt" [model]="menuItems" styleClass="ui-button-warning float-right">
+                </p-splitButton>
+                <button type="button" class="btn rounded btn-primary" (click)="modalShow(null,'UPDATE',null)">{{'update'
+                  |
+                  translate}}
+                </button>
+
+              </div>
+            </ng-template>
+
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th style="width:4em" rowspan="2">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th *ngFor="let col of columns; let i=index;" style="cursor: pointer"
+                  [style.width]="(col.field == 'stockTypeId' || col.field == 'stockTypeCode' ||
+                    col.field == 'stockTypeOneCode' || col.field == 'stockTypeTwoCode')? '80px': (col.field == 'stockTypeName')? '130px' : 'auto'">
+                  {{col.header|translate}}
+                </th>
+              </tr>
+
+
+            </ng-template>
+
+            <ng-template pTemplate="body" let-rowData let-index="rowIndex" let-columns="columns">
+              <tr [pSelectableRow]="rowData">
+                <td style="width: 4em;">
+                  <b>
+                    <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                  </b>
+
+                </td>
+                <td *ngFor="let col of columns" style="cursor: pointer" [ngSwitch]="col.field" style="padding:0px"
+                  [style.width]="(col.field == 'stockTypeId' || col.field == 'stockTypeCode' ||
+                    col.field == 'stockTypeOneCode' || col.field == 'stockTypeTwoCode')? '80px': (col.field == 'stockTypeName')? '130px' : 'auto'">
+
+
+                  {{rowData[col.field]}}
+
+                  <span *ngSwitchCase="'stockTypeOneCode'" style="padding: 0px;">
+                    <ng-container *ngFor="let classTwo of rowData?.stockTypeOneList; last as oLast">
+                      <ul [style.borderBottom]="(oLast) ? 'none': '1px solid #c8c8c8'" class="jOrderParent"
+                        [style.height]="classTwo.stockTypeTwoList.length * 25 +'px'">
+                        <li style="padding:3px">
+                          <p>{{classTwo.stockTypeCode}}</p>
+                        </li>
+                      </ul>
+                    </ng-container>
+                  </span>
+
+                  <span *ngSwitchCase="'stockTypeOneName'" style="padding: 0px;">
+                    <ng-container *ngFor="let classTwo of rowData?.stockTypeOneList; last as oLast">
+                      <ul [style.borderBottom]="(oLast) ? 'none': '1px solid #c8c8c8'" class="jOrderParent"
+                        [style.height]="classTwo.stockTypeTwoList.length * 25 +'px'">
+                        <li style="overflow: hidden;white-space: nowrap;padding:3px">
+                          <p pTooltip="{{classTwo.stockTypeName}}" tooltipPosition="top">{{classTwo.stockTypeName}}</p>
+                        </li>
+                      </ul>
+                    </ng-container>
+                  </span>
+
+                  <span *ngSwitchCase="'stockTypeTwoCode'" style="padding: 0px;">
+                    <ng-container *ngFor="let classTwo of rowData?.stockTypeOneList; last as oLast">
+                      <ul [style.borderBottom]="(oLast) ? 'none': '1px solid #c8c8c8'" class="jOrderParent"
+                        [style.height]="classTwo.stockTypeTwoList.length * 25 +'px'">
+                        <li *ngFor="let item of classTwo.stockTypeTwoList; last as jLast" style="padding:3px">
+                          <p>{{item.stockTypeCode}}</p>
+                        </li>
+                      </ul>
+                    </ng-container>
+                  </span>
+
+                  <span *ngSwitchCase="'stockTypeTwoName'" style="padding: 0px;">
+                    <ng-container *ngFor="let classTwo of rowData?.stockTypeOneList; last as oLast">
+                      <ul [style.borderBottom]="(oLast) ? 'none': '1px solid #c8c8c8'" class="jOrderParent"
+                        [style.height]="classTwo.stockTypeTwoList.length * 25 +'px'">
+                        <li *ngFor="let item of classTwo.stockTypeTwoList; last as jLast"
+                          style="overflow: hidden;white-space: nowrap;padding:3px ">
+                          <p pTooltip="{{item.stockTypeName}}" tooltipPosition="top">{{item.stockTypeName}}</p>
+                        </li>
+                      </ul>
+                    </ng-container>
+                  </span>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+          <br />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div bsModal [config]="{backdrop: 'static', keyboard: false}" #myModal="bs-modal" class="modal fade" tabindex="-1"
+  role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-success " role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"> {{'update-material-types' | translate}}</h4>
+        <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="card-body">
+          <form>
+            <table class="table table-bordered">
+              <tbody>
+                <tr>
+                  <td>{{ "type" | translate }}</td>
+                  <td>
+                    <div class="input-group">
+                      <select id="stockTypes" name="stockTypes" class="form-control" [(ngModel)]="stockType.stockTypeId"
+                        (ngModelChange)="onStockTypeSelected($event)" required>
+                        <option [ngValue]="null">
+                          {{ "please-select" | translate }}</option>
+                        <option *ngFor="let st of stockTypes" [value]="st.stockTypeId">{{ st.stockTypeName }} |
+                          {{ st.stockTypeCode }}</option>
+                      </select>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{ "class" | translate }} 2</td>
+                  <td>
+                    <div class="input-group">
+                      <select id="stockTypeOneId" name="stockTypeOneId" class="form-control"
+                        [(ngModel)]="stock.stockTypeOneId" (ngModelChange)="onStockType2Selected($event)">
+                        <option [ngValue]="null">
+                          {{ "please-select" | translate }}</option>
+                        <option *ngFor="let st of stockTypesOneList" [value]="st.stockTypeOneId">{{ st.stockTypeName }}
+                          |
+                          {{ st.stockTypeCode }}</option>
+                      </select>
+                      <button class="btn-plus" (click)="modalShowPlus(null,'PLUS',null); isUpdate = false;">+</button>
+                      <button class="btn btn-sm btn-outline-info" type="button" (click)="modalShowEditClassTwo()">
+                        <i class="fa fa-edit">
+                        </i></button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{ "class" | translate }} 3</td>
+                  <td>
+                    <div class="input-group">
+                      <select id="stockTypeTwoId" name="stockTypeTwoId" class="form-control"
+                        [(ngModel)]="stock.stockTypeTwoId">
+                        <option [ngValue]="null">
+                          {{ "please-select" | translate }}</option>
+                        <option *ngFor="let st of stockTypesTwoList" [value]="st.stockTypeTwoId">{{ st.stockTypeName }}
+                          |
+                          {{ st.stockTypeCode }}</option>
+                      </select>
+                      <button class="btn-plus" (click)="modalShowClass(null,'PLUS',null); isUpdate = false;">+</button>
+                      <button class="btn btn-sm btn-outline-info" type="button" (click)="modalShowEditClassThree()">
+                        <i class="fa fa-edit">
+                        </i></button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </form>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary"
+            (click)="myModal.hide();getStockTypeList();">{{'close' | translate}}</button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div bsModal [config]="{backdrop: 'static', keyboard: false}" #myPlusModal="bs-modal" class="modal fade" tabindex="-1"
+  role="dialog" aria-labelledby="myPlusModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-success " role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"> {{'new-class-2-item' | translate}}</h4>
+        <button type="button" class="close" (click)="myPlusModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div>
+        <p class="mtypes">{{getStockTypeInfo(stockType.stockTypeId)}}</p>
+      </div>
+      <div class="modal-body">
+        <div class="card-body">
+          <!-- <h4>{{'current-class-2-no' | 'current-class-2-name' | translate}}</h4> -->
+          <form>
+            <div class="row">
+              <div [ngClass]="!isUpdate ? 'col-lg-6': 'col-lg-12'">
+                <table class="table table-bordered">
+                  <tbody>
+                    <tr>
+                      <td> {{'class-2-no' | translate}}</td>
+                      <td>
+                        <div class="input-group">
+                          <input class="form-control" name="classTwoCode" type="text"
+                            [(ngModel)]="stockType.classTwoCode" />
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td> {{'class-2-name' | translate}}</td>
+                      <td>
+                        <div class="input-group">
+                          <input class="form-control" name="classTwoName" type="text"
+                            [(ngModel)]="stockType.classTwoName" />
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="col-lg-6 scroll m-t-m-30" *ngIf="!isUpdate">
+                <p style="font-size: 15px;">{{'class-2-list' | translate}}</p>
+                <table class="table table-bordered">
+                  <tbody>
+                    <tr>
+                      <th> {{'stock-code' | translate}}</th>
+                      <th>{{'stock-name' | translate}}</th>
+                    </tr>
+                    <tr *ngFor="let stockType of stockTypesOneList">
+                      <td> {{stockType?.stockTypeCode}}</td>
+                      <td>{{stockType?.stockTypeName}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary"
+            (click)="myPlusModal.hide()">{{'close' | translate}}</button>
+          <button type="button" class="btn rounded btn-success" (click)="saveClassTwoOk()">{{'OK' |
+            translate}}
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<div bsModal [config]="{backdrop: 'static', keyboard: false}" #myClassModal="bs-modal" class="modal fade" tabindex="-1"
+  role="dialog" aria-labelledby="myClassModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-success " role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"> {{'new-class-3-item' | translate}}</h4>
+        <button type="button" class="close" (click)="myClassModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div>
+        <p class="mtypes">{{getStockTypeInfo(stockType.stockTypeId)}}</p>
+      </div>
+      <div class="modal-body">
+        <div class="card-body">
+          <!-- <h4>{{'current-class-2-no' | 'current-class-2-name' | translate}}</h4> -->
+          <form>
+            <div class="row">
+              <div [ngClass]="!isUpdate ? 'col-lg-6': 'col-lg-12'">
+                <table class="table table-bordered">
+                  <tbody>
+                    <tr>
+                      <td> {{'class-3-no' | translate}}</td>
+                      <td>
+                        <div class="input-group">
+                          <input class="form-control" type="text" [(ngModel)]="stockType.classThreeCode" />
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td> {{'class-3-name' | translate}}</td>
+                      <td>
+                        <div class="input-group">
+                          <input class="form-control" type="text" [(ngModel)]="stockType.classThreeName" />
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="col-lg-6  scroll m-t-m-30" *ngIf="!isUpdate">
+                <p style="font-size: 15px;">{{'class-3-list' | translate}}</p>
+                <table class="table table-bordered">
+                  <tbody>
+                    <tr>
+                      <th> {{'stock-code' | translate}}</th>
+                      <th>{{'stock-name' | translate}}</th>
+                    </tr>
+                    <tr *ngFor="let stockType of stockTypesTwoList">
+                      <td> {{stockType?.stockTypeCode}}</td>
+                      <td>{{stockType?.stockTypeName}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary"
+            (click)="myClassModal.hide()">{{'close' | translate}}</button>
+          <button type="button" class="btn rounded btn-success" (click)="saveClassThreeOk()">{{'OK' |
+            translate}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

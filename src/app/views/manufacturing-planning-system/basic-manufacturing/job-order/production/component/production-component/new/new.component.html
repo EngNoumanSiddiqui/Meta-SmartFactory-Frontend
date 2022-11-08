@@ -1,0 +1,120 @@
+<!--<form #orderEdit="ngForm" >-->
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <p-tabView>
+        <p-tabPanel header="{{'new-component' | translate}}">
+          <div class="card">
+            <div class="card-header">
+              {{'component'|translate}}
+            </div>
+            <div class="card-body">
+              <form #saleForm="ngForm" class="form-horizontal ui-fluid">
+                <table class="table table-bordered">
+                  <tbody>
+
+                  <!--<tr>-->
+                    <!--<td>{{'direction'|translate}}</td>-->
+                    <!--<td><select [(ngModel)]="dataModel.direction" class="form-control" name="direction" required>-->
+                      <!--<option value="1">{{'MATERIAL'}}</option>-->
+                      <!--<option value="-1">{{'COMPONENT'}}</option>-->
+                    <!--</select></td>-->
+                  <!--</tr>-->
+                  
+                  <tr>
+                    <td>{{dataModel.direction==1? ('material'|translate):('component'|translate)}}</td>
+                    <td><span *ngIf="dataModel.component" class="form-control bg-readonly" (click)="myModal.show()">{{dataModel?.component?.stockName}}</span>
+                      <span *ngIf="!dataModel.component" class="form-control bg-readonly" (click)="myModal.show()">{{'click-to-select'|translate}}</span>
+                    </td>
+                  </tr>
+<!-- 
+                  <tr>
+                    <td width="35%">{{'number-of-edge' | translate}}</td>
+                    <td><input type="number" min="0" class="form-control" [(ngModel)]="dataModel.NumberOfEdge"
+                               name="quantity" required/>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="35%">{{'aux-name-feature' | translate}}</td>
+                    <td>
+                          <input type="number" min="0" class="form-control" [(ngModel)]="dataModel.Auxfeature"
+                               name="quantity" required/>
+                      <textarea id="description" name="description" type="text" [(ngModel)]="dataModel.description" pInputTextarea></textarea>   
+                    </td>
+                  </tr>
+                  
+                   -->
+
+                  <tr>
+                    <td width="35%">{{'quantity' | translate}}</td>
+                    <td><input type="number" min="0" class="form-control" [(ngModel)]="dataModel.neededQuantity"
+                               name="quantity" required/>
+                    </td>
+                  </tr>
+
+                   <tr>
+                    <td>{{'quantity-unit' | translate}}</td>
+                    <td>{{dataModel.unit}}</td>
+                  </tr>
+                   
+                  </tbody>
+                </table>
+
+              </form>
+            </div>
+            <div class="card-footer">
+              <!--<button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>-->
+              <!--{{'reset' | translate}}-->
+              <!--</button>-->
+              <button type="submit" class="btn btn-sm btn-primary" [disabled]="!saleForm.form.valid"
+                      (click)="save()"><i class="fa fa-dot-circle-o"></i>
+                {{'save' | translate}}
+              </button>
+            </div>
+          </div>
+        </p-tabPanel>
+        <p-tabPanel header="{{'features' | translate}}">
+          <job-order-component-feature-list [tableData]="dataModel.requestJobOrderComponentFeatureList"
+                                               [jobOrderStockId]="dataModel.jobOrderStockId"
+                                               (saveEvent)="featuresUpdated($event)"
+          ></job-order-component-feature-list>
+        </p-tabPanel>
+      </p-tabView>
+    </div>
+  </div><!--/.row-->
+</div>
+<!--</form>-->
+<!------------------------- Modals ---------------------------------------->
+<div bsModal [config]="{backdrop: 'static', keyboard: false}" #myModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-success modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          {{dataModel.direction==1? ('material'|translate):('component'|translate)}}
+        </h4>
+        <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <!---------- MODEL #Stocks ------------->
+      <!--[(visible)]="display"-->
+      <div class="modal-body">
+        <div class="form-group row">
+          <!--keep the modal open!!!!!-->
+          <div class="col-md-12">
+
+            <choose-stock-pane [plantId]="plantId" (selectedEvent)="setSelectedStock($event);myModal.hide()" 
+            [excludeMaterial]= "excludeMaterial" [includeMaterials]="includeMaterialList"></choose-stock-pane>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="myModal.hide()">{{'close' | translate}}</button>
+      </div>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

@@ -1,0 +1,141 @@
+<div class="card" id="custom-emp">
+
+  <div class="col-lg-12">
+
+    <div class="row badge-light border p-2 ">
+      <div class="col-md-3 ui-fluid">
+    <employee-auto-complete [required]="true" [selectedEmployee]="selectedEmployee" (selectedEmployeeEvent)="onChangeEmployee($event)"></employee-auto-complete>
+      </div>
+      <div class="col-md-3 ui-fluid">
+            <p-calendar [showIcon]="true" dateFormat="dd.mm.yy" required
+                        [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                        [(ngModel)]="filterCon.startDate" placeholder="{{'start-date'|translate}}"></p-calendar>
+      </div>
+      <div class="col-md-3 ui-fluid">
+            <p-calendar [showIcon]="true" dateFormat="dd.mm.yy" required
+                        [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                        [(ngModel)]="filterCon.endDate" placeholder="{{'end-date'|translate}}"></p-calendar>
+      </div>
+      <div class="col-auto">
+        <button type="button" pButton class="ui-button-info   "
+                [disabled]=" !filterCon.employeeId||!filterCon.startDate||!filterCon.endDate"
+                (click)="analyze()" label="{{'analyze' | translate}}">
+        </button>
+      </div>
+      <button pButton style="margin-right: 5px" class="ui-button-warning float-left" type="button" icon="fa fa-file-alt"
+              iconPos="left" label="{{'export-image'|translate}}" (click)="exportAsPng('custom-emp')"></button>
+
+    </div>
+
+    <h4 class="col-md-12 text-center" *ngIf="validEmployee.employee">{{validEmployee.employee}}
+      {{validEmployee.startDate?('start'|translate):''}} {{validEmployee.startDate|date:'dd.MM.yyy'}}
+      {{validEmployee.endDate?(' - '+ ('end'|translate)):''}} {{validEmployee.endDate|date:'dd.MM.yyy'}}</h4>
+
+    <div class="row" *ngIf="myWorkDetails &&myWorkDetails.length>0" style="margin-bottom: 20px">
+      <p-table #dr [columns]="workDetailsCols" [value]="myWorkDetails" [rows]="myWorkDetails.length" dataKey="sdate"
+               [(selection)]="selectedWorkDetails" scrollable="true" scrollHeight="55vh">
+
+        <ng-template pTemplate="caption">
+          <div class="ui-helper-clearfix" style="text-align:left">
+            <button pButton style="margin-right: 5px" class="ui-button-warning float-right" type="button"
+                    icon="fa fa-file-alt" iconPos="left" label="{{'export-all'|translate}}"
+                    (click)="dr.exportCSV()"></button>
+            <button pButton style="margin-right: 5px" class="ui-button-warning float-right" type="button"
+                    icon="fa fa-file" iconPos="left" label="{{'export-selected'|translate}}"
+                    (click)="dr.exportCSV({selectionOnly:true})"
+            ></button>
+          </div>
+          <!--<hr>-->
+
+        </ng-template>
+        <ng-template pTemplate="header" let-columns>
+
+          <tr>
+            <th style="width: 3em">
+              <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+            </th>
+            <th *ngFor="let col of columns">
+              {{col.header|translate}}
+            </th>
+          </tr>
+
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-columns="columns">
+          <tr [pSelectableRow]="rowData">
+            <td style="width: 3em">
+              <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+            </td>
+            <td *ngFor="let col of columns" style="cursor: pointer">
+              {{rowData[col.field]}}
+            </td>
+          </tr>
+
+        </ng-template>
+      </p-table>
+
+    </div>
+    <div class="row text-center noData" *ngIf="!isLoading() && (!myWorkDetails|| myWorkDetails.length==0)">
+      <strong class=""><i class="fa fa-warning "></i>{{'NO_WORK_DETAIL_FOUND'|translate}}!</strong>
+    </div>
+    <div class="row" *ngIf="myStopReasons && myStopReasons.length>0">
+
+      <div class="ui-grid-col-6 " style="max-height: 60%; overflow: auto">
+        <p-table #dt [columns]="stopReasonCols" [value]="myStopReasons" [rows]="myStopReasons.length"
+                 dataKey="stopCause" [(selection)]="selectedStopReasons" scrollable="true" scrollHeight="55vh">
+
+          <ng-template pTemplate="caption">
+            <div class="ui-helper-clearfix" style="text-align:left">
+              <button pButton style="margin-right: 5px" class="ui-button-warning float-right" type="button"
+                      icon="fa fa-file-alt" iconPos="left" label="{{'export-all'|translate}}"
+                      (click)="dt.exportCSV()"></button>
+              <button pButton style="margin-right: 5px" class="ui-button-warning float-right" type="button"
+                      icon="fa fa-file" iconPos="left" label="{{'export-selected'|translate}}"
+                      (click)="dt.exportCSV({selectionOnly:true})"
+              ></button>
+            </div>
+            <!--<hr>-->
+
+          </ng-template>
+          <ng-template pTemplate="header" let-columns>
+
+            <tr>
+              <th style="width: 3em">
+                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+              </th>
+              <th *ngFor="let col of columns">
+                {{col.header|translate}}
+              </th>
+            </tr>
+
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData let-columns="columns" let-index="rowIndex">
+            <tr [pSelectableRow]="rowData">
+              <td style="width: 3em">
+                <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+              </td>
+              <td *ngFor="let col of columns" style="cursor: pointer">
+                <span *ngIf="index!=myStopReasons.length-1"> {{rowData[col.field]}}</span>
+                <strong *ngIf="index==myStopReasons.length-1">  {{(rowData[col.field]+'')|translate}}</strong>
+              </td>
+            </tr>
+
+          </ng-template>
+        </p-table>
+
+      </div>
+      <div class="ui-grid-col-6">
+        <div>
+          <p-chart type="bar" [data]="barData" [options]="options"></p-chart>
+        </div>
+
+
+      </div>
+
+    </div>
+
+
+    <div class="row text-center noData" *ngIf="!isLoading() && (!myStopReasons || myStopReasons.length==0)">
+      <strong class=""><i class="fa fa-warning "></i>{{'NO_STOP_FOUND'|translate}}!</strong>
+    </div>
+  </div>
+</div>

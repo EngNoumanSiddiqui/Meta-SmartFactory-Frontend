@@ -1,0 +1,426 @@
+<div class="card" id="print-section">
+
+  <div class="col-lg-12">
+
+    <div class="row ui-fluid  badge-light border p-2  ">
+      <div class=" col-md-3">
+        <workstation-auto-complete [plantId]="plantId"
+          (selectedWorkStationEvent)="setSelectedWorkStation($event)"></workstation-auto-complete>
+      </div>
+      <div class="col-md-3 ">
+        <p-calendar [showIcon]="true" dateFormat="dd.mm.yy" showTime="true"
+                    [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                    [(ngModel)]="filterCon.rangeStart" placeholder="{{'start-date'|translate}}"></p-calendar>
+      </div>
+
+      <div class="col-md-3 ">
+        <p-calendar [showIcon]="true" dateFormat="dd.mm.yy" showTime="true"
+                    [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                    [(ngModel)]="filterCon.rangeEnd" placeholder="{{'end-date'|translate}}"></p-calendar>
+      </div>
+      <div class="col-md-auto">
+
+        <button type="button" pButton class="ui-button-info   "
+                [disabled]="!filterCon.workstationId || !filterCon.rangeEnd||!filterCon.rangeStart"
+                (click)="analyze()" label="{{'analyze' | translate}}">
+        </button>
+
+      </div>
+    </div>
+    <ng-template [ngIf]="myItems && myItems.length>0">
+      <p-tabView>
+        <p-tabPanel  header="{{'overall'|translate}}">
+          <div class="row">
+            <p-table #overAlltable [columns]="avgCols" [value]="avgItems" [rows]="20" [(selection)]="selectedOeeAvgs" [paginator]="true" scrollable="true" scrollHeight="55vh">
+              <ng-template pTemplate="header" let-columns>
+                <tr>
+                  <th *ngFor="let col of columns" [ngSwitch]="col.field">
+                    <!--<span *ngSwitchDefault> {{col.header|translate}} </span>-->
+                    <span> {{col.header | translate}} </span>
+                  </th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-rowData let-columns="columns">
+                <tr>
+                  <td *ngFor="let col of columns" style="cursor: pointer">
+                    <span> {{rowData[col.field]}} </span>
+                  </td>
+                </tr>
+              </ng-template>
+
+            </p-table>
+            <!--<p-table #overAlltable  [columns]="avgCols" [value]="averageCurntWsOeeBetweenDate" [rows]="20" [(selection)]="selectedOeeAvgs"[paginator]="true" dataKey="shiftDate" scrollable="true" scrollHeight="55vh" >-->
+              <!--<ng-template pTemplate="caption"></ng-template>-->
+              <!--<ng-template pTemplate="header" let-columns>-->
+                <!--<tr>-->
+                  <!--<th style="width: 3em">-->
+                    <!--<p-tableHeaderCheckbox></p-tableHeaderCheckbox>-->
+                  <!--</th>-->
+                  <!--<th *ngFor="let col of columns" [ngSwitch]="col.field">-->
+                    <!--&lt;!&ndash;<span *ngSwitchDefault> {{col.header|translate}} </span>&ndash;&gt;-->
+                    <!--<span> {{col.header | translate}} </span>-->
+                  <!--</th>-->
+                <!--</tr>-->
+              <!--</ng-template>-->
+              <!--<ng-template pTemplate="body" let-rowDataAvg let-columnsAvg="columns">-->
+                <!--<tr [pSelectableRow]="rowDataAvg">-->
+                  <!--<td style="width: 3em">-->
+                    <!--<p-tableCheckbox [value]="rowDataAvg"></p-tableCheckbox>-->
+                  <!--</td>-->
+                  <!--&lt;!&ndash;<td *ngFor="let col of columns" style="cursor: pointer" [ngSwitch]="col.field">&ndash;&gt;-->
+                  <!--<td *ngFor="let colAvg of columnsAvg" style="cursor: pointer">-->
+
+                    <!--&lt;!&ndash;&lt;!&ndash;<span *ngSwitchCase="'shiftStartDate'" > {{(rowData[col.field])|date:'dd/MM/yyyy HH:mm':'-000'}}</span>&ndash;&gt;&ndash;&gt;-->
+                    <!--&lt;!&ndash;&lt;!&ndash;<span *ngSwitchCase="'recordDate'" > {{(rowData[col.field])|date:'dd/MM/yyyy HH:mm'}}</span>&ndash;&gt;&ndash;&gt;-->
+                    <!--&lt;!&ndash;<span *ngSwitchDefault> {{rowData[col.field]}}</span>&ndash;&gt;-->
+                    <!--<span > {{colAvg.field}}</span>-->
+                  <!--</td>-->
+                  <!--&lt;!&ndash;<td width="45px">&ndash;&gt;-->
+                    <!--&lt;!&ndash;<button class="btn btn-sm btn-outline-info" type="button"&ndash;&gt;-->
+                          <!--&lt;!&ndash;(click)="showWorkstationReportDetail(rowData)"><i class="fa fa-line-chart "></i>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</button>&ndash;&gt;-->
+                  <!--&lt;!&ndash;</td>&ndash;&gt;-->
+                <!--</tr>-->
+
+              <!--</ng-template>-->
+            <!--</p-table>-->
+          </div>
+
+
+        </p-tabPanel>
+
+        <p-tabPanel header="{{'report'|translate}}"  >
+          <div class="row">
+            <p-table #dt [columns]="cols" [value]="myItems" [rows]="20" [paginator]="true" dataKey="shiftDate" scrollable="true" scrollHeight="55vh"
+                     [(selection)]="selectedOees">
+
+              <ng-template pTemplate="caption">
+                <div class="ui-helper-clearfix" style="text-align:left">
+                  <button pButton style="margin-right: 5px" class="ui-button-info float-left" type="button"
+                          icon="fa fa-file-alt" iconPos="left" label="{{'export-image'|translate}}"
+                          (click)="exportAsPng('print-section')"></button>
+
+                  <button pButton style="margin-right: 5px" class="ui-button-warning float-right" type="button"
+                          icon="fa fa-file-alt" iconPos="left" label="{{'export-all'|translate}}"
+                          (click)="dt.exportCSV()"></button>
+                  <button pButton style="margin-right: 5px" class="ui-button-warning float-right" type="button"
+                          icon="fa fa-file" iconPos="left" label="{{'export-selected'|translate}}"
+                          (click)="dt.exportCSV({selectionOnly:true})"
+                  ></button>
+                </div>
+                <!--<hr>-->
+
+              </ng-template>
+              <ng-template pTemplate="header" let-columns>
+                <tr>
+                  <th style="width: 3em">
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                  </th>
+                  <th *ngFor="let col of columns" [ngSwitch]="col.field">
+                    <span *ngSwitchDefault> {{col.header|translate}} </span>
+                    <div *ngSwitchCase="'availability'" style="position:relative; cursor: pointer">
+                      <span   (mouseenter)="opAvailable.show($event)" (mouseleave)="opAvailable.hide()" >{{col.header|translate}}%<i class="text-info p-1 fa fa-question-circle"></i></span>
+                    </div>
+
+                    <div *ngSwitchCase="'quality'" style="position:relative; cursor: pointer">
+                      <span   (mouseenter)="opQuality.show($event)" (mouseleave)="opQuality.hide()" >{{col.header|translate}}%<i class="text-info p-1 fa fa-question-circle"></i></span>
+                    </div>
+                    <div *ngSwitchCase="'teep'" style="display:inline-block;position:relative; cursor: pointer">
+                      <span   (mouseenter)="opTeep.show($event)" (mouseleave)="opTeep.hide()" >{{col.header|translate}}%<i class="text-info p-1 fa fa-question-circle"></i></span>
+                    </div>
+                    <div *ngSwitchCase="'hiddenFactory'" style="display:inline-block;position:relative; cursor: pointer">
+                      <span (mouseenter)="opHiddenF.show($event)"
+                            (mouseleave)="opHiddenF.hide()">{{col.header|translate}}<i class="text-info p-1 fa fa-question-circle"></i></span>
+                    </div>
+
+                    <div *ngSwitchCase="'utilization'" style="display:inline-block;position:relative; cursor: pointer">
+                      <span (mouseenter)="opUtilization.show($event)"(mouseleave)="opUtilization.hide()">{{col.header|translate}}%<i class="text-info p-1 fa fa-question-circle"></i></span>
+                    </div>
+
+                    <div *ngSwitchCase="'fullyProductiveTime'"
+                         style="display:inline-block;position:relative; cursor: pointer">
+                      <span (mouseenter)="opFullyProductive.show($event)"
+                            (mouseleave)="opFullyProductive.hide()">{{col.header|translate}}<i class="text-info p-1 fa fa-question-circle"></i></span>
+                    </div>
+
+                    <div *ngSwitchCase="'oee1'" style="display:inline-block;position:relative; cursor: pointer">
+                      <span   (mouseenter)="op.show($event)" (mouseleave)="op.hide()" >{{col.header|translate}}%<i class="text-info p-1 fa fa-question-circle"></i></span>
+                    </div>
+                    <div *ngSwitchCase="'oee2'" style="display:inline-block;position:relative;cursor: pointer">
+                      <span   (mouseenter)="op2.show($event)" (mouseleave)="op2.hide()" >{{col.header|translate}}%<i class="text-info p-1 fa fa-question-circle"></i></span>
+                    </div>
+                  </th>
+                  <th width="48px"></th>
+                </tr>
+
+              </ng-template>
+              <ng-template pTemplate="body" let-rowData let-columns="columns">
+                <tr [pSelectableRow]="rowData">
+                  <td style="width: 3em">
+                    <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                  </td>
+                  <td *ngFor="let col of columns" style="cursor: pointer" [ngSwitch]="col.field">
+
+                    <span *ngSwitchCase="'shiftStartDate'" > {{(rowData[col.field])|date:'dd/MM/yyyy HH:mm'}}</span>
+                    <span *ngSwitchCase="'recordDate'" > {{(rowData[col.field])|date:'dd/MM/yyyy HH:mm'}}</span>
+                    <span *ngSwitchDefault> {{rowData[col.field]}}</span>
+                  </td>
+                  <td width="45px">
+                    <button class="btn btn-sm btn-outline-info" type="button"
+                            (click)="showWorkstationReportDetail(rowData)"><i class="fa fa-line-chart "></i>
+                    </button>
+                  </td>
+                </tr>
+
+              </ng-template>
+            </p-table>
+
+          </div>
+        </p-tabPanel>
+
+        <p-tabPanel header="{{'oee1'|translate}}" tooltip="{{'analyse-oee1' | translate}}">
+          <div class="row orange-border">
+            <div class="mybadge">
+              <span class="text-white" >{{'oee1'|translate}}</span>
+            </div>
+            <div class="col-11">
+<!--              XXX-->
+              <div class="container-fluid">
+                <div class="row ml-5 ps-4">
+                  <div class="col-4 d-flex p-0 mr-1">
+                    <div class="bg-danger align-self-stretch col-12">
+                      <div class="row">
+                        <div class="col">
+                          <p class="h2 font-weight-bold text-white">OEE</p>
+                          <p class="h6 font-weight-bold text-white">A x P x Q
+                            <br>{{getPercentageVal(averageCurntWsOeeBetweenDate.availability)}} x {{getPercentageVal(averageCurntWsOeeBetweenDate.actualPerformance)}} x {{getPercentageVal(averageCurntWsOeeBetweenDate.quality)}}</p>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-9"><span class="h6 text-bold">All Workstation Till End</span></div>
+                        <div class="col text-right"><span class="h4 text-bold">{{getPercentageVal(averageAllWsOeeTillEndDate.oee1)}}</span></div>
+
+                      </div>
+                      <div class="row">
+                        <div class="col-9 "><span class="h6 text-bold text">Current Workstation Till End</span></div>
+                        <div class="col text-right"><span class="h4 text-bold">{{getPercentageVal(averageCurntWsOeeTillEndDate.oee1)}}</span></div>
+                      </div>
+                      <div class="row">
+                        <div class="col-9"><span class="h6 text-bold">All Workstation Between Dates</span></div>
+                        <div class="col text-right"><span class="h4 text-bold">{{getPercentageVal(averageAllWsOeeBetweenDate.oee1)}}</span></div>
+                      </div>
+                      <div class="row">
+                        <div class="col-9"><span class="h6 text-bold">Current Workstation Between Dates</span></div>
+                        <div class="col  text-right"><span class="h2  text-white">{{getPercentageVal(averageCurntWsOeeBetweenDate.oee1)}}</span></div>
+                      </div>
+
+                    </div>
+                  </div>
+                  <div class="col-2 mr-1">
+                    <div class="align-self-stretch p-0 col-12">
+                      <div class="row mb-1">
+                        <div class="col bg-success">
+                          <div class="row">
+                            <div class="col"><span class="h6 text-white">Availability</span></div>
+                          </div>
+                          <div class="row">
+                            <div class="col"><span class="h3  text-white">{{getPercentageVal(averageCurntWsOeeBetweenDate.availability)}}</span></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row my-1">
+                        <div class="col bg-info">
+                          <div class="row">
+                            <div class="col"><span class="h6">Actual Performance</span></div>
+                          </div>
+                          <div class="row">
+                            <div class="col"><span class="h3  text-white">{{getPercentageVal(averageCurntWsOeeBetweenDate.actualPerformance)}}</span></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col bg-warning">
+                          <div class="row">
+                            <div class="col"><span class="h6 text-white">Quality</span></div>
+                          </div>
+                          <div class="row">
+                            <div class="col"><span class="h3  text-white">{{getPercentageVal(averageCurntWsOeeBetweenDate.quality)}}</span></div>
+                          </div>
+
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                  <!--    <div class="col-2 p-0 mr-1">-->
+                  <!--      <div class="bg-primary">deneme</div>-->
+                  <!--    </div>-->
+                  <!--    <div class="col p-0 mr-0">-->
+                  <!--      <div class="bg-info">deneme</div>-->
+                  <!--    </div>-->
+                </div>
+              </div>
+
+              <p-chart  type="line" [data]="oee1Data" [options]="options"></p-chart>`
+            </div>
+          </div>
+        </p-tabPanel>
+
+        <p-tabPanel header="{{'oee2'|translate}}" tooltip="{{'analyse-oee2' | translate}}">
+          <div class="row blue-border" >
+            <div class=" mybadge "><span class="text-white ">{{'oee2'|translate}}</span>
+
+
+            </div>
+            <div class="col-11">
+              <p-chart  type="line" [data]="oee2Data" [options]="options"></p-chart>`
+            </div>
+          </div>
+        </p-tabPanel>
+
+        <p-tabPanel header="{{'teep'|translate}}" tooltip="{{'analyse-teep' | translate}}">
+          <div class="row red-border" >
+            <div class=" mybadge "><span class="text-white ">{{'teep'|translate}}</span></div>
+            <div class="col-11">
+              <p-chart  type="line" [data]="teepData" [options]="options"></p-chart>`
+            </div>
+          </div>
+        </p-tabPanel>
+
+        <p-tabPanel header="{{'quality'|translate}}">
+          <div class="row green-border" >
+            <div class=" mybadge "><span class="text-white ">{{'quality'|translate}}</span></div>
+            <div class="col-11">
+              <p-chart  type="line" [data]="qualityData" [options]="qualityOptions"></p-chart>`
+            </div>
+          </div>
+        </p-tabPanel>
+        <p-tabPanel header="{{'availability'|translate}}">
+          <div class="row purple-border" >
+            <div class=" mybadge "><span class="text-white ">{{'availability'|translate}}</span></div>
+            <div class="col-11">
+              <p-chart  type="line" [data]="availabilityData" [options]="options"></p-chart>`
+            </div>
+          </div>
+        </p-tabPanel>
+
+        <p-tabPanel header="{{'actual-performance'|translate}}">
+          <div class="row purple-border" >
+            <div class=" mybadge "><span class="text-white ">{{'actual-performance'|translate}}</span></div>
+            <div class="col-11">
+              <p-chart  type="line" [data]="actualPerformanceData" [options]="options"></p-chart>`
+            </div>
+          </div>
+        </p-tabPanel>
+
+        <p-tabPanel header="{{'worked-performance'|translate}}">
+          <div class="row purple-border" >
+            <div class=" mybadge "><span class="text-white ">{{'worked-performance'|translate}}</span></div>
+            <div class="col-11">
+              <p-chart  type="line" [data]="workPerformanceData" [options]="options"></p-chart>`
+            </div>
+          </div>
+        </p-tabPanel>
+
+
+      </p-tabView>
+    </ng-template>
+    <div class="row text-center noData" *ngIf="!isLoading() && (!myItems|| myItems.length==0)">
+      <strong class=""><i class="fa fa-warning "></i>{{'NO_WORK_DETAIL_FOUND'|translate}}!</strong>
+    </div>
+  </div>
+
+</div>
+
+
+
+<ng-template [ngIf]="chartModal.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal"   (onHidden)="chartModal.active=false" class="modal fade"
+       tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog modal-success modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"> {{'oee-hourly-report' | translate}}  <small class="pl-1">({{'shift'|translate}}:&nbsp;  {{chartModal?.data?.shiftStartDate|date:'dd/MM/yyyy HH:mm'}})</small></h4>
+          <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <oee-report-chart [data]="chartModal.data"></oee-report-chart>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</ng-template>
+
+
+<p-overlayPanel #opAvailable [dismissable]="true"  appendTo="body" baseZIndex="9999" >
+  <div style="width:500px;" class="p-1">
+    <strong>{{'analyse-availability' | translate}}</strong>
+    <br>
+    <p><strong>{{'analyse-run-time-text' | translate}}</strong>: {{'analyse-run-time-definition' | translate}}</p>
+    <p><strong>{{'analyse-planned-production-time-text' | translate}}</strong>: {{'analyse-planned-production-time-definition' | translate}}</p>
+    <p><strong>{{'analyse-standby-time-text' | translate}}</strong>: {{'analyse-standby-time-definition' | translate}}</p>
+    <p><strong>{{'analyse-planned-standby-time-text' | translate}}</strong>: {{'analyse-planned-standby-time-definition' | translate}}</p>
+    <p><strong>{{'analyse-unplanned-stop-duration-text' | translate}}</strong>: {{'analyse-unplanned-stop-duration-definition' | translate}}</p>
+  </div>
+</p-overlayPanel>
+
+
+<p-overlayPanel #opQuality [dismissable]="true"  appendTo="body" baseZIndex="9999" >
+  <div style="width:500px;" class="p-1">
+    <strong>{{'analyse-quality' | translate}}</strong>
+    <br>
+    <p><strong>{{'analyse-quality-text' | translate}}</strong>: {{'analyse-quality-definition' | translate}}</p>
+  </div>
+</p-overlayPanel>
+
+
+<p-overlayPanel #opTeep [dismissable]="true"  appendTo="body" baseZIndex="9999" >
+  <div style="width:500px;" class="p-1">
+    <strong>{{'analyse-teep' | translate}}</strong>
+    <br>
+    <p><strong>{{'analyse-utilization' | translate}}</strong></p>
+    <p><strong>{{'analyse-utilization-text' | translate}}</strong>: {{'analyse-utilization-definition' | translate}}</p>
+  </div>
+</p-overlayPanel>
+
+
+<p-overlayPanel #opHiddenF [dismissable]="true"  appendTo="body" baseZIndex="9999" >
+  <div style="width:500px;" class="p-1">
+    <strong>{{'analyse-hidden-factory' | translate}}</strong>
+    <br>
+    <p>
+      <strong>{{'analyse-hidden-factory-text' | translate}}</strong>: {{'analyse-hidden-factory-definition' | translate}}
+    </p>
+  </div>
+</p-overlayPanel>
+
+
+
+<p-overlayPanel #opUtilization [dismissable]="true" appendTo="body" baseZIndex="9999">
+  <div style="width:500px;" class="p-1">
+    <p>
+      <strong>{{'analyse-utilization' | translate}}</strong>
+      <br>
+      <strong>{{'analyse-utilization-text' | translate}}</strong>: {{'analyse-utilization-definition' | translate}}
+    </p>
+  </div>
+</p-overlayPanel>
+
+
+<p-overlayPanel #opFullyProductive [dismissable]="true" appendTo="body" baseZIndex="9999">
+  <div style="width:500px;" class="p-1">
+    <p>
+      <strong>{{'analyse-fully-productive-time-text' | translate}}</strong>: {{'analyse-fully-productive-time-definition' | translate}}
+    </p>
+  </div>
+</p-overlayPanel>
+<p-overlayPanel #op [dismissable]="true"  appendTo="body" baseZIndex="9999">
+  {{'analyse-oee1' | translate}}
+</p-overlayPanel>
+
+<p-overlayPanel #op2 [dismissable]="true"  appendTo="body" baseZIndex="9999">
+  {{'analyse-oee2' | translate}}
+</p-overlayPanel>

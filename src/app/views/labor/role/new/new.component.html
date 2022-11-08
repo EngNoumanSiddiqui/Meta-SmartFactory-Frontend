@@ -1,0 +1,74 @@
+
+<div class="animated fadeIn col-12">
+      <form #roleForm="ngForm">
+      <div class="form-group row">
+        <div class="col-lg-3">
+          <div class="form-group row">
+            <label class="col-md-12 col-form-label"><strong>{{'role-name' | translate}}*</strong></label>
+            <input class="col-md-12 form-control" required name="defaultRoleName" type="text" [(ngModel)]="role.defaultRoleName">
+            
+          </div>
+        </div>
+        <div class="col-lg-9">
+
+          <div class="form-group row">
+
+            <div class="col-md-6">
+              <label class="col-md-12 col-form-label"><strong>{{'all-permissions' | translate}}</strong></label>
+              <div class="form-group row thin-soft-scroll border m-1" style="max-height: 350px; overflow: auto;">
+                <div class="col-md-12 ui-fluid">
+
+                  <p-tree [value]="AllOtherPermissions" name="AllOtherPermissions" [(selection)]="selectedPermissions"
+                          (onNodeSelect)="nodeSelect($event)" (onNodeUnselect)="nodeUnselect($event)"
+                          selectionMode="checkbox">
+
+                    <ng-template let-node pTemplate="default">
+                      {{node.label|translate}}
+                    </ng-template>
+                  </p-tree>
+
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-1" style="padding-left: 0px !important;">
+              <br/>
+              <br/>
+              <i class="fa fa-exchange fa-2x"></i>
+              <br/>
+              <br/>
+            </div>
+
+            <div class="col-md-5 ">
+              <label class="col-md-12 col-form-label"><strong>{{'inserted-permissions' | translate}}</strong></label>
+              <div class="form-group row thin-soft-scroll border" style="max-height: 350px; overflow: auto;">
+                <div class="col-md-12 ">
+                  <table class="table table-sm">
+                    <tbody>
+                    <tr *ngFor="let item of dataArray">
+                      <td>{{item.name|translate}}</td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+      </div>
+      </form>
+      <div class="row">
+        <!--<button type="button" class="btn btn-sm btn-secondary float-right" (click)="goPage()">
+          <i class="icon-arrow-left-circle"></i> {{'cancel' | translate}}
+        </button>-->
+        <button type="submit" class="btn btn-sm btn-primary" [disabled]="!roleForm.form.valid || !role.rolePermissions" (click)="save()"><i class="fa fa-dot-circle-o"></i>
+          {{'save' | translate}}
+        </button>
+      </div>
+
+</div>
+
+
+

@@ -1,0 +1,27 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i> {{'common-template-type-detail' | translate}}
+        </div>
+        <div class="card-body">
+          <table class="table table-bordered">
+            <tbody *ngIf="templateTypeDto">
+            <tr>
+              <td width="30%">{{'common-template-type-code' | translate}}</td>
+              <td>{{templateTypeDto.commonTempleteTypeCode}} </td>
+            </tr>
+            <tr>
+              <td>{{'common-template-type-description' | translate}}</td>
+              <td>{{templateTypeDto.commonTempleteTypeDescription}}  </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

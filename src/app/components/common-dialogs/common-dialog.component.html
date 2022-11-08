@@ -1,0 +1,690 @@
+<ng-template [ngIf]="dialogs.JOBORDER.visible">
+  <p-dialog [header]="('job-order-detail' | translate )+' #' + dialogs.JOBORDER.uniqueId"  
+  [(visible)]="dialogs.JOBORDER.visible" (onHide)="dialogs.JOBORDER.uniqueId=null"
+[style]="{'max-width': '90%','width': '90%'}" (mousedown)="moveToTop('JOBORDER')" [autoZIndex]="true"   
+  [baseZIndex]="999999" [maximizable]="true" #dJobOrder [contentStyle]="{'min-height':'400px'}" modal="true"
+  dismissableMask="true" [closeOnEscape]="false"
+  (onHide)="dialogs.JOBORDER.uniqueId=null; dialogs.JOBORDER.visible=false;"
+  >
+  <job-order-detail [jobOrderId]="dialogs.JOBORDER.uniqueId" [extraData]="dialogs.JOBORDER.extraProps"></job-order-detail>
+</p-dialog>
+</ng-template>
+
+<ng-template [ngIf]="dialogs.BARCODE.visible">
+  <p-dialog header="{{'barcode-information' | translate}}" [(visible)]="dialogs.BARCODE.visible" 
+  (onHide)="dialogs.BARCODE.uniqueId=null"
+  [style]="{'width': '30%'}" (mousedown)="moveToTop('BARCODE')" 
+  [autoZIndex]="true" [baseZIndex]="999999" #dBarcode modal="true"
+  dismissableMask="true" [closeOnEscape]="false"
+  (onHide)="dialogs.BARCODE.uniqueId=null; dialogs.BARCODE.visible=false;"
+  >
+  <barcode-details [barcode]="dialogs.BARCODE.uniqueId"></barcode-details>
+</p-dialog>
+</ng-template>
+
+<ng-template [ngIf]="dialogs.FACTORYCALENDAR.visible">
+  <p-dialog header="{{'factory-calendar-details' | translate}}" 
+  [(visible)]="dialogs.FACTORYCALENDAR.visible" 
+  (onHide)="dialogs.FACTORYCALENDAR.uniqueId=null"
+  [style]="{'width': '75%'}" (mousedown)="moveToTop('FACTORYCALENDAR')" 
+  [autoZIndex]="true" [baseZIndex]="999999" #dFactoryCalender modal="true"
+  dismissableMask="true" [closeOnEscape]="false"
+  (onHide)="dialogs.FACTORYCALENDAR.uniqueId=null; dialogs.FACTORYCALENDAR.visible=false;"
+  >
+  <factory-calendar-details [id]="dialogs.FACTORYCALENDAR.uniqueId"></factory-calendar-details>
+</p-dialog>
+</ng-template>
+
+<ng-template [ngIf]="dialogs.STOCK.visible">
+  <p-dialog header="{{'stock-detail' | translate}}" [(visible)]="dialogs.STOCK.visible" #dStock
+    (mousedown)="moveToTop('STOCK')" [autoZIndex]="true"    [baseZIndex]="999999" [maximizable]="true"
+    [contentStyle]="{'min-height':'400px'}" modal="true" dismissableMask="true"
+    [style]="{'max-width': '80%','width': '80%'}"
+    (onHide)="dialogs.STOCK.uniqueId=null; dialogs.STOCK.visible=false;"
+    >
+    <material-card-detail [id]="dialogs.STOCK.uniqueId"></material-card-detail>
+  </p-dialog>
+</ng-template>
+<ng-template [ngIf]="dialogs.ORDERQUOTATION.visible">
+  <p-dialog header="{{'sales-quotation-information' | translate}}" [(visible)]="dialogs.ORDERQUOTATION.visible" #dStock
+    (mousedown)="moveToTop('ORDERQUOTATION')" [autoZIndex]="true"    [baseZIndex]="999999" [maximizable]="true"
+    [contentStyle]="{'min-height':'400px'}" modal="true" dismissableMask="true"
+    [style]="{'max-width': '80%','width': '80%'}"
+    (onHide)="dialogs.ORDERQUOTATION.uniqueId=null; dialogs.ORDERQUOTATION.visible=false;"
+    >
+    <sales-quotations-detail [id]="dialogs.ORDERQUOTATION.uniqueId"></sales-quotations-detail>
+  </p-dialog>
+</ng-template>
+<ng-template [ngIf]="dialogs.ORDERQUOTATIONITEM.visible">
+  <p-dialog header="{{'sales-quotation-information' | translate}}" [(visible)]="dialogs.ORDERQUOTATIONITEM.visible" #dStock
+    (mousedown)="moveToTop('ORDERQUOTATIONITEM')" [autoZIndex]="true"    [baseZIndex]="999999" [maximizable]="true"
+    [contentStyle]="{'min-height':'400px'}" modal="true" dismissableMask="true"
+    [style]="{'max-width': '80%','width': '80%'}"
+    (onHide)="dialogs.ORDERQUOTATIONITEM.uniqueId=null; dialogs.ORDERQUOTATIONITEM.visible=false;"
+    >
+    <sales-item-quotations-detail [id]="dialogs.ORDERQUOTATIONITEM.uniqueId"></sales-item-quotations-detail>
+  </p-dialog>
+</ng-template>
+<ng-template [ngIf]="dialogs.PROJECT.visible">
+  <p-dialog header="{{'project-details' | translate}}" [(visible)]="dialogs.PROJECT.visible" #dProject
+    (mousedown)="moveToTop('PROJECT')" [autoZIndex]="true" [baseZIndex]="999999" [maximizable]="true"
+    [contentStyle]="{'min-height':'400px'}" modal="true" dismissableMask="true"
+    [style]="{'max-width': '70%','width': '70%'}"
+    (onHide)="dialogs.PROJECT.uniqueId=null; dialogs.PROJECT.visible=false;"
+    >
+    <project-details [id]="dialogs.PROJECT.uniqueId"></project-details>
+  </p-dialog>
+</ng-template>
+<ng-template [ngIf]="dialogs.PROJECTTASK.visible">
+  <p-dialog header="{{'project-task-details' | translate}}" [(visible)]="dialogs.PROJECTTASK.visible" #dProjectTask
+    (mousedown)="moveToTop('PROJECTTASK')" [autoZIndex]="true" [baseZIndex]="999999" [maximizable]="true"
+    [contentStyle]="{'min-height':'400px'}" modal="true" dismissableMask="true"
+    [style]="{'max-width': '70%','width': '70%'}"
+    (onHide)="dialogs.PROJECTTASK.uniqueId=null; dialogs.PROJECTTASK.visible=false;"
+    >
+    <project-task-details [id]="dialogs.PROJECTTASK.uniqueId"></project-task-details>
+  </p-dialog>
+</ng-template>
+<ng-template [ngIf]="dialogs.MAIL.visible">
+    <app-send-mail [data]="dialogs.MAIL.data"
+    (onHide)="dialogs.MAIL.uniqueId=null; dialogs.MAIL.visible=false;dialogs.MAIL.data=null;"></app-send-mail>
+</ng-template>
+<ng-template [ngIf]="dialogs.MILESTONE.visible">
+  <p-dialog header="{{'milestone-details' | translate}}" [(visible)]="dialogs.MILESTONE.visible" #dMilestone
+    (mousedown)="moveToTop('MILESTONE')" [autoZIndex]="true"    [baseZIndex]="999999" [maximizable]="true"
+    [contentStyle]="{'min-height':'400px'}" modal="true" dismissableMask="true"
+    [style]="{'max-width': '60%','width': '60%'}"
+    (onHide)="dialogs.MILESTONE.uniqueId=null; dialogs.MILESTONE.visible=false;"
+    >
+    <milestone-details [id]="dialogs.MILESTONE.uniqueId"></milestone-details>
+  </p-dialog>
+</ng-template>
+<ng-template [ngIf]="dialogs.GOODTRANSFER.visible">
+<p-dialog header="{{'goods-movement-information' | translate}}" [(visible)]="dialogs.GOODTRANSFER.visible"
+  #dGOODTRANSFER (mousedown)="moveToTop('GOODTRANSFER')" [autoZIndex]="true"    [baseZIndex]="999999"
+  [maximizable]="true" [contentStyle]="{'min-height':'400px'}" modal="true" dismissableMask="true"
+  [style]="{'width': '80%'}" (onHide)="dialogs.GOODTRANSFER.uniqueId=null; dialogs.GOODTRANSFER.visible=false;" >
+  <transfer-receipts-detail [id]="dialogs.GOODTRANSFER.uniqueId"></transfer-receipts-detail>
+</p-dialog>
+</ng-template>
+<ng-template [ngIf]="dialogs.WORKSTATION.visible">
+<p-dialog header="{{'workstation-detail' | translate}}" [(visible)]="dialogs.WORKSTATION.visible" #dWorkstation
+  (mousedown)="moveToTop('WORKSTATION')" [autoZIndex]="true"    [baseZIndex]="999999"
+  [maximizable]="true" modal="true" dismissableMask="true" [contentStyle]="{'min-height':'400px'}"
+  [style]="{'max-width': '80%','width': '80%'}">
+  <workstation-detail [id]="dialogs.WORKSTATION.uniqueId"></workstation-detail>
+</p-dialog>
+</ng-template>
+<ng-template [ngIf]="dialogs.OPERATION.visible">
+<p-dialog header="{{'operation-detail' | translate}}" [(visible)]="dialogs.OPERATION.visible" #dOperation
+  (mousedown)="moveToTop('OPERATION')" [autoZIndex]="true"    [baseZIndex]="999999" [maximizable]="true"
+  modal="true" dismissableMask="true" [contentStyle]="{'min-height':'400px'}">
+  <operation-detail [id]="dialogs.OPERATION.uniqueId"></operation-detail>
+</p-dialog>
+</ng-template>
+<ng-template [ngIf]="dialogs.EQUIPMENTOPERATION.visible">
+  <p-dialog header="{{'operation-detail' | translate}}" [(visible)]="dialogs.EQUIPMENTOPERATION.visible" #dEQUIPMENTOPERATION
+    (mousedown)="moveToTop('EQUIPMENTOPERATION')" [autoZIndex]="true"    [baseZIndex]="999999" [maximizable]="true"
+    modal="true" dismissableMask="true" [contentStyle]="{'min-height':'400px'}">
+    <equipment-operation-detail [id]="dialogs.EQUIPMENTOPERATION.uniqueId"></equipment-operation-detail>
+  </p-dialog>
+  </ng-template>
+
+<ng-template [ngIf]="dialogs.CUSTOMER.visible">
+<p-dialog header="{{'customer-detail' | translate}}" [(visible)]="dialogs.CUSTOMER.visible" #dCustomer
+  (mousedown)="moveToTop('CUSTOMER')" [autoZIndex]="true"    [baseZIndex]="999999" modal="true"
+  dismissableMask="true" [maximizable]="true" [contentStyle]="{'min-height':'400px'}">
+  <customer-detail [id]="dialogs.CUSTOMER.uniqueId"></customer-detail>
+</p-dialog>
+</ng-template>
+<ng-template [ngIf]="dialogs.MAINTENANCENOTIFICATIONTYPE.visible">
+  <p-dialog header="{{'maintenance-notification-type' | translate}}" [(visible)]="dialogs.MAINTENANCENOTIFICATIONTYPE.visible" #dMAINTENANCENOTIFICATIONTYPE
+    (mousedown)="moveToTop('MAINTENANCENOTIFICATIONTYPE')" [autoZIndex]="true"    [baseZIndex]="999999" modal="true"
+    dismissableMask="true" [maximizable]="true" [contentStyle]="{'min-height':'400px'}">
+      <maintenance-notification-type-detail [id]="dialogs.MAINTENANCENOTIFICATIONTYPE.uniqueId"></maintenance-notification-type-detail>
+  </p-dialog>
+</ng-template>
+<ng-template [ngIf]="dialogs.MAINTENANCENOTIFICATION.visible">
+  <p-dialog header="{{'maintenance-notification-type' | translate}}" [(visible)]="dialogs.MAINTENANCENOTIFICATION.visible" #dMAINTENANCENOTIFICATION
+    (mousedown)="moveToTop('MAINTENANCENOTIFICATION')" [autoZIndex]="true"    [baseZIndex]="999999" modal="true"
+    [style]="{'max-width': '90%','width': '80%'}"
+    dismissableMask="true" [maximizable]="true" [contentStyle]="{'min-height':'400px'}">
+      <app-notification-detail [id]="dialogs.MAINTENANCENOTIFICATION.uniqueId"></app-notification-detail>
+  </p-dialog>
+</ng-template>
+<ng-template [ngIf]="dialogs.PRODUCTIONORDER.visible">
+  <p-dialog 
+    [header]="('production-order-detail' | translate )+ '\t \t' + '- P#' + dialogs.PRODUCTIONORDER.uniqueId + '     - R#' + (dialogs.PRODUCTIONORDER.data?.referenceId || '')" 
+    [(visible)]="dialogs.PRODUCTIONORDER.visible"
+    #dProductionOrder (mousedown)="moveToTop('PRODUCTIONORDER')" [autoZIndex]="true"   
+    [baseZIndex]="999999" [maximizable]="true" modal="true" dismissableMask="true" [contentStyle]="{'min-height':'95vh'}"
+    [style]="{'max-width': '95%','width': '95%'}" (onHide)="dialogs.PRODUCTIONORDER.uniqueId=null; dialogs.PRODUCTIONORDER.visible=false;">
+    <app-prod-order-detail [prodOrderId]="dialogs.PRODUCTIONORDER.uniqueId" 
+    (onDataRetreived)="dialogs.PRODUCTIONORDER.data=$event;"></app-prod-order-detail>
+  </p-dialog>
+</ng-template>
+<ng-template [ngIf]="dialogs.PRODUCTIONORDERLIST.visible">
+  <p-dialog header="{{'prod-order-list' | translate}}" [(visible)]="dialogs.PRODUCTIONORDERLIST.visible"
+    #dProductionListOrder (mousedown)="moveToTop('PRODUCTIONORDERLIST')" [autoZIndex]="true"   
+    [baseZIndex]="999999" [maximizable]="true" modal="true" dismissableMask="true" [contentStyle]="{'min-height':'95vh'}"
+    [style]="{'max-width': '95%','width': '95%'}" (onHide)="dialogs.PRODUCTIONORDERLIST.uniqueId=null; dialogs.PRODUCTIONORDERLIST.visible=false;">
+    <prod-order-list-detail [data]="dialogs.PRODUCTIONORDERLIST.data" [milestoneId]="dialogs.PRODUCTIONORDERLIST.uniqueId"></prod-order-list-detail>
+  </p-dialog>
+</ng-template>
+<ng-template [ngIf]="dialogs.BATCH.visible">
+<p-dialog header="{{'batch' | translate}}" [(visible)]="dialogs.BATCH.visible" #dBatch (mousedown)="moveToTop('BATCH')"
+  [autoZIndex]="true"    [baseZIndex]="999999" modal="true" dismissableMask="true" [maximizable]="true"
+  [style]="{'max-width': '90%','width': '90%'}" [contentStyle]="{'min-height':'600px'}">
+  <batch-detail [code]="dialogs.BATCH.uniqueId"></batch-detail>
+</p-dialog>
+</ng-template>
+
+
+<ng-template [ngIf]="dialogs.PRODUCTTREE.visible">
+  <p-dialog header="{{'product-tree-information' | translate}}" [(visible)]="dialogs.PRODUCTTREE.visible" #dProductTree (mousedown)="moveToTop('PRODUCTTREE')"
+    [autoZIndex]="true"    [baseZIndex]="99991023" modal="true" dismissableMask="true" [maximizable]="true"
+    [style]="{'max-width': '90%','width': '90%'}" [contentStyle]="{'min-height':'600px'}">
+    <detail-product-tree [id]="dialogs.PRODUCTTREE.uniqueId"></detail-product-tree>
+  </p-dialog>
+  </ng-template>
+  <ng-template [ngIf]="dialogs.PRODUCTTREEEDIT.visible">
+    <p-dialog header="{{'product-tree-information' | translate}}" [(visible)]="dialogs.PRODUCTTREEEDIT.visible" #dProductTreeEdit (mousedown)="moveToTop('PRODUCTTREEEDIT')"
+      [autoZIndex]="true"    [baseZIndex]="99991023" modal="true" dismissableMask="true" [maximizable]="true"
+      [style]="{'max-width': '90%','width': '90%'}" [contentStyle]="{'min-height':'600px'}">
+      <product-tree-new [id]="dialogs.PRODUCTTREEEDIT.uniqueId" (saveAction)="dialogs.PRODUCTTREEEDIT.visible=false;dialogs.PRODUCTTREEEDIT.uniqueId=null;"></product-tree-new>
+    </p-dialog>
+    </ng-template>
+
+<!-- <ng-template [ngIf]="dialogs.PRODUCTTREE.visible">
+  <div bsModal  [config]="{backdrop: 'static', show: true, keyboard:false}" #myProductTreeModal="bs-modal" (onHidden)="dialogs.PRODUCTTREE.visible = false;" class="modal fade"
+       tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog modal-success modal-lg" style="max-width: 90%;" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"> {{'product-tree-information' | translate}}</h4>
+          <button type="button" class="close" (click)="myProductTreeModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <detail-product-tree [id]="dialogs.PRODUCTTREE.uniqueId"></detail-product-tree>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</ng-template> -->
+<ng-template [ngIf]="dialogs.PLANT.visible">
+<p-dialog header="{{'plant' | translate}}" [(visible)]="dialogs.PLANT.visible" #dPlant (mousedown)="moveToTop('PLANT')"
+  [autoZIndex]="true"    modal="true" dismissableMask="true" [baseZIndex]="999999" [maximizable]="true"
+  [style]="{'max-width': '70%','width': '45%'}" [contentStyle]="{'min-height':'600px'}">
+  <plant-detail [id]="dialogs.PLANT.uniqueId"></plant-detail>
+</p-dialog>
+</ng-template>
+
+<ng-template [ngIf]="dialogs.WAREHOUSE.visible">
+<p-dialog header="{{'warehouse-details' | translate}}" [(visible)]="dialogs.WAREHOUSE.visible" #dWarehouse
+  (mousedown)="moveToTop('WAREHOUSE')" [autoZIndex]="true"    modal="true" dismissableMask="true"
+  [baseZIndex]="999999" [maximizable]="true" [style]="{'max-width': '90%','width': '90%'}"
+  [contentStyle]="{'min-height':'400px', 'overflow': 'hidden'}">
+  <warehouse-detail [id]="dialogs.WAREHOUSE.uniqueId"></warehouse-detail>
+</p-dialog>
+</ng-template>
+
+<ng-template [ngIf]="dialogs.PURCHASEORDER.visible">
+<p-dialog header="{{'porder-information' | translate}}" [(visible)]="dialogs.PURCHASEORDER.visible" #dPurchaseOrder
+  (mousedown)="moveToTop('PURCHASEORDER')" [autoZIndex]="true"    modal="true" dismissableMask="true"
+  [baseZIndex]="999999" [maximizable]="true" [style]="{'max-width': '90%','width': '90%'}"
+  [contentStyle]="{'overflow-x':'hidden'}"
+  (onHide)="dialogs.PURCHASEORDER.uniqueId=null; dialogs.PURCHASEORDER.visible=false;"
+  >
+  <porder-detail [id]="dialogs.PURCHASEORDER.uniqueId"></porder-detail>
+</p-dialog>
+</ng-template>
+<ng-template [ngIf]="dialogs.PURCHASEORDERITEM.visible">
+<p-dialog header="{{'purchase-order-item-information' | translate}}" [(visible)]="dialogs.PURCHASEORDERITEM.visible" #dPurchaseOrderItem
+  (mousedown)="moveToTop('PURCHASEORDERITEM')" [autoZIndex]="true"    modal="true" dismissableMask="true"
+  [baseZIndex]="999999" [maximizable]="true" [style]="{'max-width': '90%','width': '85%'}"
+  [contentStyle]="{'min-height':'500px'}"
+  (onHide)="dialogs.PURCHASEORDERITEM.uniqueId=null; dialogs.PURCHASEORDERITEM.visible=false;"
+  >
+  <pord-item-details [id]="dialogs.PURCHASEORDERITEM.uniqueId"></pord-item-details>
+</p-dialog>
+</ng-template>
+
+<ng-template [ngIf]="dialogs.SCRAPCAUSE.visible">
+<p-dialog header="{{'scrap-cause' | translate}}" [(visible)]="dialogs.SCRAPCAUSE.visible" #dScrapCause
+  (mousedown)="moveToTop('SCRAPCAUSE')" [autoZIndex]="true"    modal="true" dismissableMask="true"
+  [baseZIndex]="999999" [maximizable]="true" [style]="{'max-width': '90%','width': '90%'}"
+  [contentStyle]="{'overflow': 'hidden'}">
+  <scrap-cause-detail [id]="dialogs.SCRAPCAUSE.uniqueId"></scrap-cause-detail>
+</p-dialog>
+</ng-template>
+
+<ng-template [ngIf]="dialogs.SCRAP.visible">
+  <p-dialog header="{{'scrap-information' | translate}}" [(visible)]="dialogs.SCRAP.visible" #dSCRAP
+    (mousedown)="moveToTop('SCRAP')" [autoZIndex]="true"  modal="true" dismissableMask="true"
+    [baseZIndex]="999999" [maximizable]="true" [style]="{'max-width': '90%','width': '90%'}"
+    [contentStyle]="{'overflow': 'hidden'}">
+    <scrap-detail [id]="dialogs.SCRAP.uniqueId"></scrap-detail>
+  </p-dialog>
+</ng-template>
+
+<ng-template [ngIf]="dialogs.REWORK.visible">
+  <p-dialog header="{{'rework-information' | translate}}" [(visible)]="dialogs.REWORK.visible" #dREWORK
+    (mousedown)="moveToTop('REWORK')" [autoZIndex]="true"  modal="true" dismissableMask="true"
+    [baseZIndex]="999999" [maximizable]="true" [style]="{'max-width': '90%','width': '90%'}"
+    [contentStyle]="{'overflow': 'hidden'}">
+    <rework-detail [id]="dialogs.REWORK.uniqueId"></rework-detail>
+  </p-dialog>
+</ng-template>
+
+
+<ng-template [ngIf]="dialogs.SCRAPTYPE.visible">
+<p-dialog header="{{'scrap-type-detail' | translate}}" [(visible)]="dialogs.SCRAPTYPE.visible" #dScrapType
+  (mousedown)="moveToTop('SCRAPTYPE')" [autoZIndex]="true"    modal="true" dismissableMask="true"
+  [baseZIndex]="999999" [maximizable]="true" [style]="{'max-width': '50%','width': '50%'}"
+  [contentStyle]="{'min-height':'300px', 'overflow': 'hidden'}">
+  <scrap-type-detail [id]="dialogs.SCRAPTYPE.uniqueId"></scrap-type-detail>
+</p-dialog>
+</ng-template>
+
+<ng-template [ngIf]="dialogs.SCRAPCAUSEREWORK.visible">
+<p-dialog header="{{'scrap-cause-details' | translate}}" [(visible)]="dialogs.SCRAPCAUSEREWORK.visible"
+  #dScrapCauseRework (mousedown)="moveToTop('SCRAPCAUSEREWORK')" [autoZIndex]="true"    modal="true"
+  dismissableMask="true" [baseZIndex]="999999" [maximizable]="true" [style]="{'max-width': '90%','width': '90%'}"
+  [contentStyle]="{'min-height':'600px'}">
+  <scrap-cause-detail [id]="dialogs.SCRAPCAUSEREWORK.uniqueId"></scrap-cause-detail>
+</p-dialog>
+</ng-template>
+
+<ng-template [ngIf]="dialogs.COUNTRY.visible">
+<p-dialog header="{{'country' | translate}}" [(visible)]="dialogs.COUNTRY.visible" #dCountry
+  (mousedown)="moveToTop('COUNTRY')" [autoZIndex]="true"    modal="true" dismissableMask="true"
+  [baseZIndex]="999999" [maximizable]="true" [style]="{'max-width': '90%','width': '50%'}"
+  [contentStyle]="{'min-height':'300px'}">
+  <country-detail [id]="dialogs.COUNTRY.uniqueId"></country-detail>
+</p-dialog>
+</ng-template>
+
+<ng-template [ngIf]="dialogs.WORKCENTERTYPE.visible">
+<p-dialog header="{{'work-center-type-detail' | translate}}" [(visible)]="dialogs.WORKCENTERTYPE.visible"
+  #dWorkCenterType (mousedown)="moveToTop('WORKCENTERTYPE')" [autoZIndex]="true"    modal="true"
+  dismissableMask="true" [baseZIndex]="999999" [maximizable]="true" [style]="{'max-width': '90%','width': '50%'}"
+  [contentStyle]="{'min-height':'300px'}">
+  <workcenter-type-detail [data]="dialogs.WORKCENTERTYPE.uniqueId"></workcenter-type-detail>
+</p-dialog>
+</ng-template>
+
+<ng-template [ngIf]="dialogs.WORKCENTER.visible">
+<p-dialog header="{{'work-center' | translate}}" [(visible)]="dialogs.WORKCENTER.visible" #dWorkCenter
+  (mousedown)="moveToTop('WORKCENTER')" [autoZIndex]="true"    modal="true" dismissableMask="true"
+  [baseZIndex]="999999" [maximizable]="true" [style]="{'max-width': '90%','width': '90%'}"
+  [contentStyle]="{'min-height':'300px'}">
+  <workcenter-detail [id]="dialogs.WORKCENTER.uniqueId"></workcenter-detail>
+</p-dialog>
+</ng-template>
+
+<ng-template [ngIf]="dialogs.WORKSTATIONTYPE.visible">
+<p-dialog header="{{'workstation-detail' | translate}}" [(visible)]="dialogs.WORKSTATIONTYPE.visible" #dWorkStationType
+  (mousedown)="moveToTop('WORKSTATIONTYPE')" [autoZIndex]="true"    modal="true" dismissableMask="true"
+  [baseZIndex]="999999" [maximizable]="true" [style]="{'max-width': '90%','width': '50%'}"
+  [contentStyle]="{'min-height':'300px'}">
+  <workstation-type-detail [data]="dialogs.WORKSTATIONTYPE.uniqueId"></workstation-type-detail>
+</p-dialog>
+</ng-template>
+
+<ng-template [ngIf]="dialogs.WORKSTATIONCATEGORY.visible">
+<p-dialog header="{{'workstation-category-information' | translate}}"
+    [(visible)]="dialogs.WORKSTATIONCATEGORY.visible" #dWorkStationCategory
+    (mousedown)="moveToTop('WORKSTATIONCATEGORY')" [autoZIndex]="true"    modal="true"
+    dismissableMask="true" [baseZIndex]="999999" [maximizable]="true" [style]="{'max-width': '90%','width': '90%'}"
+    [contentStyle]="{'min-height':'300px'}">
+    <workstation-category-detail [data]="dialogs.WORKSTATIONCATEGORY.uniqueId"></workstation-category-detail>
+</p-dialog>
+</ng-template>
+
+<ng-template [ngIf]="dialogs.OPERATIONTYPE.visible">
+<p-dialog header="{{'operation-type' | translate}}"
+    [(visible)]="dialogs.OPERATIONTYPE.visible" #dOperationType
+    (mousedown)="moveToTop('OPERATIONTYPE')" [autoZIndex]="true"    modal="true"
+    dismissableMask="true" [baseZIndex]="999999" [maximizable]="true" [style]="{'max-width': '70%','width': '50%'}"
+    [contentStyle]="{'min-height':'300px'}">
+    <operation-type-detail *ngIf="dialogs.OPERATIONTYPE.visible" [id]="dialogs.OPERATIONTYPE.uniqueId"></operation-type-detail>
+</p-dialog>
+</ng-template>
+
+
+<ng-template [ngIf]="dialogs.ORDER.visible">
+<p-dialog header="{{'sales-order' | translate}}"
+    [(visible)]="dialogs.ORDER.visible" #dOrder
+    (mousedown)="moveToTop('ORDER')" [autoZIndex]="true"    modal="true"
+    dismissableMask="true" [baseZIndex]="999999" [maximizable]="true" [style]="{'max-width': '90%','width': '90%'}"
+    [contentStyle]="{'min-height':'300px'}"
+    (onHide)="dialogs.ORDER.uniqueId=null; dialogs.ORDER.visible=false;"
+    >
+    <sales-detail [id]="dialogs.ORDER.uniqueId"></sales-detail>
+</p-dialog>
+</ng-template>
+
+<ng-template [ngIf]="dialogs.ORDERITEM.visible">
+<p-dialog header="{{'sales-order' | translate}}"
+    [(visible)]="dialogs.ORDERITEM.visible" #dOrderItem
+    (mousedown)="moveToTop('ORDERITEM')" [autoZIndex]="true"    modal="true"
+    dismissableMask="true" [baseZIndex]="999999" [maximizable]="true" [style]="{'max-width': '90%','width': '90%'}"
+    [contentStyle]="{'min-height':'300px'}"
+    (onHide)="dialogs.ORDERITEM.uniqueId=null; dialogs.ORDERITEM.visible=false;"
+    >
+    <sales-detail [itemId]="dialogs.ORDERITEM.uniqueId"></sales-detail>
+</p-dialog>
+</ng-template>
+
+<ng-template [ngIf]="dialogs.STAFF.visible">
+<p-dialog header="{{'staff' | translate}}"
+    [(visible)]="dialogs.STAFF.visible" #dStaff
+    (mousedown)="moveToTop('STAFF')" [autoZIndex]="true"    modal="true"
+    dismissableMask="true" [baseZIndex]="999999" [maximizable]="true" [style]="{'max-width': '90%','width': '90%'}"
+    [contentStyle]="{'min-height':'300px'}">
+    <!-- <staff-detail [id]="dialogs.STAFF.uniqueId"></staff-detail> -->
+    <p-tabView>
+      <p-tabPanel header="Personal Detail">
+        <staff-detail [id]="dialogs.STAFF.uniqueId"></staff-detail>
+      </p-tabPanel>
+      <p-tabPanel header="Employee Skills">
+        <ng-template pTemplate="content">
+          <app-employee-skills-list [id]="{'id':dialogs.STAFF.uniqueId,'status':'read'}"></app-employee-skills-list>
+        </ng-template>
+      </p-tabPanel>
+      <p-tabPanel header="Employee Groups">
+        <ng-template pTemplate="content">
+          <app-employee-detail-groups-list [id]="{'id':dialogs.STAFF.uniqueId,'status':'read'}"></app-employee-detail-groups-list>
+        </ng-template>
+      </p-tabPanel>
+
+
+    </p-tabView>
+</p-dialog>
+</ng-template>
+
+<ng-template [ngIf]="dialogs.FUNCTIONALLOCATION.visible">
+<p-dialog header="{{'functional-location' | translate}}"
+    [(visible)]="dialogs.FUNCTIONALLOCATION.visible" #dFunctionalLocation
+    (mousedown)="moveToTop('FUNCTIONALLOCATION')" [autoZIndex]="true"    modal="true"
+    dismissableMask="true" [baseZIndex]="999999" [maximizable]="true" [style]="{'max-width': '90%','width': '90%'}"
+    [contentStyle]="{'min-height':'300px'}">
+    <functional-location-detail [id]="dialogs.FUNCTIONALLOCATION.uniqueId"></functional-location-detail>
+</p-dialog>
+</ng-template>
+
+<ng-template [ngIf]="dialogs.EQUIPMENT.visible">
+<p-dialog header="{{'equipment' | translate}}"
+    [(visible)]="dialogs.EQUIPMENT.visible" #dEquipment
+    (mousedown)="moveToTop('EQUIPMENT')" [autoZIndex]="true"    modal="true"
+    dismissableMask="true" [baseZIndex]="999999" [maximizable]="true" [style]="{'max-width': '90%','width': '90%'}"
+    [contentStyle]="{'min-height':'300px'}">
+    <equipment-detail [id]="dialogs.EQUIPMENT.uniqueId"></equipment-detail>
+</p-dialog>
+</ng-template>
+
+<ng-template [ngIf]="dialogs.TRANSFERNOTIFICATION.visible">
+<p-dialog header="{{'goods-movement-notification' | translate}}"
+    [(visible)]="dialogs.TRANSFERNOTIFICATION.visible" #dTransferNotification
+    (mousedown)="moveToTop('TRANSFERNOTIFICATION')" [autoZIndex]="true"    modal="true"
+    dismissableMask="true" [baseZIndex]="999999" [maximizable]="true"
+    [style]="{'max-width': '90%','width': '90%'}"
+    [contentStyle]="{'min-height':'300px'}"
+    (onHide)="dialogs.TRANSFERNOTIFICATION.uniqueId=null; dialogs.TRANSFERNOTIFICATION.visible=false;"
+    >
+    <transfer-notification-detail [id]="dialogs.TRANSFERNOTIFICATION.uniqueId"></transfer-notification-detail>
+</p-dialog>
+</ng-template>
+<ng-template [ngIf]="dialogs.PALLET.visible">
+<p-dialog header="{{'pallet' | translate}}"
+    [(visible)]="dialogs.PALLET.visible" #dPallet
+    (mousedown)="moveToTop('PALLET')" [autoZIndex]="true"    modal="true"
+    dismissableMask="true" [baseZIndex]="999999" [maximizable]="true"
+    [style]="{'max-width': '90%','width': '90%'}"
+    [contentStyle]="{'min-height':'300px'}"
+    (onHide)="dialogs.PALLET.uniqueId=null; dialogs.PALLET.visible=false;"
+    >
+    <pallet-detail [id]="dialogs.PALLET.uniqueId"></pallet-detail>
+</p-dialog>
+</ng-template>
+<ng-template [ngIf]="dialogs.PALLETRECORD.visible">
+  <p-dialog header="{{'pallet' | translate}}"
+      [(visible)]="dialogs.PALLETRECORD.visible" #dPallet
+      (mousedown)="moveToTop('PALLETRECORD')" [autoZIndex]="true"    modal="true"
+      dismissableMask="true" [baseZIndex]="999999" [maximizable]="true"
+      [style]="{'max-width': '90%','width': '90%'}"
+      [contentStyle]="{'min-height':'300px'}"
+      (onHide)="dialogs.PALLETRECORD.uniqueId=null; dialogs.PALLETRECORD.visible=false;"
+      >
+      <pallet-record-detail [palletId]="dialogs.PALLETRECORD.uniqueId"></pallet-record-detail>
+  </p-dialog>
+  </ng-template>
+
+<ng-template [ngIf]="dialogs.MAINTENANCESYSTEMCONDITION.visible">
+<p-dialog header="{{'maintenance-system-condition' | translate}}"
+    [(visible)]="dialogs.MAINTENANCESYSTEMCONDITION.visible" #dMaintenanceSystemCondition
+    (mousedown)="moveToTop('MAINTENANCESYSTEMCONDITION')" [autoZIndex]="true"    modal="true"
+    dismissableMask="true" [baseZIndex]="999999" [maximizable]="true" [style]="{'max-width': '90%','width': '90%'}"
+    [contentStyle]="{'min-height':'300px'}">
+    <maintenance-system-condition-detail [id]="dialogs.MAINTENANCESYSTEMCONDITION.uniqueId"></maintenance-system-condition-detail>
+</p-dialog>
+</ng-template>
+<ng-template [ngIf]="dialogs.MAINTENANCEACTIVITYTYPE.visible">
+<p-dialog header="{{'maintenance-activity-type' | translate}}"
+    [(visible)]="dialogs.MAINTENANCEACTIVITYTYPE.visible" #dMaintenanceActivityType
+    (mousedown)="moveToTop('MAINTENANCEACTIVITYTYPE')" [autoZIndex]="true"    modal="true"
+    dismissableMask="true" [baseZIndex]="999999" [maximizable]="true" [style]="{'max-width': '90%','width': '90%'}"
+    [contentStyle]="{'min-height':'300px'}">
+    <maintenance-activity-type-detail [id]="dialogs.MAINTENANCEACTIVITYTYPE.uniqueId"></maintenance-activity-type-detail>
+</p-dialog>
+</ng-template>
+
+<ng-template [ngIf]="dialogs.MAINTENANCECATEGORYTYPE.visible">
+<p-dialog header="{{'maintenance-category' | translate}}"
+    [(visible)]="dialogs.MAINTENANCECATEGORYTYPE.visible" #dMaintenanceCategoryType
+    (mousedown)="moveToTop('MAINTENANCECATEGORYTYPE')" [autoZIndex]="true"    modal="true"
+    dismissableMask="true" [baseZIndex]="999999" [maximizable]="true" [style]="{'max-width': '90%','width': '90%'}"
+    [contentStyle]="{'min-height':'300px'}">
+    <maintenance-category-detail [id]="dialogs.MAINTENANCECATEGORYTYPE.uniqueId"></maintenance-category-detail>
+</p-dialog>
+</ng-template>
+
+<ng-template [ngIf]="dialogs.MAINTENANCEREASON.visible">
+<p-dialog header="{{'maintenance-reason' | translate}}"
+    [(visible)]="dialogs.MAINTENANCEREASON.visible" #dMaintenanceReason
+    (mousedown)="moveToTop('MAINTENANCEREASON')" [autoZIndex]="true"    modal="true"
+    dismissableMask="true" [baseZIndex]="999999" [maximizable]="true" [style]="{'max-width': '90%','width': '90%'}"
+    [contentStyle]="{'min-height':'300px'}">
+    <maintenance-reason-detail [id]="dialogs.MAINTENANCEREASON.uniqueId"></maintenance-reason-detail>
+</p-dialog>
+</ng-template>
+
+<ng-template [ngIf]="dialogs.MAINTENANCPLANNINGTYPE.visible">
+<p-dialog header="{{'maintenance-planning-type' | translate}}"
+    [(visible)]="dialogs.MAINTENANCPLANNINGTYPE.visible" #dMaintenancePlanningType
+    (mousedown)="moveToTop('MAINTENANCPLANNINGTYPE')" [autoZIndex]="true"    modal="true"
+    dismissableMask="true" [baseZIndex]="999999" [maximizable]="true" [style]="{'max-width': '90%','width': '90%'}"
+    [contentStyle]="{'min-height':'300px'}">
+    <!-- <app-maintenance-planing-detail [dataModel]="dialogs.MAINTENANCPLANNINGTYPE.uniqueId"></app-maintenance-planing-detail> -->
+</p-dialog>
+</ng-template>
+
+<ng-template [ngIf]="dialogs.EQUIPMENTCATEGORY.visible">
+<p-dialog header="{{'equipment-category' | translate}}"
+    [(visible)]="dialogs.EQUIPMENTCATEGORY.visible" #dEquipmentCategory
+    (mousedown)="moveToTop('EQUIPMENTCATEGORY')" [autoZIndex]="true"    modal="true"
+    dismissableMask="true" [baseZIndex]="999999" [maximizable]="true" [style]="{'max-width': '90%','width': '90%'}"
+    [contentStyle]="{'min-height':'300px'}">
+    <equipment-category-detail [veriler]="dialogs.EQUIPMENTCATEGORY.uniqueId"></equipment-category-detail>
+</p-dialog>
+</ng-template>
+
+<ng-template [ngIf]="dialogs.PLANNERGROUP.visible">
+<p-dialog header="{{'planner-group' | translate}}"
+    [(visible)]="dialogs.PLANNERGROUP.visible" #dPlannerGroup
+    (mousedown)="moveToTop('PLANNERGROUP')" [autoZIndex]="true"    modal="true"
+    dismissableMask="true" [baseZIndex]="999999" [maximizable]="true" [style]="{'max-width': '90%','width': '90%'}"
+    [contentStyle]="{'min-height':'300px'}">
+    <equipment-planner-group-detail [id]="dialogs.PLANNERGROUP.uniqueId"></equipment-planner-group-detail>
+</p-dialog>
+</ng-template>
+
+<ng-template [ngIf]="dialogs.ABCINDICATOR.visible">
+<p-dialog header="{{'abc-indicator' | translate}}"
+    [(visible)]="dialogs.ABCINDICATOR.visible" #dABCIndicator
+    (mousedown)="moveToTop('ABCINDICATOR')" [autoZIndex]="true"    modal="true"
+    dismissableMask="true" [baseZIndex]="999999" [maximizable]="true" [style]="{'max-width': '90%','width': '50%'}"
+    [contentStyle]="{'min-height':'300px'}">
+    <abcindicator-detail [id]="dialogs.ABCINDICATOR.uniqueId"></abcindicator-detail>
+</p-dialog>
+</ng-template>
+<ng-template [ngIf]="dialogs.MAINTENANCESTRATEGY.visible">
+<p-dialog header="{{'maintenance-strategy' | translate}}"
+    [(visible)]="dialogs.MAINTENANCESTRATEGY.visible" #dMaintenanceStrategy
+    (mousedown)="moveToTop('MAINTENANCESTRATEGY')" [autoZIndex]="true"    modal="true"
+    dismissableMask="true" [baseZIndex]="999999" [maximizable]="true" [style]="{'max-width': '90%','width': '90%'}"
+    [contentStyle]="{'min-height':'300px'}">
+    <maintenance-strategy-detail [id]="dialogs.MAINTENANCESTRATEGY.uniqueId"></maintenance-strategy-detail>
+</p-dialog>
+</ng-template>
+
+<ng-template [ngIf]="dialogs.CODEGROUP.visible">
+<p-dialog header="{{'code-group' | translate}}"
+    [(visible)]="dialogs.CODEGROUP.visible" #dCodeGroup
+    (mousedown)="moveToTop('CODEGROUP')" [autoZIndex]="true"    modal="true"
+    dismissableMask="true" [baseZIndex]="999999" [maximizable]="true" [style]="{'max-width': '90%','width': '90%'}"
+    [contentStyle]="{'min-height':'300px'}">
+    <code-group-detail [id]="dialogs.CODEGROUP.uniqueId"></code-group-detail>
+</p-dialog>
+</ng-template>
+
+<ng-template [ngIf]="dialogs.CODEGROUPHEADER.visible">
+<p-dialog header="{{'code-group-header' | translate}}"
+    [(visible)]="dialogs.CODEGROUPHEADER.visible" #dCodeGroupHeader
+    (mousedown)="moveToTop('CODEGROUPHEADER')" [autoZIndex]="true"    modal="true"
+    dismissableMask="true" [baseZIndex]="999999" [maximizable]="true" [style]="{'max-width': '90%','width': '90%'}"
+    [contentStyle]="{'min-height':'300px'}">
+    <code-group-header-detail [data]="dialogs.CODEGROUPHEADER.uniqueId"></code-group-header-detail>
+</p-dialog>
+</ng-template>
+
+<ng-template [ngIf]="dialogs.CITY.visible">
+<p-dialog header="{{'city' | translate}}"
+    [(visible)]="dialogs.CITY.visible" #dCity
+    (mousedown)="moveToTop('CITY')" [autoZIndex]="true"    modal="true"
+    dismissableMask="true" [baseZIndex]="999999" [maximizable]="true" [style]="{'max-width': '90%','width': '90%'}"
+    [contentStyle]="{'min-height':'300px'}">
+    <city-detail [data]="dialogs.CITY.uniqueId"></city-detail>
+</p-dialog>
+</ng-template>
+
+<ng-template [ngIf]="dialogs.EMPLOYEECAPABILITY.visible">
+<p-dialog header="{{'capability' | translate}}"
+    [(visible)]="dialogs.EMPLOYEECAPABILITY.visible" #dEmployeeCabability
+    (mousedown)="moveToTop('EMPLOYEECAPABILITY')" [autoZIndex]="true"    modal="true"
+    dismissableMask="true" [baseZIndex]="999999" [maximizable]="true" [style]="{'max-width': '90%','width': '90%'}"
+    [contentStyle]="{'min-height':'300px'}">
+    <capability-detail [id]="dialogs.EMPLOYEECAPABILITY.uniqueId"></capability-detail>
+</p-dialog>
+</ng-template>
+
+<ng-template [ngIf]="dialogs.RESERVATION.visible">
+<p-dialog header="{{'reservation-information' | translate}}"
+          [(visible)]="dialogs.RESERVATION.visible" #dReservation
+          (mousedown)="moveToTop('RESERVATION')" [autoZIndex]="true"    modal="true"
+          dismissableMask="true" [baseZIndex]="999999" [maximizable]="true" [style]="{'max-width': '90%','width': '90%'}"
+          [contentStyle]="{'min-height':'300px'}"
+          (onHide)="dialogs.RESERVATION.uniqueId=null; dialogs.RESERVATION.visible=false;"
+          >
+  <reservation-detail [id]="dialogs.RESERVATION.uniqueId"></reservation-detail>
+</p-dialog>
+</ng-template>
+
+<ng-template [ngIf]="dialogs.PRODUCTIONORDERREPORT.visible">
+  <p-dialog header="{{'production-order-reports' | translate}}" [(visible)]="dialogs.PRODUCTIONORDERREPORT.visible"
+    #dProductionOrderReport (mousedown)="moveToTop('PRODUCTIONORDERREPORT')" [autoZIndex]="true"   
+    modal="true" dismissableMask="true" [baseZIndex]="999999" [maximizable]="true"
+    [style]="{'max-width': '90%','width': '90%'}" [contentStyle]="{'min-height':'300px'}">
+    <joborder-report [jobOrderFilter]="dialogs.PRODUCTIONORDERREPORT.uniqueId"></joborder-report>
+    <p-footer>
+      <button type="button" pButton (click)="dialogs.PRODUCTIONORDERREPORT.uniqueId=null; dialogs.PRODUCTIONORDERREPORT.visible = false"
+      class="ui-button-default" label="{{'cancel' | translate}}">
+    </button>
+    </p-footer>
+  </p-dialog>
+</ng-template>
+
+<ng-template [ngIf]="dialogs.MAINTENANCEORDER.visible">
+<p-dialog header="{{'maintenance-order' | translate}}"
+          [(visible)]="dialogs.MAINTENANCEORDER.visible" #dMaintenanceOrder
+          (mousedown)="moveToTop('MAINTENANCEORDER')" [autoZIndex]="true"    modal="true"
+          dismissableMask="true" [baseZIndex]="999999" [maximizable]="true" [style]="{'max-width': '90%','width': '90%'}"
+          [contentStyle]="{'min-height':'300px'}">
+  <maintenance-order-detail [data]="dialogs.MAINTENANCEORDER.uniqueId"></maintenance-order-detail>
+</p-dialog>
+</ng-template>
+
+
+
+<ng-template [ngIf]="dialogs.SHIFTSETTING.visible">
+<p-dialog header="{{'shift-settings' | translate}}"
+          [(visible)]="dialogs.SHIFTSETTING.visible" #dShiftSetting
+          (mousedown)="moveToTop('SHIFTSETTING')" [autoZIndex]="true" [positionTop]="15" modal="true"
+          dismissableMask="true" [baseZIndex]="999999" [maximizable]="true" [style]="{'max-width': '90%','width': '90%'}"
+          [contentStyle]="{'min-height':'300px'}">
+  <shift-setting-detail [id]="dialogs.SHIFTSETTING.uniqueId"></shift-setting-detail>
+</p-dialog>
+</ng-template>
+
+<ng-template [ngIf]="dialogs.STOPCAUSETYPE.visible">
+  <p-dialog header="{{'stop-cause-details' | translate}}"
+            [(visible)]="dialogs.STOPCAUSETYPE.visible" #dStopCausesType
+            (mousedown)="moveToTop('STOPCAUSETYPE')" [autoZIndex]="true" modal="true"
+            dismissableMask="true" [baseZIndex]="999999" [maximizable]="true">
+    <stop-cause-type-detail [id]="dialogs.STOPCAUSETYPE.uniqueId"></stop-cause-type-detail>
+  </p-dialog>
+</ng-template>
+<ng-template [ngIf]="dialogs.LOCATION.visible">
+  <p-dialog header="{{'location-information' | translate}}"
+            [(visible)]="dialogs.LOCATION.visible" #dLocation
+            (mousedown)="moveToTop('LOCATION')" [autoZIndex]="true" modal="true"
+            dismissableMask="true" [baseZIndex]="999999" [maximizable]="true">
+    <location-detail [id]="dialogs.LOCATION.uniqueId"></location-detail>
+  </p-dialog>
+</ng-template>
+<ng-template [ngIf]="dialogs.JOBORDEROPERATION.visible">
+  <p-dialog header="{{'job-order-operation-details' | translate}} #{{dialogs.JOBORDEROPERATION.uniqueId}}"
+            [contentStyle]="{'min-height':'300px'}" [positionTop]="15"
+            [style]="{'width': '67%'}"
+            [(visible)]="dialogs.JOBORDEROPERATION.visible" #dJobOrderOperation
+            (mousedown)="moveToTop('JOBORDEROPERATION')" [autoZIndex]="true" modal="true"
+          
+            dismissableMask="true" [baseZIndex]="999999" [maximizable]="true">
+    <job-order-operation-detail [id]="dialogs.JOBORDEROPERATION.uniqueId"></job-order-operation-detail>
+  </p-dialog>
+</ng-template>
+
+<ng-template [ngIf]="dialogs.STOPCAUSE.visible">
+  <p-dialog header="{{'stop-cause-details' | translate}}"
+            [(visible)]="dialogs.STOPCAUSE.visible" #dStopCause
+            (mousedown)="moveToTop('STOPCAUSE')" [autoZIndex]="true" modal="true"
+            dismissableMask="true" [baseZIndex]="999999" [maximizable]="true">
+    <causes-detail [id]="dialogs.STOPCAUSE.uniqueId"></causes-detail>
+  </p-dialog>
+</ng-template>
+
+<ng-template [ngIf]="dialogs.COSTCENTER.visible">
+  <p-dialog header="{{'cost-center-information' | translate}}"
+  [style]="{'width': '40%'}"
+            [(visible)]="dialogs.COSTCENTER.visible" #dCOSTCENTER
+            (mousedown)="moveToTop('COSTCENTER')" [autoZIndex]="true" modal="true"
+            dismissableMask="true" [baseZIndex]="999999" [maximizable]="true">
+    <cost-center-detail [id]="dialogs.COSTCENTER.uniqueId"></cost-center-detail>
+  </p-dialog>
+</ng-template>
+

@@ -1,0 +1,52 @@
+<!--<form #orderEdit="ngForm" >-->
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12" *ngIf="data">
+      <div class="card">
+        <div class="card-header">
+          {{'external-service'|translate}}
+        </div>
+        <div class="card-body">
+          <form #saleForm="ngForm" class="form-horizontal ui-fluid">
+            <table class="table table-bordered">
+              <tbody>
+              <tr>
+                <td width="35%">{{'task-operation-service-id' | translate}}</td>
+                <td>{{data.equipmentTaskOperationExternalServiceId}}
+                </td>
+              </tr>
+              <tr>
+                <td>{{'external-service' | translate}}</td>
+                <td>{{data?.externalService?.serviceName}}
+                </td>
+              </tr>
+              <tr>
+                <td>{{'quantity' | translate}}</td>
+                <td> {{data.quantity}}
+                </td>
+              </tr>
+              <tr>
+                <td>{{'quantity-unit' | translate}}</td>
+                <td> {{data.quantityUnit}}
+                </td>
+              </tr>
+              <tr>
+                <td>{{'gross-price' | translate}}</td>
+                <td> {{data.grossPrice}}</td>
+              </tr>
+              <tr>
+                <td>{{'currency' | translate}}</td>
+                <td> {{data.currency}}</td>
+              </tr>
+
+              </tbody>
+
+            </table>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div><!--/.row-->
+</div>
+<!--</form>-->

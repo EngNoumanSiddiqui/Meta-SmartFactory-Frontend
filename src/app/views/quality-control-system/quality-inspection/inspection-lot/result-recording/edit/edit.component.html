@@ -1,0 +1,143 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">   
+        <div class="card">
+          <div class="">
+            <form #inspForm="ngForm">
+              <table class="table table-bordered">
+                <tr>
+                  <td>{{'inspection-characteristic' | translate}}</td>
+                  <td>
+                     <insp-char-auto-complete [addIfMissing]="true" [selectedInspCharId]="'1'" (selectedInspCharEvent)="onSelectedInspChar($event)"></insp-char-auto-complete>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'recording-type' | translate}}</td>
+                  <td>
+                    <input
+                      type="text"
+                      id="recordType"
+                      name="recordType"
+                      [(ngModel)]="resultRecording.recordType"
+                      class="form-control"
+                      disabled
+                    />
+                  </td>
+                </tr> 
+                <tr>
+                  <td>{{'specifications' | translate}}</td>
+                  <td>
+                      <input
+                      type="text"
+                      id="specifications"
+                      name="specifications"
+                      [(ngModel)]="resultRecording.specifications"
+                      class="form-control"
+                      disabled
+                    />
+                    
+                  </td>
+                </tr> 
+                <tr>
+                  <td>{{'inspect' | translate}}</td>
+                  <td class="display-flex">
+                      <input
+                      type="number"
+                      id="inspect"
+                      name="inspect"
+                      [(ngModel)]="resultRecording.inspect"
+                      class="form-control"
+                      disabled
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'inspected' | translate}}</td>
+                  <td>
+                    <input
+                      type="number"
+                      id="inspected"
+                      name="inspected"
+                      [(ngModel)]="resultRecording.inspected"
+                      class="form-control"
+                      required
+                    />
+                  </td>
+                </tr> 
+                <tr>
+                  <td>{{'result' | translate}}</td>
+                  <td>
+                      <input
+                      type="text"
+                      id="result"
+                      name="result"
+                      [(ngModel)]="resultRecording.result"
+                      class="form-control"
+                      required
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'defect' | translate}}</td>
+                  <td>
+                    <input
+                      type="number"
+                      id="defect"
+                      name="defect"
+                      [(ngModel)]="resultRecording.defect"
+                      class="form-control"
+                      required
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'attribute' | translate}}</td>
+                  <td>
+                      <select id="attribute" name="attribute" class="form-control" [(ngModel)]="resultRecording.attribute">
+                        <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                        <option value="{{attribute}}" *ngFor="let attribute of attributes">{{attribute}}
+                        </option>
+                      </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'inspection-description' | translate}}</td>
+                  <td>
+                    <input
+                      type="text"
+                      id="inspectionDescription"
+                      name="inspectionDescription"
+                      [(ngModel)]="resultRecording.inspectionDescription"
+                      class="form-control"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'valuation' | translate}}</td>
+                  <td>
+                    <div class="ui-g-6">
+                      <p-radioButton name="valuation" value="Accepted" [(ngModel)]="resultRecording.valuation" label="Accept" required></p-radioButton>
+                    </div>
+                    <div class="ui-g-6">
+                      <p-radioButton name="valuation" value="Rejected" [(ngModel)]="resultRecording.valuation" label="Reject" required></p-radioButton>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </form>
+          </div>
+        </div>
+        <div class="row col-md-12">
+          <button
+            type="submit"
+            class="btn btn-sm btn-primary"
+            [disabled]="!inspForm.form.valid"
+            (click)="save()"
+          >
+            <i class="fa fa-dot-circle-o"></i>
+            {{ "save" | translate }}
+          </button>
+        </div>
+    </div>
+  </div>
+</div>

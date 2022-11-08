@@ -1,0 +1,303 @@
+<p-confirmDialog [baseZIndex]="99999"></p-confirmDialog>
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body"  >
+          <p-table #dt [columns]="selectedColumns" scrollable="true" scrollHeight="55vh"
+           [value]="scraps" [rows]="pagination.rows" [totalRecords]="pagination.totalElements" dataKey="scrapId" [(selection)]="selectedScraps" >
+            <ng-template pTemplate="caption">
+              <div style="text-align:left">
+                <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header" maxSelectedLabels="0"  selectedItemsLabel="{{'columns-selected'|translate}}"
+                               [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" (onChange) = "filtingAreaColumns($event)">
+                  <ng-template let-col let-i="index" pTemplate="item">
+                    {{col.label|translate}}
+                  </ng-template>
+                </p-multiSelect>
+                <button pButton type="button" style="margin-left: 5px; margin-top: 1px;" class="float-right" icon="fa fa-refresh" name="refresh" (click)="filter(pageFilter)"></button>
+                <button pButton  class="ui-button-success float-right" (click)="modalShow(null,'NEW')" label="{{'add-new'|translate}}"> </button>
+                <!-- <button pButton style="margin-right: 5px" class="ui-button-warning float-right" type="button"  icon="fa fa-file-alt" iconPos="left" label="{{'export-all'|translate}}" (click)="dt.exportCSV()"></button>
+                <button pButton style="margin-right: 5px" class="ui-button-warning float-right" type="button"  icon="fa fa-file" iconPos="left" label="{{'export-selected'|translate}}" (click)="dt.exportCSV({selectionOnly:true})"
+                ></button> -->
+                <p-splitButton [style]="{'margin-right' : '5px'}"  label="{{'export-all'|translate}}" 
+                icon="fa fa-file-alt" [model]="menuItems" 
+                styleClass="ui-button-warning float-right">
+              </p-splitButton>
+              <p-splitButton [style]="{'margin-right' : '5px'}"  label="{{'export-selected'|translate}}" 
+                icon="fa fa-file" [model]="selecteMenuItems" 
+                styleClass="ui-button-warning float-right">
+              </p-splitButton>
+              </div>
+              <!--<hr>-->
+            </ng-template>
+            <ng-template pTemplate="header" let-columns>
+              <tr >
+                <th style="width: 3em" rowspan="2">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <ng-container *ngFor="let col of columns let i=index" [ngSwitch]="col.field" >
+                  <th *ngSwitchDefault style="cursor: pointer" [ngClass]="{'bg-selected-order':pageFilter.orderByProperty ==col.field}" (click)="reOrderData(i,col.field)"><i [ngClass]="'fa fa-sort-alpha-' + classReOrder[i]"></i>{{col.header|translate}}</th>
+                  
+                  <th *ngSwitchCase="'wareHouse'" style="cursor: pointer; width: 114px;" [ngClass]="{'bg-selected-order':pageFilter.orderByProperty ==col.field}" (click)="reOrderData(i,col.field)"><i [ngClass]="'fa fa-sort-alpha-' + classReOrder[i]"></i>
+                    {{col.header|translate}}
+                  </th>
+                  
+                  <th *ngSwitchCase="'workstation'" style="cursor: pointer; width: 114px;" [ngClass]="{'bg-selected-order':pageFilter.orderByProperty ==col.field}" (click)="reOrderData(i,col.field)"><i [ngClass]="'fa fa-sort-alpha-' + classReOrder[i]"></i>
+                    {{col.header|translate}}
+                  </th>
+                  
+                  <th *ngSwitchCase="'operator'" style="cursor: pointer; width: 6em;" [ngClass]="{'bg-selected-order':pageFilter.orderByProperty ==col.field}" (click)="reOrderData(i,col.field)"><i [ngClass]="'fa fa-sort-alpha-' + classReOrder[i]"></i>
+                    {{col.header|translate}}
+                  </th>
+                
+                </ng-container>
+                <th width="80px" rowspan="2">{{'action' | translate}}</th>
+              </tr>
+              <tr>
+                <th *ngFor="let col of columns" class="ui-fluid" [ngSwitch]="col.field">
+                  <!-- <span (input)="filterByColumn($event.target.value,col.field)"></span> -->
+                  <span *ngSwitchCase="'type'"></span>
+                  <span *ngSwitchCase="'quantity'"></span>
+                  <span *ngSwitchCase="'quantityUnit'"></span>
+                  <input *ngSwitchCase="'plant'" style="width: 100%"  pInputText type="text" disabled [(ngModel)]="pageFilter.plantName" (input)="filterByColumn($event.target.value,col.field)">
+                  <input *ngSwitchCase="'material'" style="width: 100%"  pInputText type="text" [(ngModel)]="pageFilter.materiaName" (input)="filterByColumn($event.target.value,col.field)">
+                  <input *ngSwitchCase="'workstation'" style="width: 100%"  pInputText type="text" [(ngModel)]="pageFilter.workstationName" (input)="filterByColumn($event.target.value,col.field)">
+                  <input *ngSwitchCase="'jobOrder'" style="width: 100%"  pInputText type="text" [(ngModel)]="pageFilter.jobOrderId" (input)="filterByColumn($event.target.value,col.field)">
+                  <input *ngSwitchCase="'wareHouse'" style="width: 100%"  pInputText type="text" [(ngModel)]="pageFilter.wareHouseName" (input)="filterByColumn($event.target.value,col.field)">
+                  <input *ngSwitchCase="'operator'" style="width: 100%"  pInputText type="text" [(ngModel)]="pageFilter.operatorName" (input)="filterByColumn($event.target.value,col.field)">
+                  <input *ngSwitchCase="'scrapCause'" style="width: 100%"  pInputText type="text" [(ngModel)]="pageFilter.scrapCauseName" (input)="filterByColumn($event.target.value,col.field)">
+                  <input *ngSwitchCase="'scrapType'" style="width: 100%"  pInputText type="text" [(ngModel)]="pageFilter.scrapDescription" (input)="filterByColumn($event.target.value,col.field)">
+                  <input *ngSwitchCase="'batch'" style="width: 100%"  pInputText type="text" [(ngModel)]="pageFilter.batch" (input)="filterByColumn($event.target.value,col.field)">
+                  <p-calendar *ngSwitchCase="'createDate'" [(ngModel)]="pageFilter.createDate" placeholder="{{'create-date'|translate}}" 
+                    appendTo="body" yearRange="1990:2100" [monthNavigator]="true" [yearNavigator]="true" (input)="filterByColumn($event.target.value,col.field)"
+                    dateFormat="dd-mm-yy"
+                   ></p-calendar>
+                  <input *ngSwitchDefault style="width: 100%"  pInputText type="text" [(ngModel)]="pageFilter[col.field]" (input)="filterByColumn($event.target.value,col.field)">
+                </th>
+
+              </tr>
+
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr [pSelectableRow]="rowData">
+                <td style="width: 3em">
+                  <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                </td>
+                <td *ngFor="let col of columns" [ngSwitch]="col.field" style="cursor: pointer" [style.width]="getStyle(col.field)">
+                  
+                  <span *ngSwitchDefault (click)="modalShow(rowData.scrapId,'DETAIL')">{{rowData[col.field]}}</span>
+                  
+                  <a href="javascript:;" *ngSwitchCase="'shiftName'" (click)="showShiftDetailDialog(rowData.shift?.shiftId,'DETAIL')">{{rowData?.shift?.shiftName}}</a>
+
+                  <a *ngSwitchCase="'scrapId'" href="javascript:;" (click)="modalShow(rowData.scrapId,'DETAIL')">{{rowData[col.field]}}</a>
+                  
+                  <a *ngSwitchCase="'plant'" href="javascript:;" (click)="showPlantDetail(rowData[col.field]?.plantId)">{{rowData[col.field]?.plantName}}</a>
+                  
+                  <a *ngSwitchCase="'material'" href="javascript:;" (click)="showStockDetail(rowData[col.field]?.stockId)">{{rowData[col.field]?.stockName}}</a>
+                  
+                  <a *ngSwitchCase="'materialNo'" href="javascript:;" (click)="showStockDetail(rowData.material?.stockId)">{{rowData.material?.stockNo}}</a>
+                  
+                  <a *ngSwitchCase="'workstation'" href="javascript:;" (click)="showWsDetail(rowData[col.field]?.workStationId)">{{rowData[col.field]?.workStationName}}</a>
+
+                  <span *ngSwitchCase="'jobOrder'">
+                      <a href="javascript:;" (click)="showJobOrderDetail(rowData[col.field]?.jobOrderId)">{{rowData[col.field]?.jobOrderId}}</a>
+                  </span>
+                  <a *ngSwitchCase="'jobOrderOperation'" href="javascript:;" 
+                  (click)="showJobOrderOperationDetail(rowData[col.field]?.jobOrderOperationId)" >
+                  {{rowData.referenceId}}</a>
+                  <a *ngSwitchCase="'referenceId'" href="javascript:;" 
+                  (click)="showJobOrderOperationDetail(rowData.jobOrderOperation?.jobOrderOperationId)" >
+                  {{rowData.referenceId}}</a>
+                  <a *ngSwitchCase="'scrapCause'" href="javascript:;" (click)="showScrapCauseReworkDetail(rowData[col.field]?.scrapCauseId)">{{rowData[col.field]?.scrapCauseName}}</a>
+                  
+                  <a *ngSwitchCase="'scrapType'" href="javascript:;" (click)="showScrapTypeDetail(rowData[col.field]?.scrapTypeId)">{{rowData[col.field]?.scrapDescription}}</a>
+
+                  <span *ngSwitchCase="'type'">
+                    <span *ngIf="rowData.scrapType?.typeRework === true">Rework</span>
+                    <span *ngIf="rowData.scrapType?.typeScrap === true">Scrap</span>
+                      <!-- <a href="javascript:;" (click)="showScrapTypeDetail(rowData[col.field]?.scrapTypeId)">{{rowData[col.field]?.scrapCode}}</a> -->
+                  </span>
+
+                  <a *ngSwitchCase="'wareHouse'" href="javascript:;" (click)="showWarehouseDetail(rowData[col.field]?.wareHouseId)">{{rowData[col.field]?.wareHouseName}}</a>
+                  
+                  <a href="javascript:;" *ngSwitchCase="'batch'" (click)="showBatchDetail(rowData.batch)" > {{rowData.batch}}</a>
+
+                  <a href="javascript:;" *ngSwitchCase="'operator'" (click)="showOpertorDetail(rowData[col.field]?.employeeId)">{{rowData[col.field]?.firstName}} {{rowData[col.field]?.lastName}}</a>
+                  
+                  <span *ngSwitchCase="'createDate'">{{rowData[col.field] | date:'dd-MM-yyyy HH:mm'}}</span>
+
+                  <span *ngSwitchCase="'updateDate'">{{rowData[col.field] | date:'dd-MM-yyyy HH:mm'}}</span>
+
+                  <span *ngSwitchCase="'employeeLoginDate'">{{rowData[col.field] | date:'dd-MM-yyyy HH:mm'}}</span>
+
+                </td>
+                <td width="80px" >
+                  <button class="btn btn-sm btn-outline-danger" type="button" (click)="delete(rowData.scrapId)">
+                    <i class="fa fa-trash"></i></button>
+                  <button class="btn btn-sm btn-outline-info" type="button" (click)="modalShow(rowData.scrapId,'EDIT')">
+                    <i class="fa fa-edit"></i></button>
+                  <button class="btn btn-sm btn-outline-primary" type="button"
+                    *ngIf="rowData.reworkStatus=='REQUESTED' ||  rowData.reworkStatus=='PARTIALLY_REPROCESSED'"
+                    pTooltip="{{'create-production-order'|translate}}" tooltipPosition="top" placeholder="Top"
+                    (click)="createProductionOrder(rowData)">
+                    <i class="fa fa-play"></i>
+                  </button>
+                </td>
+              </tr>
+
+            </ng-template>
+          </p-table>
+
+          <br/>
+          <div class="row">
+            <app-paging
+              [TotalElements]="pagination.totalElements"
+              [CurrentPage]="pagination.currentPage"
+              [PageSize]="pagination.pageSize"   [showSearch]="false"         [rows]="pagination.rows"
+              [TotalPageLinkButtons]="pagination.TotalPageLinkButtons"
+              [RowsPerPageOptions]="pagination.RowsPerPageOptions"
+              (onPageChange)="myChanges($event)"
+            ></app-paging>
+            <span style="margin-left:2px; padding-top: 2px " class="text-muted" >{{'total-records'|translate}}: {{pagination?.totalElements}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--/.col-->
+  </div>
+
+</div>
+<div bsModal [config]="{backdrop: 'static', keyboard: false}" [config]="{backdrop: 'static', keyboard: false}" #myModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+aria-labelledby="myModalLabel"
+  (onHidden)="partModal.id=null; partModal.modal=null;"
+     aria-hidden="true" >
+  <div class="modal-dialog modal-success modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" *ngIf="partModal.modal=='NEW'"> {{'new' | translate}}  {{'rework' | translate}}</h4>
+        <h4 class="modal-title" *ngIf="partModal.modal=='EDIT'"> {{'edit' | translate}}  {{'rework' | translate}}</h4>
+        <h4 class="modal-title" *ngIf="partModal.modal=='DETAIL'"> {{'rework-information' | translate}}</h4>
+        <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <ng-template [ngIf]="partModal.modal=='NEW'">
+          <rework-new (saveAction)="myModal.hide(); filter(pageFilter)"></rework-new>
+        </ng-template>
+        <ng-template [ngIf]="partModal.modal=='EDIT'">
+          <rework-edit [id]="partModal.id" (saveAction)="myModal.hide(); partModal.id=null; filter(pageFilter)"></rework-edit>
+        </ng-template>
+        <ng-template [ngIf]="partModal.modal=='DETAIL'">
+          <rework-detail [id]="partModal.id" ></rework-detail>
+        </ng-template>
+      </div>
+      <div class="modal-footer">
+        <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary" (click)="myModal.hide()">{{'close' | translate}}</button>
+        <button *ngIf="partModal.modal=='DETAIL'" type="button" class="btn rounded btn-primary" (click)="partModal.modal='NEW'">{{'new' | translate}}</button>
+        <button *ngIf="partModal.modal=='DETAIL'" type="button" class="btn rounded btn-success"
+                (click)="partModal.modal='EDIT'">{{'edit' | translate}}</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+<ng-template [ngIf]="dialog.visible">
+  <p-dialog class="custom-dialog" [blockScroll]="true"
+    header="{{'rework' | translate}}" [(visible)]="dialog.visible" 
+    appendTo="body" [baseZIndex]="9999"
+    [style]="{'min-width': '45%'}"    [maximizable]="true" #dOrderDetails
+    [contentStyle]="{'min-height':'60vh'}" [focusOnShow]="false" modal="true" dismissableMask="true">
+    <div class="row col-md-12">
+      <table class="table table-bordered">
+        <tbody>
+          <tr>
+            <td>{{'rework-id'|translate}}</td>
+            <td>{{selectedReworkForProductionOrder.scrapId}}</td>
+          </tr>
+          <tr>
+            <td>{{'quantity'|translate}}</td>
+            <td>
+              <input class="form-control" tye="number" name="quantity" [(ngModel)]="selectedReworkForProductionOrder.quantity" />
+            </td>
+          </tr>
+          <tr>
+            <td>{{'material-no'|translate}}</td>
+            <td>{{selectedReworkForProductionOrder.material?.stockNo}}</td>
+          </tr>
+          <tr>
+            <td>{{'material-name'|translate}}</td>
+            <td>{{selectedReworkForProductionOrder.material?.stockName}}</td>
+          </tr>
+          <tr>
+            <td>{{'job-order-id'|translate}}</td>
+            <td>{{selectedReworkForProductionOrder.jobOrder?.jobOrderId}}</td>
+          </tr>
+          <tr>
+            <td>{{'job-order-operation-id'|translate}}</td>
+            <td>{{selectedReworkForProductionOrder.jobOrderOperation?.jobOrderOperationId}}</td>
+          </tr>
+          <tr>
+            <td>{{'reference-id'|translate}}</td>
+            <td>{{selectedReworkForProductionOrder.referenceId}}</td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <div class="d-flex justify-content-end">
+                <button class="btn btn-outline-primary" (click)="saveProdOrder()">{{'save'|translate}}</button>
+                <button class="btn btn-outline-danger" (click)="dialog.active=false;">{{'close'|translate}}</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </p-dialog>
+</ng-template>
+
+
+<ng-template [ngIf]="prodEditModal.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myProdEditModal="bs-modal"
+    (onHidden)="prodEditModal.active=false; prodEditModal.data=null;prodEditModal.selectedIndex=0;" class="modal fade" tabindex="-1" role="dialog"
+    aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-success" [ngStyle]="{'max-width': prodEditModal.selectedIndex=='big' ? '95%' : (prodEditModal.selectedIndex=='mid' ? '85%' : '80%')}" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"> {{'production-order-information'|translate}}</h4>
+          <button type="button" class="close" (click)="myProdEditModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+
+          <prod-edit [prodOrderTypeList]="prodOrderTypeList" [prodOrderId]="prodEditModal.data.prodOrderId"
+          (saveAction)="onEditedProdItem($event)" (indexSelection)="prodEditModal.selectedIndex=$event;"></prod-edit>
+
+        </div>
+        <div class="modal-footer">
+          <div class="col-md-12 ">
+            <!-- <button type="button" *ngIf="prodEditModal.data.prodOrderStatus==='REQUESTED'"
+                    class="btn btn-success float-left"
+                    (click)="confirmProductionOrder(prodEditModal.data)">{{'confirm' | translate}}</button> -->
+            <button type="button" class="btn btn-secondary float-right"
+                    (click)="myProdEditModal.hide()">{{'close' | translate}}</button>
+            <button *ngIf="prodEditModal.data.prodOrderStatus!=='REQUESTED'" type="submit" 
+            class="btn btn-sm btn-primary mr-1 float-right" (click)="saveCombineOrderModal()"><i
+              class="fa fa-dot-circle-o"></i> 
+                {{'save' | translate}}
+            </button>
+            <button *ngIf="prodEditModal.data.prodOrderStatus==='REQUESTED'" 
+             type="submit" class="btn btn-sm btn-primary mr-1 float-right" (click)="completeReviewModal()"><i
+              class="fa fa-dot-circle-o"></i> 
+                {{'complete-review' | translate}} 
+            </button>
+
+          </div>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
+</ng-template>

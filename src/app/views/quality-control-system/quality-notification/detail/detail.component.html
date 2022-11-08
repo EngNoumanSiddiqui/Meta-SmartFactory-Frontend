@@ -1,0 +1,123 @@
+<div class="animated fadeIn">
+  <!-- <div class="row"> -->
+      <button *ngIf="qualityNotification" type="button" style="margin-right: 5px" class="btn rounded btn-warning float-right"
+        (click)="getPrintHtmlDocument()"><i class="fa fa-file"></i> {{'print-document' | translate}}</button>
+    <p-tabView class="col-md-6" (onChange)="handleChange($event)">
+      <p-tabPanel header="{{'reference-object'|translate}}">
+          
+        <div class="card" *ngIf="qualityNotification">
+          <div class="card-body">
+            <form #inspForm="ngForm" style="display: flex; justify-content: space-between;">
+              <table class="table table-striped table-outline" style="width: 48% !important;">
+                  <!-- <thead class="table-secondary">
+                      <tr>
+                        <th colspan="2"> Quality Notification</th>
+                      </tr>
+                  </thead> -->
+                  <tbody>
+                  <tr>
+                      <td width="30%" class="text-bold">{{'notification-id' | translate}} <span style="width: 0 !important;" class="float-right">:</span> </td>
+                      <td>{{qualityNotification.notificationId}}</td>
+                  </tr>
+                <tr>
+                  <td width="30%" class="text-bold">{{'notification-code' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                      <td>{{qualityNotification.notificationCode}}</td>
+                </tr> 
+                <tr>
+                  <td width="30%" class="text-bold">{{'notification-type' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                  <td>{{qualityNotification.notificationType}}</td>
+                </tr>
+                <tr>
+                  <td width="30%" class="text-bold">{{'material-name' | translate}}<span style="width: 0 !important;" class="float-right">:</span> </td>
+                  <td>{{qualityNotification.materialName}}</td>
+                  
+                </tr> 
+                <tr>
+                  <td width="30%" class="text-bold">{{'plant' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                  <td>{{qualityNotification.plant?.plantName}}</td>
+                  
+                </tr>
+                <tr>
+                  <td width="30%" class="text-bold">{{'inspection-lot' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                  <td>{{qualityNotification.inspectionLot}}</td>
+                  
+                </tr>
+                <tr *ngIf="qualityNotification.notificationType == 'Customer Complaint'">
+                  <td width="30%" class="text-bold">{{'sale-order' | translate}}<span style="width: 0 !important;" class="float-right">:</span> </td>
+                  <td>{{qualityNotification.saleOrder}}</td>
+                  
+                </tr>
+                <tr>
+                  <td width="30%" class="text-bold"> {{'purchase-order' | translate}}<span style="width: 0 !important;" class="float-right">:</span> </td>
+                  <td>{{qualityNotification.purchaseOrder}}</td>
+                 
+                </tr>
+                <tr *ngIf="qualityNotification.notificationType == 'Complaint Against a Vendor' || qualityNotification.notificationType == 'Customer Complaint'">
+                  <td width="30%" class="text-bold">{{'document-number' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                  <td>{{qualityNotification.documentNo}}</td>
+                 
+                </tr>
+              </tbody>
+              </table>
+              <table class="table table-striped table-outline "style="width: 48% !important;">
+                <tbody>
+                  <td width="30%" class="text-bold">{{'batch' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                  <td>{{qualityNotification.batch?.batchName}}</td>
+              <tr *ngIf="qualityNotification.notificationType == 'Internal Problem Report'">
+                <td width="30%" class="text-bold">{{'work-center' | translate}} <span style="width: 0 !important;" class="float-right">:</span></td>
+                <td>{{qualityNotification.workCenter}}</td>
+              </tr>
+                <tr *ngIf="qualityNotification.notificationType == 'Complaint Against a Vendor'">
+                    <td width="30%" class="text-bold">{{'vendor' | translate}} <span style="width: 0 !important;" class="float-right">:</span></td>
+                    <td>{{qualityNotification.vendor}}</td>
+                  </tr>
+                <tr *ngIf="qualityNotification.notificationType == 'Complaint Against a Vendor'">
+                    <td width="30%" class="text-bold">{{'vendor-address' | translate}} <span style="width: 0 !important;" class="float-right">:</span></td>
+                    <td>{{qualityNotification.vendorAddress}}</td>
+                  </tr>
+                  <tr *ngIf="qualityNotification.notificationType == 'Customer Complaint'">
+                    <td width="30%" class="text-bold">{{'customer' | translate}} <span style="width: 0 !important;" class="float-right">:</span></td>
+                    <td>{{qualityNotification.customer}}</td>
+                  </tr>
+                <tr *ngIf="qualityNotification.notificationType == 'Customer Complaint'">
+                    <td width="30%" class="text-bold">{{'customer-address' | translate}} <span style="width: 0 !important;" class="float-right">:</span></td>
+                    <td>{{qualityNotification.customerAddress}}</td>
+                  </tr>
+                  <tr>
+                    <td width="30%" class="text-bold">{{'report-type' | translate}} <span style="width: 0 !important;" class="float-right">:</span></td>
+                    <td>{{qualityNotification.reportType}}</td>
+                  </tr> 
+                <tr>
+                    <td width="30%" class="text-bold">{{'complaint-quantity' | translate}} <span style="width: 0 !important;" class="float-right">:</span></td>
+                    <td>{{qualityNotification.complaintQuantity}}</td>
+                  </tr>
+                  <tr>
+                    <td width="30%" class="text-bold">{{'quantity-unit' | translate}} <span style="width: 0 !important;" class="float-right">:</span></td>
+                    <td>{{qualityNotification.quantityUnit}}</td>
+                </tr> 
+                <tr>
+                    <td width="30%" class="text-bold">{{'description' | translate}} <span style="width: 0 !important;" class="float-right">:</span></td>
+                    <td>{{qualityNotification.description}}</td>
+                  </tr>
+                  <tr>
+                    <td width="30%" class="text-bold">{{'long-text' | translate}} <span style="width: 0 !important;" class="float-right">:</span></td>
+                    <td>{{qualityNotification.longText}}</td>
+                 </tr>
+            </tbody>
+            </table>
+            </form>
+          </div>
+        </div>
+      </p-tabPanel>
+      <!-- Processing -->
+      <p-tabPanel header="{{ 'Processing' | translate }}">
+        <detail-processing id="{{qualityNotification.processingId}}"></detail-processing> 
+      </p-tabPanel>
+      <!-- Item -->
+      <p-tabPanel header="{{ 'Items' | translate }}">
+          <list-item></list-item>
+          
+        </p-tabPanel>
+    </p-tabView>
+  <!-- </div> -->
+</div>

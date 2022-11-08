@@ -1,0 +1,351 @@
+<div class="animated fadeIn" >
+  <div class="row" *ngIf="porderItemDetails">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          {{'order-detail' | translate}}
+        </div>
+
+
+        <div class="card-body" >
+            <table class="table table-md table-responsive-sm table-striped table-outline mb-0">
+                <tbody >
+                  <tr>
+                    <td width="15%"class="text-bold">{{'order-type' | translate}} <span class="float-right">:</span></td>
+                    <td width="20%"> {{headerDetails.purchaseOrderType}}</td>
+
+                    <td width="15%" class="text-bold">{{'order-id' | translate}} <span class="float-right">:</span></td>
+                    <td width="20%"><a href="javascript:;" 
+                      (click)="showDetailDialog(porderItemDetails.purchaseOrderId, 'PURCHASEORDER')">
+                       {{porderItemDetails.purchaseOrderId}}
+                    </a>
+                  </td>
+
+                    <td width="15%" class="text-bold">{{'order-no' | translate}} <span class="float-right">:</span></td>
+                    <td width="15%">
+                      <a href="javascript:;" 
+                          (click)="showDetailDialog(porderItemDetails.purchaseOrderId, 'PURCHASEORDER')">
+                           {{headerDetails.porderNo}}
+                        </a>
+                    </td>
+
+                  </tr>
+
+                  <tr>
+                    <td class="text-bold">{{'reference-id' | translate}} <span class="float-right">:</span></td>
+                    <td> {{porderItemDetails.referenceId}}</td>
+                    <td class="text-bold">{{'order-detail-id' | translate}} <span class="float-right">:</span></td>
+                    <td>{{porderItemDetails.purchaseOrderDetailId}}</td>
+                    <td class="text-bold">{{'order-detail-no' | translate}} <span class="float-right">:</span></td>
+                    <td>{{porderItemDetails.purchaseOrderDetailCode}}</td>
+
+                  </tr>
+                <tr>
+
+                  <td class="text-bold">{{'warehouse-name' | translate}}<span class="float-right">:</span></td>
+                  <td>
+                    <a href="javascript:;" 
+                      (click)="showDetailDialog(porderItemDetails.wareHouseId, 'WAREHOUSE')">
+                       {{porderItemDetails.wareHouseName}}
+                    </a>
+                  </td>
+                  
+                  <td class="text-bold">{{'material' | translate}}<span class="float-right">:</span></td>
+                    <td>
+                      <a href="javascript:;" 
+                      (click)="showDetailDialog(porderItemDetails.stockId, 'STOCK')">{{porderItemDetails.stockNo}}</a> || 
+                      <a href="javascript:;" 
+                    (click)="showDetailDialog(porderItemDetails.stockId, 'STOCK')">{{porderItemDetails.stockName}}</a>
+                    </td>
+
+                    <td class="text-bold">{{'base-unit' | translate}}<span class="float-right">:</span></td>
+                  <td>{{porderItemDetails.baseUnit}}</td>
+     
+  
+                  
+                </tr>
+                <tr>
+                  <td class="text-bold">{{'quantity' | translate}}<span class="float-right">:</span></td>
+                  <td>{{porderItemDetails.quantity}}</td>
+                  <td class="text-bold">{{'order-unit' | translate}}<span class="float-right">:</span></td>
+                  <td>{{porderItemDetails.orderUnit}}</td>
+                  <td class="text-bold">{{'batch' | translate}}<span class="float-right">:</span></td>
+                  <td>
+                    <a href="javascript:;" 
+                      (click)="showDetailDialog(porderItemDetails.batch, 'BATCH')">
+                       {{porderItemDetails.batch}}
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+     
+                  <td class="text-bold">{{'total-income-quantity' | translate}}<span class="float-right">:</span></td>
+                  <td>{{porderItemDetails.totalIncomeQuantity}}</td>
+                  <td class="text-bold">{{'reserved-quantity' | translate}}<span class="float-right">:</span></td>
+                  <td>{{porderItemDetails.reservedQuantity}}</td>
+                  <td class="text-bold">{{'status' | translate}}<span class="float-right">:</span></td>
+                  <td>{{porderItemDetails.purchaseOrderStatus}}</td>
+                </tr>
+               
+                <tr>
+                  <td class="text-bold">{{'order-date' | translate}}<span class="float-right">:</span></td>
+                  <td>{{porderItemDetails.porderDate|date:"dd/MM/yyyy" }}</td>
+                  <td class="text-bold">{{'start-delivery-date' | translate}}<span class="float-right">:</span></td>
+                  <td>{{porderItemDetails.deliveryStartDate|date:"dd/MM/yyyy" }}</td>
+
+                  <td class="text-bold">{{'end-delivery-date' | translate}}<span class="float-right">:</span></td>
+                  <td>{{porderItemDetails.deliveryDate|date:"dd/MM/yyyy" }}</td>
+                </tr>
+               
+              
+                <tr>
+                  <td class="text-bold">{{'purchase-price' | translate}}<span class="float-right">:</span></td>
+                  <td>
+                    {{porderItemDetails?.purchaseOrderItemCosting?.effectivePrice | number:'1.2-2'}}
+                  </td>
+                  <td class="text-bold">{{'operation' | translate}}<span class="float-right">:</span></td>
+                  <td>
+                    <a href="javascript:;" 
+                      (click)="showDetailDialog(porderItemDetails.operationId, 'OPERATION')">
+                      {{porderItemDetails.operationName}}
+                    </a>
+                    
+                  </td>
+                  <td class="text-bold">{{'job-order-operation' | translate}}<span class="float-right">:</span></td>
+                  <td>
+                    <a href="javascript:;" 
+                    (click)="showDetailDialog(porderItemDetails.jobOrderOperationId, 'JOBORDEROPERATION')">
+                     {{porderItemDetails.jobOrderOperationId}}
+                  </a>
+                    <!-- {{porderItemDetails.jobOrderOperationId}}</pre> -->
+                  </td>
+                  
+                </tr>
+                <tr>
+                  <td class="text-bold">{{'description' | translate}}<span class="float-right">:</span></td>
+                  <td>
+                    <pre>{{porderItemDetails.description}}</pre>
+                  </td>
+                </tr>
+                <tr>
+                  
+                </tr>
+                </tbody>
+            </table>
+            <div class="col-md-12">
+              <p-tabView>
+                <p-tabPanel header="{{'notification'|translate}}">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <p-table [columns]="notificationSelectedColumns" [value]="notificationTree"
+                        [dataKey]="'stockTransferNotificationDetailId'">
+                        <!-- <ng-template pTemplate="caption">
+                            <div class="row">
+                              <p-multiSelect class="col-md-3" [options]="notificationColumns"
+                                [(ngModel)]="notificationSelectedColumns" optionLabel="header" maxSelectedLabels="0"
+                                selectedItemsLabel="{{'columns-selected'|translate}}" [style]="{minWidth: '200px'}"
+                                defaultLabel="Choose Columns">
+                                <ng-template let-col let-i="index" pTemplate="item">
+                                  {{col.label|translate}}
+                                </ng-template>
+                              </p-multiSelect>
+                              <div class="col-md-12" style="text-align: center;align-self: center;">
+                                {{'notification'|translate}}
+                              </div>
+                            </div>
+                          </ng-template> -->
+                        <ng-template pTemplate="header" let-columns>
+                          <tr>
+                            <th style="width: 3em"></th>
+                            <ng-container *ngFor="let col of columns" [ngSwitch]="col.field">
+                              <th *ngSwitchDefault>{{col.header | translate}}</th>
+                              <th *ngSwitchCase="'goodMovementDocumentType'" style="width: 14em;">{{col.header | translate}}
+                              </th>
+                              <th *ngSwitchCase="'materialNo'" style="width: 9em;">{{col.header | translate}}</th>
+                              <th *ngSwitchCase="'quantity'" style="width: 6em;">{{col.header | translate}}</th>
+                              <th *ngSwitchCase="'baseUnit'" style="width: 6em;">{{col.header | translate}}</th>
+                              <th *ngSwitchCase="'stockTransferReceiptNotificationId'" style="width: 6em;">
+                                {{col.header | translate}}</th>
+                              <th *ngSwitchCase="'stockTransferNotificationDetailId'" style="width: 7em;">
+                                {{col.header | translate}}</th>
+                            </ng-container>
+                          </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-rowData let-expanded="expanded" let-columns="columns">
+                          <tr>
+                            <td>
+                              <a href="#" [pRowToggler]="rowData">
+                                <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+                              </a>
+                            </td>
+                            <td *ngFor="let col of columns" style="cursor: pointer" [ngSwitch]="col.field">
+        
+                              <!-- <a href="javascript:;" *ngSwitchCase="'batch'" (click)="showBatchDetail(rowData.batch)">
+                                  {{rowData.batch}}</a> -->
+                              <a *ngSwitchCase="'materialName'" href="javascript:;" (click)="showDetailDialog(rowData.materialId, 'STOCK')">{{rowData.materialName}}</a>
+                              <a *ngSwitchCase="'materialNo'" href="javascript:;" (click)="showDetailDialog(rowData.materialId, 'STOCK')">{{rowData.materialNo}}</a>
+                              <a *ngSwitchCase="'stockTransferReceiptNotificationId'" href="javascript:;" 
+                                (click)="showDetailDialog(rowData.stockTransferReceiptNotificationId, 'TRANSFERNOTIFICATION')">
+                                {{rowData.stockTransferReceiptNotificationId}}
+                              </a>
+                                <a  *ngSwitchCase="'stockTransferNotificationDetailId'" href="javascript:;" 
+                                  (click)="showDetailDialog(rowData.stockTransferNotificationDetailId, 'TRANSFERNOTIFICATION')">
+                                  {{rowData.stockTransferNotificationDetailId}}
+                                </a>
+                                <a  *ngSwitchCase="'pallet'" href="javascript:;" 
+                                  (click)="showDetailDialog(rowData.pallet?.palletId, 'PALLET')">
+                                  {{rowData.pallet?.palletId}}
+                                </a>
+                              <span *ngSwitchCase="'postingDate'"> {{rowData[col.field] | date:'dd/MM/yyyy HH:mm'}} </span>
+                              <span *ngSwitchCase="'documentDate'"> {{rowData[col.field] | date:'dd/MM/yyyy HH:mm'}} </span>
+                              <span *ngSwitchCase="'updateDate'"> {{rowData[col.field] | date:'dd/MM/yyyy HH:mm'}} </span>
+                              <span *ngSwitchCase="'createDate'"> {{rowData[col.field] | date:'dd/MM/yyyy HH:mm'}} </span>
+                              <span *ngSwitchDefault> {{rowData[col.field]}} </span>
+                            </td>
+                          </tr>
+                        </ng-template>
+                        <ng-template pTemplate="rowexpansion" let-rowData let-columns="columns">
+                          <tr>
+                            <td colspan="2"></td>
+                            <td colspan="4">
+                          <tr>
+                            <td><strong>{{'purchase-order-id' | translate}}</strong> : 
+                              <a href="javascript:;" 
+                                (click)="showDetailDialog(rowData.purchaseOrderId, 'PURCHASEORDER')">
+                                 {{rowData.purchaseOrderId}}
+                              </a>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td><strong>{{'pallet-id' | translate}}</strong> : 
+                              <a href="javascript:;" 
+                                (click)="showDetailDialog(rowData.pallet?.palletId, 'PALLET')">
+                                 {{rowData.pallet?.palletId}}
+                              </a>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td><strong>{{'defect' | translate}}</strong> : {{rowData.defected ? 'Yes' : 'No'}}</td>
+                          </tr>
+                          <tr>
+                            <td><strong>{{'warehouse-from-name' | translate}}</strong> : 
+                              <a href="javascript:;" 
+                              (click)="showDetailDialog(rowData.wareHouseFromId, 'WAREHOUSE')">
+                               {{rowData.wareHouseFromName}}
+                            </a>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td><strong>{{'description' | translate}}</strong> : {{rowData.description}}</td>
+                          </tr>
+                          </td>
+                          <td colspan="4">
+                            <tr>
+                              <td><strong>{{'purchase-order-no' | translate}}</strong> : {{rowData.purchaseOrderNo}}</td>
+                            </tr>
+                            <tr>
+                              <td><strong>{{'batch' | translate}}</strong> : 
+                                <a href="javascript:;" 
+                              (click)="showDetailDialog(rowData.batch, 'BATCH')">
+                               {{rowData.batch}}
+                            </a>
+                              </td>
+                            </tr>
+                            <!-- <tr>
+                              <td><strong>{{'base-unit' | translate}}</strong> : {{rowData.baseUnit}}</td>
+                            </tr> -->
+                            
+                            <tr>
+                              <td><strong>{{'create-date' | translate}}</strong> :
+                                {{rowData.createDate | date:'dd/MM/yyyy HH:mm'}}</td>
+                            </tr>
+                            <tr>
+                              <td><strong>{{'document-date' | translate}}</strong> :
+                                {{rowData.documentDate | date:'dd/MM/yyyy HH:mm'}}</td>
+                            </tr>
+                            <tr>
+                              <td><strong>{{'posting-date' | translate}}</strong> :
+                                {{rowData.postingDate | date:'dd/MM/yyyy HH:mm'}}</td>
+                            </tr>
+                           
+                            <tr>
+                              <td *ngIf="rowData.goodsMovementActivityType==='TRANSFER_POSTING'">
+                                <strong>{{'warehouse-to-name' | translate}}</strong> : {{rowData.wareHouseToName}}</td>
+                            </tr>
+                          </td>
+                          <!-- <td [attr.colspan]="columns.length - 1">
+                                <div class="col-md-12">
+                                  <table class="table table-bordered">
+                                    <tr>
+                                      <td>{{'notification-status' | translate}}</td>
+                                      <td>{{rowData.goodsMovementStatus}}</td>
+                                    </tr>
+                                    <tr>
+                                      <td>{{'document-type' | translate}}</td>
+                                      <td>{{rowData.goodMovementDocumentType}}</td>
+                                    </tr>
+                                    <tr>
+                                      <td>{{'activity-type' | translate}}</td>
+                                      <td>{{rowData.goodsMovementActivityType}}</td>
+                                    </tr>
+                                    <tr>
+                                      <td>{{'prod-order-id' | translate}}</td>
+                                      <td>{{rowData.prodOrderId}}</td>
+                                    </tr>
+                                    <tr>
+                                      <td>{{'material-no' | translate}}</td>
+                                      <td>{{rowData.materialNo}}</td>
+                                    </tr>
+                                    <tr>
+                                      <td>{{'material-name' | translate}}</td>
+                                      <td>{{rowData.materialName}}</td>
+                                    </tr>
+                                    <tr>
+                                      <td>{{'quantity' | translate}}</td>
+                                      <td>{{rowData.quantity}}</td>
+                                    </tr>
+                                    <tr>
+                                      <td>{{'base-unit' | translate}}</td>
+                                      <td>{{rowData.baseUnit}}</td>
+                                    </tr>
+                                    <tr>
+                                      <td>{{'warehouse-from-name' | translate}}</td>
+                                      <td>{{rowData.wareHouseFromName}}</td>
+                                    </tr>
+                                    <tr *ngIf="rowData.goodsMovementStatus==='TRANSFER_POSTING'">
+                                      <td>{{'warehouse-to-name' | translate}}</td>
+                                      <td>{{rowData.wareHouseToName}}</td>
+                                    </tr>
+                                    <tr>
+                                      <td>{{'batch' | translate}}</td>
+                                      <td>{{rowData.batch}}</td>
+                                    </tr>
+                                    <tr>
+                                      <td>{{'create-date' | translate}}</td>
+                                      <td>{{rowData.createDate | date: 'dd/mm/yyyy HH:mm'}}</td>
+                                    </tr>
+                                    <tr>
+                                      <td>{{'description' | translate}}</td>
+                                      <td>{{rowData.description}}</td>
+                                    </tr>
+                                  </table>
+                                </div>
+                              </td> -->
+                          </tr>
+                        </ng-template>
+                      </p-table>
+                    </div>
+                  </div>
+                </p-tabPanel>
+              </p-tabView>
+            </div>
+        </div>
+        <div class="card-footer">
+          <button type="button" pButton class="ui-button-info"
+            (click)="OpenDetailPROrder()" label="{{'view-full-details' | translate}}">
+          </button>
+        </div>
+        </div>
+      </div>
+    </div>
+</div>

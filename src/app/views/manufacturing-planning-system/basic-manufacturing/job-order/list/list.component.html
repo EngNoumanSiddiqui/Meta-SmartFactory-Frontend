@@ -1,0 +1,857 @@
+<p-confirmDialog [autoZIndex]="true" [baseZIndex]="999999"></p-confirmDialog>
+<div class="animated fadeIn">
+
+
+  <div class="col-lg-12">
+    <div id="topDiv" class="row badge-light border p-2  align-items-center">
+      <div class="col-md-2 ui-fluid p-0">
+        <div class="row ui-fluid">
+          <div class="col-md-12">
+            <p-calendar [showIcon]="true" dateFormat="dd/mm/yy" [monthNavigator]="true" [yearNavigator]="true"
+              yearRange="1990:2100" [(ngModel)]="pageFilter.startDate" placeholder="{{'planned-start'|translate}}" showTime="true">
+            </p-calendar>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-2 ui-fluid p-0 ml-1">
+        <div class="row ui-fluid">
+          <div class="col-sm-12">
+            <p-calendar [showIcon]="true" dateFormat="dd/mm/yy" [monthNavigator]="true" [yearNavigator]="true"
+              yearRange="1990:2100" [(ngModel)]="pageFilter.finishDate" placeholder="{{'planned-finish'|translate}}" showTime="true">
+            </p-calendar>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-2 px-1 ui-fluid" style="width: 15%;">
+        <p-dropdown [options]="workcenterTypes" [(ngModel)]="selectedWorkCenterTypes"
+          placeholder="{{'select-workcenter-types' | translate}}" (onChange)="workcenterTypeChanged($event)"
+          optionLabel="workCenterTypeName" [filter]="true"></p-dropdown>
+      </div>
+      <div class="col-md-2 px-1 ui-fluid" style="width: 14%;">
+        <p-dropdown [options]="workcenters" [(ngModel)]="selectedWorkCenters"
+          placeholder="{{'select-workcenters' | translate}}" [optionLabel]="'workCenterName'" [filter]="true"
+          (onChange)="workcenterChanged($event)"></p-dropdown>
+      </div>
+      <div class="col-md-auto">
+
+        <button type="button" pButton class="ui-button-info" (click)="filter()" label="{{'filter' | translate}}">
+        </button>
+        <button type="button" pButton class="ui-button-secondary ml-1" (click)="ClearDates()"
+          label="{{'clear-dates' | translate}}">
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div id="mainTable" class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <p-table #dt [columns]="selectedColumns" [value]="allJobs" [rows]="pagination.rows"
+            [totalRecords]="pagination.totalElements" dataKey="jobOrderId" [(selection)]="selectedJobOrders"
+            scrollable="true">
+            <ng-template pTemplate="caption">
+              <div style="text-align:left; align-items: center; display: flex; flex-wrap: wrap;">
+                <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" style="flex:1" optionLabel="header"
+                  maxSelectedLabels="0" selectedItemsLabel="{{'columns-selected'|translate}}"
+                  [style]="{minWidth: '200px'}" defaultLabel="Choose Columns">
+                  <ng-template let-col let-i="index" pTemplate="item">
+                    {{col.label|translate}}
+                  </ng-template>
+                </p-multiSelect>
+                <!-- <button pButton style="margin-left: 4px" type="button" class="ui-button-warning float-right"
+                  label="{{'reset'  |translate}}" (click)="resetFilter()"></button> -->
+
+                <p-checkbox [style]="{'margin-right' : '5px'}" class="float-right" binary="true"
+                  [(ngModel)]="showMaterialNo" (ngModelChange)="onShowMaterialNo($event)"
+                  label="{{'show-material-no'|translate}}"></p-checkbox>
+                <button pButton style="margin-right: 5px" class="ui-button-warning float-right" type="button"
+                  icon="fa fa-file" iconPos="left" label="{{'export-processing'|translate}}"
+                  (click)="exportProcessingCSV()"></button>
+
+                <button pButton style="margin-right: 5px" class="ui-button-danger float-right" type="button"
+                  label="{{'cancel'|translate}} {{'all'|translate}}" (click)="cancelAllJobOrder()"
+                  [disabled]="selectedJobOrders?.length <= 1"></button>
+                <button pButton style="margin-right: 5px" class="ui-button-info float-right" type="button"
+                  label="{{'CREATE_INSPECTION_LOT'|translate}}" (click)="openCreateInspectionLot()"
+                  [disabled]="selectedJobOrders?.length !== 1"></button>
+                <button pButton style="margin-right: 5px" class="ui-button-info  float-right" type="button"
+                  icon="fa fa-exchange" iconPos="left" label="{{'compare'|translate}}"
+                  (click)="compareSelecteds()"></button>
+                <p-splitButton [style]="{'margin-right' : '5px'}" label="{{'export-selected'|translate}}"
+                  icon="fa fa-file" [model]="selecteMenuItems" styleClass="ui-button-warning float-right">
+                </p-splitButton>
+                <p-splitButton [style]="{'margin-right' : '5px'}" label="{{'export-all'|translate}}"
+                  icon="fa fa-file-alt" [model]="menuItems" styleClass="ui-button-warning float-right">
+                </p-splitButton>
+
+                <button pButton type="button" style="margin-right: 5px; margin-top: 1px;" class="float-right"
+                  icon="fa fa-refresh" name="refresh" (click)="filter()"></button>
+
+              </div>
+            </ng-template>
+
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th style="width:4em" rowspan="2">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <ng-container *ngFor="let col of columns; let i=index">
+                  <th style="cursor: pointer" [ngClass]="{'bg-selected-order':pageFilter.orderByProperty ==col.field}"
+                    (click)="reOrderData(i,col.field)"
+                    [style.width]="(col.field == 'jobOrderOperations' || col.field == 'jobOrderStockUseList' ||
+                    col.field == 'jobOrderStockProduceList' || col.field == 'workStation.workStationName')? '85px': 'auto'">
+                    <i *ngIf="isOrderable(col.field)" [ngClass]="'fa fa-sort-alpha-' + classReOrder[i]"></i>
+                    {{col.header|translate}}
+                  </th>
+                </ng-container>
+                <th width="60px" rowspan="2">{{'action' | translate}}</th>
+              </tr>
+              <tr>
+
+                <th *ngFor="let col of columns" class="ui-fluid" [ngSwitch]="col.field">
+
+                  <p-multiSelect display="chip" appendTo="body" *ngSwitchCase="'jobOrderStatus'"
+                  [options]="jobOrderStatusList" [(ngModel)]="pageFilter.jobOrderStatusList"
+                  (ngModelChange)="filter(pageFilter)" optionLabel="name"
+                  optionValue="name"
+                  selectedItemsLabel="{{'select-options'|translate}}" [style]="{minWidth: '40px'}"
+                  defaultLabel="Choose Options">
+                </p-multiSelect>
+
+                  <!-- <select *ngSwitchCase="'jobOrderStatus'" name="status" class="form-control"
+                    [(ngModel)]="pageFilter.jobOrderStatus" (ngModelChange)="filter()">
+                    <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                    <option *ngFor="let status of jobOrderStatusList" value="{{status}}">{{status|translate}}</option>
+                  </select> -->
+
+                  <p-multiSelect display="chip" appendTo="body" *ngSwitchCase="'position'"
+                  [options]="jobOrderPositionList" [(ngModel)]="pageFilter.positionList"
+                  (ngModelChange)="filter(pageFilter)" optionLabel="name"
+                  optionValue="name"
+                  selectedItemsLabel="{{'select-options'|translate}}" [style]="{minWidth: '50px'}"
+                  defaultLabel="Choose Options">
+                </p-multiSelect>
+
+                  <!-- <select *ngSwitchCase="'position'" name="status" class="form-control"
+                    [(ngModel)]="pageFilter.position" (ngModelChange)="filter()">
+                    <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                    <option *ngFor="let pos of jobOrderPositionList" value="{{pos}}">{{pos|translate}}</option>
+                  </select> -->
+                  <p-calendar *ngSwitchCase="'startDate'" [showIcon]="true" dateFormat="dd.mm.yy"
+                    [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100" appendTo="body"
+                    [(ngModel)]="pageFilter.startDate" placeholder="{{'start-date'|translate}}" showTime="true"
+                    (ngModelChange)="filter()">
+                  </p-calendar>
+
+                  <p-calendar *ngSwitchCase="'finishDate'" [showIcon]="true" dateFormat="dd.mm.yy"
+                    [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100" appendTo="body"
+                    [(ngModel)]="pageFilter.finishDate" placeholder="{{'finish-date'|translate}}" showTime="true"
+                    (ngModelChange)="filter()">
+                  </p-calendar>
+                  <p-calendar *ngSwitchCase="'erpPlannedStartDate'" [showIcon]="true" dateFormat="dd.mm.yy"
+                    [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100" appendTo="body"
+                    [(ngModel)]="pageFilter.erpPlannedStartDate" placeholder="{{'erp-planned-start-date'|translate}}"
+                    (ngModelChange)="filter()">
+                  </p-calendar>
+
+                  <p-calendar *ngSwitchCase="'erpPlannedFinishDate'" [showIcon]="true" dateFormat="dd.mm.yy"
+                    [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100" appendTo="body"
+                    [(ngModel)]="pageFilter.erpPlannedFinishDate" placeholder="{{'erp-planned-finish-date'|translate}}"
+                    (ngModelChange)="filter()">
+                  </p-calendar>
+                  <p-calendar *ngSwitchCase="'createDate'" [showIcon]="true" dateFormat="dd.mm.yy"
+                    [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100" appendTo="body"
+                    [(ngModel)]="pageFilter.createDate" placeholder="{{'create-date'|translate}}"
+                    (ngModelChange)="filter()">
+                  </p-calendar>
+                  <span *ngSwitchCase="'operationNameNext'"></span>
+                  <span *ngSwitchCase="'plannedQuantity'"></span>
+                  <span *ngSwitchCase="'actualTotalDuration'"></span>
+                  <span *ngSwitchCase="'individualCapacity'"></span>
+                  <span *ngSwitchCase="'manualPlanned'"></span>
+                  <span *ngSwitchCase="'createDate'"></span>
+
+
+
+                  <input *ngSwitchCase="'jobOrderOperations'" style="width: 100%" pInputText type="text"
+                    [(ngModel)]="pageFilter.operationUseName"
+                    (input)="filterByColumn($event.target.value,'operationUseName')">
+
+                  <input *ngSwitchCase="'jobOrderStockProduceList'" style="width: 100%" pInputText type="text"
+                    [(ngModel)]="pageFilter.stockToProduceName"
+                    (input)="filterByColumn($event.target.value,'stockToProduceName')">
+
+                  <input *ngSwitchCase="'jobOrderStockUseList'" style="width: 100%" pInputText type="text"
+                    [(ngModel)]="pageFilter.stockUseName" (input)="filterByColumn($event.target.value,'stockUseName')">
+
+                  <input *ngSwitchCase="'jobOrderReferenceId'" style="width: 100%" pInputText type="text"
+                    [(ngModel)]="pageFilter.jobOrderReferenceId"
+                    (input)="filterByColumn($event.target.value,'jobOrderReferenceId')">
+
+                  <input *ngSwitchCase="'skillGroups'" style="width: 100%" pInputText type="text"
+                    [(ngModel)]="pageFilter.skillGroups" (input)="filterByColumn($event.target.value,'skillGroups')">
+
+                  <input *ngSwitchCase="'jobOrderStockProduceListNo'" style="width: 100%" pInputText type="text"
+                    [(ngModel)]="pageFilter.outputStockNo"
+                    (input)="filterByColumn($event.target.value,'outputStockNo')">
+
+                  <input *ngSwitchCase="'jobOrderStockUseListNo'" style="width: 100%" pInputText type="text"
+                    [(ngModel)]="pageFilter.inputStockNo" (input)="filterByColumn($event.target.value,'inputStockNo')">
+
+                  <input *ngSwitchDefault style="width: 100%" pInputText type="text" [(ngModel)]="pageFilter[col.field]"
+                    (input)="filterByColumn($event.target.value,col.field)">
+
+                  <input *ngSwitchCase="'jobOrderOperationId'" style="width: 100%" pInputText type="text"
+                    [(ngModel)]="pageFilter[col.field]"
+                    (input)="filterByColumn(($event.target.value ? +$event.target.value : null),col.field)">
+
+                  <select *ngSwitchCase="'panelActive'" name="panelActive" class="form-control"
+                    [(ngModel)]="pageFilter.panelActive" (ngModelChange)="filter()">
+                    <option value="null">{{'please-select' | translate}}</option>
+                    <option value="true">ACTIVE</option>
+                    <option value="false">INACTIVE</option>
+                  </select>
+
+                  <p-calendar *ngSwitchCase="'actualStart'" [showIcon]="true" dateFormat="dd.mm.yy"
+                    [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100" appendTo="body"
+                    [(ngModel)]="pageFilter.actualStart" placeholder="{{'actual-start'|translate}}"
+                    (ngModelChange)="filter()">
+                  </p-calendar>
+
+                  <p-calendar *ngSwitchCase="'actualFinish'" [showIcon]="true" dateFormat="dd.mm.yy"
+                    [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100" appendTo="body"
+                    [(ngModel)]="pageFilter.actualFinish" placeholder="{{'actual-finish'|translate}}"
+                    (ngModelChange)="filter()">
+                  </p-calendar>
+
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-index="rowIndex" let-columns="columns">
+              <tr [pSelectableRow]="rowData">
+                <td style="width: 4em;">
+                  <b>
+                    <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                  </b>
+                  <!--                  <a href="#" [pRowToggler]="rowData">-->
+                  <!--                    <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>-->
+                  <!--                  </a>-->
+                </td>
+                <td *ngFor="let col of columns" style="cursor: pointer" [ngSwitch]="col.field"
+                  [style.width]="(col.field == 'jobOrderOperations' || col.field == 'jobOrderStockUseList'
+                  || col.field == 'jobOrderStockProduceList' || col.field == 'workStation.workStationName')? '85px': 'auto'" [style.padding]="(col.field == 'jobOrderOperations' || col.field == 'jobOrderStockUseList'
+                || col.field == 'jobOrderStockProduceList'
+                || col.field == 'batch'
+                || col.field == 'plannedQuantity'
+                || col.field == 'actualTotalDuration'
+                || col.field == 'singleTotalDuration'
+                || col.field == 'baseUnit'
+                || col.field == 'jobOrderOperationId'
+                || col.field == 'workStation.workStationName')? '0px': '0.3em 0.6em 0.3em 0.6em'">
+
+                  <a href="javascript:;" *ngSwitchCase="'prodOrderId'"
+                    (click)="showProdOrderDetail(rowData.prodOrder.prodOrderId)">
+                    {{rowData.prodOrder?.prodOrderId}}</a>
+                  <a href="javascript:;" *ngSwitchCase="'jobOrderId'" (click)="showJobOrderDetail(rowData[col.field])">
+                    {{rowData.jobOrderId}}</a>
+                  <a href="javascript:;" *ngSwitchCase="'jobOrderReferenceId'"
+                    (click)="showJobOrderDetail(rowData.jobOrderId)">
+                    {{rowData.referenceId}}</a>
+
+                  <p *ngSwitchCase="'skillGroups'">
+                    {{rowData?.employeeGenericGroupList?.groupCode}}
+                    {{rowData?.employeeGenericGroupList?.groupName}}
+                  </p>
+
+                  <a href="javascript:;" *ngSwitchCase="'prodOrderReferenceId'"
+                    (click)="showProdOrderDetail(rowData.prodOrder.prodOrderId)">
+                    {{rowData.prodOrder?.referenceId}}</a>
+
+                  <a href="javascript:;" *ngSwitchCase="'operationUseName'"
+                    (click)="showOperationDetail(rowData.operationUseId)"> {{rowData.operationUseName}}</a>
+
+
+                  <a href="javascript:;" *ngSwitchCase="'orderDetail.orderId'"
+                    (click)="showOrderDetail(rowData.orderDetail?.orderId)"> {{rowData.orderDetail?.orderId}}</a>
+
+                  <div *ngIf="rowData.orderDetail">
+                    <a href="javascript:;" *ngSwitchCase="'batch'" (click)="showBatchDetail(rowData.orderDetail.batch)">
+                      {{rowData.orderDetail.batch}}</a>
+                  </div>
+
+                  <p *ngSwitchCase="'startDate'">{{rowData[col.field]|date:'dd.MM.yyyy HH:mm'}}</p>
+                  <p *ngSwitchCase="'finishDate'">{{rowData[col.field]|date:'dd.MM.yyyy HH:mm'}}</p>
+                  <p *ngSwitchCase="'actualEarlyLateness'">{{getReadableTime(rowData[col.field])}}</p>
+                  <p *ngSwitchCase="'plannedEarlyLateness'">{{getReadableTime(rowData[col.field])}}</p>
+                  <!-- <p *ngSwitchCase="'erpPlannedStartDate'">{{rowData[col.field]|date:'dd.MM.yyyy HH:mm'}}</p> -->
+                  <!-- <p *ngSwitchCase="'erpPlannedFinishDate'">{{rowData[col.field]|date:'dd.MM.yyyy HH:mm'}}</p> -->
+                  <p *ngSwitchCase="'createDate'">{{rowData[col.field]|date:'dd.MM.yyyy HH:mm'}}</p>
+                  <span *ngSwitchCase="'erpPlannedStartDate'" style="padding: 0px;">
+                    <ng-container *ngFor="let operation of rowData?.jobOrderOperations; last as oLast">
+                      <ul [style.borderBottom]="(oLast) ? 'none': '1px solid #c8c8c8'" class="jOrderParent"
+                        [style.height]="(operation.jobOrderStockProduceList.length >  operation.jobOrderStockUseList.length)? (operation.jobOrderStockProduceList.length + 1) * 20 +'px' : (operation.jobOrderStockUseList.length + 1) * 20 +'px'">
+                        <li>
+                          {{operation.erpPlannedStartDate |date:'dd.MM.yyyy HH:mm'}}
+                        </li>
+                      </ul>
+                    </ng-container>
+                  </span>
+                  <span *ngSwitchCase="'actualTotalDuration'" style="padding: 0px;">
+                    <ng-container *ngFor="let operation of rowData?.jobOrderOperations; last as oLast">
+                      <ul [style.borderBottom]="(oLast) ? 'none': '1px solid #c8c8c8'" class="jOrderParent"
+                        [style.height]="(operation.jobOrderStockProduceList.length >  operation.jobOrderStockUseList.length)? (operation.jobOrderStockProduceList.length + 1) * 20 +'px' : (operation.jobOrderStockUseList.length + 1) * 20 +'px'">
+                        <li>
+                          {{getReadableTime(operation.actualTotalDuration)}}
+                        </li>
+                      </ul>
+                    </ng-container>
+                  </span>
+                  <span *ngSwitchCase="'singleTotalDuration'" style="padding: 0px;">
+                    <ng-container *ngFor="let operation of rowData?.jobOrderOperations; last as oLast">
+                      <ul [style.borderBottom]="(oLast) ? 'none': '1px solid #c8c8c8'" class="jOrderParent"
+                        [style.height]="(operation.jobOrderStockProduceList.length >  operation.jobOrderStockUseList.length)? (operation.jobOrderStockProduceList.length + 1) * 20 +'px' : (operation.jobOrderStockUseList.length + 1) * 20 +'px'">
+                        <li>
+                          {{getReadableTime(operation.singleTotalDuration)}}
+                        </li>
+                      </ul>
+                    </ng-container>
+                  </span>
+                  <span *ngSwitchCase="'erpPlannedFinishDate'" style="padding: 0px;">
+                    <ng-container *ngFor="let operation of rowData?.jobOrderOperations; last as oLast">
+                      <ul [style.borderBottom]="(oLast) ? 'none': '1px solid #c8c8c8'" class="jOrderParent"
+                        [style.height]="(operation.jobOrderStockProduceList.length >  operation.jobOrderStockUseList.length)? (operation.jobOrderStockProduceList.length + 1) * 20 +'px' : (operation.jobOrderStockUseList.length + 1) * 20 +'px'">
+                        <li>
+                          {{operation.erpPlannedFinishDate |date:'dd.MM.yyyy HH:mm'}}
+                        </li>
+                      </ul>
+                    </ng-container>
+                  </span>
+                  <span *ngSwitchCase="'jobOrderOperationId'" style="padding: 0px;">
+                    <ng-container *ngFor="let operation of rowData?.jobOrderOperations; last as oLast">
+                      <ul [style.borderBottom]="(oLast) ? 'none': '1px solid #c8c8c8'" class="jOrderParent"
+                        [style.height]="(operation.jobOrderStockProduceList.length >  operation.jobOrderStockUseList.length)? (operation.jobOrderStockProduceList.length + 1) * 20 +'px' : (operation.jobOrderStockUseList.length + 1) * 20 +'px'">
+                        <li>
+                          <a href="javascript:;" (click)="showJobOrderOperationDetail(operation.jobOrderOperationId)">
+                            {{operation.jobOrderOperationId}}</a>
+                          <!-- {{operation.jobOrderOperationId}} -->
+                        </li>
+                      </ul>
+                    </ng-container>
+                  </span>
+                  <!-- <span *ngSwitchCase="'jobOrderOperationId'">
+                    <ng-container *ngFor="let operation of rowData?.jobOrderOperations; last as oLast">
+                      {{operation.jobOrderOperationId}}
+                    </ng-container>
+                  </span> -->
+                  <span *ngSwitchCase="'jobOrderOperations'">
+                    <ng-container *ngFor="let operation of rowData?.jobOrderOperations; last as oLast">
+                      <ul [style.borderBottom]="(oLast) ? 'none': '1px solid #c8c8c8'" class="jOrderParent"
+                        [style.height]="(operation.jobOrderStockProduceList.length >  operation.jobOrderStockUseList.length)? (operation.jobOrderStockProduceList.length + 1) * 20 +'px' : (operation.jobOrderStockUseList.length + 1) * 20 +'px'">
+                        <li>
+                          <a href="javascript:;" (click)="showOperationDetail(operation.operationId)"
+                            pTooltip="{{operation.operationName}}" tooltipPosition="top">{{operation.operationName}}</a>
+                        </li>
+                      </ul>
+                    </ng-container>
+                  </span>
+
+                  <span *ngSwitchCase="'operationTaskCode'">
+                    <ng-container *ngFor="let operation of rowData?.jobOrderOperations; last as oLast">
+                      <ul [style.borderBottom]="(oLast) ? 'none': '1px solid #c8c8c8'" class="jOrderParent"
+                        [style.height]="(operation.jobOrderStockProduceList.length >  operation.jobOrderStockUseList.length)? (operation.jobOrderStockProduceList.length + 1) * 20 +'px' : (operation.jobOrderStockUseList.length + 1) * 20 +'px'">
+                        <li>
+                          <p pTooltip="{{operation.operationTaskCode}}" tooltipPosition="top">
+                            {{operation.operationTaskCode}}</p>
+                        </li>
+                      </ul>
+                    </ng-container>
+                  </span>
+
+                  <span *ngSwitchCase="'jobOrderStockUseList'">
+                    <ng-container *ngFor="let operation of rowData?.jobOrderOperations; last as oLast">
+                      <ul [style.borderBottom]="(oLast) ? 'none': '1px solid #c8c8c8'" class="jOrderParent"
+                        [style.height]="(operation.jobOrderStockProduceList.length >  operation.jobOrderStockUseList.length)? (operation.jobOrderStockProduceList.length + 1) * 20 +'px' : (operation.jobOrderStockUseList.length + 1) * 20 +'px'">
+                        <li *ngFor="let item of operation.jobOrderStockUseList; last as jLast">
+                          <a href="javascript:;" (click)="showStockDetail(item.stockId)"
+                            pTooltip="{{item.stockNo}} {{item.stockName}}" tooltipPosition="top">{{item.stockName}}</a>
+                        </li>
+                      </ul>
+                    </ng-container>
+                  </span>
+                  <span *ngSwitchCase="'jobOrderStockUseListNo'">
+                    <ng-container *ngFor="let operation of rowData?.jobOrderOperations; last as oLast">
+                      <ul [style.borderBottom]="(oLast) ? 'none': '1px solid #c8c8c8'" class="jOrderParent"
+                        [style.height]="(operation.jobOrderStockProduceList.length >  operation.jobOrderStockUseList.length)? (operation.jobOrderStockProduceList.length + 1) * 20 +'px' : (operation.jobOrderStockUseList.length + 1) * 20 +'px'">
+                        <li *ngFor="let item of operation.jobOrderStockUseList; last as jLast">
+                          <a href="javascript:;" (click)="showStockDetail(item.stockId)"
+                            pTooltip="{{item.stockNo}} {{item.stockName}}" tooltipPosition="top">{{item.stockNo}}</a>
+                        </li>
+                      </ul>
+                    </ng-container>
+                  </span>
+                  <span *ngSwitchCase="'jobOrderStockProduceList'">
+                    <ng-container *ngFor="let operation of rowData?.jobOrderOperations; last as oLast">
+                      <ul [style.borderBottom]="(oLast) ? 'none': '1px solid #c8c8c8'" class="jOrderParent"
+                        [style.height]="(operation.jobOrderStockProduceList.length >  operation.jobOrderStockUseList.length)? (operation.jobOrderStockProduceList.length + 1) * 20 +'px' : (operation.jobOrderStockUseList.length + 1) * 20 +'px'">
+                        <li *ngFor="let item of operation.jobOrderStockProduceList">
+                          <a href="javascript:;" (click)="showStockDetail(item.stockId)"
+                            pTooltip="{{item.stockNo}} {{item.stockName}}" tooltipPosition="top">{{item.stockName}}</a>
+                        </li>
+                      </ul>
+                    </ng-container>
+                  </span>
+                  <span *ngSwitchCase="'jobOrderStockProduceListNo'">
+                    <ng-container *ngFor="let operation of rowData?.jobOrderOperations; last as oLast">
+                      <ul [style.borderBottom]="(oLast) ? 'none': '1px solid #c8c8c8'" class="jOrderParent"
+                        [style.height]="(operation.jobOrderStockProduceList.length >  operation.jobOrderStockUseList.length)? (operation.jobOrderStockProduceList.length + 1) * 20 +'px' : (operation.jobOrderStockUseList.length + 1) * 20 +'px'">
+                        <li *ngFor="let item of operation.jobOrderStockProduceList">
+                          <a href="javascript:;" (click)="showStockDetail(item.stockId)"
+                            pTooltip="{{item.stockNo}} {{item.stockName}}" tooltipPosition="top">{{item.stockNo}}</a>
+                        </li>
+                      </ul>
+                    </ng-container>
+                  </span>
+
+                  <span *ngSwitchCase="'workStation.workStationName'">
+                    <ng-container *ngFor="let operation of rowData?.jobOrderOperations; last as oLast">
+                      <ul [style.borderBottom]="(oLast) ? 'none': '1px solid #c8c8c8'" class="jOrderParent"
+                        [style.height]="(operation.jobOrderStockProduceList.length >  operation.jobOrderStockUseList.length)? (operation.jobOrderStockProduceList.length + 1) * 20 +'px' : (operation.jobOrderStockUseList.length + 1) * 20 +'px'">
+                        <li><a href="javascript:;" (click)="showWsDetail(operation.workStationId)"
+                            pTooltip="{{operation.workStationName}}"
+                            tooltipPosition="top">{{operation.workStationName}}</a></li>
+                      </ul>
+                    </ng-container>
+                  </span>
+
+                  <a *ngSwitchCase="'batch'" href="javascript:;"
+                    (click)="showBatchDetail(rowData.batch)">{{rowData.batch}}</a>
+
+                  <!-- <p *ngSwitchCase="'batch'">
+                    <ng-container *ngFor="let operation of rowData?.jobOrderOperations; last as oLast">
+                      <ul [style.borderBottom]="(oLast) ? 'none': '1px solid grey'" class="jOrderParent"
+                        [style.height]="(operation.jobOrderStockProduceList.length >  operation.jobOrderStockUseList.length)? (operation.jobOrderStockProduceList.length + 1) * 16 +'px' : (operation.jobOrderStockUseList.length + 1) * 16 +'px'">
+                        <li>
+                          <a href="javascript:;" (click)="showBatchDetail(operation.batch)">{{operation.batch}}</a>
+                        </li>
+                      </ul>
+                    </ng-container>
+                  </p>-->
+                  <p *ngSwitchCase="'individualCapacity'">
+                    <!-- <ng-container *ngFor="let operation of rowData?.jobOrderOperations; last as oLast">
+                      <ul [style.borderBottom]="(oLast) ? 'none': '1px solid grey'" class="jOrderParent"
+                        [style.height]="(operation.jobOrderStockProduceList.length >  operation.jobOrderStockUseList.length)? (operation.jobOrderStockProduceList.length + 1) * 16 +'px' : (operation.jobOrderStockUseList.length + 1) * 16 +'px'">
+                        <li>
+                          <span>{{operation.individualCapacity}}</span>
+                        </li>
+                      </ul>
+                    </ng-container> -->
+                    {{rowData.individualCapacity}}
+                  </p>
+
+                  <span *ngSwitchCase="'baseUnit'">
+                    <ng-container *ngFor="let operation of rowData?.jobOrderOperations; last as oLast">
+                      <ul [style.borderBottom]="(oLast) ? 'none': '1px solid #c8c8c8'" class="jOrderParent"
+                        [style.height]="(operation.jobOrderStockProduceList.length >  operation.jobOrderStockUseList.length)? (operation.jobOrderStockProduceList.length + 1) * 20 +'px' : (operation.jobOrderStockUseList.length + 1) * 20 +'px'">
+                        <li *ngFor="let item of operation.jobOrderStockProduceList">
+                          <span>{{item.unit}}</span>
+                        </li>
+                      </ul>
+                    </ng-container>
+                  </span>
+
+                  <span *ngSwitchCase="'plannedQuantity'">
+                    <ng-container *ngFor="let operation of rowData?.jobOrderOperations; last as oLast">
+                      <ul [style.borderBottom]="(oLast) ? 'none': '1px solid #c8c8c8'" class="jOrderParent"
+                        [style.height]="(operation.jobOrderStockProduceList.length >  operation.jobOrderStockUseList.length)? (operation.jobOrderStockProduceList.length + 1) * 20 +'px' : (operation.jobOrderStockUseList.length + 1) * 20 +'px'">
+                        <li *ngFor="let item of operation.jobOrderStockProduceList">
+                          <span>{{item?.neededQuantity}}</span>
+                        </li>
+                      </ul>
+                    </ng-container>
+                  </span>
+
+
+
+
+                  <span *ngSwitchCase="'panelActive'">
+                    <ng-container *ngFor="let operation of rowData?.jobOrderOperations; last as oLast">
+                      <ul [style.borderBottom]="(oLast) ? 'none': '1px solid #c8c8c8'" class="jOrderParent"
+                        [style.height]="(operation.jobOrderStockProduceList.length >  operation.jobOrderStockUseList.length)? (operation.jobOrderStockProduceList.length + 1) * 20 +'px' : (operation.jobOrderStockUseList.length + 1) * 20 +'px'">
+                        <li>{{(operation.workStation?.panelActive)? 'ACTIVE': 'INACTIVE'}}</li>
+                      </ul>
+                    </ng-container>
+                  </span>
+
+                  <span *ngSwitchCase="'panelIP'">
+                    <ng-container *ngFor="let operation of rowData?.jobOrderOperations; last as oLast">
+                      <ul [style.borderBottom]="(oLast) ? 'none': '1px solid #c8c8c8'" class="jOrderParent"
+                        [style.height]="(operation.jobOrderStockProduceList.length >  operation.jobOrderStockUseList.length)? (operation.jobOrderStockProduceList.length + 1) * 20 +'px' : (operation.jobOrderStockUseList.length + 1) * 20 +'px'">
+                        <li>{{operation.workStation?.panelIP}}</li>
+                      </ul>
+                    </ng-container>
+                  </span>
+                  <!--                  -->
+                  <!--                  <span-->
+                  <!--                    *ngSwitchCase="'panelActive'">{{(rowData.workStation?.panelActive)? 'ACTIVE': 'INACTIVE'}}</span>-->
+                  <!--                  <span *ngSwitchCase="'panelIP'">{{rowData.workStation?.panelIP}}</span>-->
+
+                  <span *ngSwitchCase="'orderUnit'">{{rowData.prodOrder?.orderUnit}}</span>
+                  <span *ngSwitchCase="'actualStart'">{{rowData.actualStart | date: 'dd/MM/yyyy HH:mm'}}</span>
+                  <span *ngSwitchCase="'actualFinish'">{{rowData.actualFinish| date: 'dd/MM/yyyy HH:mm'}}</span>
+                  <span *ngSwitchCase="'manualPlanned'">{{rowData[col.field]==true?'YES':'NO'}}</span>
+
+                  <span *ngSwitchDefault> {{(rowData[col.field]?(rowData[col.field]+''):'')|translate}} </span>
+                </td>
+                <td width="60px">
+                  <button *ngIf="rowData.jobOrderStatus=='PLANNED'||rowData.jobOrderStatus=='LONG_TERM_PROCESSING'"
+                    class="btn btn-sm btn-outline-warning" type="button" pTooltip="CHANGE TO READY"
+                    tooltipPosition="top" placeholder="Top" (click)="updateJobOrderStatusToReady(rowData.jobOrderId)"
+                    style="background: #ffc107">
+                    <i class="fa fa fa-power-off" style="color: white;"></i>
+                  </button>
+
+
+                  <span *ngIf="rowData.jobOrderStatus=='COMPLETED'" style="padding: 0px;">
+                    <ng-container *ngFor="let operation of rowData?.jobOrderOperations; last as oLast">
+                      <ul [style.borderBottom]="(oLast) ? 'none': '1px solid #c8c8c8'" class="jOrderParent"
+                        [style.height]="(operation.jobOrderStockProduceList.length >  operation.jobOrderStockUseList.length)? (operation.jobOrderStockProduceList.length + 1) * 20 +'px' : (operation.jobOrderStockUseList.length + 1) * 20 +'px'">
+                        <li>
+                          <button class="btn btn-sm btn-outline-primary" type="button"
+                            pTooltip="CHANGE TO PLANNED - {{operation.jobOrderOperationId}}" tooltipPosition="top"
+                            placeholder="Top" (click)="openProcessModal(rowData)">
+                            <i class="fa fa fa-plane"></i>
+                          </button>
+                          <!-- <a href="javascript:;" (click)="showJobOrderOperationDetail(operation.jobOrderOperationId)">
+                              {{operation.jobOrderOperationId}}</a> -->
+                          <!-- {{operation.jobOrderOperationId}} -->
+                        </li>
+                      </ul>
+                    </ng-container>
+                  </span>
+                  <!-- <button class="btn btn-sm btn-outline-primary" *ngIf="rowData.jobOrderStatus==='PROCESSING'" type="button"
+                    pTooltip="Processing To Planned" tooltipPosition="top" placeholder="Top"
+                    (click)="openProcessModal(rowData)">
+                    <i class="fa fa fa-plane"></i>
+                  </button> -->
+                  <button class="btn btn-sm btn-outline-danger" *ngIf="!(rowData.jobOrderStatus==='CANCELLED' 
+                  || rowData.jobOrderStatus=='PROCESSING' 
+                  || rowData.jobOrderStatus=='COMPLETED')" type="button" pTooltip="CANCEL Job Order"
+                    tooltipPosition="top" placeholder="Top" (click)="cancelJobOrder(rowData.jobOrderId)">
+                    <i class="fa fa fa-times"></i>
+                  </button>
+
+                  <button *ngIf="rowData.jobOrderStatus=='STANDBY'" class="btn btn-sm btn-success" type="button"
+                    pTooltip="ROLLBACK" tooltipPosition="top" placeholder="Top"
+                    (click)="rollbackStandByJobOrder(rowData.jobOrderId)">
+                    <i class="fa fa fa-play" style="color: white;"></i>
+                  </button>
+
+                  <button *ngIf="isWithPanel" class="btn btn-sm btn-success" type="button" style="padding: 5px;"
+                    (click)="showEndJobForm(rowData)">
+                    <!-- <i class="fa fa fa-play" style="color: white;"></i> -->
+                    <img src="assets/img/withPanel.jpg" style="width: 16px; height: 16px;">
+                  </button>
+                  <button class="btn btn-sm btn-outline-primary"
+                    *ngIf="!(rowData.jobOrderStatus=='CANCELLED' || rowData.jobOrderStatus=='COMPLETED')" type="button"
+                    pTooltip="Complete Job Order" tooltipPosition="top" placeholder="Top"
+                    (click)="openCompleteModal(rowData)">
+                    <i class="fa fa-check-circle"></i>
+                  </button>
+                </td>
+              </tr>
+
+            </ng-template>
+            <!--            <ng-template pTemplate="rowexpansion" let-rowData let-columns="columns">-->
+            <!--              <tr>-->
+            <!--                <td [attr.colspan]="columns.length + 2">-->
+            <!--                  <job-order-row-detail [data]="rowData"></job-order-row-detail>-->
+            <!--                </td>-->
+            <!--              </tr>-->
+            <!--            </ng-template>-->
+          </p-table>
+          <br />
+          <div class="row">
+            <app-paging [TotalElements]="pagination.totalElements" [CurrentPage]="pagination.currentPage"
+              [PageSize]="pagination.pageSize" [rows]="pagination.rows"
+              [TotalPageLinkButtons]="pagination.TotalPageLinkButtons"
+              [RowsPerPageOptions]="pagination.RowsPerPageOptions" (onPageChange)="myChanges($event)"></app-paging>
+            <span style="margin-left:2px; padding-top: 2px " class="text-muted">{{'total-records'|translate}}:
+              {{pagination?.totalElements}}</span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template [ngIf]="dialog.mode==='edit-job-order'">
+  <p-dialog header="{{'edit-job-order' | translate}}" [(visible)]="dialog.visible" [style]="{'width': '700px'}"
+    (mousedown)="dJobOrder.moveOnTop()" [autoZIndex]="true" [baseZIndex]="999999" [maximizable]="true" #dJobOrder
+    (onHide)="dialog.visible=false; dialog.mode=null;" [contentStyle]="{'min-height':'400px'}" [modal]="true"
+    dismissableMask="true">
+    <edit-job-order [jobOrderId]="dialog.uniqueId" (saveAction)="dialog.visible=false; dialog.mode=null;">
+    </edit-job-order>
+  </p-dialog>
+</ng-template>
+
+<ng-template [ngIf]="dialog.mode==='compare-model'">
+  <!-- <p-dialog header="{{'compare-job-order' | translate}}" [(visible)]="dialog.visible" [style]="{'width': '1200px'}" (mousedown)="dJobOrder.moveOnTop()"
+    [autoZIndex]="true" [baseZIndex]="999999" [maximizable]="true" #dcompareJobOrder (onHide)="dialog.visible=false; dialog.mode=null;"
+    [contentStyle]="{'min-height':'400px'}"    [modal]="true" dismissableMask="true">
+    </p-dialog> -->
+</ng-template>
+
+<ng-template [ngIf]="dialog.mode==='jobOrderDetails'">
+  <p-dialog header="{{'job-order-detail' | translate}}" [(visible)]="dialog.visible"
+    [style]="{'max-width': '75%','width': '72%'}" [autoZIndex]="true" [baseZIndex]="999999" [maximizable]="true"
+    #dJobOrderData [contentStyle]="{'min-height':'400px'}" modal="true" dismissableMask="true">
+    <job-order-detail [jobOrderData]="dialog.data"
+      (hideDialog)="dialog.visible=false; dialog.mode=null; dialog.data=null;"></job-order-detail>
+  </p-dialog>
+
+</ng-template>
+
+<ng-template [ngIf]="dialog.mode==='prod-details'">
+  <p-dialog header="{{'production-order-detail' | translate}}" [(visible)]="dialog.visible" #dProductionOrder
+    [autoZIndex]="true" [baseZIndex]="999999" [maximizable]="true" modal="true" dismissableMask="true"
+    [contentStyle]="{'min-height':'400px'}" [style]="{'max-width': '90%','width': '90%'}">
+    <app-prod-order-detail [prodOrderData]="dialog.data"></app-prod-order-detail>
+  </p-dialog>
+</ng-template>
+
+<ng-template [ngIf]="dialog.mode==='end-job'">
+  <p-dialog header="{{'END_JOB' | translate}}" [(visible)]="dialog.visible" [autoZIndex]="true" [baseZIndex]="999999"
+    [maximizable]="true" modal="true" dismissableMask="true"
+    [style]="{'max-width': '65%','width': '65%', 'min-height': '90%'}">
+
+    <end-job [jobOrder]="dialog.data"></end-job>
+
+    <div class="modal-footer" style="border-top:none">
+      <div class="col-md-12 d-flex justify-content-center ">
+        <button type="button" class="btn rounded btn-outline-primary ml-2 mr-2"
+          (click)=" this.filter();dialog.visible=false; dialog.mode=null; dialog.data=null;">{{'save' |
+          translate}}</button>
+        <button type="button" (click)=" dialog.visible=false; dialog.mode=null; dialog.data=null;"
+          class="btn rounded btn-outline-danger ml-2 mr-2">{{'cancel' | translate}}</button>
+      </div>
+    </div>
+
+  </p-dialog>
+</ng-template>
+
+<ng-template [ngIf]="inspectionLotModal.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #inspectionLotBSModal="bs-modal"
+    (onHidden)="inspectionLotModal.active=false" class="modal fade" tabindex="-1" role="dialog"
+    aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-success modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">{{'inspection-lot' | translate}}</h4>
+          <button type="button" class="close" (click)="inspectionLotBSModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <new-inspection-lot (saveAction)="this.filter(); inspectionLotBSModal.hide();"
+            [fromJobOrderData]="selectedJobOrders[0]" [inspectionType]="'IN_PROCESS_INSPECTION_FOR_A_PRODUCTION_ORDER'">
+          </new-inspection-lot>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="inspectionLotBSModal.hide()">{{'close' |
+            translate}}</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</ng-template>
+
+
+
+<p-dialog header="{{panel.title | translate}}" appendTo="body" [(visible)]="panel.visible" [autoZIndex]="true"
+  [baseZIndex]="999999" #dJoin [style]="{'width': '50%'}" [contentStyle]="{'min-height':'260px'}">
+  <div class="col-md-12" *ngIf="panel.title==='processing-to-planned'">
+    <table class="table table-bordered">
+      <tbody>
+        <tr>
+          <td>{{'job-order-id' | translate}}</td>
+          <td>
+            {{this.panel.data?.jobOrderId}}
+          </td>
+        </tr>
+        <tr *ngIf="panel.title!='processing-to-planned'">
+          <td>{{'job-order-operation-id'| translate}}</td>
+          <td>
+            {{this.panel.data?.jobOrderOperationId}}
+          </td>
+        </tr>
+        <tr *ngIf="panel.title==='processing-to-planned'">
+          <td>{{'job-order-operation-id'| translate}}</td>
+          <td>
+            <select name="jobOrderOperationId" class="form-control"
+              [(ngModel)]="reqChangeJobOrderOperationStatusDto.jobOrderOperationId">
+              <!-- <option [ngValue]="null"> {{'please-select' | translate}}</option> -->
+              <option *ngFor="let pos of jobOrderOperationIds" [value]="pos">{{pos}}</option>
+            </select>
+          </td>
+        </tr>
+        <tr *ngIf="panel.title=='processing-to-planned'">
+          <td>{{'reference-id'| translate}}</td>
+          <td>
+            {{this.panel.data?.referenceId}}
+          </td>
+        </tr>
+        <tr>
+          <td>{{'start-date'|translate}}</td>
+          <td>
+            <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100" [showTime]="true"
+              [showIcon]="true" name="startDate" dateFormat="dd/mm/yy" appendTo="body" [baseZIndex]="99999999"
+              [(ngModel)]="reqChangeJobOrderOperationStatusDto.startDate" placeholder="{{'start-date'|translate}}">
+            </p-calendar>
+            <!-- <p-calendar [(ngModel)]="reqChangeJobOrderOperationStatusDto.startDate" [showIcon]="true" [showTime]="true" [style]="{'overflow': 'visible', 'z-index': '19999','opacity':'1'}" inputId="startDate"></p-calendar> -->
+          </td>
+        </tr>
+        <tr>
+          <td>{{'finish-date' | translate}}</td>
+          <td>
+            <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100" [showTime]="true"
+              [showIcon]="true" name="finishDate" dateFormat="dd/mm/yy" appendTo="body" [baseZIndex]="99999999"
+              [(ngModel)]="reqChangeJobOrderOperationStatusDto.finishDate" placeholder="{{'finish-date'|translate}}">
+            </p-calendar>
+            <!-- <p-calendar [(ngModel)]="reqChangeJobOrderOperationStatusDto.finishDate" [showIcon]="true" [showTime]="true" [style]="{'overflow': 'visible', 'z-index': '9999','opacity':'1'}" inputId="finishDate"></p-calendar> -->
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <table class="table table-bordered">
+              <tbody>
+                <ng-container *ngFor="let stckq of reqChangeJobOrderOperationStatusDto.stockQuantityList; let i=index;">
+                  <tr>
+                    <td colspan="2" class="font-weight-bold">{{stckq.stockNo}}-{{stckq.stockName}}</td>
+                  </tr>
+                  <tr>
+                    <td>{{'produced-quantity' | translate}}</td>
+                    <td>
+                      <input type="number" name="produce{{i}}" class="form-control" [(ngModel)]="stckq.quantity" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'scrap-quantity' | translate}}</td>
+                    <td>
+                      <input type="number" name="produce{{i}}" class="form-control"
+                        [(ngModel)]="stckq.defectQuantity" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'rework-quantity' | translate}}</td>
+                    <td>
+                      <input type="number" name="produce{{i}}" class="form-control"
+                        [(ngModel)]="stckq.reworkQuantity" />
+                    </td>
+                  </tr>
+
+                </ng-container>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+
+        <tr>
+          <td colspan="2">
+            <button class="btn btn-danger float-right" (click)="panel.visible=false;">{{'close' | translate}}</button>
+            <button class="btn btn-primary float-right" (click)="processToPlanned()">
+              {{'save' | translate}}</button>
+
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="col-md-12" *ngIf="panel.title==='complete-job-order'">
+    <table class="table table-bordered">
+      <tbody>
+        <tr>
+          <td>{{'job-order-id' | translate}}</td>
+          <td>
+            {{this.panel.data?.jobOrderId}}
+          </td>
+        </tr>
+        <tr>
+          <td>{{'job-order-operation-id'| translate}}</td>
+          <td>
+            <!-- {{this.panel.data?.jobOrderOperationId}}-->
+
+            <select name="jobOrderOperationId" class="form-control"
+              [(ngModel)]="reqChangeJobOrderOperationStatusDto.jobOrderOperationId">
+              <!-- <option [ngValue]="null"> {{'please-select' | translate}}</option> -->
+              <option *ngFor="let pos of jobOrderOperationIds" [value]="pos">{{pos}}</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td>{{'start-date'|translate}}</td>
+          <td>
+            <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100" [showTime]="true"
+              [showIcon]="true" name="startDate" dateFormat="dd/mm/yy" appendTo="body" [baseZIndex]="99999999"
+              [(ngModel)]="reqChangeJobOrderOperationStatusDto.startDate" placeholder="{{'start-date'|translate}}">
+            </p-calendar>
+            <!-- <p-calendar [(ngModel)]="reqChangeJobOrderOperationStatusDto.startDate" [showIcon]="true" [showTime]="true" [style]="{'overflow': 'visible', 'z-index': '19999','opacity':'1'}" inputId="startDate"></p-calendar> -->
+          </td>
+        </tr>
+        <tr>
+          <td>{{'finish-date' | translate}}</td>
+          <td>
+            <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100" [showTime]="true"
+              [showIcon]="true" name="finishDate" dateFormat="dd/mm/yy" appendTo="body" [baseZIndex]="99999999"
+              [(ngModel)]="reqChangeJobOrderOperationStatusDto.finishDate" placeholder="{{'finish-date'|translate}}">
+            </p-calendar>
+            <!-- <p-calendar [(ngModel)]="reqChangeJobOrderOperationStatusDto.finishDate" [showIcon]="true" [showTime]="true" [style]="{'overflow': 'visible', 'z-index': '9999','opacity':'1'}" inputId="finishDate"></p-calendar> -->
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <table class="table table-bordered">
+              <tbody>
+                <ng-container *ngFor="let stckq of reqChangeJobOrderOperationStatusDto.stockQuantityList; let i=index;">
+                  <tr>
+                    <td colspan="2" class="font-weight-bold">{{stckq.stockNo}}-{{stckq.stockName}}</td>
+                  </tr>
+                  <tr>
+                    <td>{{'produced-quantity' | translate}}</td>
+                    <td>
+                      <input type="number" name="produce{{i}}" class="form-control" [(ngModel)]="stckq.quantity" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'scrap-quantity' | translate}}</td>
+                    <td>
+                      <input type="number" name="produce{{i}}" class="form-control"
+                        [(ngModel)]="stckq.defectQuantity" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'rework-quantity' | translate}}</td>
+                    <td>
+                      <input type="number" name="produce{{i}}" class="form-control"
+                        [(ngModel)]="stckq.reworkQuantity" />
+                    </td>
+                  </tr>
+
+                </ng-container>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <button class="btn btn-danger float-right" (click)="panel.visible=false;">{{'close' | translate}}</button>
+            <button class="btn btn-primary float-right" (click)="processToComplete()">
+              {{'save' | translate}}</button>
+
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</p-dialog>

@@ -1,0 +1,69 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <p-tabView class="col-md-12">
+      <p-tabPanel header="{{ 'new-control-indicator' | translate }}">
+        <div class="card">
+          <div class="card-body">
+            <form #inspForm="ngForm">
+              <table class="table table-bordered">
+                <tr>
+                  <td width="35%">{{'control-indicator-code' | translate}}</td>
+                  <td>
+                    <input
+                      type="text"
+                      id="controlIndicatorCode"
+                      name="controlIndicatorCode"
+                      [(ngModel)]="controlIndicator.characteristicControlIndicatorCode"
+                      class="form-control"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'control-indicator-type' | translate}}</td>
+                  <td>
+                    <div class="ui-g">
+                      <div class="ui-g-4" *ngFor="let indicatorSample of controlIndicatorTypeList"><p-radioButton name="controlIndicatorType" value="{{indicatorSample}}"
+                         label="{{indicatorSample}}" [(ngModel)]="controlIndicator.qualityCharacteristicControlIndicatorType" inputId="orny-{{indicatorSample}}"></p-radioButton></div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'control-indicator-sample' | translate}}</td>
+                  <td>
+                   <quality-control-indicator-sample-auto-complete [selectedControlIndicatorSample]="controlIndicator.qualityControlIndicatorSample" [addIfMissing]="true" (selectedControlIndicatorSampleEvent)="onSelectControlIndicatorSample($event)"></quality-control-indicator-sample-auto-complete>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'control-indicator-result' | translate}}</td>
+                  <td>
+                   <quality-control-indicator-result-auto-complete [selectedControlIndicatorResult]="controlIndicator.qualityControlIndicatorResult" [addIfMissing]="true" (selectedControlIndicatorResultEvent)="onSelectControlIndicatorResult($event)"></quality-control-indicator-result-auto-complete>
+                  </td>
+                </tr>
+              </table>
+              <p-checkbox name="defectRecording" value="true" label="Defect Recording"></p-checkbox>
+            </form>
+          </div>
+        </div>
+      </p-tabPanel>
+      <p-tabPanel header="{{ 'control-indicator-data' | translate }}">
+        <div class="col-md-12">
+          <div class="card">
+            <list-control-indicator-data  [isUpperLimitChecked]="true"></list-control-indicator-data>
+          </div>
+        </div>
+      </p-tabPanel>
+
+      <div class="row col-md-12">
+        <button
+          type="submit"
+          class="btn btn-sm btn-primary"
+          
+          (click)="save()"
+        >
+          <i class="fa fa-dot-circle-o"></i>
+          {{ "save" | translate }}
+        </button>
+      </div>
+    </p-tabView>
+  </div>
+</div>

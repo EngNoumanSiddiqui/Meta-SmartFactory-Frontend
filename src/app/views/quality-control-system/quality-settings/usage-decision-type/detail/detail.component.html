@@ -1,0 +1,28 @@
+<div class="animated fadeIn">
+    <div class="card" *ngIf="usageDecisionType">
+      <div class="card-header">
+        <i class="fa fa-align-justify"></i> {{'quality-usage-decision-type-detail' | translate}}
+      </div>
+      <div class="card-body">
+        <table class="table table-striped table-outline">
+          <tbody>
+            <tr>
+              <td width="30%" class="text-bold">{{'ud_type_id' | translate}} <span style="width: 0 !important;"
+                  class="float-right">:</span> </td>
+              <td>{{usageDecisionType.qmQualityUsageDecisionTypeId}}</td>
+            </tr>
+            <tr>
+              <td class="text-bold">{{'ud_type_code' | translate}} <span style="width: 0 !important;"
+                  class="float-right">:</span> </td>
+              <td>{{usageDecisionType.qmQualityUsageDecisionTypeCode}}</td>
+            </tr>
+            <tr>
+              <td class="text-bold">{{'ud_type_description' | translate}}<span style="width: 0 !important;"
+                  class="float-right">:</span></td>
+              <td>{{usageDecisionType.qmQualityUsageDecisionTypeDescription}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+</div>

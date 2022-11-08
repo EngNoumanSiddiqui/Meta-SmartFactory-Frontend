@@ -1,0 +1,651 @@
+<p-confirmDialog [autoZIndex]="true" [baseZIndex]="999999"></p-confirmDialog>
+
+<div class="animated fadeIn">
+
+
+  <div class="col-lg-12 p-0">
+    <div id="topDiv" class="d-flex badge-light border flex-row align-items-center">
+      <div class="px-1 ui-fluid" style="width: 12%;">
+        <p-calendar [showIcon]="true" dateFormat="dd/mm/yy" [monthNavigator]="true" [yearNavigator]="true"
+          yearRange="1990:2100" [(ngModel)]="pageFilter.startDate" placeholder="{{'start-date'|translate}}">
+        </p-calendar>
+      </div>
+      <div class="px-1 ui-fluid" style="width: 12%;">
+        <p-calendar [showIcon]="true" dateFormat="dd/mm/yy" [monthNavigator]="true" [yearNavigator]="true"
+          yearRange="1990:2100" [(ngModel)]="pageFilter.finishDate" placeholder="{{'finish-date'|translate}}">
+        </p-calendar>
+      </div>
+      <div class="px-1 ui-fluid" style="width: 12%;">
+
+        <project-auto-complete (selectedProjectEvent)="pageFilter.projectId=$event.projectId"></project-auto-complete>
+
+      </div>
+      <div class="px-1 ui-fluid" style="width: 12%;">
+
+        <milestone-auto-complete [projectId]="pageFilter.projectId"
+          (selectedMilestoneEvent)="pageFilter.milestoneId=$event.milestoneId"></milestone-auto-complete>
+
+      </div>
+      <div class="px-1 ui-fluid" style="width: 15%;">
+        <p-dropdown [options]="workcenterTypes" [(ngModel)]="selectedWorkCenterTypes"
+          placeholder="{{'select-workcenter-types' | translate}}" (onChange)="workcenterTypeChanged($event)"
+          optionLabel="workCenterTypeName" [filter]="true"></p-dropdown>
+      </div>
+      <div class="px-1 ui-fluid" style="width: 14%;">
+        <p-dropdown [options]="workcenters" [(ngModel)]="selectedWorkCenters"
+          placeholder="{{'select-workcenters' | translate}}" [optionLabel]="'workCenterName'" [filter]="true"
+          (onChange)="workcenterChanged($event)"></p-dropdown>
+      </div>
+      <div class="ui-fluid d-flex flex-row align-items-center" style="width: 18%;">
+
+        <button type="button" pButton class="ui-button-info" (click)="filter()" label="{{'filter' | translate}}">
+        </button>
+        <button type="button" pButton class="ui-button-secondary ml-1" (click)="ClearDates()"
+          label="{{'clear-dates' | translate}}">
+        </button>
+      </div>
+      <div class="ui-fluid d-flex flex-row align-items-center">
+        <button pButton class="ui-button-primary" type="button" icon="fa fa-gear" name="cancelAllJobs"
+          (click)="cancelAllAutoAndReorderPO()"></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div id="mainTable" class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <p-table #dt [columns]="selectedColumns" [value]="allJobs" [rows]="pagination.rows"
+            [totalRecords]="pagination.totalElements" dataKey="prodOrderId" [(selection)]="selectedJobOrders"
+            (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)"
+            (onHeaderCheckboxToggle)="OnTableChecked($event)" scrollable="true">
+            <ng-template pTemplate="caption">
+              <div class="row col-md-12 p-0 m-0">
+                <div class="col-md-3 p-0">
+                  <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
+                    maxSelectedLabels="0" selectedItemsLabel="{{'columns-selected'|translate}}"
+                    [style]="{minWidth: '200px'}" defaultLabel="Choose Columns">
+                    <ng-template let-col let-i="index" pTemplate="item">
+                      {{col.label|translate}}
+                    </ng-template>
+                  </p-multiSelect>
+                </div>
+                <div class="col-md-9">
+                  <div class="row col-md-12 m-0 p-0">
+                    <div style="text-align:left;flex:auto;">
+                      <button pButton type="button" style="margin-left: 5px; margin-top: 1px;" class="float-right"
+                        icon="fa fa-refresh" name="refresh" (click)="filter()"></button>
+                      <button pButton class="ui-button-success float-right"
+                        (click)="modal.active = true; modal.cloned = false" label="{{'add-new-manual-prod'|translate}}">
+                      </button>
+
+                      <button pButton style="margin-right: 5px" class="ui-button-success float-right"
+                        (click)="prodTreeModal.active=true" label="{{'with-product-tree'|translate}}"> </button>
+
+                      <button pButton style="margin-right: 5px" class="ui-button-success float-right"
+                        (click)="saleModal.active=true" label="{{'auto-sale'|translate}}"> </button>
+                      <button pButton style="margin-right: 5px" class="ui-button-primary float-right"
+                        [disabled]="!selectedJobOrders || !selectedJobOrders.length || (selectedJobOrders.length>1)"
+                        (click)="openCloned()" label="{{'Clone'|translate}}"> </button>
+
+                    </div>
+
+                  </div>
+                  <div class="row col-md-12 m-0 p-0">
+                    <div style="text-align:left; flex:auto;">
+                      <p-splitButton [style]="{'margin-right' : '5px'}" label="{{'export-all'|translate}}"
+                        icon="fa fa-file-alt" [model]="menuItems" styleClass="ui-button-warning float-right">
+                      </p-splitButton>
+                      <p-splitButton [style]="{'margin-right' : '5px'}" label="{{'export-selected'|translate}}"
+                        icon="fa fa-file" [model]="selecteMenuItems" styleClass="ui-button-warning float-right">
+                      </p-splitButton>
+                      <!-- <button pButton style="margin-right: 5px" class="mt-1 ui-button-warning float-right" type="button"
+                      icon="fa fa-file-alt" iconPos="left" label="{{'export-all'|translate}}"
+                      (click)="exportCSV()"></button>
+
+                    <button pButton style="margin-right: 5px" class="mt-1 ui-button-warning float-right" type="button"
+                      icon="fa fa-file" iconPos="left" label="{{'export-selected'|translate}}"
+                      (click)="exportCSV(true)"></button> -->
+                      <button pButton style="margin-right: 5px" class="mt-1 ui-button-danger float-right"
+                        [disabled]="!enableCancelAllBtn" (click)="cancelAll()"
+                        label="{{'cancel'|translate}} {{'all' | translate}}"> </button>
+                      <!-- <button pButton style="margin-right: 5px" class="ui-button-warning float-right" type="button"
+                      icon="fa fa-file" iconPos="left" label="{{'export-processing'|translate}}"
+                      (click)="exportProcessingCSV()"></button> -->
+                      <p-fileUpload #fileUpload [style]="{'margin-right' : '5px'}" styleClass="mt-1 float-right"
+                        accept=".csv,.xls" name="myfile[]" customUpload="true"
+                        (uploadHandler)="myUploader($event, fileUpload)" mode="basic" auto="false"
+                        chooseLabel="Upload Job Orders"></p-fileUpload>
+                      <p-fileUpload #fileProdOrdersUpload
+                        [style]="{'margin-right' : '5px', 'background-color': '#2998aa'}" styleClass="mt-1 float-right"
+                        accept=".csv,.xls" name="myfile[]" customUpload="true"
+                        (uploadHandler)="myProductionOrderUploader($event, fileProdOrdersUpload)" mode="basic"
+                        auto="false" chooseLabel="Upload Production Orders"></p-fileUpload>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!--<hr>-->
+            </ng-template>
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th style="width: 3em" rowspan="2">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <ng-container *ngFor="let col of columns; let i=index">
+                  <th *ngIf="col.field != 'quantity' && col.field != 'deliveryQuantity'" style="cursor: pointer"
+                    [ngClass]="{'bg-selected-order':pageFilter.orderByProperty ==col.field}"
+                    (click)="reOrderData(i,col.field)"><i *ngIf="isOrderable(col.field)"
+                      [ngClass]="'fa fa-sort-alpha-' + classReOrder[i]"></i>
+                    {{col.header|translate}}
+                  </th>
+                  <th rowspan="2" *ngIf="col.field == 'quantity'">
+                    {{col.header|translate}}
+                  </th>
+                  <th rowspan="2" *ngIf="col.field == 'deliveryQuantity'">
+                    {{col.header|translate}}
+                  </th>
+                </ng-container>
+                <th width="60px" rowspan="2">{{'action' | translate}}</th>
+              </tr>
+              <tr>
+                <ng-container *ngFor="let col of columns">
+                  <th *ngIf="col.field != 'quantity' && col.field != 'deliveryQuantity'" class="ui-fluid"
+                    [ngSwitch]="col.field">
+                    <!-- <select *ngSwitchCase="'jobOrderStatus'" name="status" class="form-control"
+                          [(ngModel)]="pageFilter.jobOrderStatus"
+                          (ngModelChange)="filter(pageFilter)">
+                    <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                    <option *ngFor="let status of jobOrderStatusList" value="{{status}}">{{status|translate}}</option>
+                  </select> -->
+
+                    <p-multiSelect display="chip" appendTo="body" *ngSwitchCase="'prodOrderStatus'"
+                      [options]="prodOrderStatusList" [(ngModel)]="pageFilter.prodOrderStatusList"
+                      (ngModelChange)="filter(pageFilter)" optionLabel="name" optionValue="name"
+                      selectedItemsLabel="{{'select-options'|translate}}" [style]="{minWidth: '50px'}"
+                      defaultLabel="Choose Options">
+                    </p-multiSelect>
+
+
+                    <!-- <select *ngSwitchCase="'prodOrderStatus'" name="prodOrderStatus" class="form-control"
+                      [(ngModel)]="pageFilter.prodOrderStatus" (ngModelChange)="filter(pageFilter)">
+                      <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                      <option *ngFor="let status of prodOrderStatusList" value="{{status}}">{{status|translate}}
+                      </option>
+                    </select> -->
+
+                    <p-multiSelect display="chip" appendTo="body" *ngSwitchCase="'prodOrderType'"
+                      [options]="prodOrderTypeList" [(ngModel)]="pageFilter.prodOrderTypeList"
+                      (ngModelChange)="filter(pageFilter)" optionLabel="name" optionValue="name"
+                      selectedItemsLabel="{{'select-options'|translate}}" [style]="{minWidth: '50px'}"
+                      defaultLabel="Choose Options">
+                    </p-multiSelect>
+
+
+                    <!-- <select *ngSwitchCase="'prodOrderType'" name="prodOrderType" class="form-control"
+                      [(ngModel)]="pageFilter.prodOrderType" (ngModelChange)="filter(pageFilter)">
+                      <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                      <option *ngFor="let status of prodOrderTypeList" value="{{status}}">{{status|translate}}</option>
+                    </select> -->
+
+                    <select *ngSwitchCase="'position'" name="status" class="form-control"
+                      [(ngModel)]="pageFilter.position" (ngModelChange)="filter(pageFilter)">
+                      <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                      <option *ngFor="let pos of jobOrderPositionList" value="{{pos}}">{{pos|translate}}</option>
+                    </select>
+                    <span *ngSwitchCase="'actualStart'"></span>
+                    <span *ngSwitchCase="'actualFinish'"></span>
+                    <span *ngSwitchCase="'operationNameNext'"></span>
+                    <!-- <span *ngSwitchCase="'quantity'"></span> -->
+                    <!-- <span *ngSwitchCase="'deliveryQuantity'"></span> -->
+                    <span *ngSwitchCase="'grQuantity'"></span>
+                    <span *ngSwitchCase="'orderUnit'"></span>
+                    <span *ngSwitchCase="'baseUnit'"></span>
+                    <span *ngSwitchCase="'plantName'">{{pageFilter.plantName}}</span>
+
+                    <p-multiSelect display="chip" appendTo="body" *ngSwitchCase="'priority'"
+                      [options]="commonPriorities" [(ngModel)]="pageFilter.priorityList"
+                      (ngModelChange)="filter(pageFilter)" optionLabel="name" optionValue="name"
+                      selectedItemsLabel="{{'select-options'|translate}}" [style]="{minWidth: '70px'}"
+                      defaultLabel="Choose Options">
+                    </p-multiSelect>
+
+
+                    <!-- <select *ngSwitchCase="'priority'" [(ngModel)]="pageFilter.priority" id="priorityId"
+                      name="priorityId" class="form-control" (ngModelChange)="filter(pageFilter)">
+                      <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                      <option value="{{priority}}" *ngFor="let priority of commonPriorities">{{priority}}
+                      </option>
+                    </select> -->
+
+                    <!-- <span *ngSwitchCase="'warehouseName'"></span> -->
+                    <span *ngSwitchCase="'prodOrderStatus'"></span>
+                    <p-calendar *ngSwitchCase="'actualStart'" [showIcon]="true" dateFormat="dd.mm.yy"
+                      [(ngModel)]="pageFilter.actualStart" (ngModelChange)="filter(pageFilter)" [monthNavigator]="true"
+                      [yearNavigator]="true" yearRange="1990:2100" appendTo="body"
+                      placeholder="{{'actual-start'|translate}}">
+                    </p-calendar>
+
+                    <p-calendar *ngSwitchCase="'actualFinish'" [showIcon]="true" dateFormat="dd.mm.yy"
+                      [(ngModel)]="pageFilter.actualFinish" (ngModelChange)="filter(pageFilter)" [monthNavigator]="true"
+                      [yearNavigator]="true" yearRange="1990:2100" appendTo="body"
+                      placeholder="{{'actual-finish'|translate}}">
+                    </p-calendar>
+                    <p-calendar *ngSwitchCase="'scheduledStartTime'" [showIcon]="true" dateFormat="dd.mm.yy"
+                      [(ngModel)]="pageFilter.scheduledStartTime" (ngModelChange)="filter(pageFilter)"
+                      [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100" appendTo="body"
+                      placeholder="{{'scheduled-start-date'|translate}}">
+                    </p-calendar>
+
+                    <p-calendar *ngSwitchCase="'scheduledFinishTime'" [showIcon]="true" dateFormat="dd.mm.yy"
+                      [(ngModel)]="pageFilter.scheduledFinishTime" (ngModelChange)="filter(pageFilter)"
+                      [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100" appendTo="body"
+                      placeholder="{{'scheduled-finish-date'|translate}}">
+                    </p-calendar>
+
+                    <p-calendar *ngSwitchCase="'createDate'" [showIcon]="true" dateFormat="dd.mm.yy"
+                      [(ngModel)]="pageFilter.createDate" (ngModelChange)="filter()" [monthNavigator]="true"
+                      [yearNavigator]="true" yearRange="1990:2100" appendTo="body"
+                      placeholder="{{'create-date'|translate}}">
+                    </p-calendar>
+
+                    <p-calendar *ngSwitchCase="'finishDate'" [showIcon]="true" dateFormat="dd.mm.yy"
+                      [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100" appendTo="body"
+                      [(ngModel)]="pageFilter.finishDate" placeholder="{{'finish-date'|translate}}"
+                      (ngModelChange)="filter()">
+                    </p-calendar>
+                    <p-calendar *ngSwitchCase="'erpPlannedFinishDate'" [showIcon]="true" dateFormat="dd.mm.yy"
+                      [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100" appendTo="body"
+                      [(ngModel)]="pageFilter.erpPlannedFinishDate" placeholder="{{'due-date'|translate}}"
+                      (ngModelChange)="filter()">
+                    </p-calendar>
+
+                    <p-calendar *ngSwitchCase="'startDate'" [showIcon]="true" dateFormat="dd.mm.yy"
+                      [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100" appendTo="body"
+                      [(ngModel)]="pageFilter.startDate" placeholder="{{'start-date'|translate}}"
+                      (ngModelChange)="filter()">
+                    </p-calendar>
+
+                    <span *ngSwitchCase="'materialName'">
+                      <input style="width: 100%" pInputText type="text" [(ngModel)]="pageFilter.stockName"
+                        (input)="filterByColumn($event.target.value,'stockName')">
+                    </span>
+                    <span *ngSwitchCase="'milestone'">
+                      <input style="width: 100%" pInputText type="text" [(ngModel)]="pageFilter.milestoneName"
+                        (input)="filterByColumn($event.target.value,'milestoneName')">
+                    </span>
+
+                    <span *ngSwitchCase="'materialNo'">
+                      <input style="width: 100%" pInputText type="text" [(ngModel)]="pageFilter.stockNo"
+                        (input)="filterByColumn($event.target.value,'stockNo')">
+                    </span>
+
+                    <input *ngSwitchDefault style="width: 100%" pInputText type="text"
+                      [(ngModel)]="pageFilter[col.field]" (input)="filterByColumn($event.target.value,col.field)">
+                  </th>
+                </ng-container>
+              </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr [pSelectableRow]="rowData">
+                <td style="width: 3em">
+                  <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                </td>
+
+
+
+
+
+
+                <td *ngFor="let col of columns" style="cursor: pointer" [ngSwitch]="col.field">
+
+                  <a href="javascript:;" *ngSwitchCase="'prodOrderId'"
+                    (click)="showProdOrderDetail(rowData[col.field])">
+                    {{rowData.prodOrderId}}</a>
+                  <a href="javascript:;" *ngSwitchCase="'referenceId'"
+                    (click)="showProdOrderDetail(rowData.prodOrderId)">
+                    {{rowData.referenceId}}</a>
+
+                  <span *ngSwitchCase="'orderDetailId'">
+                    <a href="javascript:;" *ngSwitchCase="'orderDetailId'"
+                      (click)="showOrderDetailDialog(rowData.orderDetail.order.orderId)">
+                      {{rowData.orderDetailId}}</a>
+                  </span>
+
+
+
+                  <a href="javascript:;" *ngSwitchCase="'batch'" (click)="showBatchDetail(rowData.batch)">
+                    {{rowData.batch}}</a>
+
+                  <a href="javascript:;" *ngSwitchCase="'plantName'" (click)="showPlantDetailDialog(rowData.plantId)">{{
+                    rowData.plantName }}</a>
+
+                  <a href="javascript:;" *ngSwitchCase="'materialName'"
+                    (click)="showMaterialDetailDialog(rowData.materialId)">{{ rowData.materialName }}</a>
+                  <a href="javascript:;" *ngSwitchCase="'materialNo'"
+                    (click)="showMaterialDetailDialog(rowData.materialId)">{{ rowData.materialNo }}</a>
+                  <a href="javascript:;" *ngSwitchCase="'wareHouseName'"
+                    (click)="showWareHouseDetailDialog(rowData.wareHouseId)">{{ rowData.warehouseName }}</a>
+
+                  <div *ngSwitchCase="'stockToProduceName'"
+                    [ngClass]="{small:rowData.jobOrderStockProduceList&&rowData.jobOrderStockProduceList.length>1}">
+                    <a class="d-block" href="javascript:;" *ngFor="let stToPr of rowData.jobOrderStockProduceList"
+                      (click)="showStockDetail(stToPr.stockId)">{{stToPr.stockName}} </a>
+                  </div>
+                  <div *ngSwitchCase="'milestone'">
+                    <a href="javascript:;" (click)="showMilestoneDetail(rowData.milestoneId)">
+                      {{rowData.milestoneName}}
+                    </a>
+                  </div>
+                  <div *ngSwitchCase="'stockUseName'"
+                    [ngClass]="{small:rowData.jobOrderStockUseList&&rowData.jobOrderStockUseList.length>1}">
+                    <a class="d-block" href="javascript:;" *ngFor="let stToPr of rowData.jobOrderStockUseList"
+                      (click)="showStockDetail(stToPr.stockId)">{{stToPr.stockName}} </a>
+                  </div>
+
+                  <div *ngSwitchCase="'neededQuantity'"
+                    [ngClass]="{small:rowData.jobOrderStockProduceList&&rowData.jobOrderStockProduceList.length>1}">
+                    <span class="d-block"
+                      *ngFor="let stToPr of rowData.jobOrderStockProduceList">{{stToPr.neededQuantity}} </span>
+                  </div>
+
+                  <p *ngSwitchCase="'startDate'">{{rowData[col.field]|date:'dd-MM-yyyy HH:mm'}}</p>
+
+                  <p *ngSwitchCase="'finishDate'">{{rowData[col.field] | date:'dd-MM-yyyy HH:mm'}}</p>
+                  <p *ngSwitchCase="'erpPlannedFinishDate'">{{rowData[col.field] | date:'dd-MM-yyyy HH:mm'}}</p>
+                  <p *ngSwitchCase="'createDate'">{{rowData[col.field] | date:'dd-MM-yyyy HH:mm'}}</p>
+                  <p *ngSwitchCase="'actualStart'">{{rowData[col.field] | date:'dd-MM-yyyy HH:mm'}}</p>
+                  <p *ngSwitchCase="'actualFinish'">{{rowData[col.field] | date:'dd-MM-yyyy HH:mm'}}</p>
+
+                  <p *ngSwitchCase="'scheduledStartTime'">{{rowData[col.field] | date:'dd-MM-yyyy HH:mm'}}</p>
+                  <p *ngSwitchCase="'scheduledFinishTime'">{{rowData[col.field] | date:'dd-MM-yyyy HH:mm'}}</p>
+
+
+                  <span *ngSwitchDefault (click)="showProdOrderDetail(rowData.prodOrderId)"> {{rowData[col.field]}}
+                  </span>
+                  <!--                  <span *ngSwitchDefault (click)="showProdOrderDetail(rowData.prodOrderId)"> {{((rowData[col.field]+''))|translate}} </span>-->
+                </td>
+                <td width="60px">
+                  <button
+                    *ngIf="rowData.prodOrderStatus==='PLANNED' ||
+                  rowData.prodOrderStatus==='READY' || rowData.prodOrderStatus==='PROCESSING' ||
+                  rowData.prodOrderStatus==='REQUESTED' || rowData.prodOrderStatus==='CONFIRMED'
+                  || rowData.prodOrderStatus==='WAITING_FINAL_REVIEW' || rowData.prodOrderStatus==='WAITING_INITIAL_REVIEW'"
+                    class="btn btn-sm btn-outline-danger" type="button" pTooltip="CANCEL IT " tooltipPosition="top"
+                    placeholder="Top" (click)="delete(rowData.prodOrderId)">
+                    <i class="fa fa-window-close"></i></button>
+                  <button *ngIf="rowData.prodOrderStatus==='REQUESTED' || rowData.prodOrderStatus==='READY'
+                  || rowData.prodOrderStatus===null
+                  || rowData.prodOrderStatus==='WAITING_FINAL_REVIEW'" class="btn btn-sm btn-outline-info"
+                    type="button" pTooltip="EDIT IT " tooltipPosition="top" placeholder="Top"
+                    (click)="showEditProductionOrder(rowData.prodOrderId, rowData)">
+                    <i class="fa fa-edit"></i></button>
+
+                  <button
+                    *ngIf="rowData.prodOrderStatus==='REQUESTED' || rowData.prodOrderStatus==='WAITING_FINAL_REVIEW'"
+                    class="btn btn-sm btn-outline-success" type="button" pTooltip="CONFIRM IT " tooltipPosition="top"
+                    placeholder="Top" (click)="confirmProductionOrder(rowData)">
+                    <i class="fa fa-check-circle"></i></button>
+
+                  <button
+                    *ngIf="rowData.prodOrderStatus==='READY' || rowData.prodOrderStatus==='PLANNED' || rowData.prodOrderStatus==='PROCESSING'"
+                    class="btn btn-sm btn-outline-success" type="button" pTooltip="Make Final Review"
+                    tooltipPosition="top" placeholder="Top" (click)="makeFinalReview(rowData)">
+                    <i class="fa fa-columns"></i></button>
+
+                  <button *ngIf="rowData.prodOrderStatus=='CANCELLED'" class="btn btn-sm btn-outline-info"
+                    pTooltip="MAKE IT READY" tooltipPosition="top" placeholder="Top" type="button"
+                    (click)="turnToReady(rowData.prodOrderId)">
+                    <i class="fa fa-check"></i></button>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+          <br />
+          <div class="row">
+            <app-paging [TotalElements]="pagination.totalElements" [CurrentPage]="pagination.currentPage"
+              [PageSize]="pagination.pageSize" [rows]="pagination.rows"
+              [TotalPageLinkButtons]="pagination.TotalPageLinkButtons"
+              [RowsPerPageOptions]="pagination.RowsPerPageOptions" (onPageChange)="myChanges($event)"></app-paging>
+            <span style="margin-left:2px; padding-top: 2px " class="text-muted">{{'total-records'|translate}}:
+              {{pagination?.totalElements}}</span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!--provide new,edit component renderer here-->
+<ng-template [ngIf]="modal.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal"
+    (onHidden)="modal.active=false" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-success" style="max-width: 80%;" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"> {{'manual-job-order' | translate}}</h4>
+          <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <app-prod-new [prodOrderTypeList]="prodOrderTypeList" (saveAction)="myModal.hide(); filter();"></app-prod-new>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-sm btn-primary" (click)="saveCombineOrderModal()"><i
+              class="fa fa-dot-circle-o"></i> {{'save' | translate}}</button>
+          <button type="button" class="btn btn-secondary" (click)="myModal.hide()">{{'close' | translate}}</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</ng-template>
+
+<ng-template [ngIf]="saleModal.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal"
+    (onHidden)="saleModal.active=false" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-success modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"> {{'create-auto-sale-production'|translate}}</h4>
+          <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <app-create-auto-sale-order></app-create-auto-sale-order>
+        </div>
+
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
+</ng-template>
+
+
+<ng-template [ngIf]="prodTreeModal.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal"
+    (onHidden)="prodTreeModal.active=false" class="modal fade" tabindex="-1" role="dialog"
+    aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-success modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"> {{'product-tree-production-order-base'|translate}}</h4>
+          <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+
+          <app-with-product-tree-order></app-with-product-tree-order>
+
+        </div>
+
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
+</ng-template>
+
+
+<ng-template [ngIf]="prodEditModal.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myProdEditModal="bs-modal"
+    (onHidden)="prodEditModal.active=false; prodEditModal.cloned=false; prodEditModal.data=null;prodEditModal.selectedIndex=0;"
+    class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-success"
+      [ngStyle]="{'max-width': prodEditModal.selectedIndex=='big' ? '95%' : (prodEditModal.selectedIndex=='mid' ? '85%' : '80%')}"
+      role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"> {{'production-order-information'|translate}}</h4>
+          <button type="button" class="close" (click)="close()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+
+          <!-- <prod-edit [cloned]="prodEditModal.cloned" [prodOrderTypeList]="prodOrderTypeList"
+          [prodOrderId]="prodEditModal.data?.prodOrderId" -->
+          <prod-edit [cloned]="prodEditModal.cloned" [prodOrderTypeList]="prodOrderTypeList"
+            [prodOrderId]="prodEditModal.data?.prodOrderId" (saveAction)="onEditedProdItem($event)"
+            (indexSelection)="prodEditModal.selectedIndex=$event;"></prod-edit>
+
+        </div>
+        <div class="modal-footer">
+          <div class="col-md-12 ">
+            <!-- <button type="button" *ngIf="prodEditModal.data.prodOrderStatus==='REQUESTED'"
+                    class="btn btn-success float-left"
+                    (click)="confirmProductionOrder(prodEditModal.data)">{{'confirm' | translate}}</button> -->
+            <button type="button" class="btn btn-secondary float-right" (click)="myProdEditModal.hide()">{{'close' |
+              translate}}</button>
+            <button *ngIf="prodEditModal.data.prodOrderStatus!=='REQUESTED'" type="submit"
+              class="btn btn-sm btn-primary mr-1 float-right" (click)="saveCombineOrderModal()"><i
+                class="fa fa-dot-circle-o"></i>
+              {{'save' | translate}}
+            </button>
+            <button *ngIf="prodEditModal.data.prodOrderStatus==='REQUESTED'" type="submit"
+              class="btn btn-sm btn-primary mr-1 float-right" (click)="completeReviewModal()"><i
+                class="fa fa-dot-circle-o"></i>
+              {{'complete-review' | translate}}
+            </button>
+
+          </div>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
+</ng-template>
+<!--provide new,edit component renderer here-->
+
+<ng-template [ngIf]="dialog.mode==='prod-details'">
+  <p-dialog header="{{'production-order-detail' | translate}}" [(visible)]="dialog.visible" #dProductionOrder
+    [autoZIndex]="true" [baseZIndex]="999999" [maximizable]="true" modal="true" dismissableMask="true"
+    [contentStyle]="{'min-height':'400px'}" [style]="{'max-width': '90%','width': '90%'}">
+    <app-prod-order-detail [prodOrderData]="dialog.data"></app-prod-order-detail>
+  </p-dialog>
+
+</ng-template>
+
+<ng-template [ngIf]="dialog.mode==='cancel-all-porders'">
+  <p-dialog header="{{'cancel-all-auto-and-reorder-production-orders-before' | translate}}" [(visible)]="dialog.visible"
+    #dProductionOrder [autoZIndex]="true" [baseZIndex]="999999" [maximizable]="true" modal="true" dismissableMask="true"
+    [contentStyle]="{'min-height':'200px'}" [style]="{'max-width': '50%','width': '40%'}">
+    <div class="col-md-12">
+      <table class="table table-bordered">
+        <tbody>
+          <tr>
+            <td>{{'date'|translate}}</td>
+            <td class="ui-fluid">
+              <p-calendar name="deliveryDate" [(ngModel)]="cancelAutoPorders.date" placeholder="{{'date'|translate}}"
+                yearRange="1990:2100" [monthNavigator]="true" [yearNavigator]="true" dateFormat="dd/mm/yy"
+                appendTo="body" [baseZIndex]="9999999" [showIcon]="true" [showTime]="true">
+              </p-calendar>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <div class="d-flex">
+                <button class="mr-4 float-right btn btn-sm btn-primary" type="button"
+                  (click)="CreateProductionOrderBSDOnStock()">
+                  {{'create-production-order-based-on-stock'|translate}}
+                </button>
+                <button class="mr-2 float-right btn btn-sm btn-outline-info" type="button" (click)="cancelAutoPOs()">
+                  <i class="fa fa-save mr-1"></i>{{'cancel-prod-order'|translate}}
+                </button>
+                <button class="float-right btn btn-sm  btn-outline-danger" type="button"
+                  (click)="dialog.mode=null; dialog.visible=false;">
+                  <i class="fa fa-close"></i> {{'close'|translate}}
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </p-dialog>
+
+</ng-template>
+
+
+<!-- modals -->
+<ng-template [ngIf]="inspectionLotModal.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #inspectionLotBSModal="bs-modal"
+    (onHidden)="inspectionLotModal.active=false" class="modal fade" tabindex="-1" role="dialog"
+    aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-success modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">{{'inspection-lot' | translate}}</h4>
+          <button type="button" class="close" (click)="inspectionLotBSModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <new-inspection-lot (saveAction)="onSaveSuccessful($event, myModal)"
+            [inspectionType]="'IN_PROCESS_INSPECTION_FOR_A_PRODUCTION_ORDER'"></new-inspection-lot>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="inspectionLotBSModal.hide()">{{'close' |
+            translate}}</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</ng-template>
+
+
+
+<!-- modals -->
+<ng-template [ngIf]="combineProdModal.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #combineProductionModal="bs-modal"
+    (onHidden)="combineProdModal.active=false; combineProdModal.data=null; saveCombineOrder = false" class="modal fade"
+    tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-success" style="max-width: 56%;" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">{{'combine-job-orders' | translate}}</h4>
+          <button type="button" class="close" (click)="combineProductionModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <combine-production-order [data]="combineProdModal.data"
+            (saveAction)="combineProductionModal.hide(); filter();"></combine-production-order>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-sm btn-primary" (click)="saveCombineOrderModal()"><i
+              class="fa fa-dot-circle-o"></i> {{'save' | translate}}</button>
+          <button type="button" class="btn btn-secondary" (click)="combineProductionModal.hide()">{{'close' |
+            translate}}</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</ng-template>

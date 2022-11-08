@@ -1,0 +1,165 @@
+:host ::ng-deep.b-grid-cell {
+  font-size: 11px !important;
+  display: block;
+  word-wrap: break-word;
+  white-space: normal;
+}
+
+:host ::ng-deep.b-grid-headers .b-grid-header .b-grid-header-text {
+  font-size: 11px !important;
+  display: flex;
+  // word-wrap: break-word;
+  // width: 60px;
+  // white-space: normal
+}
+
+:host ::ng-deep .b-highlighting .b-sch-event-wrap .b-sch-event.b-match {
+  opacity: 1;
+  box-shadow: 0 0 8px red;
+}
+
+:host ::ng-deep.b-watermark {
+  display: none !important;
+}
+
+#app {
+
+  font-size: 11px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  //overflow-x: auto;
+
+  #tools {
+    display: flex;
+    margin-bottom: 1em;
+    align-items: center;
+
+    button {
+      width: 8em;
+      padding: .7em;
+      background: #8BC34A;
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      font-size: 11px;
+      font-family: "Source Sans Pro", "Helvetica Neue", Helvetica, sans-serif;
+      border-radius: 2px;
+      margin-right: .5em;
+    }
+
+    button:hover {
+      background: #9CCC65;
+    }
+
+    button:active {
+      background: #9CCC65;
+    }
+
+    button:disabled {
+      background: #FF9269 !important;
+    }
+
+    button.red {
+      background: #F44336;
+    }
+
+    button.red:hover {
+      background: #EF5350;
+    }
+
+    .sel-event {
+      margin-left: 2em;
+      flex: 1;
+
+      span {
+        font-size: 11px;
+        position: relative;
+        top: 1px;
+        left: .5em;
+      }
+    }
+
+    .barmargin input {
+      font-size: 11px;
+      font-family: inherit;
+      padding: .7em;
+      border-radius: 2px;
+      border: 1px solid #31AA73;
+      margin-left: .5em;
+    }
+
+  }
+
+}
+
+:host ::ng-deep {
+  font-family: Roboto, sans-serif;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.dirty-day:after {
+  font-family: 'FontAwesome';
+  content: "•";
+  font-size: 20px;
+  color: red;
+  line-height: 10px;
+}
+
+.dirty-day {
+  padding: 0;
+}
+
+:host ::ng-deep .ui-datepicker {
+  padding: 0.15em !important;
+  border: 1px solid #d8d5d5 !important;
+  table {
+    tr {
+      margin: 2px !important;
+    }
+    th {
+      color: #31b3c1 !important;
+
+    }
+    td {
+      padding: 0 !important;
+      a {
+        padding: 0.3em !important;
+      }
+      span {
+        padding: 0 !important;
+      }
+    }
+  }
+  .ui-datepicker-title {
+    font-size: 14px;
+    font-weight: 700;
+  }
+}
+
+//.selected-workcenter{
+//  word-wrap:break-word;
+//  width: 150px;
+//  white-space: normal;
+//  label{
+//    font-size: 15px;
+//    color: #636363;
+//
+//    span{
+//    font-size: 14px;
+//      color: #020201;
+//      font-weight: 600;
+//    }
+//  }
+//}
+scheduler {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: stretch;
+  height: 100%;
+}
+
+

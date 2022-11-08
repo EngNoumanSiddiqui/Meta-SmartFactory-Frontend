@@ -1,0 +1,266 @@
+
+<!--<form #maintenanceEdit="ngForm" >-->
+<div class="animated fadeIn">
+  <div class="row">
+
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          {{'maintenance-info' | translate}}
+        </div>
+        <div class="card-body">
+          <form #maintenanceForm="ngForm" class="form-horizontal">
+            <div class="form-group row">
+              <label class="col-md-3 col-form-label" for="maintenanceNo"> {{'maintenance-no' | translate}}*</label>
+              <div class="col-md-9">
+                <input type="text" id="maintenanceNo" name="maintenanceNo" required [(ngModel)]="maintenance.maintenanceNo"
+                       class="form-control" placeholder="{{'maintenance-no' | translate}}">
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label class="col-md-3 col-form-label" >{{'maintenance-type' | translate}}</label>
+              <div class="col-md-9">
+                <select id="maintenanceType" name="maintenanceType" class="form-control" [(ngModel)]="maintenance.maintenanceType">
+                  <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                  <option *ngFor="let maintenanceType of maintenanceTypes" value="{{maintenanceType}}">{{maintenanceType}}</option>
+                </select>
+              </div>
+            </div>
+
+
+
+            <div class="form-group row">
+              <label class="col-md-3 col-form-label"> {{'planned-date' | translate}}</label>
+              <div class="col-md-9 ui-g-9 ui-md-9">
+                <p-calendar [(ngModel)]="maintenance.plannedDate" name="plannedDate"
+
+                            [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                            [showIcon]="true"  dateFormat="dd/mm/yy" ></p-calendar>
+              </div>
+            </div>
+
+
+            <div class="form-group row">
+              <label class="col-md-3 col-form-label" > {{'workstation' | translate}} {{'name' | translate}}</label>
+              <div class="col-md-9">
+                <select id="workstationId" name="workstationId" class="form-control" [(ngModel)]="maintenance.workStationId">
+                  <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                  <option *ngFor="let ws of workStationList" value="{{ws.workStationId}}">{{ws.workStationName}}</option>
+                </select>
+              </div>
+            </div>
+
+
+
+            <div class="form-group row">
+              <label class="col-md-3 col-form-label" for="description">{{'description' | translate}}</label>
+              <div class="col-md-9">
+                <input type="text" id="description" name="description"   [(ngModel)]="maintenance.description"
+                       class="form-control" placeholder="{{'description' | translate}}">
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label class="col-md-3 col-form-label" for="comments">{{'comments' | translate}}</label>
+              <div class="col-md-9">
+                <input type="text" id="comments" name="comments"   [(ngModel)]="maintenance.comments"
+                       class="form-control" placeholder="{{'comments' | translate}}">
+              </div>
+            </div>
+
+
+          </form>
+        </div>
+        <div class="card-footer">
+         <!-- <button type="reset" class="btn btn-sm btn-danger" (click)="goPage()"><i class="fa fa-ban"></i>
+            {{'cancel' | translate}}</button>-->
+          <button type="submit" class="btn btn-sm btn-primary" [disabled]="!maintenanceForm.form.valid" (click)="save()"><i class="fa fa-dot-circle-o"></i>
+            {{'save' | translate}}</button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          {{'add' | translate}} {{'part' | translate}}
+          <div class="card-actions">
+            <button type="button" class="btn btn-primary" data-toggle="modal"
+                    (click)="params.dialog.title='parts';myModal.show()"><i class="fa fa-plus"></i></button>
+          </div>
+        </div>
+
+
+        <div class="card-body">
+          <form action="" method="post" class="form-horizontal">
+
+            <table class="table table-responsive-sm table-hover table-outline mb-0" *ngIf="maintenance.maintenancePartDtoList.length > 0">
+              <thead class="table-secondary">
+              <tr>
+                <th>{{'code' | translate}}</th>
+                <th>{{'name' | translate}}</th>
+                <th>{{'quantity'  |translate}}</th>
+                <th>{{'unit'  |translate}}</th>
+                <th></th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let item of maintenance.maintenancePartDtoList">
+                <td >{{item.partCode}}</td>
+                <td width="40%">{{item.partName}}</td>
+                <td><input type="number" style=" width: 100%" class="form-control-sm" [(ngModel)]="item.quantity"
+                           [ngModelOptions]="{standalone: true}" min="1"/></td>
+                <td><input type="text" style=" width: 100%" class="form-control-sm" [(ngModel)]="item.unit"
+                           [ngModelOptions]="{standalone: true}"/></td>
+                <td><a (click)="deletePartFromList(item)"><i class="fa fa-close"></i></a></td>
+              </tr>
+              </tbody>
+            </table>
+
+          </form>
+        </div>
+
+      </div>
+      <div class="card">
+        <div class="card-header">
+          {{'add' | translate}} {{'planned-personal' | translate}}
+          <div class="card-actions">
+            <button type="button" class="btn btn-primary" data-toggle="modal"
+                    (click)="params.dialog.title='personal';myModal.show()"><i class="fa fa-plus"></i></button>
+          </div>
+        </div>
+
+
+        <div class="card-body">
+          <form action="" method="post" class="form-horizontal">
+
+            <table class="table table-responsive-sm table-hover table-outline mb-0" *ngIf="maintenance.maintenanceEmployeeDtoList.length > 0">
+              <thead class="table-secondary">
+              <tr>
+                <th>{{'no' | translate}}</th>
+                <th>{{'name'  |translate}}</th>
+                <th></th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let emp of maintenance.maintenanceEmployeeDtoList">
+                <td>{{emp.employeeNo}}</td>
+                <td>{{emp?.firstName}} {{emp?.lastName}}</td>
+                <td><a (click)="deleteEmployeeFromList(emp)"><i class="fa fa-close"></i></a> </td>
+              </tr>
+              </tbody>
+            </table>
+
+          </form>
+        </div>
+
+      </div>
+    </div><!--/.col-->
+
+
+  </div><!--/.row-->
+
+</div>
+<!--</form>-->
+
+
+
+<!------------------------- Modals ---------------------------------------->
+
+<div bsModal [config]="{backdrop: 'static', keyboard: false}" #myModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-success" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          <span *ngIf="params.dialog.title == 'parts'">{{'parts' | translate}}</span>
+          <span *ngIf="params.dialog.title == 'personal'">{{'personals' | translate}}</span>
+        </h4>
+        <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <!---------- MODEL #1 ------------->
+        <span *ngIf="params.dialog.title == 'parts'">
+          <div class="form-group row">
+          <div class="col-md-12">
+
+            <div class="input-group">
+                  <span class="input-group-btn">
+                    <button type="button" class="btn btn-primary" (click)="getPartItems()">
+                      <i class="fa fa-search"></i>{{'search'  |translate}}</button>
+                  </span>
+              <input type="text" id="input1-group2" name="input1-group2" class="form-control" placeholder="{{'search' | translate}}"
+                     [(ngModel)]="filterPart.partName" (ngModelChange)="getPartItems()">
+            </div>
+
+
+            <table class="table table-responsive-sm table-hover table-outline mb-0" *ngIf="partList">
+              <thead class="table-secondary">
+              <tr>
+                <th>{{'code' | translate}}</th>
+                <th>{{'name' | translate}}</th>
+                <th></th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let item of partList">
+                <td>{{item.partCode}}</td>
+                <td>{{item.partName}}</td>
+                <!--<td>{{item.quantity}}</td>-->
+                <td><button (click)="addPartList(item)"><i class="fa fa-plus"></i> </button></td>
+              </tr>
+              </tbody>
+            </table>
+
+          </div>
+        </div>
+        </span>
+        <span *ngIf="params.dialog.title == 'personal'">
+          <div class="form-group row">
+          <div class="col-md-12">
+
+            <div class="input-group">
+                  <span class="input-group-btn">
+                    <button type="button" class="btn btn-primary" (click)="getEmployeeItems()">
+                      <i class="fa fa-search"></i>{{'search'  |translate}}</button>
+                  </span>
+              <input type="text" id="input1-grouppersonal" name="input1-grouppersonal" class="form-control" placeholder="{{'search' | translate}}"
+                     [(ngModel)]="filterEmployee.employeeName" (ngModelChange)="getEmployeeItems()">
+            </div>
+
+
+            <table class="table table-responsive-sm table-hover table-outline mb-0" *ngIf="employeeList">
+              <thead class="table-secondary">
+              <tr>
+                <th>{{'no' | translate}}</th>
+                <th>{{'name' | translate}}</th>
+                <th></th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let em of employeeList">
+                <td>{{em.employeeNo}}</td>
+                <td>{{em?.firstName}} {{em?.lastName}}</td>
+                <!--<td>{{item.quantity}}</td>-->
+                <td><button (click)="addEmployeeList(em)"><i class="fa fa-plus"></i> </button></td>
+              </tr>
+              </tbody>
+            </table>
+
+          </div>
+        </div>
+        </span>
+
+      </div>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+

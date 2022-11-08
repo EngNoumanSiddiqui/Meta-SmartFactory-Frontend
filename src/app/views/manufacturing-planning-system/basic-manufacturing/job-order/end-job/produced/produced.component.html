@@ -1,0 +1,79 @@
+<div class="card">
+    <div class="card-header">
+        {{'PRODUCED_MATERIAL_DETAILS' | translate}}
+    </div>
+    <div class="card-body">
+        <form action="" method="post" class="form-horizontal">
+            <table class="table table-bordered tw-50">
+                <tbody>
+                  <!--change-->
+                  <tr>
+                    <td>{{'warehouse' | translate}}</td>
+                    <td>{{jobOrder?.prodOrder?.warehouseName}}</td>
+                  </tr>
+
+                  <tr>
+                    <td>{{'material' | translate}}</td>
+                    <td>
+                      <span *ngFor="let item of jobOrder?.jobOrderStockProduceList; last as isLast">
+                        <span>{{item.stockName}}</span>
+                        <span *ngIf="!isLast">, </span>
+                      </span>
+                    </td>
+                  </tr>
+                  
+                  <tr>
+                    <td>{{'produced-quantity' | translate}}</td>
+                    <td>
+                      <input type="text" class="form-control" name="producedQuantity" required /> 
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td>{{'plant' | translate}}</td>
+                    <td>{{selectedPlant.plantName}}</td>
+                  </tr>
+
+                  <tr>
+                    <td>{{'batch-code' | translate}}</td>
+                    <td>
+                      <!-- <batch-auto-complete [plantId]="purchaseDetailListDto.plantId" (selectedBatchEvent)="setSelectedBatch($event)"
+                        [stockId]="purchaseDetailListDto.stockId" [actId]="order.supplier" [batchLevel]="'PURCHASE_ORDER'"
+                        [addIfMissing]="true">
+                      </batch-auto-complete> -->
+                      <batch-auto-complete  (selectedBatchEvent)="setSelectedBatch($event)" [addIfMissing]="true"></batch-auto-complete>
+                    
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td>{{'unit-of-measures' | translate}}</td>
+                    <td>
+                      <input type="text" class="form-control" name="unitOfMeasures" disabled [value]="jobOrder?.orderDetail?.batch"/> 
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td>{{'actual-start' | translate}}</td>
+                    <td>
+                      <p-calendar  name="actualstartdate"
+                      [monthNavigator]="true" [showTime]="true" [yearNavigator]="true" yearRange="1990:2100"
+                      [showIcon]="true" dateFormat="dd/mm/yy" [hideOnDateTimeSelect]="true"></p-calendar>
+
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td>{{'actual-finish' | translate}}</td>
+                    <td>
+                      <p-calendar  name="actualfinishdate"
+                      [monthNavigator]="true" [showTime]="true" [yearNavigator]="true" yearRange="1990:2100"
+                      [showIcon]="true" dateFormat="dd/mm/yy" [hideOnDateTimeSelect]="true"></p-calendar>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+        </form>
+    </div>
+  
+</div>

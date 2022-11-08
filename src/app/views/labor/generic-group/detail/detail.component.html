@@ -1,0 +1,81 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-lg-6">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i>{{'generic-group-definition-information' | translate}}
+        </div>
+        <div class="card-body">
+          <table class="table table-bordered">
+            <tbody *ngIf="groupCodeDetail">
+              <tr>
+                <td>{{'plant'|translate}}</td>
+                <td>{{groupCodeDetail?.plant?.plantName}}</td>
+              </tr>
+              <tr>
+                <td>{{'group-type'|translate}}</td>
+                <td>{{(groupCodeDetail?.groupType?.message)? groupCodeDetail?.groupType?.message: groupCodeDetail?.groupType}}</td>
+              </tr>
+              <tr>
+                <td>{{'group-sub-type'|translate}}</td>
+                <td>{{groupCodeDetail?.groupSubTypeEnum?.message}}</td>
+              </tr>
+              <tr>
+                <td>{{'reference-item'|translate}}</td>
+                <td>{{groupCodeDetail?.referenceItemDto?.itemNo ? groupCodeDetail?.referenceItemDto?.itemNo + ' | ' : ''}}  {{groupCodeDetail?.referenceItemDto?.itemName}}</td>
+              </tr>
+              <tr>
+                <td>{{'group-code'|translate}}</td>
+                <td>{{groupCodeDetail?.groupCode}}</td>
+              </tr>
+
+              <tr>
+                <td>{{'group-name'|translate}}</td>
+                <td>{{groupCodeDetail?.groupName}}</td>
+              </tr>
+              <tr>
+                <td>{{'work-under-supervisor'|translate}}</td>
+                <td >
+                  <ng-container *ngIf="groupCodeDetail">
+                    <div *ngIf="groupCodeDetail.workUnderSupervision">
+                      <span class="badge badge-success">{{'yes'|translate}}</span>
+                    </div>
+                    <div *ngIf="!groupCodeDetail.workUnderSupervision">
+                      <span class="badge badge-danger">{{'no'|translate}}</span>
+                    </div>
+                  </ng-container>
+                 
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i>{{'generic-group-definition-information' | translate}}
+        </div>
+        <div class="card-body">
+          <table class="table table-bordered">
+            <tbody style="height: 200px;
+            display: block;
+            overflow: auto;" *ngIf="groupCodeDetail">
+              <tr *ngIf="groupCodeDetail.members.length>0">
+                <td>{{'employee-list'|translate}}</td>
+                <ng-container *ngFor="let item of groupCodeDetail.members">
+              <tr>
+                <ul>
+                  <li> {{item.employeeNo}} | {{item.firstName}}-{{item.lastName}}</li>
+                </ul>
+              </tr>
+              </ng-container>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

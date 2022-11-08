@@ -1,0 +1,163 @@
+
+<div class="animated fadeIn">
+  <div class="row">
+
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i> {{'edit' | translate}} {{'pallet' | translate}}
+        </div>
+        <div class="card-body">
+          <form #warehouseForm="ngForm">
+          <table class="table table-bordered">
+            <tbody>
+              <tr>
+
+                <td>{{'pallet-name'|translate}}</td>
+                <td>
+                  <input type="text" class="form-control" required name="palletName"  
+                  [(ngModel)]="palletdto.palletName"/>
+                </td>
+                <td>{{'height-cm'|translate}}</td>
+                <td>
+                  <input type="number" class="form-control" required name="height"  
+                  [(ngModel)]="palletdto.height"/>
+                </td>
+    
+              </tr>
+              <tr>
+
+                <td>{{'warehouse'|translate}}</td>
+                <td>
+                 <warehouse-auto-complete [selectedWareHouseId]="palletdto.wareHouseId" (selectedWareHouseEvent)="setSelectedWarehouse($event)"></warehouse-auto-complete>
+                </td>
+                <td>{{'width-cm'|translate}}</td>
+                <td>
+                  <input type="number" class="form-control" required name="width"  
+                  [(ngModel)]="palletdto.width"/>
+                </td>
+    
+              </tr>
+              <tr>
+
+                <td>{{'operation'|translate}}</td>
+                <td><span *ngIf="palletdto.operationId" class="form-control bg-readonly" (click)="myModal.show()">{{selectedOperation?.operationName}}</span>
+                  <span *ngIf="!palletdto.operationId" class="form-control bg-readonly" (click)="myModal.show()">{{'click-to-select'|translate}}</span>
+                </td>
+                <td>{{'min-quantity'|translate}}</td>
+                <td>
+                  <input type="number" class="form-control" name="minQuantity"  
+                  [(ngModel)]="palletdto.minQuantity"/>
+                </td>
+    
+              </tr>
+              <tr>
+                <!-- <td>{{'plant' | translate}}</td>
+                <td>
+                  <span *ngIf="palletdto.plantId && selectedPlant && palletdto.plantId=== selectedPlant.plantId">{{selectedPlant.plantName}}</span>
+                  <plant-auto-complete *ngIf="!palletdto.plantId && !selectedPlant"  [selectedPlantId]="palletdto.plantId" 
+                  (selectedPlantEvent)="setSelectedPlant($event)" [eventFire]="true"></plant-auto-complete>
+                </td> -->
+
+                <td>{{'variety'|translate}}</td>
+                <td>
+                  <select class="form-control" name="variety" [(ngModel)]="palletdto.variety">
+                    <option *ngFor="let variety of varieties" [value]="variety">{{variety}}</option>
+                  </select>
+                </td>
+
+                <td>{{'max-quantity'|translate}}</td>
+                <td>
+                  <input type="number" class="form-control" name="maxQuantity"  
+                  [(ngModel)]="palletdto.maxQuantity"/>
+                </td>
+            </tr>
+            <tr>
+
+              <td>{{'max-box-quantity'|translate}}</td>
+              <td>
+                <input type="number" class="form-control" name="maxBoxQuantity"  
+                [(ngModel)]="palletdto.maxBoxQuantity"/>
+              </td>
+              
+              <td>{{'current-stock-quantity'|translate}}</td>
+                <td>
+                  <input type="number" class="form-control" name="currentStockQuantity"  
+                  [(ngModel)]="palletdto.currentStockQuantity"/>
+                </td>
+              
+            </tr>
+            <tr>
+
+              <td>{{'reserved-quantity'|translate}}</td>
+              <td>
+                <input type="number" class="form-control" name="reservedStockQuantity"  
+                [(ngModel)]="palletdto.reservedStockQuantity"/>
+              </td>
+
+              <td>{{'requirement-pallet-quantity-for-forklift'|translate}}</td>
+              <td>
+                <input type="number" class="form-control" name="requirementPalletQuantityForForklift"  
+                [(ngModel)]="palletdto.requirementPalletQuantityForForklift"/>
+              </td>
+            </tr>
+
+            <tr>
+              <td colspan="4">
+                <!-- <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+                  {{'reset' | translate}}</button> -->
+                <button type="submit" class="btn btn-sm btn-primary" [disabled]="!warehouseForm.valid"
+                    (click)="save()"><i class="fa fa-dot-circle-o"></i>
+                  {{'save' | translate}}</button>
+              <!--  <button type="button" class="btn btn-sm btn-secondary float-right" (click)="goPage()">
+                  <i class="icon-arrow-left-circle"></i> {{'cancel' | translate}} </button>-->
+
+              </td>
+            </tr>
+            </tbody>
+          </table>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!------------------------- Modals ---------------------------------------->
+<div bsModal [config]="{backdrop: 'static', keyboard: false}" #myModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-success modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          {{('operation'|translate)}}
+        </h4>
+        <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <!---------- MODEL #Stocks ------------->
+      <!--[(visible)]="display"-->
+      <div class="modal-body">
+        <div class="form-group row">
+          <!--keep the modal open!!!!!-->
+          <div class="col-md-12">
+
+            <choose-operation-pane (selectedEvent)="setSelectedOperation($event);myModal.hide()"></choose-operation-pane>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="myModal.hide()">{{'close' | translate}}</button>
+      </div>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+

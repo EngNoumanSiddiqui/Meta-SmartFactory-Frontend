@@ -1,0 +1,31 @@
+<div class="animated fadeIn">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fa fa-align-justify"></i> {{'cost-center-information' | translate}}
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <tbody *ngIf="data">
+                            <tr>
+                                <td width="30%">{{'cost-center-id' | translate}}</td>
+                                <td>{{data?.costCenterId}} </td>
+                            </tr>
+                            <tr>
+                                <td>{{'cost-center-code' | translate}}</td>
+                                <td>{{data?.costCenterCode}} </td>
+                            </tr>
+                            <tr>
+                                <td>{{'cost-center-name' | translate}}</td>
+                                <td>{{data?.costCenterName}} </td>
+                            </tr>
+                            <!-- <tr>
+                                <td>{{'location-description' | translate}}</td>
+                                <td>{{data?.locationDescription}} </td>
+                            </tr> -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+</div>

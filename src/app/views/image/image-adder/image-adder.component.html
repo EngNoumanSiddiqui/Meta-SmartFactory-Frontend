@@ -1,0 +1,117 @@
+<div class="row">
+  <!--image selector-->
+
+  <div class="col-md-12 text-left mb-2">
+    <p-progressBar  *ngIf="showUploadSpin" mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>
+    <!-- [style]="{'min-height': '100px'}" -->
+      <p-fileUpload name="demo[]" [files]="this.uploadedFiles" dragHighlight="true"
+        customUpload="true" (uploadHandler)="myUploader($event)" [multiple]="true"
+        accept="image/*,.pdf,.doc,.docx,.xlsx,.xls,.csv,.txt" maxFileSize="100000000">
+          <ng-template pTemplate="content">
+              <ul *ngIf="uploadedFiles.length">
+                  <li *ngFor="let file of uploadedFiles">{{file.name}} - {{file.size}} bytes</li>
+              </ul>
+          </ng-template>
+      </p-fileUpload>
+  </div>
+ 
+
+
+  <!-- <div style="margin-left: 10px;">
+    <label *ngIf="!selectedFile && !isFile" class="btn btn-sm btn-primary bt" for="my-fil-selector" style="border-radius: 2px">
+      <input id="my-fil-selector"  name="mf1" type="file" style="display:none" (change)="onSelectFile($event)" accept="image/*">
+      {{'add-picture'|translate}} <i class="fa fa-plus"></i>
+    </label>
+    <label *ngIf="!selectedFile && isFile" class="btn btn-sm btn-primary bt" for="my-fil-selector9" style="border-radius: 2px">
+      <input id="my-fil-selector9"  name="mf1" type="file" style="display:none" (change)="onSelectFile($event)" 
+        >
+      {{'add-document'|translate}} <i class="fa fa-plus"></i>
+    </label>
+    <label *ngIf="selectedFile && isFile" class="btn btn-sm btn-primary bt" for="my-file-selector4"
+           style="margin-top: 0.38rem; border-radius: 2px">
+      <input *ngIf="isFile" id="my-file-selector4" name="mf2" type="file" style="display:none" (change)="onSelectFile($event)">
+      {{'change-document'|translate}}
+     </label>
+     <label *ngIf="selectedFile && !isFile" class="btn btn-sm btn-primary bt" for="my-file-selector2"
+     style="margin-top: 0.38rem; border-radius: 2px">
+      <input id="my-file-selector2" name="mf2" type="file" style="display:none" (change)="onSelectFile($event)" accept="image/*">
+      {{'change-picture'|translate}}
+      </label>
+    <button *ngIf="selectedFile" [disabled]="isDisabled" pButton type="button"
+            class="ui-button-success " icon="fa fa-upload" label="{{'upload'|translate}}" (click)="upload()"></button>
+    <img *ngIf="selectedFile&&selectedFile.type!=='application/pdf'" [src]="path" alt="" height="50">
+    <ngx-doc-viewer *ngIf="selectedFile && selectedFile.type==='application/pdf'"
+       [url]="path" viewer="url"  style="width:100%;height:396px;">
+    </ngx-doc-viewer>
+    <span class='label label-info'> {{selectedFile?.name}}</span>
+  </div> -->
+  <!-- <div class="col-md-2" style="height: 50px">
+    <p-progressSpinner *ngIf="showUploadSpin" [style]="{width: '40px', height: '40px'} "></p-progressSpinner>
+  </div> -->
+</div>
+
+ <!--image shower on carrusel-->
+<div *ngIf="images && images.length>0" class="row  align-items-end" style="height: 450px;">
+  <div class="col-md-12" style="text-align: -webkit-center;" >
+    <carousel [interval]="0" [(activeSlide)]="activeSlideIndex">
+      <slide *ngFor=" let im of images; let index=index" style="height: 400px">
+        <img *ngIf="(im.extension==='jpg')||(im.extension==='png')||(im.extension==='jpeg'); else fileLink" [src]="im.path" [alt]="im.title"
+             style="display: block;  max-height: 400px; max-width: 100%">
+        <ng-template #fileLink>
+        <!-- <a href="{{im.path}}" download="{{im.fileName}}">{{im.fileName}}</a> -->
+       
+        <ngx-doc-viewer [url]="im.path" viewer="google"  style="width:100%;height:396px;">
+        </ngx-doc-viewer>
+        <!-- <pdf-viewer [src]="im.path"
+              [original-size]="false" [autoresize]="true" style="width: 570px; max-height: 450px; overflow-y: scroll; display: block;"
+        ></pdf-viewer> -->
+        </ng-template>
+      </slide>
+    </carousel>
+    <div class="row">
+      <div style="margin: 10px 10px 0 20px; height: 50px">
+        <button [disabled]="showDeleteSpin" type="button" class="btn btn-danger" (click)="deleteMedia()">
+          {{'delete'|translate}}
+        </button>
+      </div>
+
+      <div style="height: 50px">
+        <p-progressSpinner *ngIf="showDeleteSpin"
+                           [style]="{width: '40px', height: '40px'} "></p-progressSpinner>
+      </div>
+    </div>
+
+  </div>
+
+
+  
+
+
+</div>
+
+  <!--image title and description-->
+    <div *ngIf="images && images.length>0" class="row">
+
+      <div class="col-md-12 form-group">
+        <input class="form-control" name="mf3" type="text" placeholder="{{'title' | translate}}"
+               [(ngModel)]="images[activeSlideIndex].title"/>
+      </div>
+      <div class="col-md-12 form-group">
+                        <textarea class="form-control" name="mf4" placeholder="{{'description' | translate}}"
+                                  [(ngModel)]="images[activeSlideIndex].description"
+                                  rows="3"></textarea>
+                                  
+      </div>
+    </div>
+
+<!--image shower on carrusel-->
+<div *ngIf="(!images || images.length===0) && (!this.uploadedFiles || this.uploadedFiles.length==0)" class="row">
+  <div class="col-12">
+    <img [src]="'assets/img/logo.png'" style=" width: 200px" >
+  </div>
+</div>
+<!-- <div *ngIf="!images || images.length==0 && selectedFile" class="row">
+    <div class="col-12">
+      <img [src]="path" style=" width: 200px" >
+    </div>
+</div> -->

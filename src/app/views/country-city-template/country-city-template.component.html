@@ -1,0 +1,26 @@
+
+
+<div>
+  <span style="width: 30%" class="card-header">{{'country' |translate}}</span>
+    <div class="input-group ui-fluid">
+      <p-autoComplete [(ngModel)]="selectedCountry" [suggestions]="filteredCountries"
+                      (completeMethod)="searchCountry($event)" field="countryName"
+                      [dropdown]="true"
+                      placeholder="{{'search-country'|translate}}" [minLength]="1" name="country"
+                      (ngModelChange)="onChangeCountry($event)">
+        </p-autoComplete>
+        
+    </div>
+</div>
+<div>
+  <span class="card-header ">{{'city' | translate}}</span>
+    <div class="input-group ui-fluid">
+      <p-autoComplete [disabled]="!selectedCountryValid()" [(ngModel)]="selectedCity" [suggestions]="filteredCities"
+                      (completeMethod)="searchCity($event)" field="cityName"
+                      [dropdown]="true"
+                      placeholder="{{'search-city'|translate}}" [minLength]="1" name="city"
+                      (ngModelChange)="onChangeCity($event)"></p-autoComplete>
+  </div>
+</div>
+
+

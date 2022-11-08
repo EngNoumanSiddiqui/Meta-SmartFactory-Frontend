@@ -1,0 +1,209 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <p-tabView class="col-md-12" [activeIndex]="activeTab">
+      <p-tabPanel header="{{ 'reference-object' | translate }}">
+        <div class="card">
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i> {{'quality-notification' | translate}}
+          </div>
+          <div class="card-body">
+            <form #inspForm="ngForm" class="tables_outer">
+              <table class="table table-bordered">
+                <tr>
+                  <td>{{'notification-code' | translate}}</td>
+                  <td>
+                    <input type="text" readonly id="notificationCode" name="notificationCode"
+                      [(ngModel)]="qualityNotification.qualityNotificationCode" class="form-control" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'notification-type' | translate}}</td>
+                  <td>
+                    <select id="qualityNotificationType" name="qualityNotificationType" class="form-control"
+                      [(ngModel)]="qualityNotification.qualityNotificationType">
+                      <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                      <option value="{{notificationType}}" *ngFor="let notificationType of notificationTypes">
+                        {{notificationType}}
+                      </option>
+                    </select>
+                    <!-- <quality-notification-type-auto-complete [selectedNotificationTypeId]="qualityNotification.qualityNotificationType" (selectedNotificationTypeEvent)="onChangeNotificationType($event)" [addIfMissing]="true"></quality-notification-type-auto-complete> -->
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'material-name' | translate}}</td>
+                  <td>
+                    <stock-auto-complete [plantId]="qualityNotification.plantId"
+                      (selectedStockEvent)="setSelectedMaterial($event)"></stock-auto-complete>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'plant' | translate}}</td>
+                  <td>
+                    <span style="width: 100%;" *ngIf="selectedPlant">
+                      {{ selectedPlant.plantName }}</span>
+                    <plant-auto-complete *ngIf="!selectedPlant" [addIfMissing]="false"
+                      [selectedPlantId]="qualityNotification.plantId"
+                      (selectedPlantEvent)="qualityNotification.plantId = +$event.plantId"
+                      [selectedPlant]="qualityNotification.plantId">
+                    </plant-auto-complete>
+
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'inspection-lot' | translate}}</td>
+                  <td>
+                    <quality-inspection-lot-auto-complete (selectedInspectionLotEvent)="setInspectionLot($event)">
+                    </quality-inspection-lot-auto-complete>
+                  </td>
+                </tr>
+                <tr *ngIf="qualityNotification.qualityNotificationType == 'CUSTOMER_COMPLAINT'">
+                  <td>{{'sale-order' | translate}}</td>
+                  <td>
+                    <order-detail-auto-complete (selectedOrderDetailEvent)="searchReadyJobsForOrderDetail($event)">
+                    </order-detail-auto-complete>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'purchase-order' | translate}}</td>
+                  <td>
+                    <p-dropdown [options]="pOrders" name="pOrders" (onChange)="setPurchaseOrder($event.value)"
+                      [autoDisplayFirst]="false" [filter]="true" filterBy="porderId" optionLabel="porderId"
+                      dataKey="pOrderId" [style]="{width: '100%'}"></p-dropdown>
+
+                  </td>
+                </tr>
+                <tr
+                  *ngIf="qualityNotification.qualityNotificationType == 'COMPLAINT_AGAINST_A_VENDOR' || qualityNotification.qualityNotificationType == 'CUSTOMER_COMPLAINT'">
+                  <td>{{'document-number' | translate}}</td>
+                  <td>
+                    <!-- <input type="number" id="documentNo" name="documentNo" [(ngModel)]="qualityNotification.documentNo"
+                      class="form-control" disabled /> -->
+                    <p-dropdown [options]="documents" name="documents" (onChange)="setDocumentNo($event.value)"
+                      [autoDisplayFirst]="false" [filter]="true" filterBy="documentNo" optionLabel="documentNo"
+                      dataKey="stockTransferReceiptId" [style]="{width: '100%'}">
+                    </p-dropdown>
+                  </td>
+                </tr>
+              </table>
+              <table class="table table-bordered">
+                <tr>
+                  <td>{{'batch-code' | translate}}</td>
+                  <td>
+                    <batch-auto-complete [required]="true" [addIfMissing]="true" [plantId]="qualityNotification.plantId"
+                      (selectedBatchEvent)="setSelectedBatch($event)">
+                    </batch-auto-complete>
+                  </td>
+                </tr>
+                <tr *ngIf="qualityNotification.qualityNotificationType == 'INTERNAL_PROBLEM_REPORT'">
+                  <td>{{'work-center' | translate}}</td>
+                  <td>
+                    <p-dropdown [options]="workCenters" name="workCenters" (onChange)="setWorkCenter($event.value)"
+                      [autoDisplayFirst]="false" [filter]="true" filterBy="workCenterName" optionLabel="workCenterName"
+                      dataKey="workCenterId" [style]="{width: '100%'}"></p-dropdown>
+                  </td>
+                </tr>
+                <tr *ngIf="qualityNotification.qualityNotificationType == 'COMPLAINT_AGAINST_A_VENDOR'">
+                  <td>{{'vendor' | translate}}</td>
+                  <td>
+                    <p-dropdown [options]="vendors" name="vendors" [autoDisplayFirst]="false"
+                      (onChange)="setSelectedVendor($event.value)" [filter]="true" filterBy="actName"
+                      optionLabel="actName" dataKey="actId" [style]="{width: '100%'}"></p-dropdown>
+                  </td>
+                </tr>
+                <tr *ngIf="qualityNotification.qualityNotificationType == 'COMPLAINT_AGAINST_A_VENDOR'">
+                  <td>{{'vendor-address' | translate}}</td>
+                  <td>
+                    <input type="text" id="vendorAddress" name="vendorAddress"
+                      [(ngModel)]="qualityNotification.vendorAddress" class="form-control" disabled />
+                  </td>
+                </tr>
+                <tr *ngIf="qualityNotification.qualityNotificationType == 'CUSTOMER_COMPLAINT'">
+                  <td>{{'customer' | translate}}</td>
+                  <td>
+                    <p-dropdown [options]="vendors" name="customers" [autoDisplayFirst]="false"
+                      (onChange)="setSelectedCustomer($event.value)" [filter]="true" filterBy="actName"
+                      optionLabel="actName" dataKey="actId" [style]="{width: '100%'}"></p-dropdown>
+                  </td>
+                </tr>
+                <tr *ngIf="qualityNotification.qualityNotificationType == 'CUSTOMER_COMPLAINT'">
+                  <td>{{'customer-address' | translate}}</td>
+                  <td>
+                    <input type="text" id="customerAddress" name="customerAddress"
+                      [(ngModel)]="qualityNotification.customerAddress" class="form-control" disabled />
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'report-type' | translate}}</td>
+                  <td>
+                    <!-- <select id="reportType" name="reportType" class="form-control"
+                      [(ngModel)]="qualityNotification.reportType">
+                      <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                      <option value="{{reportType}}" *ngFor="let reportType of reportTypeList">{{reportType}}
+                      </option>
+                    </select> -->
+                    <p-dropdown [options]="reportTypeList" name="reportType" (onChange)="setReportType($event.value)"
+                      [autoDisplayFirst]="false" [filter]="true" filterBy="qualityNotificationReportTypeShortText"
+                      optionLabel="qualityNotificationReportTypeShortText" dataKey="qualityNotificationReportTypeId"
+                      [style]="{width: '100%'}">
+                    </p-dropdown>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'complaint-quantity' | translate}}</td>
+                  <td>
+                    <input type="number" id="complaintQuantity" name="complaintQuantity"
+                      [(ngModel)]="qualityNotification.complaintQuantity" class="form-control" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'quantity-unit' | translate}}</td>
+                  <td>
+                    <unit-auto-complete [addIfMissing]="true"
+                      (unitChangeEvent)="qualityNotification.quantityUnit=$event;selectQuantityUnit($event)"
+                      [selectedUnit]="qualityNotification.quantityUnit">
+                    </unit-auto-complete>
+                  </td>
+                </tr>
+
+
+                <tr>
+                  <td>{{'description' | translate}}</td>
+                  <td>
+                    <input type="text" id="description" name="description" [(ngModel)]="qualityNotification.description"
+                      class="form-control" required />
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'long-text' | translate}}</td>
+                  <td>
+                    <input type="text" id="longText" name="longText" [(ngModel)]="qualityNotification.longText"
+                      class="form-control" required />
+                  </td>
+                </tr>
+              </table>
+            </form>
+          </div>
+        </div>
+        <div class="row col-md-12">
+          <button type="submit" class="btn btn-sm btn-danger" [disabled]="!inspForm.form.valid" (click)="reset()">
+            <i class="fa fa-ban" aria-hidden="true"></i>
+            {{ "reset" | translate }}
+          </button>
+          <button type="submit" class="btn btn-sm btn-primary" [disabled]="!inspForm.form.valid" (click)="save()">
+            <i class="fa fa-dot-circle-o"></i>
+            {{ "save" | translate }}
+          </button>
+        </div>
+      </p-tabPanel>
+      <!-- Processing -->
+      <p-tabPanel header="{{ 'Processing' | translate }}" [disabled]="!qualityNotification.qualityNotificationId">
+        <edit-processing [data]="processingData" [notificationId]="qualityNotification.qualityNotificationId"
+          (saveAction)="activeTab=2;"></edit-processing>
+      </p-tabPanel>
+      <!-- Item -->
+      <p-tabPanel header="{{ 'Items' | translate }}" [disabled]="!qualityNotification.qualityNotificationId">
+        <list-item [qualityNotificationId]="qualityNotification.qualityNotificationId"></list-item>
+      </p-tabPanel>
+    </p-tabView>
+  </div>
+</div>

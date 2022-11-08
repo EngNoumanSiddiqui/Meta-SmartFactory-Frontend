@@ -1,0 +1,32 @@
+::ng-deep .table-order th, .table-order td {
+    padding: 0.50rem !important;
+}
+
+::ng-deep .remove-scroll{
+    overflow: hidden;
+    .ng-trigger-animation,
+    .ui-dialog-content {
+        overflow: initial;
+    }
+}
+
+::ng-deep .custom-dialog{
+    background: #fff;
+}
+
+
+:host ::ng-deep .remove-scroll{
+    overflow: hidden;
+    .ng-trigger-animation,
+    .ui-dialog-content {
+        overflow: initial;
+    }
+}
+
+:host ::ng-deep .custom-dialog{
+    background: #fff;
+}
+
+:host ::ng-deep .ui-table .ui-table-caption {
+     margin-right: 0px;
+}

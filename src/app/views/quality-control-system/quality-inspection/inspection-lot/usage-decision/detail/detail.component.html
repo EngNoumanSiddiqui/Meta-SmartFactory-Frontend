@@ -1,0 +1,65 @@
+<div class="animated fadeIn">
+    <div class="col-md-12">
+      <div>
+        <div class="card" *ngIf="usageDecision">
+        <div class="card-header">
+            <i class="fa fa-align-justify"></i> {{'inspection-lot-usage-decision-details' | translate}}
+        </div>
+        <div class="card-body">
+            <form #stockForm="ngForm">
+            <table class="table table-striped table-outline">
+                <tbody>
+                  <tr>
+                    <td width="30%" class="text-bold">{{'usage-decision-id' | translate}} <span style="width: 0 !important;" class="float-right">:</span> </td>
+                    <td>{{usageDecision.usageDecisionId}}</td>
+                  </tr>
+                  <tr>
+                    <td width="30%" class="text-bold">{{'ud-code' | translate}} <span style="width: 0 !important;" class="float-right">:</span> </td>
+                    <td>{{usageDecision.udCode}}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'usage-decision' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                    <td>{{usageDecision.usageDecision}}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'quality-score' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                    <td>{{usageDecision.qualityScore}}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'inspection-lot-quantity' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                    <td>{{usageDecision.inspectionLotQuantity}}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'sample-size' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                    <td>{{usageDecision.sampleSize}}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'unrestricted-use' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                    <td>{{usageDecision.unrestrictedUse}}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'scrap' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                    <td>{{usageDecision.scrap}}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'sample-usage' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                    <td>{{usageDecision.sampleUsage}}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'blocked-stock' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                    <td>{{usageDecision.blockedStock}}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'reserves' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                    <td>{{usageDecision.reserves}}</td>
+                  </tr>
+                </tbody>
+            </table>
+            </form>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  

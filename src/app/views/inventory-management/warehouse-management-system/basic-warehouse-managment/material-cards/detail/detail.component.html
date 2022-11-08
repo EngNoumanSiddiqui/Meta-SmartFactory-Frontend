@@ -1,0 +1,868 @@
+<div class="animated fadeIn">
+  <p-tabView class="col-md-12" (onChange)="handleChange($event)">
+
+     <!-- MAIN SCREEN TAB -->
+
+    <p-tabPanel header="{{'main'|translate}}">
+        <div class="card" *ngIf="stock">
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i> {{'material-information' | translate}}
+          </div>
+          <div class="card-body">
+            <form #stockForm="ngForm" class="row p-3">
+              <div class="col-md-6">
+                <table class="table table-striped table-outline">
+                  <tbody>
+
+                    <tr>
+                      <td width="30%" class="text-bold">{{'stock-id' | translate}} <span class="float-right">:</span> </td>
+                      <td>{{stock.stockId}}</td>
+                    </tr>
+                    <tr>
+                      <td width="30%" class="text-bold">{{'stock-name' | translate}} <span class="float-right">:</span> </td>
+                      <td>{{stock.stockName}}</td>
+                  </tr>
+                  <tr>
+                    <td width="30%" class="text-bold">{{'stock-name' | translate}} 2 <span class="float-right">:</span> </td>
+                    <td>{{stock.stockName2}}</td>
+                  </tr>
+                  <tr>
+                    <td width="30%" class="text-bold">{{'stock-name' | translate}} 3 <span class="float-right">:</span> </td>
+                    <td>{{stock.stockName3}}</td>
+                </tr>
+                  <tr>
+                    <td width="30%" class="text-bold">{{'stock-no' | translate}} <span class="float-right">:</span> </td>
+                    <td>
+                      <div class="d-flex" style="align-items: center;">
+                        <div class="col-md-8">{{stock.stockNo}}</div>
+                        <p-checkbox [disabled]="true" name="stockNoChangeAllowed" binary="true" label="{{'allow-to-change' | translate}}"
+                        [(ngModel)]="stock.stockNoChangeAllowed"></p-checkbox>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'industry' | translate}}<span class="float-right">:</span></td>
+                    <td>{{stock.industryName}}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'default-location' | translate}}<span class="float-right">:</span></td>
+                    <td>{{stock.locationNo}}</td>
+                  </tr>
+
+                  <tr>
+                    <td class="text-bold">{{'buy-make' | translate}}<span class="float-right">:</span></td>
+                  <td>{{stock.buy ? ('Buy' | translate) : ''}} {{stock.make ? ('Make' | translate) : ''}}</td>
+                  </tr>
+
+                  </tbody>
+                </table>
+              </div>
+              <div class="col-md-6">
+                <table class="table table-striped table-outline">
+                  <tbody>
+                    <tr>
+                      <td class="text-bold">{{'type' | translate}}<span class="float-right">:</span></td>
+                      <td>
+                        <span *ngIf="stock.stockTypeCode">{{stock.stockTypeCode}} | {{stock.stockTypeName}}</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-bold">{{'class' | translate}} 2<span class="float-right">:</span></td>
+                      <td>
+                        <span *ngIf="stock.stockTypeOneCode">{{stock.stockTypeOneCode}} | {{stock.stockTypeOneName}}</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-bold">{{'class' | translate}} 3<span class="float-right">:</span></td>
+                      <td>
+                        <span *ngIf="stock.stockTypeTwoCode">{{stock.stockTypeTwoCode}} | {{stock.stockTypeTwoName}}</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-bold">{{'plant' | translate}}<span class="float-right">:</span></td>
+                      <td><a href="javascript:;" (click)="showDetailDialog(stock.plantId, 'PLANT')"> {{stock.plantName}}</a></td>
+                    </tr>
+                    <tr>
+                      <td class="text-bold">{{'base-unit-measure' | translate}}<span class="float-right">:</span></td>
+                      <td>{{stock.baseUnit}}</td>
+                    </tr>
+                    <tr>
+                      <td class="text-bold">{{'material-group' | translate}}<span class="float-right">:</span></td>
+                      <td>{{stock.stockGroupName}}</td>
+                    </tr>
+                    <tr>
+                      <td class="text-bold">{{'status' | translate}}<span class="float-right">:</span></td>
+                      <td>{{stock.stockStatus | translate}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+            </form>
+          </div>
+        </div>
+    </p-tabPanel>
+
+    <!-- TECHNOLOGY SCREEN TAB -->
+
+    <p-tabPanel header="{{'technology'|translate}}">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i>
+          {{ "technology" | translate }}
+        </div>
+        <div class="card-body">
+          <table class="table table-bordered ui-fluid">
+            <tbody>
+              <tr>
+                <td>{{ "extra-production-percentage" | translate }}*</td>
+                <td>
+                  {{stock.extraProductionPercentage}}
+                </td>
+              </tr>
+              <tr>
+                <td>{{ "purchase-notification-period" | translate }}</td>
+                <td>
+                  {{stock.purchaseNotificationPeriod}}
+                </td>
+              </tr>
+              <tr>
+                <td>{{ "combine-material" | translate }}</td>
+                <td>
+                 {{stock.combineStockIds}}
+                </td>
+              </tr>
+              <tr>
+                <td>{{ "scrap-must" | translate }}</td>
+                <td>
+                  <p-checkbox [disabled]="true" name="scrapMust" [(ngModel)]="stock.scrapMust" binary="true"></p-checkbox>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </p-tabPanel>
+
+   <!-- PURCHASING SCREEN TAB -->
+
+   <p-tabPanel header="{{'purchasing'|translate}}"
+        [disabled]="(stock?.stockTypeId == 3) || (stock?.stockTypeId == 9) || (stock?.make && !stock?.buy)">
+
+        <div class="card">
+          <span class="card-header">{{ "purchasing-screen" | translate }}</span>
+          <div class="card-body">
+            <table class="table table-bordered ui-fluid cost-screen">
+              <tbody>
+                  <tr>
+                      <td>
+                        <span class="d-flex">
+                            <span style="width: 40%;">
+                                <strong>{{ "material" | translate }}:   </strong>
+                            </span>
+                            <span style="width: 60%;">
+                              {{stock?.stockNo}} | {{purchasingScreen.stockName}}
+                            </span>
+                        </span>
+                    </td>
+                      <td>
+                          <span class="d-flex">
+                              <span style="width: 30%;">
+                                  <strong>{{ "warehouse" | translate }}:&nbsp;&nbsp;</strong>
+                              </span>
+                              <span style="width: 70%;">
+                                 {{stock?.purchaseOrderWarehouseId?.wareHouseName}}
+                              </span>
+                          </span>
+
+                      </td>
+                      <td>
+                        <span class="d-flex">
+                          <span style="width: 40%;"><strong>{{ "plant" | translate }}: </strong></span>
+                          <span style="width: 60%;">{{purchasingScreen?.plantName}}</span>
+                        </span>
+                      </td>
+
+                  </tr>
+                  <tr>
+                      <td>
+                          <span class="d-flex">
+                              <span style="width: 40%;">
+                                  <strong>{{ "base-unit-measure" | translate }}:&nbsp;&nbsp;</strong>
+                              </span>
+                              <span style="width: 58%;">
+                                 {{purchasingScreen.baseUnit}}
+                              </span>
+                          </span>
+
+                      </td>
+                      <td>
+                          <span class="d-flex">
+                              <span style="width: 30%;">
+                                  <strong>{{ "order-unit" | translate }}:&nbsp;&nbsp;</strong>
+                              </span>
+                              <span style="width: 70%;">
+                                 {{purchasingScreen?.orderUnit}}
+                              </span>
+                          </span>
+
+                      </td>
+                      <td>
+                          <span class="d-flex">
+                                <span style="width: 40%;"><strong>{{ "batch-management" | translate }}:&nbsp;&nbsp;</strong></span>
+                                <span style="width: 60%;">
+                                    <p-checkbox [binary]="true" [(ngModel)]="purchasingScreen.batchManagement"></p-checkbox>
+                                </span>
+                          </span>
+                      </td>
+
+                  </tr>
+                  <tr>
+            
+                    <td>
+                        <span class="d-flex">
+                            <span style="width: 40%;">
+                                <strong>{{ "supplier-lead-time-day" | translate }}:&nbsp;&nbsp;</strong>
+                            </span>
+                            <span style="width: 60%;">
+                                {{purchasingScreen.supplierLeadTimeDay}}
+                                
+                            </span>
+                        </span>
+                    </td>
+                    <td>
+                        <span class="d-flex">
+                            <span style="width: 40%;">
+                                <strong>{{"max-order-size-per-week" | translate}}:&nbsp;&nbsp;</strong>
+                            </span>
+                            <span style="width: 60%;">
+                                {{purchasingScreen.maxOrderSizePerWeek}}
+                            
+                            </span>
+                        </span>
+                    </td>
+
+                </tr>
+              </tbody>
+          </table>
+          <div class="cost-screen-header">
+              <span>{{ "info-records" | translate }}</span>
+          </div>
+          <p-table [value]="infoRecordsList">
+              <ng-template pTemplate="header">
+                  <tr>
+                      <th>Vendor</th>
+                      <th>Net Price</th>
+                      <th style="width: 135px;">Effective Price</th>
+                      <th>Currency</th>
+                      <th>Status</th>
+                      <th>Description</th>
+                      <!-- <th style="width: 180px;">Action</th> -->
+                  </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-infoRecord>
+                  <tr>
+                      <td>{{infoRecord.vendorId}}</td>
+                      <td>{{infoRecord.purchaseConditionRecord.netPrice}}</td>
+                      <td>{{infoRecord.purchaseConditionRecord.effectivePrice}}</td>
+                      <td>{{infoRecord.purchaseConditionRecord.currencyCode}}</td>
+                      <td>{{infoRecord.purchaseInfoRecordStatus}}</td>
+                      <td>{{infoRecord.description}}</td>
+                      <!-- <td style="width: 180px;">
+                          <button class="btn btn-success" type="button" (click)="conditionAction(infoRecord.purchaseInfoRecordId)" style="margin-right:5px">Condition</button>
+                          <button class="btn btn-sm btn-outline-danger" type="button" (click)="delete(infoRecord)">
+                              <i class="fa fa-trash"></i></button>
+                          <button class="btn btn-sm btn-outline-info" type="button" (click)="onRowSelect(infoRecord);">
+                              <i class="fa fa-edit"></i></button>
+                      </td> -->
+                  </tr>
+              </ng-template>
+          </p-table>
+          </div>
+        </div>
+
+      </p-tabPanel>
+
+
+    <!-- COSTING SCREEN TAB -->
+
+    <p-tabPanel header="{{ 'costing' | translate }}">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i>
+          {{ "costing-screen" | translate }}
+        </div>
+        <div class="card-body">
+          <table class="table table-bordered ui-fluid cost-screen">
+            <tbody>
+
+              <tr>
+                <td>
+                  <span class="d-flex">
+                    <span class="example-half-width">
+                      <strong>{{ "material" | translate }}:</strong>
+                    </span>
+                    <span class="example-half-width">
+                      {{stock?.stockNo}} | {{stock?.stockName}}
+                    </span>
+                  </span>
+
+
+                </td>
+                <td>
+                  <span class="d-flex">
+                    <span class="example-half-width">
+                      <strong>{{ "plant" | translate }}:</strong>
+                    </span>
+                    <span class="example-half-width">
+                      {{ stock?.plantName}}
+                    </span>
+                  </span>
+
+
+                </td>
+              </tr>
+              <!-- {{purchasingScreen | json}} -->
+              <tr>
+                <td>
+                  <span class="d-flex">
+                    <span class="example-half-width">
+                      <strong>{{ "base-unit" | translate }}:</strong>
+                    </span>
+                    <span class="example-half-width">
+                      {{stock?.stockCosting?.baseUnit}}
+                    </span>
+                  </span>
+                  </td>
+                <td>
+                  <span class="d-flex">
+                    <span class="example-half-width">
+                      <strong>{{ "order-unit" | translate }}:</strong>
+                    </span>
+                    <span class="example-half-width">
+                      {{ stock?.stockCosting?.orderUnit}}
+                    </span>
+                  </span>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <span class="d-flex">
+                    <span class="example-half-width">
+                      <strong>{{ "procurement-type" | translate }}:</strong>
+                    </span>
+                    <span class="example-half-width">
+                      {{ stock?.stockCosting?.procurementType | translate}}
+                    </span>
+                  </span>
+
+                </td>
+
+                <td>
+                  <span class="d-flex">
+                    <span class="example-half-width">
+                      <strong>{{ "currency" | translate }}:</strong>
+                    </span>
+                    <span class="example-half-width">
+                      {{ stock?.stockCosting?.currencyCode}}
+                    </span>
+                  </span>
+
+                </td>
+
+              </tr>
+              <tr>
+                <td>
+                  <span class="d-flex">
+                    <span class="example-half-width">
+                      <strong>{{ "create-date" | translate }}:</strong>
+                    </span>
+                    <span class="example-half-width">
+                      {{ stock?.stockCosting?.createDate ? (stock?.stockCosting?.createDate| date:'dd/MM/yy') : '' }}
+                    </span>
+                  </span>
+                </td>
+                <td>
+                  <span class="d-flex">
+                    <span class="example-half-width">
+                      <strong>{{ "update-date" | translate }}:</strong>
+                    </span>
+                    <span class="example-half-width">
+                      {{ stock?.stockCosting?.updateDate ? (stock?.stockCosting?.updateDate| date:'dd/MM/yy') : '' }}
+                    </span>
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <span class="d-flex">
+                    <span class="example-half-width">
+                      <strong>{{'cost-center'|translate}}:</strong>
+                    </span>
+                    <span class="example-half-width">
+                      {{stock?.stockCosting?.costCenter?.costCenterNo}} {{stock?.stockCosting?.costCenter?.costCenterName}}
+                    </span>
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="cost-screen-header">
+            <i class="fa fa-align-justify mr-2 ml-1"></i>
+            <p>{{ "costing-estimate" | translate }}</p>
+          </div>
+          <table class="table table-bordered ui-fluid cost-screen">
+            <tbody>
+              <tr>
+                <td>
+                  <span class="d-flex">
+                    <span class="example-half-width">
+                      <strong>{{ "current-price" | translate }}:</strong>
+                    </span>
+                    <span class="example-half-width">
+                      {{ stock?.stockCostEstimate?.currentPrice}}
+                    </span>
+                  </span>
+                </td>
+                <td>
+                  <span class="example-half-width">
+
+                    <strong>{{ "current-period" | translate }}: </strong>
+                  </span>
+                  <span  class="example-half-width">
+                    {{ stock?.stockCostEstimate?.currentPricePeriod ? (stock?.stockCostEstimate?.currentPricePeriod| date:'dd/MM/yy') : '' }}
+                    <!-- {{ stock?.stockCostEstimate?.currentPricePeriod}} -->
+                  </span>
+
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <span class="d-flex">
+                    <span class="example-half-width">
+                      <strong>{{ "planned-price" | translate }}:</strong>
+                    </span>
+                    <span class="example-half-width">
+                      {{ stock?.stockCostEstimate?.plannedPrice}}
+                    </span>
+                  </span>
+                </td>
+
+                <td>
+                  <span class="d-flex">
+                    <span class="example-half-width">
+                      <strong>{{ "planned-period" | translate }}:</strong>
+                    </span>
+                    <span class="example-half-width">
+                      {{ stock?.stockCostEstimate?.plannedPricePeriod ? (stock?.stockCostEstimate?.plannedPricePeriod| date:'dd/MM/yy') : '' }}
+                    </span>
+                  </span>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <span class="d-flex">
+                    <span class="example-half-width">
+                      <strong>{{ "previous-price" | translate }}:</strong>
+                    </span>
+                    <span class="example-half-width">
+                      {{ stock?.stockCostEstimate?.previousPrice}}
+                    </span>
+                  </span>
+                  <!-- <strong>{{ "previous-price" | translate }}:</strong>
+                  {{ stock?.stockCostEstimate?.previousPrice}} -->
+
+                </td>
+
+                <td>
+                  <span class="d-flex">
+                    <span class="example-half-width">
+                      <strong>{{ "previous-period" | translate }}:</strong>
+                    </span>
+                    <span class="example-half-width">
+                      {{ stock?.stockCostEstimate?.previousPricePeriod ? (stock?.stockCostEstimate?.previousPricePeriod| date:'dd/MM/yy') : '' }}
+                    </span>
+                  </span>
+
+
+                  <!-- {{ stock?.stockCosting?.stockCostEstimate?.previousPricePeriod}} -->
+                </td>
+
+              </tr>
+
+              <tr>
+                <td>
+                  <span class="d-flex">
+                    <span class="example-half-width">
+                      <strong>{{ "moving-price" | translate }}:</strong>
+                    </span>
+                    <span class="example-half-width">
+                      {{ stock?.stockCostEstimate?.movingPrice}}
+                    </span>
+                  </span>
+                </td>
+                <td>
+                  <span class="d-flex">
+                    <span class="example-half-width">
+                      <strong>{{ "standard-price" | translate }}: </strong>
+                    </span>
+                    <span class="example-half-width">
+                      {{ stock?.stockCostEstimate?.standardPrice}}
+                    </span>
+                  </span>
+
+
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <span class="d-flex">
+                    <span class="example-half-width">
+                      <strong>{{ "create-date" | translate }}:</strong>
+                    </span>
+                    <span class="example-half-width">
+                      {{ stock?.stockCostEstimate?.createDate ? (stock?.stockCostEstimate?.createDate| date:'dd/MM/yy') : '' }}
+                    </span>
+                  </span>
+                </td>
+                <td>
+                  <span class="d-flex">
+                    <span class="example-half-width">
+                      <strong>{{ "update-date" | translate }}:</strong>
+                    </span>
+                    <span class="example-half-width">
+                      {{ stock?.stockCostEstimate?.updateDate ? (stock?.stockCostEstimate?.updateDate| date:'dd/MM/yy') : '' }}
+                    </span>
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="cost-screen-header">
+            <i class="fa fa-align-justify mr-2 ml-1"></i>
+            <p>{{ "material-valuation" | translate }}</p>
+          </div>
+          <table class="table table-bordered ui-fluid cost-screen">
+            <tbody>
+              <tr>
+                <td>
+                  <span class="d-flex">
+                    <span class="example-half-width">
+                      <strong>{{ "price-control" | translate }}:</strong>
+                    </span>
+                    <span class="example-half-width" *ngIf="stock?.stockValuation?.movingPriceSelection === true">
+                      MOVING PRICE
+                    </span>
+                    <span class="example-half-width" *ngIf="stock?.stockValuation?.movingPriceSelection === false">
+                      STANDARD PRICE
+                    </span>
+                  </span>
+                </td>
+                <td>
+                  <span class="d-flex">
+                    <span class="example-half-width">
+                      <strong>{{ "total-value" | translate }}: </strong>
+                    </span>
+                    <span class="example-half-width">
+                      {{ stock?.stockValuation?.stockTotalValue}}
+                    </span>
+
+                  </span>
+
+
+                </td>
+
+              </tr>
+              <tr>
+                <td>
+                  <span class="d-flex">
+                    <span class="example-half-width">
+                      <strong>{{ "valid-from" | translate }}:</strong>
+                    </span>
+                    <span class="example-half-width">
+                      {{ stock?.stockValuation?.validFrom ? (stock?.stockValuation?.validFrom| date:'dd/MM/yy') : '' }}
+                      <!-- {{ stock?.stockValuation?.validFrom}} -->
+                    </span>
+                  </span>
+                </td>
+                <td>
+                  <span class="d-flex">
+                    <span class="example-half-width">
+                      <strong>{{ "update-date" | translate }}:</strong>
+                    </span>
+                    <span class="example-half-width">
+                      {{ stock?.stockValuation?.updateDate ? (stock?.stockValuation?.updateDate| date:'dd/MM/yy') : '' }}
+                      <!-- {{ stock?.stockValuation?.validFrom}} -->
+                    </span>
+                  </span>
+                  </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </p-tabPanel>
+
+
+    <p-tabPanel header = "{{'sales' | translate}}" [disabled]="stock?.stockTypeId == 1">
+      <div class="card" *ngIf="stock">
+        <span class="card-header">{{'sales-screen'|translate}}</span>
+        <div class="card-body">
+          <table class="table">
+            <thead>
+            <tr align="center">
+              <th>{{'material'|translate}}</th>
+              <th>{{'warehouse-name'|translate}}</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr align="center">
+              <td >
+                {{stock.stockNo}} | {{stock.stockName}}
+              </td>
+              <td>
+                {{stock.salesOrderWarehouseId?.wareHouseName}}
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </p-tabPanel>
+    <p-tabPanel header="{{'production'|translate}}" [disabled]="stock?.buy">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i>{{ "production-screen" | translate }}
+        </div>
+        <div class="card-body">
+          <table class="table table-bordered" *ngIf="stock">
+            <tbody>
+              <tr>
+                <td width="50%" >
+                 <span class="text-bold">{{'material' | translate}}</span> : {{stock.stockNo}} | {{stock.stockName}}
+                </td>
+                <td>
+                  <span class="text-bold">{{'plant' | translate}}</span> : {{stock.plantName}}
+                </td>
+              </tr>
+              <tr>
+                <td class="text-bold">{{'production-order-warehouse' | translate}}</td>
+                <td><a href="javascript:;" (click)="showDetailDialog(stock.productionOrderWareHouseId, 'WAREHOUSE')"> {{stock.productionOrderWareHouseName}}</a></td>
+              </tr>
+              <tr>
+                <td class="text-bold">{{'product-tree-id' | translate}}</td>
+                  <td><a *ngIf="stock.defaultProductTreeId" href="javascript:;" (click)="showDetailDialog(stock.defaultProductTreeId, 'PRODUCTTREE')">
+                    {{stock.defaultProductTreeId}} | {{stock.defaultProductTreereVisionNo}}
+                    </a></td>
+
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </p-tabPanel>
+    <p-tabPanel header="{{'quality'|translate}}">
+      <ng-template pTemplate="content">
+        <quality-screen-detail [stock]="stock"></quality-screen-detail>
+      </ng-template>
+    </p-tabPanel>
+
+
+    <p-tabPanel header="{{'pallet'|translate}}">
+        <pallet-screen-detail [stock]="stock"></pallet-screen-detail>
+    </p-tabPanel>
+
+    <p-tabPanel header="{{'documentation'|translate}}">
+        <div class="card" *ngIf="id">
+            <div class="card-header">
+              <i class="fa fa-align-justify"></i>{{'other-details' | translate}}
+            </div>
+            <div class="card-body">
+              <table class="table table-bordered">
+                <tbody>
+                <tr align="center">
+                  <td class="text-center" colspan="2">
+                    <image-viewer></image-viewer>
+                  </td>
+                </tr>
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+    </p-tabPanel>
+    <p-tabPanel header="{{'dimension'|translate}}">
+        <div class="card" *ngIf="stock">
+            <span class="card-header">{{'unit-of-measures'|translate}}</span>
+            <div class="card-body">
+              <table class="table" *ngIf="stock&& stock.stockUnitMeasureList">
+                <thead>
+                <tr>
+                  <th>{{'denominator'|translate}}</th>
+                  <th>{{'alternative-unit'|translate}}</th>
+                  <th>{{'numerator'|translate}}</th>
+                  <th>{{'base-unit-measure'|translate}}</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr align="center" *ngFor="let item of stock.stockUnitMeasureList; let i = index">
+                  <td class="text-center">
+                    {{item.denominator}}
+                  </td>
+                  <td class="text-center">
+                    {{item.alternativeUnit}}
+                  </td>
+                  <td class="text-center">
+                    {{item.numerator}}
+                  </td>
+                  <td class="text-center">
+                    {{item.baseUnit}}
+                  </td>
+                </tr>
+
+                </tbody>
+              </table>
+            </div>
+        </div>
+        <div class="card" *ngIf="stock">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6">
+                <table class="table table-bordered">
+                  <tbody >
+                      <tr>
+                          <td width="25%" class="text-bold">{{'gross-weight' | translate}}<span class="float-right">:</span></td>
+                          <td>{{stock.grossWeight}}</td>
+                        </tr>
+                        <tr>
+                          <td class="text-bold">{{'weight-unit' | translate}}<span class="float-right">:</span></td>
+                          <td>{{stock.weightUnit}}</td>
+                        </tr>
+                        <tr>
+                          <td class="text-bold">{{'net-weight' | translate}}<span class="float-right">:</span></td>
+                          <td><span> {{stock.netWeight}}</span></td>
+                        </tr>
+                        <tr>
+                          <td class="text-bold">{{'volume' | translate}}<span class="float-right">:</span></td>
+                          <td><span> {{stock.volume}}</span></td>
+                        </tr>
+                        <tr>
+                          <td class="text-bold">{{'volume-unit' | translate}}<span class="float-right">:</span></td>
+                          <td><span> {{stock.volumeUnit}}</span></td>
+                        </tr>
+                        <tr>
+                          <td class="text-bold">{{'thickness' | translate}}(mm)<span class="float-right">:</span></td>
+                          <td><span> {{stock.thickness}}</span></td>
+                        </tr>
+
+                  </tbody>
+                </table>
+              </div>
+              <div class="col-md-6">
+
+                <table class="table table-bordered">
+                  <tbody>
+                    <tr>
+                      <td  width="25%" class="text-bold">{{'length' | translate}}<span class="float-right">:</span></td>
+                      <td><span> {{stock.length}}</span></td>
+                    </tr>
+                    <tr>
+                      <td class="text-bold">{{'height' | translate}}<span class="float-right">:</span></td>
+                      <td><span> {{stock.height}}</span></td>
+                    </tr>
+                    <tr>
+                      <td class="text-bold">{{'width' | translate}}<span class="float-right">:</span></td>
+                      <td><span> {{stock.width}}</span></td>
+                    </tr>
+                    <tr>
+                      <td class="text-bold">{{'dimension-unit' | translate}}<span class="float-right">:</span></td>
+                      <td>
+                        <span> {{stock.dimensionUnit}}</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-bold">{{ "flexible_cut" | translate }}</td>
+                      <td>
+                            <p-checkbox name="buy" [disabled]="true" binary="true" [(ngModel)]="stock.flexibleCut">
+                            </p-checkbox>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+        </div>
+    </p-tabPanel>
+    <p-tabPanel header="{{'reorder-planning'|translate}}">
+        <div class="card" *ngIf="stock">
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i>
+            {{ "reorder-planning" | translate }}
+          </div>
+          <div class="card-body">
+            <table class="table table-bordered ui-fluid">
+              <tbody >
+                  <!-- <tr>
+                    <td width="37%" class="text-bold">{{'max-stock-level' | translate}}</td>
+                    <td>{{stock.maxStockLevel}}</td>
+                  </tr>
+                  <tr>
+                    <td width="37%" class="text-bold">{{'reorder-point' | translate}}</td>
+                    <td>{{stock.reorderPoint}}</td>
+                  </tr>
+                  <tr>
+                    <td width="37%" class="text-bold">{{'safety-Stock' | translate}}</td>
+                    <td>{{stock.safetyStock}}</td>
+                  </tr>
+                  <tr>
+                    <td width="37%" class="text-bold">{{'reorder-strategy' | translate}}</td>
+                    <td>{{stock.reorderStrategy | translate}}</td>
+                  </tr> -->
+                  <tr>
+                    <td class="text-bold">{{'stock-management' | translate}}</td>
+                    <td>
+                      <p-checkbox [disabled]="true" name="stockManagement" binary="true" [(ngModel)]="stock.stockManagement"></p-checkbox>
+                    </td>
+                  </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+    </p-tabPanel>
+    <p-tabPanel header="{{'batch'|translate}}">
+
+    </p-tabPanel>
+
+    <p-tabPanel header="{{'schedule'|translate}}">
+      <div class="card" *ngIf="stock">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i>
+          {{ "schedule" | translate }}
+        </div>
+        <div class="card-body">
+          <table class="table table-bordered ui-fluid">
+            <tbody>
+              <tr>
+                <td style="width:50%" class="text-bold">{{'min-schedule-ready-percentage' | translate}}</td>
+                <td style="width:50%"><span> {{stock.minSchReadyReservationPercentage}} %</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+  </p-tabPanel>
+
+
+     <!-- <p-tabPanel header="{{ 'stock-strategy' | translate }}">
+      <app-stock-strategy [readonly]="true" [stockId]="stock.stockId"></app-stock-strategy>
+    </p-tabPanel> -->
+  </p-tabView>
+</div>
+

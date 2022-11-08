@@ -1,0 +1,31 @@
+<div class="animated fadeIn">
+    <div class="col-md-12" (onChange)="handleChange($event)">
+      <div class="card" *ngIf="qualityControlKey">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i> {{'quality-control-key-details' | translate}}
+        </div>
+        <div class="card-body">
+          <form #stockForm="ngForm">
+            <table class="table table-striped table-outline">
+              <tbody>
+                <tr>
+                  <td width="30%" class="text-bold">{{'control-key-id' | translate}} <span style="width: 0 !important;" class="float-right">:</span> </td>
+                  <td>{{qualityControlKey.qmControlKeyId}}</td>
+                </tr>
+                <tr>
+                  <td class="text-bold">{{'code' | translate}} <span style="width: 0 !important;" class="float-right">:</span> </td>
+                  <td>{{qualityControlKey.qmControlKeyCode}}</td>
+                </tr>
+                <tr>
+                  <td class="text-bold">{{'short-text' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                  <td>{{qualityControlKey.qmControlKeyText}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  

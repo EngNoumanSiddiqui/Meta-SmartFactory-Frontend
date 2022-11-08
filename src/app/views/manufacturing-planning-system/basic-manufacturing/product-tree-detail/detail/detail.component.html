@@ -1,0 +1,98 @@
+<!--<form #orderEdit="ngForm" >-->
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12" *ngIf="dataModel">
+
+      <p-tabView  (onChange)="handleChange($event)">
+        <!-- <p-tabPanel header="{{'detail' | translate}}" [selected]="index == 0">
+        <div class="card">
+        <div class="card-body">
+            <table class="table table-bordered table-md">
+              <tbody>
+                <tr>
+                  <td>{{('production-type'|translate)}}</td>
+                  <td>
+                    {{dataModel.productionType}}
+                  </td>
+                </tr>
+              <tr>
+                <td>{{('workstation'|translate)}}</td>
+                <td>
+                  {{dataModel.workstation?.workStationName}}
+                </td>
+              </tr>
+
+              <tr>
+                <td width="35%">{{'operation-repeat' | translate}}</td>
+                <td>
+                  {{dataModel.operationRepeat}}
+                </td>
+              </tr>
+              <tr>
+                <td width="35%">{{'process-control-frequency' | translate}}</td>
+                <td>
+                  {{dataModel.processControlFrequency}}
+                </td>
+              </tr>
+              <tr>
+                <td width="35%">{{'planned-cycle-quantity' | translate}}</td>
+                <td>
+                  {{dataModel.plannedCycleQuantity}}
+                </td>
+              </tr>
+              <tr>
+                <td width="35%">{{'single-duration' | translate}}</td>
+                <td> {{dataModel.ssingleDuration}}
+                </td>
+              </tr>
+              <tr>
+                <td width="35%">{{'single-setup-duration' | translate}}</td>
+                <td>{{dataModel.ssingleSetupDuration}}
+                </td>
+              </tr>
+              <tr>
+                <td width="35%">{{'single-total-duration' | translate}}</td>
+                <td>{{dataModel.ssingleTotalDuration}}
+                </td>
+              </tr>
+              <tr>
+                <td width="35%">{{'max-single-standby-duration' | translate}}</td>
+                <td>{{dataModel.smaxSingleStandbyDuration}}
+                </td>
+              </tr>
+              </tbody>
+            </table>
+        </div>
+       </div>
+        </p-tabPanel>
+        <p-tabPanel header="{{'components' | translate}}" [selected]="index == 1">
+          <product-tree-component-list [detailMode]="true" [productTreeDetailId]="dataModel.productTreeDetailId" [tableData]="componentList"
+                                       (saveEvent)="componentList=$event;"></product-tree-component-list>
+        </p-tabPanel>
+        <p-tabPanel header="{{'auxiliary-materials' | translate}}" [selected]="index == 2">
+          <product-tree-component-list [detailMode]="true"
+            [productTreeDetailId]="dataModel.productTreeDetailId" [tableData]="this.auxMaterialList"
+            (saveEvent)="this.auxMaterialList=$event"></product-tree-component-list>
+        </p-tabPanel> -->
+        <p-tabPanel header="{{'operation' | translate}}" [selected]="index == 0">
+          <product-tree-operation-list [detailMode]="true" [productTreeDetailId]="dataModel.productTreeDetailId" [tableData]="dataModel.operationList"
+                                       (saveEvent)="dataModel.operationList=$event;"></product-tree-operation-list>
+        </p-tabPanel>
+        <p-tabPanel header="{{'equipments' | translate}}" [selected]="index == 1">
+          <product-tree-equipment-list [detailMode]="true" [productTreeDetailId]="dataModel.productTreeDetailId" [tableData]="dataModel.equipmentList"
+                                       (saveEvent)="dataModel.equipmentList=$event;"></product-tree-equipment-list>
+        </p-tabPanel>
+        <!-- <p-tabPanel header="{{'workstation-program' | translate}}" [selected]="index == 2">
+          <product-tree-workstation-program-list [detailMode]="true" [productTreeDetailId]="dataModel.productTreeDetailId" [tableData]="dataModel.workstationProgramList"
+                                       (saveEvent)="dataModel.workstationProgramList=$event;"></product-tree-workstation-program-list>
+        </p-tabPanel> -->
+        <p-tabPanel header="{{'QUALITY_PLAN' | translate}}" [selected]="index == 3">
+          <product-tree-quality-plan-list [detailMode]="true" [productTreeDetailId]="dataModel.productTreeDetailId" [tableData]="dataModel.workstationProgramList"
+                                       (saveEvent)="dataModel.workstationProgramList=$event;"></product-tree-quality-plan-list>
+        </p-tabPanel>
+      </p-tabView>
+
+    </div>
+  </div><!--/.row-->
+</div>
+<!--</form>-->

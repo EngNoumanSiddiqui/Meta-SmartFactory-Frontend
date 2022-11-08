@@ -1,0 +1,61 @@
+<!--<form #orderEdit="ngForm" >-->
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          {{'task-operation-service'|translate}}
+        </div>
+        <div class="card-body">
+          <form #saleForm="ngForm" class="form-horizontal ui-fluid">
+            <table class="table table-bordered">
+              <tbody>
+              <tr>
+                <td width="35%">{{'external-service' | translate}}</td>
+                <td> <external-service-auto-complete [required]="true" [addIfMissing]="true"
+                                                     (selectedExternalServiceEvent)="setSelectedService($event)"></external-service-auto-complete>
+                </td>
+              </tr>
+              <tr>
+                <td width="35%">{{'quantity' | translate}}</td>
+                <td><input class="form-control" [(ngModel)]="dataModel.quantity" type="number" min="0"
+                           name="quantity" required/>
+                </td>
+              </tr>
+              <tr>
+                <td width="35%">{{'quantity-unit' | translate}}</td>
+                <td><unit-auto-complete [addIfMissing]="true" (unitChangeEvent)="dataModel.quantityUnit=$event"></unit-auto-complete>
+                </td>
+              </tr>
+              <tr>
+                <td >{{'gross-price' | translate}}</td>
+                <td><input class="form-control" [(ngModel)]="dataModel.grossPrice" type="number"
+                           name="grossPrice" />
+                </td>
+              </tr>
+              <tr>
+                <td >{{'currency' | translate}}</td>
+                <td><input class="form-control" [(ngModel)]="dataModel.currency"
+                           name="currency" />
+                </td>
+              </tr>
+              </tbody>
+
+            </table>
+
+          </form>
+        </div>
+        <div class="card-footer">
+          <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+            {{'reset' | translate}}
+          </button>
+          <button type="submit" class="btn btn-sm btn-primary" [disabled]="!saleForm.form.valid || !dataModel.externalServiceId"
+                  (click)="save()"><i class="fa fa-dot-circle-o"></i>
+            {{'save' | translate}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div><!--/.row-->
+</div>
+<!--</form>-->

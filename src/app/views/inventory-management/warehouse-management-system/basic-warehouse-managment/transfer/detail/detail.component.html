@@ -1,0 +1,313 @@
+<div class="row ui-fluid" *ngIf="stockTransferReceipt">
+
+  <div class="col-lg-4 pr-0" style="max-width: 30%;" >
+    <div class="card">
+      <div class="card-header">
+        <i class="fa fa-align-justify"></i> {{'good-movements-information' | translate}}
+      </div>
+      <div class="card-body">
+        <form #transferForm="ngForm">
+          <table class="table table-striped table-outline  ">
+            <tbody *ngIf="stockTransferReceipt">
+            <tr>
+              <td width="35%" class="text-bold">{{'activity-type' | translate}}<span class="float-right">:</span></td>
+              <td>{{stockTransferReceipt.goodsMovementActivityType}}</td>
+            </tr>
+
+            <tr>
+              <td class="text-bold">{{'document-type' | translate}}<span class="float-right">:</span></td>
+              <td>{{stockTransferReceipt.goodMovementDocumentType}}</td>
+            </tr>
+
+            <ng-template [ngIf]="stockTransferReceipt.goodsMovementActivityType != 'TRANSFER_POSTING'">
+              <ng-template [ngIf]="stockTransferReceipt.goodMovementDocumentType == 'PURCHASE_ORDER'">
+                <tr>
+                  <td class="text-bold">{{'purchase-order-id' | translate}}<span class="float-right">:</span></td>
+                  <td>{{stockTransferReceipt.purchaseOrderId}}</td>
+                </tr>
+              </ng-template>
+
+              <ng-template [ngIf]="stockTransferReceipt.goodMovementDocumentType == 'PRODUCTION_ORDER'">
+                <tr>
+                  <td class="text-bold">{{'production-order-id' | translate}}<span class="float-right">:</span></td>
+                  <td>{{stockTransferReceipt.prodOrderId}}</td>
+                </tr>
+              </ng-template>
+
+              <ng-template [ngIf]="stockTransferReceipt.goodMovementDocumentType == 'SALES_ORDER'">
+                <tr>
+                  <td class="text-bold">{{'sales-order-id' | translate}}<span class="float-right">:</span></td>
+                  <td>{{stockTransferReceipt.saleOrderId}} | {{stockTransferReceipt.saleOrderNo}}</td>
+                </tr>
+              </ng-template>
+            </ng-template>
+
+            <tr>
+              <td class="text-bold">{{'document-no' | translate}}<span class="float-right">:</span></td>
+              <td>{{stockTransferReceipt.documentNo}}</td>
+            </tr>
+
+            <tr>
+              <td class="text-bold">{{'document-date' | translate}}<span class="float-right">:</span></td>
+              <td>{{stockTransferReceipt.documentDate | date:'dd-MM-yyyy HH:mm:ss'}}</td>
+            </tr>
+
+            <tr>
+              <td class="text-bold">{{'posting-date' | translate}}<span class="float-right">:</span></td>
+              <td>{{stockTransferReceipt.postingDate | date:'dd-MM-yyyy HH:mm:ss'}}</td>
+            </tr>
+
+            </tbody>
+          </table>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg p-0" style="max-width: 70%;">
+    <p-tabView>
+      <p-tabPanel header="{{'good-movements-details'|translate}}">
+        <table class="table table-sm  table-outline mb-0">
+                <thead class="table-secondary small">
+                  <tr>
+                    <th>{{'item-no' | translate}}</th>
+                    <th>{{'plant' | translate}}</th>
+                    <th>{{'material-no' | translate}}</th>
+                    <th>{{'material' | translate}}</th>
+                    <th>{{'defect' | translate}}</th>
+                    <th *ngIf="stockTransferReceipt.goodsMovementActivityType == 'TRANSFER_POSTING'" >{{'batch-code-from' | translate}}</th>
+                    <th *ngIf="stockTransferReceipt.goodsMovementActivityType == 'TRANSFER_POSTING'" >{{'batch-code-to' | translate}}</th>
+                    <th *ngIf="stockTransferReceipt.goodsMovementActivityType != 'TRANSFER_POSTING'" >{{'batch-code' | translate}}</th>
+    
+                    <ng-container *ngIf="stockTransferReceipt.goodsMovementActivityType !== 'GOODS_RECEIPT'; else wareHouseFrom">
+                      <th>{{'warehouse-from' | translate}}</th>
+                    </ng-container>
+                    <ng-template #wareHouseFrom>
+                      <th>{{'warehouse-to' | translate}}</th>
+                    </ng-template>
+                    
+                    <th *ngIf="stockTransferReceipt.goodsMovementActivityType == 'TRANSFER_POSTING'"> {{'warehouse-to' | translate}}</th>
+                    <th>{{'height' |translate}}</th>
+                    <th>{{'width' |translate}}</th>
+                    <th>{{'quantity' |translate}}</th>
+                    <th>{{'base-unit' |translate}}</th>
+                    <th>{{'dimension-unit' |translate}}</th>
+                    <!--<th></th>-->
+                    <!--<th></th>-->
+                  </tr>
+                </thead>
+                <tbody>
+                  <ng-container *ngFor="let item of stockTransferReceipt.responseStockTransferDetailList; let i = index">
+                    <tr  [ngClass]="{'bg-success': selectedItemIndex==i}">
+                      <td>{{item.itemNo}}</td>
+                      <td>{{item.plantName}}</td>
+                      <td>{{item.materialNo}}</td>
+                      <td>{{item.materialName}}</td>
+                      <td>
+                        {{item.defected==true?'YES':'NO'}}
+                      </td>
+                      <td *ngIf="stockTransferReceipt.goodsMovementActivityType == 'TRANSFER_POSTING'"  >{{item.batchFrom}}</td>
+                      <td>{{item.batch}}</td>
+                      <td>{{item.wareHouseFromName}}</td>
+                      <td *ngIf="stockTransferReceipt.goodsMovementActivityType == 'TRANSFER_POSTING'">{{item.wareHouseToName}}</td>
+                      <td>{{item.height}}</td>
+                      <td>{{item.width}}</td>
+                      <td>{{item.quantity}}</td>
+                      <td>{{item.baseUnit}}</td>
+                      <td>{{item.dimensionUnit}}</td>
+                    </tr>
+                  </ng-container>
+    
+                  <tr *ngIf="!stockTransferReceipt.responseStockTransferDetailList || stockTransferReceipt.responseStockTransferDetailList.length==0">
+                    <td colspan="10" class="noData text-center">
+                      <strong class=""><i class="fa fa-warning "></i>{{'NO_DATA_FOUND'|translate}}!</strong>
+                    </td>
+                  </tr>
+    
+                </tbody>
+        </table>
+      </p-tabPanel>
+     <p-tabPanel header="{{'pallet-list'|translate}}">
+        <div class="row">
+          <div class="col-md-12">
+            <p-table [columns]="palletSelectedColumns" [value]="palletList" [dataKey]="'palletId'">
+              <ng-template pTemplate="header" let-columns>
+                  <tr>
+                    <th style="width: 3em"></th>
+                      <th *ngFor="let col of columns">
+                          {{col.header | translate}}
+                      </th>
+                  </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-rowData let-expanded="expanded" let-columns="columns">
+                <tr>
+                  <td>
+                    <a href="#" [pRowToggler]="rowData">
+                      <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+                    </a>
+                  </td>
+                  <td *ngFor="let col of columns" style="cursor: pointer"
+                    [ngSwitch]="col.field">
+  
+                    <span *ngSwitchCase="'batch'" > {{rowData.batch}}</span>
+                    <span *ngSwitchCase="'stock'" >{{rowData[col.field]?.stockName}}</span>
+                    <span *ngSwitchCase="'jobOrder'"> </span>
+                    <span *ngSwitchCase="'unit'"> {{rowData.stock?.baseUnit}} </span>
+                    <span *ngSwitchCase="'wareHouse'"> {{rowData[col.field]?.wareHouseName}} </span>
+                    <span *ngSwitchCase="'updateDate'"> {{rowData[col.field] | date:'dd/mm/yyyy HH:mm'}} </span>
+                    <span *ngSwitchCase="'createDate'"> {{rowData[col.field] | date:'dd/mm/yyyy HH:mm'}} </span>
+                    <span *ngSwitchDefault> {{rowData[col.field]}} </span>
+                  </td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="rowexpansion" let-rowData let-columns="columns">
+                <tr>
+                  <td colspan="2"></td>
+                  <td colspan="2">
+                    <tr><td><strong>{{'stock-no' | translate}}</strong> : {{rowData.stock?.stockNo}}</td></tr>
+                    <tr><td><strong>{{'stock' | translate}}</strong> : {{rowData.stock?.stockName}}</td></tr>
+                    <tr><td><strong>{{'warehouse' | translate}}</strong> : {{rowData.wareHouse?.wareHouseName}}</td></tr>
+                  </td>
+                  <td colspan="2">
+                    <tr><td><strong>{{'jobOrder' | translate}}</strong> : {{rowData.jobOrder?.jobOrderId}}</td></tr>
+                    <tr><td><strong>{{'batch' | translate}}</strong> : {{rowData.batch}}</td></tr>
+                    <tr><td><strong>{{'create-date' | translate}}</strong> : {{rowData.createDate | date:'dd/MM/yyyy HH:mm'}}</td></tr>
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+      </div>
+      </p-tabPanel>
+      <p-tabPanel header="{{'notification'|translate}}">
+        <div class="row">
+          <div class="col-md-12">
+            <p-table [columns]="notificationSelectedColumns" [value]="StockTransferNotificationDetailList"
+              [dataKey]="'stockTransferNotificationDetailId'"  [autoLayout]="true">
+              <ng-template pTemplate="header" let-columns>
+                <tr>
+                  <th style="width: 3em"></th>
+                  <ng-container *ngFor="let col of columns" [ngSwitch]="col.field">
+                    <th *ngSwitchDefault>{{col.header | translate}}</th>
+                    <th *ngSwitchCase="'goodsMovementStatus'" style="width: 8em;">{{col.header | translate}}</th>
+                    <th *ngSwitchCase="'goodsMovementActivityType'" style="width: 12em;">{{col.header | translate}}</th>
+                    <th *ngSwitchCase="'goodMovementDocumentType'" style="width: 12em;">{{col.header | translate}}</th>
+                    <th *ngSwitchCase="'materialNo'" style="width: 10em;">{{col.header | translate}}</th>
+                    <th *ngSwitchCase="'quantity'" style="width: 4em;">{{col.header | translate}}</th>
+                    <th *ngSwitchCase="'baseUnit'" style="width: 4em;">{{col.header | translate}}</th>
+                    <th *ngSwitchCase="'stockTransferReceiptNotificationId'" style="width: 4em;">{{col.header | translate}}</th>
+                    <th *ngSwitchCase="'stockTransferNotificationDetailId'" style="width: 4em;">{{col.header | translate}}</th>
+                  </ng-container>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-rowData let-expanded="expanded" let-columns="columns">
+                <tr>
+                  <td>
+                    <a href="#" [pRowToggler]="rowData">
+                      <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+                    </a>
+                  </td>
+                  <td *ngFor="let col of columns" style="cursor: pointer" [ngSwitch]="col.field">
+                    <span *ngSwitchCase="'stockTransferReceiptNotificationId'">
+                      <!-- <a href="#" [pRowToggler]="rowData">
+                        <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+                      </a> -->
+                      {{rowData[col.field]}}
+                    </span>
+                    <span *ngSwitchCase="'batch'">{{rowData.batch}}</span>
+                    <span *ngSwitchCase="'materialName'">{{rowData[col.field]}}</span>
+                    <span *ngSwitchCase="'pallet'"> {{rowData[col.field]?.palletId}} </span>
+                    <span *ngSwitchCase="'postingDate'"> {{rowData[col.field] | date:'dd/MM/yyyy HH:mm'}} </span>
+                    <span *ngSwitchCase="'documentDate'"> {{rowData[col.field] | date:'dd/MM/yyyy HH:mm'}} </span>
+                    <span *ngSwitchCase="'updateDate'"> {{rowData[col.field] | date:'dd/MM/yyyy HH:mm'}} </span>
+                    <span *ngSwitchCase="'createDate'"> {{rowData[col.field] | date:'dd/MM/yyyy HH:mm'}} </span>
+                    <span *ngSwitchDefault> {{rowData[col.field]}} </span>
+                  </td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="rowexpansion" let-rowData let-columns="columns">
+                <tr>
+                  <td></td>
+                  <td colspan="4">
+                    <tr><td><strong>{{'prod-order-id' | translate}}</strong> : {{rowData.prodOrderId}}</td></tr>
+                    <tr><td><strong>{{'pallet-id' | translate}}</strong> : {{rowData.pallet?.palletId}}</td></tr>
+                    <tr><td><strong>{{'defect' | translate}}</strong> : {{rowData.defected ? 'Yes' : 'No'}}</td></tr>
+                    <tr><td><strong>{{'warehouse-from-name' | translate}}</strong> : {{rowData.wareHouseFromName}}</td></tr>
+                  </td>
+                  <td colspan="3">
+                    <tr><td><strong>{{'batch' | translate}}</strong> : {{rowData.batch}}</td></tr>
+                    <tr><td><strong>{{'create-date' | translate}}</strong> : {{rowData.createDate | date:'dd/MM/yyyy HH:mm'}}</td></tr>
+                    <tr><td><strong>{{'description' | translate}}</strong> : {{rowData.description}}</td></tr>
+                    <tr><td *ngIf="rowData.goodsMovementActivityType==='TRANSFER_POSTING'"><strong>{{'warehouse-to-name' | translate}}</strong> : {{rowData.wareHouseToName}}</td></tr>
+                  </td>
+                  <!-- <td [attr.colspan]="columns.length - 1">
+                    <div class="col-md-12">
+                      <table class="table table-bordered">
+                        <tr>
+                          <td>{{'notification-status' | translate}}</td>
+                          <td>{{rowData.goodsMovementStatus}}</td>
+                        </tr>
+                        <tr>
+                          <td>{{'document-type' | translate}}</td>
+                          <td>{{rowData.goodMovementDocumentType}}</td>
+                        </tr>
+                        <tr>
+                          <td>{{'activity-type' | translate}}</td>
+                          <td>{{rowData.goodsMovementActivityType}}</td>
+                        </tr>
+                        <tr>
+                          <td>{{'prod-order-id' | translate}}</td>
+                          <td>{{rowData.prodOrderId}}</td>
+                        </tr>
+                        <tr>
+                          <td>{{'material-no' | translate}}</td>
+                          <td>{{rowData.materialNo}}</td>
+                        </tr>
+                        <tr>
+                          <td>{{'material-name' | translate}}</td>
+                          <td>{{rowData.materialName}}</td>
+                        </tr>
+                        <tr>
+                          <td>{{'quantity' | translate}}</td>
+                          <td>{{rowData.quantity}}</td>
+                        </tr>
+                        <tr>
+                          <td>{{'base-unit' | translate}}</td>
+                          <td>{{rowData.baseUnit}}</td>
+                        </tr>
+                        <tr>
+                          <td>{{'warehouse-from-name' | translate}}</td>
+                          <td>{{rowData.wareHouseFromName}}</td>
+                        </tr>
+                        <tr *ngIf="rowData.goodsMovementStatus==='TRANSFER_POSTING'">
+                          <td>{{'warehouse-to-name' | translate}}</td>
+                          <td>{{rowData.wareHouseToName}}</td>
+                        </tr>
+                        <tr>
+                          <td>{{'batch' | translate}}</td>
+                          <td>{{rowData.batch}}</td>
+                        </tr>
+                        <tr>
+                          <td>{{'create-date' | translate}}</td>
+                          <td>{{rowData.createDate | date: 'dd/mm/yyyy HH:mm'}}</td>
+                        </tr>
+                        <tr>
+                          <td>{{'description' | translate}}</td>
+                          <td>{{rowData.description}}</td>
+                        </tr>
+                      </table>
+                    </div>
+                  </td> -->
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+        </div>
+      </p-tabPanel>
+    </p-tabView>
+  </div>
+
+</div>
+
+
+

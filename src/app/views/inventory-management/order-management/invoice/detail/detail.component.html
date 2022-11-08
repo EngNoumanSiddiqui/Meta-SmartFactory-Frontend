@@ -1,0 +1,76 @@
+<div class="animated fadeIn">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card">
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i>{{'invoice-information' | translate}}
+          </div>
+          <div class="card-body">
+            <form #workCenterForm="ngForm">
+              <table class="table table-bordered">
+                <tbody>
+                  <tr>
+                    <td>
+                      {{'invoice-id' | translate}}
+                    </td>
+                    <td>
+                    {{data.invoiceId}}
+                    </td>
+                  </tr>
+                <tr>
+                  <td>
+                    {{'invoice-no' | translate}}
+                  </td>
+                  <td>
+                   {{data.invoiceNo}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    {{'invoice-type' | translate}}
+                  </td>
+                  <td>
+                    {{data.invoiceType}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    {{'reference-id' | translate}}
+                  </td>
+                  <td>
+                    {{data.referenceId}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    {{'actual-amount' | translate}}
+                  </td>
+                  <td>
+                   {{data.actualAmount}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    {{'posting-date' | translate}}
+                  </td>
+                  <td>
+                    {{data.postingDate|date: 'dd/MM/yyyy'}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    {{'notes' | translate}}
+                  </td>
+                  <td>
+                    <pre>{{data.notes}}</pre>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

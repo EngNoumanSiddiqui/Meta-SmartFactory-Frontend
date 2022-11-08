@@ -1,0 +1,11 @@
+<div class="d-flex ui-fluid">
+    <div *ngIf="requestSent"><i class="fa fa-spinner fa-pulse"></i></div>
+    <p-autoComplete [(ngModel)]="selectedProdOrder" [suggestions]="filteredProdOrder"
+        #prodAutocomplete
+        (completeMethod)="searchWorkStation($event)" field="prodOrderId" [dropdown]="dropdown" [required]="required"
+        [forceSelection]="true" dataKey="prodOrderId" placeholder="{{placeholder|translate}}" [minLength]="1"
+        name="prodOrder" [disabled]="disabled" (onDropdownClick)="handleDropdownClickForProdOrder()"
+        (ngModelChange)="onChangeProdOrder($event)" [style]="{maxWidth: '100%'}">
+    </p-autoComplete>
+    
+</div>

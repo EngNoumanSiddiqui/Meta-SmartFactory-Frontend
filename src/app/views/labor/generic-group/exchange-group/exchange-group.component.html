@@ -1,0 +1,182 @@
+<div class="animated fadeIn">
+    <div class="row">
+      <div class="card col">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i>{{'group-definition' | translate}}
+        </div>
+        <div class="card-body pl-0 pr-0">
+          <form #empGroupCodeForm="ngForm">
+            <div class="row">
+              <div class="col-md-4">
+                <table class="table table-bordered">
+                  <tbody>
+                    <tr>
+                      <td>{{'plant' | translate}}</td>
+                      <td>
+                        <span
+                          *ngIf="empGroupCode.plantId && selectedPlant && empGroupCode.plantId=== selectedPlant.plantId">{{selectedPlant.plantName}}</span>
+                        <plant-auto-complete *ngIf="!empGroupCode.plantId && !selectedPlant"
+                          [selectedPlantId]="empGroupCode.plantId" (selectedPlantEvent)="setSelectedPlant($event)"
+                          [eventFire]="true"></plant-auto-complete>
+                        <!-- <plant-auto-complete  [addIfMissing]="true" [eventFire]="true" (selectedPlantEvent)="setSelectedPlant($event)"></plant-auto-complete> -->
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'group-type' | translate}}</td>
+                      <td>
+                        <select id="GroupType" name="GroupType" class="form-control" required
+                          [(ngModel)]="empGroupCode.groupType" (ngModelChange)="filterSubGroups()" disabled>
+                          <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                          <option *ngFor="let type of employeeGenericGroupTypes"
+                            [value]="(type.groupType.message) ? type.groupType.message: type.groupType">
+                            {{(type.groupType.message) ? type.groupType.message: type.groupType}}</option>
+                        </select>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'sub-group-type' | translate}}</td>
+                      <td>
+                        <select id="GroupSubType" name="GroupSubType" class="form-control" required
+                          [(ngModel)]="empGroupCode.groupSubType" (change)="empGroupCode.referenceId = null" disabled>
+                          <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                          <option *ngFor="let subGroup of filteredEmployeeSubGroup" [value]="subGroup.message">
+                            {{subGroup.message}}</option>
+                        </select>
+                      </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="background-color: #a4b7c1;"><b>{{ 'first-selection' | translate }}</b></td>
+                    </tr>
+                    <tr>
+                        <td>{{'reference-item' | translate}}</td>
+                        <td [ngSwitch]="empGroupCode.groupSubType">
+
+                            <workstation-auto-complete [plantId]="empGroupCode.plantId"
+                              (selectedWorkStationEvent)="setSelectedWorkStation($event)" *ngSwitchCase="'WORKSTATION'">
+                            </workstation-auto-complete>
+
+                            <workcenter-auto-complete [plantId]="empGroupCode.plantId" (selectedWorkCenterEvent)="setSelectedWorkCenter($event)"
+                            *ngSwitchCase="'WORKCENTER'">
+                            </workcenter-auto-complete>
+
+                            <planner-group-auto-complete [plantId]="selectedPlant?.plantId" [selectedPlannerGroup]="empGroupCode.referenceId"
+                              [addIfMissing]="true" (selectedPlannerGroupEvent)="setSelectedPlannerGroup($event)"
+                              *ngSwitchCase="'MAINTENANCE_PLANNER_GROUP'"></planner-group-auto-complete>
+
+                              <operation-auto-complete (selectedOperationEvent)="setSelectedOperation($event)"
+                              *ngSwitchCase="'OPERATION'"></operation-auto-complete>
+
+                              <operation-auto-complete (selectedOperationEvent)="setSelectedOperation($event)"
+                              *ngSwitchCase="'OPERATION '"></operation-auto-complete>
+
+                              <p-dropdown [options]="operationTypes" name="operationTypeId" [autoDisplayFirst]="false" (onChange)="setSelectedOperationType($event.value)"
+                              *ngSwitchCase="'OPERATION_TYPE'" optionLabel="operationTypeName" dataKey="operationTypeId" [style]="{width: '100%'}"></p-dropdown>
+
+                              <p-dropdown [options]="operationTypes" name="operationTypeId" [autoDisplayFirst]="false"
+                              *ngSwitchCase="'OPERATION_TYPE '" optionLabel="operationTypeName" dataKey="operationTypeId" (onChange)="setSelectedOperationType($event.value)"
+                                [style]="{width: '100%'}"></p-dropdown>
+
+                          </td>
+                    </tr>
+                    <tr>
+                      <td>{{'group-name'|translate}}</td>
+                      <td><input type="text" class="form-control" required name="GroupName"
+                          [(ngModel)]="empGroupCode.groupName" /> </td>
+                    </tr>
+                    <tr>
+                      <td>{{'group-code'|translate}}</td>
+                      <td><input type="text" class="form-control" required name="GroupCode"
+                          [(ngModel)]="empGroupCode.groupCode" /> </td>
+                    </tr>
+
+
+                    <tr>
+                        <td colspan="2" style="background-color: #a4b7c1;"><b>{{ 'second-selection' | translate }}</b></td>
+                    </tr>
+                    <tr>
+                        <td>{{'reference-item' | translate}}</td>
+                        <td [ngSwitch]="empGroupCode.groupSubType">
+
+                            <workstation-auto-complete [plantId]="empGroupCode.plantId"
+                              (selectedWorkStationEvent)="setSelectedWorkStation($event, 'referenceId1')" *ngSwitchCase="'WORKSTATION'">
+                            </workstation-auto-complete>
+
+                            <workcenter-auto-complete [plantId]="empGroupCode.plantId" (selectedWorkCenterEvent)="setSelectedWorkCenter($event, 'referenceId1')"
+                            *ngSwitchCase="'WORKCENTER'">
+                            </workcenter-auto-complete>
+
+                            <planner-group-auto-complete [plantId]="selectedPlant?.plantId" [selectedPlannerGroup]="empGroupCode.referenceId"
+                              [addIfMissing]="true" (selectedPlannerGroupEvent)="setSelectedPlannerGroup($event, 'referenceId1')"
+                              *ngSwitchCase="'MAINTENANCE_PLANNER_GROUP'"></planner-group-auto-complete>
+
+                              <operation-auto-complete (selectedOperationEvent)="setSelectedOperation($event, 'referenceId1')"
+                              *ngSwitchCase="'OPERATION'"></operation-auto-complete>
+
+                              <operation-auto-complete (selectedOperationEvent)="setSelectedOperation($event, 'referenceId1')"
+                              *ngSwitchCase="'OPERATION '"></operation-auto-complete>
+
+                              <p-dropdown [options]="operationTypes" name="operationTypeId" [autoDisplayFirst]="false" (onChange)="setSelectedOperationType($event.value, 'referenceId1')"
+                              *ngSwitchCase="'OPERATION_TYPE'" optionLabel="operationTypeName" dataKey="operationTypeId" [style]="{width: '100%'}"></p-dropdown>
+
+                              <p-dropdown [options]="operationTypes" name="operationTypeId" [autoDisplayFirst]="false"
+                              *ngSwitchCase="'OPERATION_TYPE '" optionLabel="operationTypeName" dataKey="operationTypeId" (onChange)="setSelectedOperationType($event.value, 'referenceId1')"
+                                [style]="{width: '100%'}"></p-dropdown>
+
+                          </td>
+                    </tr>
+                    <tr>
+                      <td>{{'group-name'|translate}}</td>
+                      <td><input type="text" class="form-control" required name="GroupName"
+                          [(ngModel)]="empGroupCode.groupName1" /> </td>
+                    </tr>
+                    <tr>
+                      <td>{{'group-code'|translate}}</td>
+                      <td><input type="text" class="form-control" required name="GroupCode"
+                          [(ngModel)]="empGroupCode.groupCode1" /> </td>
+                    </tr>
+
+
+                    <tr>
+                      <td colspan="2">
+                        <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+                          {{'reset' | translate}}</button>
+                        <button type="submit" class="btn btn-sm btn-primary" [disabled]="!empGroupCodeForm.form.valid"
+                          (click)="save()"><i class="fa fa-dot-circle-o"></i>
+                          {{'save' | translate}}
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="col-md-8">
+                <table class="table table-bordered">
+                  <tbody>
+                    <tr>
+                      <td>{{'group-members'|translate}}</td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <p-pickList [source]="sourceEmployeeList" [target]="targetEmployeeList"
+                          [sourceHeader]="exchangeGroups[0].groupName" [targetHeader]="exchangeGroups[1].groupName"
+                          [style]="{'width': '100%'}" [responsive]="true" filterBy="employeeId,firstName,lastName">
+                          <ng-template let-emp pTemplate="item">
+                            <div class="ui-helper-clearfix">
+                              <div style="font-size:14px;float:right;margin:15px 5px 0 0">
+                                {{emp.employeeId}} | {{emp.firstName}}-{{emp.lastName}}
+                              </div>
+                            </div>
+                          </ng-template>
+                        </p-pickList>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>

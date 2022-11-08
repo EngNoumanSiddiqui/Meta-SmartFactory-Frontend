@@ -1,0 +1,67 @@
+<div class="animated fadeIn">
+    <div class="row">
+      <p-tabView class="col-md-12">
+        <p-tabPanel header="{{ 'item-cause' | translate }}">
+        <div class="card"> 
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i> {{'item-cause' | translate}}
+          </div>
+          <div class="card-body">   
+            <form #inspForm="ngForm">
+              <table class="table table-bordered">
+                <tr>
+                  <td>{{'cause' | translate}}</td>
+                  <td>
+                    <select id="causeName" name="causeName" class="form-control" [(ngModel)]="itemCausesType.causeName" required>
+                      <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                      <option value="{{causeName}}" *ngFor="let causeName of causeNameList">{{causeName}}
+                      </option>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                <tr>
+                  <td>{{'short-text' | translate}}</td>
+                  <td>
+                    <input
+                      type="text" 
+                      id="shortText"
+                      name="shortText"
+                      [(ngModel)]="itemCausesType.shortText"
+                      class="form-control"
+                    />
+                  </td>
+                </tr>
+              </table>
+            </form>
+          </div>
+        </div>
+        <div class="row col-md-12">
+            <button
+            type="submit"
+            class="btn btn-sm btn-danger"
+            [disabled]="!inspForm.form.valid" 
+            (click)="reset()"
+          >
+          <i class="fa fa-ban" aria-hidden="true"></i>
+            {{ "reset" | translate }}
+          </button>
+          <button
+            type="submit"
+            class="btn btn-sm btn-primary"
+            [disabled]="!inspForm.form.valid"
+            (click)="save()"
+          >
+            <i class="fa fa-dot-circle-o"></i>
+            {{ "save" | translate }}
+          </button>
+        </div>
+        </p-tabPanel>
+        <!-- ITEM-TASKS -->
+      <p-tabPanel header="{{ 'tasks' | translate }}">
+        <list-item-tasks></list-item-tasks>
+      </p-tabPanel>
+        </p-tabView>
+      </div>
+  </div>
+   

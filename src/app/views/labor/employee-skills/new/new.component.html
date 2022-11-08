@@ -1,0 +1,68 @@
+<div class="modal-body">
+  <form #capform="ngForm">
+    <div class="form-group row">
+      <label class="col-md-3 col-form-label" for="categoryId">{{'employee'|translate}}</label>
+      <div class="col-md-9">
+       <employee-auto-complete [selectedEmployeeId]="capRequest.employeeId" (selectedEmployeeEvent)="capRequest.employeeId=$event?.employeeId"></employee-auto-complete>
+      
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-md-3 col-form-label" for="categoryId">{{'category'|translate}}</label>
+      <div class="col-md-9">
+
+        <select id="categoryId" name="categoryId" class="form-control" (change)="onCategorySelction()"
+          [(ngModel)]="obj.skillMatrixCategoryId" required>
+          <option [ngValue]="null"> {{'please-select' | translate}}</option>
+          <option value="{{category.skillMatrixCategoryId}}" *ngFor="let category of categories">
+            {{category.skillMatrixCategoryCode}}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label class="col-md-3 col-form-label" for="capabilitName">{{'capability'|translate}}</label>
+      <div class="col-md-9">
+        <select id="capabilityName" name="capabilityName" class="form-control" (change)="categorySelection($event)"
+          [(ngModel)]="capRequest.skillMatrixId" required>
+          <option [ngValue]="null"> {{'please-select' | translate}}</option>
+          <option value="{{capability.skillMatrixId}}" *ngFor="let capability of capabilities">
+            {{capability.skillMatrixName}}
+          </option>
+        </select>
+      </div>
+    </div>
+
+
+    <div class="form-group row">
+      <label class="col-md-3 col-form-label" for="proficiency">Proficiency</label>
+      <div class="col-md-9">
+        <input type="number" id="proficiency name="proficiency [(ngModel)]="capRequest.proficiency" class="form-control"
+          placeholder="Proficiency" required>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-md-3 col-form-label" for="interest">Interest</label>
+      <div class="col-md-9">
+        <input type="number" id="interest" name="interest" [(ngModel)]="capRequest.interest" class="form-control"
+          placeholder="Intrest" required>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label class="col-md-3 col-form-label" for="capdesc">{{'cap-description'|translate}}</label>
+      <div class="col-md-9">
+        <textarea type="text" id="capdesc" name="capdesc" [(ngModel)]="capRequest.note" class="form-control"
+          placeholder="{{'cap-description'|translate}}"></textarea>
+      </div>
+    </div>
+  </form>
+  <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+    {{'reset' | translate}}</button>
+  <button type="submit" class="btn btn-sm btn-primary" [disabled]="!capform.form.valid" (click)="save()"><i
+      class="fa fa-dot-circle-o"></i>
+    {{'save' | translate}}
+  </button>
+
+</div>

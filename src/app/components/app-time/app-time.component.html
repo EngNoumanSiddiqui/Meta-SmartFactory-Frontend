@@ -1,0 +1,33 @@
+<div class="row small pl-2 pt-3">
+  <span class="ui-float-label ml-2 mr-2 ">
+
+    <input id="{{name}}-daysSetup" type="number" class="time-w" name="{{name}}daysSetup" [disabled]="disabled"
+      (ngModelChange)="sendTimeChanged($event, 'daysSetup')" [(ngModel)]="daysSetup" min="0" pInputText />
+    <label for="float-daysSetup">{{'days'|translate}}</label>
+  </span>
+  <span class="ui-float-label ml-2 mr-2">
+
+    <input id="{{name}}-hoursSetup" type="number" max="23" class="time-w" name="{{name}}hoursSetup" [disabled]="disabled"
+      (ngModelChange)="sendTimeChanged($event, 'hoursSetup')" [(ngModel)]="hoursSetup" min="0" pInputText />
+    <label for="float-hoursSetup">{{'hours'|translate}}</label>
+  </span>
+  <span class="ui-float-label ml-2 mr-2">
+
+    <input id="{{name}}-minutesSetup" type="number" class="time-w" max="49" name="{{name}}minutesSetup" [disabled]="disabled"
+      (ngModelChange)="sendTimeChanged($event, 'minutesSetup')" [(ngModel)]="minutesSetup" min="0" pInputText />
+    <label for="float-minutesSetup">{{'minutes'|translate}}</label>
+  </span>
+  <span class="ui-float-label ml-2 mr-2">
+
+    <input id="{{name}}-secondsSetup" type="number" class="time-w" max="49" name="{{name}}secondsSetup" [disabled]="disabled"
+      (ngModelChange)="sendTimeChanged($event, 'secondsSetup')" [(ngModel)]="secondsSetup" min="0" pInputText />
+    <label for="float-secondsSetup">{{'seconds'|translate}}</label>
+  </span>
+  <span class="ui-float-label ml-2 mr-2" *ngIf="showMills">
+
+    <input id="{{name}}-millsSetup" type="number" class="time-w" max="999" name="{{name}}millsSetup" [disabled]="disabled"
+      (ngModelChange)="sendTimeChanged($event, 'millsSetup')" [(ngModel)]="millsSetup" min="0" pInputText />
+    <label for="float-millsSetup">{{'mills'|translate}}</label>
+  </span>
+
+</div>

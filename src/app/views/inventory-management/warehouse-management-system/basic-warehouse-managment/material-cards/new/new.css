@@ -1,0 +1,31 @@
+body .ui-chkbox-label {
+  float: left;
+  margin: 0 0.5em 0 0.5em;
+}
+
+.cost-screen table {
+  table-layout: fixed !important;
+}
+
+.cost-screen td {
+  width: 25% !important;
+  padding: 0.4em !important;
+}
+
+.cost-screen-header {
+  height: 35px;
+  background: #56bedb;
+  /* text-align: center; */
+  padding: 8px;
+  /* color: white; */
+}
+.example-half-width {
+  width: 50%;
+}
+
+.info-record-tbl td {
+  border: none !important;
+}
+::ng-deep .ui-table-wrapper {
+  margin-right: 0;
+}

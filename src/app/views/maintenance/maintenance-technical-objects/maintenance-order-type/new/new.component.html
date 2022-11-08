@@ -1,0 +1,44 @@
+<!--<form #orderEdit="ngForm" >-->
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          {{'maintenance-order-type'|translate}}
+        </div>
+        <div class="card-body">
+          <form #saleForm="ngForm" class="form-horizontal ui-fluid">
+            <table class="table table-bordered">
+              <tbody>
+              <tr>
+                <td width="35%">{{'order-type' | translate}}</td>
+                <td><input id="code" class="form-control" [(ngModel)]="dataModel.maintenanceOrderType"
+                           name="code" required/>
+                </td>
+              </tr>
+              <tr>
+                <td width="35%">{{'description' | translate}}</td>
+                <td> <input id="maintenanceOrderTypeName" class="form-control" [(ngModel)]="dataModel.maintenanceOrderTypeName"
+                            name="maintenanceOrderTypeName" required/>
+                </td>
+              </tr>
+              </tbody>
+
+            </table>
+
+          </form>
+        </div>
+        <div class="card-footer">
+          <button type="button" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+            {{'reset' | translate}}
+          </button>
+          <button type="submit" class="btn btn-sm btn-primary" [disabled]="!saleForm.form.valid"
+                  (click)="save()"><i class="fa fa-dot-circle-o"></i>
+            {{'save' | translate}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div><!--/.row-->
+</div>
+<!--</form>-->

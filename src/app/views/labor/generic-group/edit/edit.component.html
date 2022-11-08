@@ -1,0 +1,159 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="card col">
+      <div class="card-header">
+        <i class="fa fa-align-justify"></i>{{'group-definition' | translate}}
+      </div>
+      <div class="card-body pl-0 pr-0">
+        <form #empGroupCodeForm="ngForm">
+          <div class="row">
+            <div class="col-md-4">
+              <table class="table table-bordered">
+                <tbody>
+                  <tr>
+                    <td>{{'plant' | translate}}</td>
+                    <td>
+                      <span
+                        *ngIf="genericGroupRequestDto.plantId && selectedPlant && genericGroupRequestDto.plantId=== selectedPlant.plantId">{{selectedPlant.plantName}}</span>
+                      <plant-auto-complete *ngIf="!genericGroupRequestDto.plantId && !selectedPlant"
+                        [selectedPlantId]="genericGroupRequestDto.plantId"
+                        (selectedPlantEvent)="setSelectedPlant($event)" [eventFire]="true"></plant-auto-complete>
+                      <!-- <plant-auto-complete [selectedPlantId]="genericGroupRequestDto.plantId" [addIfMissing]="true" [eventFire]="true" (selectedPlantEvent)="setSelectedPlant($event)"></plant-auto-complete> -->
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'group-type' | translate}}</td>
+                    <td>
+                      <select id="GroupType" name="GroupType" class="form-control" required
+                        [(ngModel)]="genericGroupRequestDto.groupType" (ngModelChange)="filterSubGroups()">
+                        <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                        <option *ngFor="let type of employeeGenericGroupTypes" [ngValue]="(type.groupType.message) ? type.groupType.message: type.groupType">
+                          {{(type.groupType.message) ? type.groupType.message: type.groupType}}</option>
+                      </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'sub-group-type' | translate}}</td>
+                    <td>
+                      <select id="GroupSubType" name="GroupSubType" class="form-control" required
+                        [(ngModel)]="genericGroupRequestDto.groupSubType" (ngModelChange)="onChangeSubType($event)">
+                        <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                        <option *ngFor="let subGroup of filteredEmployeeSubGroup" [value]="subGroup.message">
+                          {{subGroup.message}}</option>
+                      </select>
+                    </td>
+                  </tr>
+                  <!--fix require on this-->
+                  <tr>
+                    <td>{{'reference-item' | translate}}</td>
+                    <td [ngSwitch]="genericGroupRequestDto.groupSubType">
+
+                      <workstation-auto-complete *ngSwitchCase="'WORKSTATION'" [required]="true"
+                        [plantId]="genericGroupRequestDto.plantId" [selectedWorkStation]="referenceItemDto"
+                        (selectedWorkStationEvent)="setSelectedReferenceItemId($event)"> </workstation-auto-complete>
+                        <workstation-auto-complete *ngSwitchCase="'MACHINE_SETUP'" [required]="true"
+                        [plantId]="genericGroupRequestDto.plantId" [selectedWorkStation]="referenceItemDto"
+                        (selectedWorkStationEvent)="setSelectedReferenceItemId($event)"> </workstation-auto-complete>
+                        
+                      <workcenter-auto-complete [plantId]="genericGroupRequestDto.plantId" [required]="true" [selectedWorkCenter]="referenceItemDto"
+                        (selectedWorkCenterEvent)="setSelectedWorkCenter($event)" *ngSwitchCase="'WORKCENTER'">
+                      </workcenter-auto-complete>
+
+                      <material-group-auto-complete *ngSwitchCase="'MATERIAL_GROUP'" [selectedMaterialGroupId]="referenceItemDto?.itemId" (selectedMaterialGroupEvent)="setSelectedMaterialGroup($event)"></material-group-auto-complete>
+                      <planner-group-auto-complete [plantId]="selectedPlant?.plantId" *ngSwitchCase="'MAINTENANCE_PLANNER_GROUP'" [addIfMissing]="true"
+                        [selectedPlannerGroup]="referenceItemDto" [required]="true"
+                        (selectedPlannerGroupEvent)="setSelectedReferenceItemId($event)"></planner-group-auto-complete>
+
+                        <warehouse-auto-complete *ngSwitchCase="'WAREHOUSE'" [selectedWareHouseId]="referenceItemDto?.itemId" (selectedWareHouseEvent)="setWarehouseItem($event)"></warehouse-auto-complete>
+                        <forklift-auto-complete *ngSwitchCase="'FORKLIFT'" [selectedForkLiftId]="referenceItemDto?.itemId" (selectedForkLiftEvent)="setForkLiftItem($event)"></forklift-auto-complete>
+                        <operation-auto-complete (selectedOperationEvent)="setSelectedOperation($event)"
+                        *ngSwitchCase="'OPERATION'" [selectedOperation]="referenceItemDto"></operation-auto-complete>
+
+                        <operation-auto-complete (selectedOperationEvent)="setSelectedOperation($event)"
+                        *ngSwitchCase="'OPERATION '" [selectedOperation]="referenceItemDto"></operation-auto-complete>
+
+                        <p-dropdown [options]="operationTypes" name="operationTypeId" [autoDisplayFirst]="false" (onChange)="setSelectedOperationType($event.value)"
+                        *ngSwitchCase="'OPERATION_TYPE'" optionLabel="operationTypeName" dataKey="operationTypeId" [style]="{width: '100%'}" [(ngModel)]="referenceItemDto"></p-dropdown>
+
+                        <p-dropdown [options]="operationTypes" name="operationTypeId" [autoDisplayFirst]="false"
+                          *ngSwitchCase="'OPERATION_TYPE '" optionLabel="operationTypeName" dataKey="operationTypeId"
+                          (onChange)="setSelectedOperationType($event.value)" [style]="{width: '100%'}" [(ngModel)]="referenceItemDto">
+                        </p-dropdown>
+                        <span *ngSwitchCase="'HUMAN_RESOURCES'">{{referenceItemDto?.itemName}}</span>
+                        <span *ngSwitchCase="'SHIFT_GROUP'">{{referenceItemDto?.itemName}}</span>
+
+                        <!-- <p-dropdown [options]="operationTypes" name="operationTypeId" [autoDisplayFirst]="false"
+                          *ngSwitchCase="'HUMAN_RESOURCES'" optionLabel="operationTypeName" dataKey="operationTypeId"
+                          (onChange)="setSelectedOperationType($event.value)" [(ngModel)]="referenceItemDto" [style]="{width: '100%'}"></p-dropdown>
+                        <p-dropdown [options]="operationTypes" name="operationTypeId" [autoDisplayFirst]="false" *ngSwitchCase="'SHIFT_GROUP'"
+                          optionLabel="operationTypeName" dataKey="operationTypeId" [(ngModel)]="referenceItemDto" (onChange)="setSelectedOperationType($event.value)"
+                          [style]="{width: '100%'}"></p-dropdown> -->
+
+                    </td>
+                  </tr>
+                  <!--fix require on this-->
+                  <tr>
+                    <td>{{'group-name'|translate}}</td>
+                    <td><input type="text" class="form-control" required name="GroupName"
+                        [(ngModel)]="genericGroupRequestDto.groupName" /> </td>
+                  </tr>
+                  <tr>
+                    <td>{{'group-code'|translate}}</td>
+                    <td><input type="text" class="form-control" name="GroupCode" required
+                        [(ngModel)]="genericGroupRequestDto.groupCode" /> </td>
+                  </tr>
+                  <tr>
+                    <td>{{'work-under-supervisor'|translate}}</td>
+                    <td>
+                      <p-checkbox name="workUnderSupervisor" 
+                      [(ngModel)]="genericGroupRequestDto.workUnderSupervision"
+                        binary="true"></p-checkbox>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td colspan="2">
+                      <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+                        {{'reset' | translate}}</button>
+                      <button type="submit" class="btn btn-sm btn-primary" [disabled]="!empGroupCodeForm.form.valid"
+                        (click)="save()"><i class="fa fa-dot-circle-o"></i>
+                        {{'save' | translate}}
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="col-md-8">
+              <table class="table table-bordered">
+                <tbody>
+                  <tr>
+                    <td>{{'group-members'|translate}}</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <p-pickList [source]="sourceEmployeeList" [target]="targetEmployeeList"
+                        sourceHeader="Available Employee" targetHeader="Selected Employee"
+                        (onMoveAllToTarget)="onPushToAllTarget($event.items)" (onMoveAllToSource)="onBackToAllSource()"
+                        (onMoveToTarget)="pushEmp($event.items)" (onMoveToSource)="popEmp($event.items)"
+                        [style]="{'width': '100%'}" [responsive]="true" filterBy="employeeNo,firstName,lastName">
+                        <ng-template let-emp pTemplate="item">
+                          <div class="ui-helper-clearfix">
+                            <div style="font-size:14px;float:right;margin:15px 5px 0 0">
+                              {{emp.employeeNo}} | {{emp.firstName}}-{{emp.lastName}}
+                            </div>
+                          </div>
+                        </ng-template>
+                      </p-pickList>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

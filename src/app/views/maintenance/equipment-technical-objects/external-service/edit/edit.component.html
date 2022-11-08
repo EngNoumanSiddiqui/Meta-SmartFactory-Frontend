@@ -1,0 +1,67 @@
+<!--<form #orderEdit="ngForm" >-->
+<div class="animated fadeIn">
+  <div class="row" *ngIf="dataModel">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          {{'external-service'|translate}}
+        </div>
+        <div class="card-body">
+          <form #saleForm="ngForm" class="form-horizontal ui-fluid">
+            <table class="table table-bordered">
+              <tbody>
+              <tr>
+                <td width="35%">{{'service-id' | translate}}</td>
+                <td><span class="bg-readonly form-control">{{dataModel.serviceId}}</span>
+                </td>
+              </tr>
+              <tr>
+                <td width="35%">{{'service-name' | translate}}</td>
+                <td><input  class="form-control" [(ngModel)]="dataModel.serviceName"
+                            name="serviceName" required/>
+                </td>
+              </tr>
+              <tr>
+                <td width="35%">{{'service-code' | translate}}</td>
+                <td><input class="form-control" [(ngModel)]="dataModel.serviceCode"
+                           name="serviceCode" required/>
+                </td>
+              </tr>
+              <tr>
+                <td >{{'company-address' | translate}}</td>
+                <td><input class="form-control" [(ngModel)]="dataModel.companyAddress"
+                           name="companyAddress" />
+                </td>
+              </tr>
+              <tr>
+                <td >{{'phone' | translate}}</td>
+                <td><input class="form-control" [(ngModel)]="dataModel.phone"
+                           name="phone" />
+                </td>
+              </tr>
+              <tr>
+                <td >{{'tax-number' | translate}}</td>
+                <td><input class="form-control" [(ngModel)]="dataModel.taxNumber"
+                           name="taxNumber" />
+                </td>
+              </tr>
+              </tbody>
+
+            </table>
+
+          </form>
+        </div>
+        <div class="card-footer">
+          <button type="reset" class="btn btn-sm btn-danger" (click)="cancel()"><i class="fa fa-ban"></i>
+            {{'cancel' | translate}}
+          </button>
+          <button type="submit" class="btn btn-sm btn-primary" [disabled]="!saleForm.form.valid"
+                  (click)="save()"><i class="fa fa-dot-circle-o"></i>
+            {{'save' | translate}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div><!--/.row-->
+</div>
+<!--</form>-->

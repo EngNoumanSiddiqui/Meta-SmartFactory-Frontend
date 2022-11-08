@@ -1,0 +1,154 @@
+<p-confirmDialog></p-confirmDialog>
+
+
+<div class="animated fadeIn" *ngIf="pageFilter.equipmentTaskId">
+
+
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+
+        <div class="card-body" >
+          <div class="card border-0 mb-0 mt-0" *ngIf="!isDetails">
+            <div class="card-body">
+              <button pButton class="ui-button-warning float-right ml-1" type="button"
+              [disabled]="!selectedData || selectedData.length === 0"
+                      label="{{'external-service'|translate}}" (click)="modalShow(null,'EXTERNAL-SERVICE',null)" ></button>
+            </div>
+          </div>
+          <p-table #dt [columns]="selectedColumns" [value]="tableData" [rows]="pagination.rows" [totalRecords]="pagination.totalElements"
+                   dataKey="equipmentTaskOperationId" [(selection)]="selectedData" scrollable="true" scrollHeight="55vh" >
+
+            <ng-template pTemplate="caption">
+              <div style="text-align:left">
+                <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header" maxSelectedLabels="0"  selectedItemsLabel="{{'columns-selected'|translate}}"
+                               [style]="{minWidth: '200px'}" defaultLabel="Choose Columns">
+                  <ng-template let-col let-i="index" pTemplate="item">
+                    {{col.label|translate}}
+                  </ng-template>
+                </p-multiSelect>
+                <button pButton *ngIf="!isDetails"  type="button" class="ui-button-warning float-right ml-1" label="{{'reset'  |translate}}" (click)="resetFilter()"></button>
+                <button pButton *ngIf="!isDetails"  class="ui-button-success float-right ml-1" (click)="modalShow(null,'NEW',null)" label="{{'add-new'|translate}}"> </button>
+                <button pButton *ngIf="!isDetails" class="ui-button-warning float-right ml-1" type="button"  icon="fa fa-file-alt" iconPos="left" label="{{'export-all'|translate}}" (click)="dt.exportCSV()"></button>
+                <button pButton *ngIf="!isDetails"  class="ui-button-warning float-right ml-1" type="button"  icon="fa fa-file" iconPos="left" label="{{'export-selected'|translate}}" (click)="dt.exportCSV({selectionOnly:true})"
+                ></button>
+              </div>
+              <!--<hr>-->
+
+            </ng-template>
+            <ng-template pTemplate="header" let-columns>
+
+              <tr >
+                <th style="width: 3em" rowspan="2">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <!-- <ng-template ngFor let-cols [ngForOf]="columns" let-i="index">
+                  <ng-container [ngSwitch]="cols.header">
+                  <th *ngSwitchCase="'workUnit'">{{cols.header | translate}}</th>
+                  <th *ngSwitchCase="'workUnit'">{{cols.header | translate}}</th>
+                  <th *ngSwitchDefault style="cursor: pointer" [ngClass]="{'bg-selected-order':pageFilter.orderByProperty ==col.field}" (click)="reOrderData(i,col.field)"><i [ngClass]="'fa fa-sort-alpha-' + classReOrder[i]"></i>
+                    {{cols.header | translate}}</th>
+                  </ng-container>
+                </ng-template> -->
+                <th *ngFor="let col of columns let i=index" style="cursor: pointer" [ngClass]="{'bg-selected-order':pageFilter.orderByProperty ==col.field}" (click)="reOrderData(i,col.field)"><i [ngClass]="'fa fa-sort-alpha-' + classReOrder[i]"></i>
+                  {{col.header|translate}}
+                </th>
+                <th width="80px" rowspan="2" *ngIf="!isDetails">{{'action' | translate}}</th>
+              </tr>
+              <tr *ngIf="!isDetails">
+
+                <th *ngFor="let col of columns" class="ui-fluid" [ngSwitch]="col.field" >
+                  <!--<input *ngSwitchCase="'equipmentOperation'" style="width: 100%"  pInputText type="text"[(ngModel)]="pageFilter.equipmentOperationId"  (input)="filterByColumn($event.target.value,'equipmentOperationId')">-->
+                  <span *ngSwitchCase="'equipmentTask'"></span>
+                  <input *ngSwitchDefault style="width: 100%"  pInputText type="text"[(ngModel)]="pageFilter[col.field]"  (input)="filterByColumn($event.target.value,col.field)">
+                </th>
+
+
+
+              </tr>
+
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+              <tr [pSelectableRow]="rowData">
+                <td style="width: 3em">
+                  <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                </td>
+                <td *ngFor="let col of columns" style="cursor: pointer"  [ngSwitch]="col.field" (click)="modalShow(rowData.equipmentTaskOperationId,'DETAIL',rowData); ">
+                 <span *ngSwitchCase="'equipmentOperation'"> {{rowData[col.field]?.operationDescription}}</span>
+                 <span *ngSwitchCase="'equipmentTask'"> {{rowData[col.field]?.equipmentTaskId}}</span>
+                 <span *ngSwitchDefault> {{rowData[col.field]}}</span>
+                </td>
+                <td width="80px" *ngIf="!isDetails" >
+                  <button class="btn btn-sm btn-outline-danger" type="button" (click)="delete(rowData.equipmentTaskOperationId)">
+                    <i class="fa fa-trash"></i></button>
+                  <button class="btn btn-sm btn-outline-info" type="button" (click)="modalShow(rowData.equipmentTaskOperationId,'EDIT',null)">
+                    <i class="fa fa-edit"></i></button>
+                </td>
+              </tr>
+
+            </ng-template>
+          </p-table>
+
+          <br/>
+          <div class="row">
+            <app-paging
+              [showSearch]="false"
+              [TotalElements]="pagination.totalElements"
+              [CurrentPage]="pagination.currentPage"
+              [PageSize]="pagination.pageSize"
+              [rows]="pagination.rows"
+              [TotalPageLinkButtons]="pagination.TotalPageLinkButtons"
+              [RowsPerPageOptions]="pagination.RowsPerPageOptions"
+              (onPageChange)="myChanges($event)"
+            ></app-paging>
+            <span style="margin-left:2px; padding-top: 2px " class="text-muted" >{{'total-records'|translate}}: {{pagination?.totalElements}}</span>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--/.col-->
+  </div>
+</div>
+<ng-template [ngIf]="modal.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal" (onHidden)="modal.active=false;filter(pageFilter);" class="modal fade"
+       tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog modal-success modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"> {{'task-operation' | translate}}</h4>
+          <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <!--step2-->
+        <div class="modal-body">
+          <ng-template [ngIf]="equipmentModal.modal=='NEW'">
+            <task-operation-new [equipmentTaskId]="pageFilter.equipmentTaskId" (saveAction)="myModal.hide(); filter(pageFilter);modalShow($event.equipmentTaskOperationId,'DETAIL',$event)  "></task-operation-new>
+          </ng-template>
+          <!--sale-edit-component-->
+          <ng-template [ngIf]="equipmentModal.modal=='EDIT'">
+            <task-operation-edit [id]="equipmentModal.id" (saveAction)="myModal.hide(); filter(pageFilter)"></task-operation-edit>
+          </ng-template>
+          <!--sale-edit-component-->
+          <ng-template [ngIf]="equipmentModal.modal=='DETAIL'">
+            <task-operation-detail [data]="equipmentModal.data"></task-operation-detail>
+          </ng-template>
+          <ng-template [ngIf]="equipmentModal.modal=='EXTERNAL-SERVICE'">
+            <task-operation-service-list
+            [equipmentTaskOperationId]="equipmentTaskOperationId"></task-operation-service-list>
+          </ng-template>
+        </div>
+        <!--step2-->
+        <div class="modal-footer">
+          <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary" (click)="myModal.hide()">{{'close' | translate}}</button>
+          <button *ngIf="equipmentModal.modal=='DETAIL'" type="button" class="btn rounded btn-primary" (click)="equipmentModal.modal='NEW'">{{'new' | translate}}</button>
+
+          <button *ngIf="equipmentModal.modal=='DETAIL'" type="button" class="btn rounded btn-success"
+                  (click)="equipmentModal.modal='EDIT'">{{'edit' | translate}}</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</ng-template>

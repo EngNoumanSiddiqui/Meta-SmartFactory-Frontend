@@ -1,0 +1,51 @@
+<!--<form #orderEdit="ngForm" >-->
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12" *ngIf="dataModel">
+      <p-tabView>
+        <p-tabPanel header="{{'component' | translate}}">
+          <div class="card">
+            <div class="card-header">
+              {{'detail'|translate}}
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered">
+                  <tbody>
+
+                  <tr>
+                    <td>{{'direction'|translate}}</td>
+                    <td> {{dataModel.direction==1? ('MATERIAL'|translate) :('COMPONENT'|translate)}}</td>
+                  </tr>
+                  <tr>
+                    <td>{{dataModel.direction==1? ('material'|translate):('component'|translate)}}</td>
+                    <td>
+                      {{dataModel?.stockName}}
+
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td width="35%">{{'quantity' | translate}}</td>
+                    <td> {{dataModel.neededQuantity}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'quantity-unit' | translate}}</td>
+                    <td> {{dataModel.unit}}</td>
+                  </tr>
+                  </tbody>
+                </table>
+            </div>
+          </div>
+        </p-tabPanel>
+        <p-tabPanel header="{{'features' | translate}}">
+          <job-order-component-feature-list [tableData]="dataModel.requestJobOrderComponentFeatureList" [detailMode]="true"
+                                               [jobOrderStockId]="dataModel.jobOrderStockId"
+                                               (saveEvent)="featuresUpdated($event)"
+          ></job-order-component-feature-list>
+        </p-tabPanel>
+      </p-tabView>
+    </div>
+  </div><!--/.row-->
+</div>
+<!--</form>-->

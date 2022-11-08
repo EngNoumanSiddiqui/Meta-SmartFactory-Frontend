@@ -1,0 +1,132 @@
+<!--<form #orderEdit="ngForm" >-->
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <form #saleForm="ngForm" class="form-horizontal ui-fluid">
+      <p-tabView (onChange)="handleChange($event)">
+        <!-- <p-tabPanel header="{{'detail' | translate}}" [selected]="index == 0">
+          <div class="card">	
+            <div class="card-body">	
+              <form #saleForm="ngForm" class="form-horizontal ui-fluid">	
+                <table class="table table-bordered table-md">	
+                  <tbody>	
+                    <tr>
+                      <td>{{'production-type' | translate}}</td>
+                      <td>
+                        <select id="productionType" name="productionType" class="form-control" [(ngModel)]="dataModel.productionType" 
+                          >
+                            <option [value]="null"> {{'please-select' | translate}}</option>
+                            <option *ngFor="let type of productionTypeList" [value]="type.message">{{type.message}}</option>
+                          </select>
+                      </td>
+                    </tr>
+                    <tr>	
+                      <td>{{('workstation'|translate)}}</td>	
+                      <td>	
+                        <workstation-auto-complete [plantId]="selectedPlant?.plantId"	
+                          [selectedWorkStation]="dataModel.workstation"	
+                          (selectedWorkStationEvent)="setSelectedWorkstation($event)"></workstation-auto-complete>	
+                      </td>	
+                    </tr>	
+
+                    <tr>	
+                      <td width="35%">{{'operation-repeat' | translate}}</td>	
+                      <td><input type="number" min="0" class="form-control" [(ngModel)]="dataModel.operationRepeat"	
+                          name="operationRepeat" required />	
+                      </td>	
+                    </tr>	
+                    <tr>	
+                      <td width="35%">{{'process-control-frequency' | translate}}</td>	
+                      <td><input type="number" min="0" class="form-control"	
+                          [(ngModel)]="dataModel.processControlFrequency" name="processControlFrequency" required />	
+                      </td>	
+                    </tr>	
+                    <tr>	
+                      <td width="35%">{{'planned-cycle-quantity' | translate}}</td>	
+                      <td><input type="number" min="0" class="form-control" [(ngModel)]="dataModel.plannedCycleQuantity"	
+                          name="plannedCycleQuantity" required />	
+                      </td>	
+                    </tr>	
+                    <tr>	
+                      <td width="35%">{{'single-duration' | translate}}</td>	
+                      <td>	
+                        <app-time [name]="'single'" [showMills]="true" [timeInMills]="dataModel.singleDuration"	
+                          (timeChanged)="addsingleDuration($event)"></app-time>	
+                      </td>	
+                    </tr>	
+                    <tr>	
+                      <td width="35%">{{'single-setup-duration' | translate}}</td>	
+                      <td>	
+                        <app-time [name]="'setup'" [showMills]="true"  [timeInMills]="dataModel.singleSetupDuration"	
+                          (timeChanged)="addsingleSetupDuration($event)"></app-time>	
+                      </td>	
+                    </tr>	
+                    <tr>	
+                      <td width="35%">{{'single-total-duration' | translate}}</td>	
+                      <td>	
+                        <app-time [name]="'total'" [showMills]="true"  [total]="true" [disabled]="true"	
+                          [timeInMills]="dataModel.singleTotalDuration"></app-time>	
+                      </td>	
+                    </tr>	
+                    <tr>	
+                      <td width="35%">{{'max-single-standby-duration' | translate}}</td>	
+                      <td>	
+                        <app-time [name]="'standby'" [showMills]="true"  [timeInMills]="dataModel.maxSingleStandbyDuration"	
+                          (timeChanged)="dataModel.maxSingleStandbyDuration=$event"></app-time>	
+                      </td>	
+                    </tr>	
+                  </tbody>	
+                </table>	
+
+              </form>	
+            </div>	
+          </div>	
+        </p-tabPanel>	
+        <p-tabPanel header="{{'components' | translate}}" [selected]="index == 1">
+          <product-tree-component-list [plant]="selectedPlant"
+            [openModalType]="openModalType === 1 || openModalType === -1 ? openModalType: null"
+            [productTreeDetailId]="dataModel.productTreeDetailId" [tableData]="this.componentList"
+            (saveEvent)="this.componentList=$event;"></product-tree-component-list>
+        </p-tabPanel>
+        <p-tabPanel header="{{'auxiliary-materials' | translate}}" [selected]="index == 2">
+          <product-tree-component-list [plant]="selectedPlant"
+            [openModalType]="openModalType === 0 ? openModalType : null" [isAuxiliaryMaterial]="true"
+            [productTreeDetailId]="dataModel.productTreeDetailId" [tableData]="this.auxMaterialList"
+            (saveEvent)="this.auxMaterialList=$event"></product-tree-component-list>
+        </p-tabPanel> -->
+        <p-tabPanel header="{{'operation' | translate}}" [selected]="index == 0">
+          <product-tree-operation-list [openModalType]="openModalType === 3 ? openModalType : null"
+            [workstationId]="dataModel.workstationId" [productTreeDetailId]="dataModel.productTreeDetailId"
+            [componentList]="componentList"
+            [isParent]="isParent"
+            [tableData]="dataModel.operationList" (saveEvent)="dataModel.operationList=$event; this.prodDetailCommunicatingService.seletedProdDTItem = dataModel;">
+          </product-tree-operation-list>
+        </p-tabPanel>
+        <p-tabPanel header="{{'equipments' | translate}}" [selected]="index == 1">
+          <product-tree-equipment-list [openModalType]="openModalType === 4 ? openModalType : null"
+            [productTreeDetailId]="dataModel.productTreeDetailId" [tableData]="dataModel.equipmentList"
+            (saveEvent)="dataModel.equipmentList=$event;this.prodDetailCommunicatingService.seletedProdDTItem = dataModel;"></product-tree-equipment-list>
+        </p-tabPanel>
+        <!-- <p-tabPanel header="{{'workstation-program' | translate}}" [selected]="index == 2">
+          <product-tree-workstation-program-list [openModalType]="openModalType === 5 ? openModalType: null"
+            [productTreeDetailId]="dataModel.productTreeDetailId" [tableData]="dataModel.workstationProgramList"
+            (saveEvent)="dataModel.workstationProgramList=$event;"></product-tree-workstation-program-list>
+        </p-tabPanel> -->
+
+        <p-tabPanel header="{{'QUALITY_PLAN' | translate}}" [selected]="index == 3">
+          <product-tree-quality-plan-list [openModalType]="openModalType === 6 ? openModalType: null"
+            [productTreeDetailId]="dataModel.productTreeDetailId" [tableData]="dataModel.workstationProgramList"
+            (saveEvent)="dataModel.workstationProgramList=$event;"></product-tree-quality-plan-list>
+        </p-tabPanel>
+
+      </p-tabView>
+      </form>
+      <button type="submit" class="btn btn-sm btn-primary" [disabled]="!saleForm.form.valid" (click)="save()"><i
+          class="fa fa-dot-circle-o"></i>
+        {{'save' | translate}}
+      </button>
+    </div>
+  </div>
+  <!--/.row-->
+</div>
+<!--</form>-->

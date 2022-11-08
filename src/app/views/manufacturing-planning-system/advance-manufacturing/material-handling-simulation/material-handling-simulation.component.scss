@@ -1,0 +1,48 @@
+.table-parent {
+  margin-top: 20px;
+  padding: 10px;
+  overflow: auto;
+  display: flex;
+}
+
+td {
+  min-height: 25px !important;
+}
+
+.pp {
+  position: relative;
+  overflow: auto;
+  min-width: 250px;
+  max-width: 500px;
+}
+
+.workstation {
+  min-width: 700px !important;
+}
+
+.pallet {
+  min-width: 500px;
+}
+
+.position-absolute {
+  padding: 5px 10px;
+  font-size: 15px;
+  font-weight: 600;
+  border-bottom: 1px solid #c8c8c8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+}
+
+.no-record {
+  padding: 20px;
+  font-size: 18px;
+  color: red;
+  text-align: center;
+  width: 100%;
+}
+
+.warehouse {
+  min-width: fit-content;
+}

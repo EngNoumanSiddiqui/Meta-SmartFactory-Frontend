@@ -1,0 +1,110 @@
+
+<div class="row ui-fluid">
+
+  <div class="col-lg-6" >
+    <div class="card">
+      <div class="card-header">
+        <i class="fa fa-align-justify"></i>{{'measuring-document' | translate}}
+      </div>
+      <div class="card-body">
+        <form #measuringDocumentForm="ngForm">
+          <table class="table table-bordered">
+            <tbody >
+            <tr>
+              <td width="35%">{{'measurement-point' | translate}}</td>
+              <td>
+
+                <input type="text" readonly required class="form-control" name="equipmentMeasuringPointId"
+                       placeholder="{{'select-measurement-point'|translate}}"
+                       [(ngModel)]="dataModel.equipmentMeasuringPointId" (click)="measurementModal.show()">
+             </td>
+            </tr>
+            <tr>
+              <td>{{'measurement-position' | translate}}</td>
+              <td class=""><span class="form-control bg-readonly">{{selectedMeasurementPoint?.measurementPosition}} </span> </td>
+            </tr>
+            <tr>
+              <td>{{'measurement-equipment' | translate}}</td>
+              <td class=""><span class="form-control bg-readonly">{{selectedMeasurementPoint?.equipment?.equipmentName}} </span>   </td>
+            </tr>
+            <tr>
+              <td>{{'measuring-date' | translate}} </td>
+              <td>      <p-calendar [(ngModel)]="dataModel.measurementDate"
+                                    [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                                    required name="measurementDate" [showTime]="true"
+                                    dateFormat="dd/mm/yy" ></p-calendar> </td>
+            </tr>
+            <tr>
+              <td>{{'measurement-characteristic' | translate}}</td>
+              <td class="">
+                <span class="form-control bg-readonly"> {{selectedMeasurementPoint?.maintenanceCharacteristic?.characteristic}}  </span>
+                </td>
+            </tr>
+            <tr>
+              <td>{{'measurement-characteristic-unit' | translate}}</td>
+              <td class=""><span class="form-control bg-readonly"> {{selectedMeasurementPoint?.maintenanceCharacteristic?.unitMeasure}}  </span>  </td>
+            </tr>
+            <tr>
+              <td>{{'counter-reading' | translate}}</td>
+              <td>
+                <input type="number" min="0" name="counterReading" class="form-control" [(ngModel)]="dataModel.counterReading"/>
+              </td>
+            </tr>
+            <tr>
+              <td>{{'read-by' | translate}}</td>
+              <td>
+                <employee-auto-complete [required]="true" [selectedEmployeeId]="dataModel.employeeId" (selectedEmployeeEvent)="setSelectedEmployee($event)"></employee-auto-complete>
+              </td>
+            </tr>
+            <tr>
+              <td>{{'measurement-code-group-header' | translate}}</td>
+              <td class=""><span class="form-control bg-readonly"> {{selectedMeasurementPoint?.equipmentCodeGroupHeader?.shortText}}  </span>  </td>
+            </tr>
+            <tr>
+              <td>{{'parameter' | translate}}</td>
+              <td><input type="parameter" name="parameter" class="form-control"  [(ngModel)]="dataModel.parameter"/>  </td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+                  {{'reset' | translate}}</button>
+                <button type="submit" class="btn btn-sm btn-primary" [disabled]="!measuringDocumentForm.form.valid" (click)="save()"><i class="fa fa-dot-circle-o"></i>
+                  {{'save' | translate}}</button>
+
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div bsModal [config]="{backdrop: 'static', keyboard: false}" #measurementModal="bs-modal" (onHidden)="modal.active=false" class="modal fade"
+     tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-success modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{'select-measuring-point' | translate}}</h4>
+        <button type="button" class="close" (click)="measurementModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <choose-measuring-point-pane [plantId]="selectedPlant?.plantId" (selectedEvent)="setSelectedMeasurementPoint($event);measurementModal.hide()"></choose-measuring-point-pane>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary"
+                (click)="measurementModal.hide()">{{'close' | translate}}
+        </button>
+      </div>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+

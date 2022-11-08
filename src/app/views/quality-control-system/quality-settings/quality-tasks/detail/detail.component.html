@@ -1,0 +1,47 @@
+<div class="animated fadeIn">
+    <div class="col-md-12">
+      <div class="card" *ngIf="qualityTask">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i> {{'quality-task-details' | translate}}
+        </div>
+        <div class="card-body">
+          <form #stockForm="ngForm">
+            <table class="table table-striped table-outline">
+              <tbody>
+                <tr>
+                  <td width="30%" class="text-bold">{{'task-id' | translate}} <span style="width: 0 !important;" class="float-right">:</span> </td>
+                  <td>{{qualityTask.qualityTaskTypeId}}</td>
+                </tr>
+                <tr>
+                  <td class="text-bold">{{'code' | translate}} <span style="width: 0 !important;" class="float-right">:</span> </td>
+                  <td>{{qualityTask.qualityTaskTypeCode}}</td>
+                </tr>
+                <tr>
+                  <td width="30%" class="text-bold">{{'task-name' | translate}} <span style="width: 0 !important;" class="float-right">:</span> </td>
+                  <td>{{qualityTask.qualityTaskTypeName}}</td>
+                </tr>
+                <tr>
+                  <td width="30%" class="text-bold">{{'short-text' | translate}}<span style="width: 0 !important;" class="float-right">:</span> </td>
+                  <td>{{qualityTask.qualityTaskTypeDescription}}</td>
+                </tr>
+                <!-- <tr>
+                  <td class="text-bold">{{'code-group' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                  <td>{{qualityTask.qualityCodeGroup?.codeGroupCode}}</td>
+                </tr>
+                <tr>
+                  <td class="text-bold">{{'defect-recording' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                  <td>{{qualityTask.qualityDefectRecording?.defectRecordingCode}}</td>
+                </tr>
+                <tr>
+                  <td class="text-bold">{{'quality-notification' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                  <td>{{qualityTask.qualityNotification?.qualityNotificationCode}}</td>
+                </tr> -->
+              </tbody>
+            </table>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  

@@ -1,0 +1,1238 @@
+<div class="animated fadeIn">
+  <form #materialForm="ngForm" focusInvalidInput>
+    <p-tabView class="col-md-12" (onChange)="onTabChange($event)">
+
+      <!-- MAIN SCREEN TAB -->
+      <p-tabPanel header="{{ 'main' | translate }}">
+        <div class="card">
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i>
+            {{ "material-information" | translate }}
+          </div>
+          <div class="card-body row p-3">
+            <div class="col-md-6">
+              <table class="table table-bordered ui-fluid">
+                <tbody>
+                  <tr>
+                    <td>{{ "stock-name" | translate }}*</td>
+                    <td>
+                      <input type="text" id="stockName" name="stockName" class="form-control" class="form-control"
+                        required [(ngModel)]="stock.stockName"/>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{ "stock-name" | translate }} 2</td>
+                    <td>
+                      <input type="text" id="stockName2" name="stockName2" class="form-control" class="form-control"
+                         [(ngModel)]="stock.stockName2"/>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{ "stock-name" | translate }} 3</td>
+                    <td>
+                      <input type="text" id="stockName3" name="stockName3" class="form-control" class="form-control"
+                         [(ngModel)]="stock.stockName3"/>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{ "stock-no" | translate }}*</td>
+                    <td>
+                      <div class="d-flex">
+                        <input type="text" id="stockNo" name="stockNo" class="form-control" class="form-control"
+                        [(ngModel)]="stock.stockNo" />
+                        <p-checkbox class="col-md-3" name="stockNoChangeAllowed" binary="true" label="{{'allow-to-change' | translate}}" 
+                        [(ngModel)]="stock.stockNoChangeAllowed"></p-checkbox>
+                      </div>
+                     
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{ "industry" | translate }}</td>
+                    <td>
+                      <div class="input-group">
+                        <select id="industry" name="industry" class="form-control" [(ngModel)]="stock.industryId">
+                          <option [ngValue]="null">
+                            {{ "please-select" | translate }}</option>
+                          <option *ngFor="let st of industryList" value="{{ st.industryId }}">
+                            {{ st.industryName | translate }}
+                          </option>
+                        </select>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{ "default-location" | translate }}</td>
+                    <td>
+                        <span class="bg-readonly form-control"
+                        *ngIf="!stock.locationNo" (click)="warehouseLocationModal.active=true;">
+                        {{'select-location' | translate}}
+                      </span>
+                      <span class="bg-readonly form-control"
+                        *ngIf="stock.locationNo" (click)="warehouseLocationModal.active=true;">
+                        {{ stock.locationNo | translate}}
+                      </span>
+                      <!-- <location-auto-complete [addIfMissing]="true" (selectedLocationEvent)="stock.locationNo=$event?.locationNo" ></location-auto-complete> -->
+                    </td>
+                  </tr>
+                  
+                  <tr>
+                    <td>{{ "buy-make" | translate }}</td>
+                    <td>
+                      <div class="row">
+                        <div class="col col-lg-3">
+                          <p-checkbox name="buy" *ngIf="
+                              !stock.stockTypeId ||
+                              stock.stockTypeId >= 16 ||
+                              (+stock.stockTypeId !== 3)
+                            " binary="true" label="{{'buy' | translate}}" [(ngModel)]="stock.buy"
+                            (ngModelChange)="onBuySelected($event)">
+                          </p-checkbox>
+                        </div>
+                        <div class="col col-lg-5">
+                          <p-checkbox *ngIf="
+                              !stock.stockTypeId ||
+                              stock.stockTypeId >= 16 ||
+                              +stock.stockTypeId === 2 ||
+                              +stock.stockTypeId === 3
+                            " name="make" binary="true" label="{{'make' | translate}}" [(ngModel)]="stock.make"
+                            (ngModelChange)="onMakeSelected($event)"></p-checkbox>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+  
+                  <!-- <tr>
+                      <td colspan="2">
+                        <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+                          {{'reset' | translate}}
+                        </button>
+                        <button type="submit" class="btn btn-sm btn-primary" [disabled]="!stockForm.form.valid"
+                                (click)="save()"><i class="fa fa-dot-circle-o"></i>
+                          {{'save' | translate}}
+                        </button>
+  
+                      </td>
+                    </tr> -->
+                </tbody>
+              </table>
+            </div>
+            <div class="col-md-6">
+              <table class="table table-bordered ui-fluid">
+                <tbody>
+                  <tr>
+                    <td>{{ "type" | translate }}</td>
+                    <td>
+                      <div class="input-group">
+                        <select id="stockTypes" name="stockTypes" class="form-control" [(ngModel)]="stock.stockTypeId"
+                          (ngModelChange)="onStockTypeSelected($event)" required>
+                          <option [ngValue]="null">
+                            {{ "please-select" | translate }}</option>
+                          <option *ngFor="let st of stockTypes" value="{{ st.stockTypeId }}">{{ st.stockTypeName }} |
+                            {{ st.stockTypeCode }}</option>
+                        </select>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{ "class" | translate }} 2</td>
+                    <td>
+                      <div class="input-group">
+                        <select id="stockTypeOneId" name="stockTypeOneId" class="form-control" [(ngModel)]="stock.stockTypeOneId" (ngModelChange)="onStockType2Selected($event)">
+                          <option [ngValue]="null">
+                            {{ "please-select" | translate }}</option>
+                          <option *ngFor="let st of stockTypesOneList" [value]="st.stockTypeOneId">{{ st.stockTypeName }} |
+                            {{ st.stockTypeCode }}</option>
+                        </select>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{ "class" | translate }} 3</td>
+                    <td>
+                      <div class="input-group">
+                        <select id="stockTypeTwoId" name="stockTypeTwoId" class="form-control" [(ngModel)]="stock.stockTypeTwoId">
+                          <option [ngValue]="null">
+                            {{ "please-select" | translate }}</option>
+                          <option *ngFor="let st of stockTypesTwoList" [value]="st.stockTypeTwoId">{{ st.stockTypeName }} |
+                            {{ st.stockTypeCode }}</option>
+                        </select>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{ "base-unit-measure" | translate }}</td>
+                    <td>
+                      <unit-auto-complete [addIfMissing]="true" (unitChangeEvent)="
+                          stock.baseUnit = $event; stock.dimensionUnit=$event; baseUnitChanged($event)
+                        " [required]="true" [selectedUnit]="stock.baseUnit">
+                      </unit-auto-complete>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{ "base-unit-measure" | translate }} 2</td>
+                    <td>
+                      <unit-auto-complete [addIfMissing]="true" (unitChangeEvent)="stock.unit2=$event;" [selectedUnit]="stock.unit2"></unit-auto-complete>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{ "material-group" | translate }}</td>
+                    <td>
+                      <div class="input-group">
+                        <select id="materialGroup" name="materialGroup" class="form-control"
+                          [(ngModel)]="stock.stockGroupId">
+                          <option [ngValue]="null">
+                            {{ "please-select" | translate }}</option>
+                          <option *ngFor="let mg of materialGroupList" value="{{ mg.stockGroupId }}">
+                            {{ mg.groupDescription | translate }}
+                          </option>
+                        </select>
+                      </div>
+                    </td>
+                  </tr>
+  
+                  <tr>
+  
+                  </tr>
+                  <tr>
+                    <td>{{ "status" | translate }}</td>
+                    <td>
+                      <div class="input-group">
+                        <select id="stockStatus" name="stockStatus" class="form-control" [(ngModel)]="stock.stockStatus">
+                          <option [ngValue]="null">
+                            {{ "please-select" | translate }}</option>
+                          <option *ngFor="let status of statusList" value="{{ status }}">{{ status | translate }}
+                          </option>
+                        </select>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </p-tabPanel>
+
+      <!-- TECHNOLOGY SCREEN TAB -->
+
+      <p-tabPanel header="{{ 'technology' | translate }}"> 
+        <div class="card">
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i>
+            {{ "technology" | translate }}
+          </div>
+          <div class="card-body">
+            <table class="table table-bordered ui-fluid">
+              <tbody>
+                <tr>
+                  <td>{{ "extra-production-percentage" | translate }}*</td>
+                  <td>
+                    <input type="number" id="extraProductionPercentage" name="extraProductionPercentage" class="form-control"
+                      [(ngModel)]="stock.extraProductionPercentage"/>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{ "purchase-notification-period" | translate }}</td>
+                  <td>
+                    <input type="number" id="purchaseNotificationPeriod" name="purchaseNotificationPeriod" class="form-control"
+                      [(ngModel)]="stock.purchaseNotificationPeriod"/>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{ "combine-material" | translate }}</td>
+                  <td>
+                    <stock-auto-complete
+                    (selectedStockEvent)="stock.combineStockIds=$event?.stockId;"
+                      [selectedStockId]="stock.combineStockIds"></stock-auto-complete>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{ "scrap-must" | translate }}</td>
+                  <td>
+                    <p-checkbox name="scrapMust" [(ngModel)]="stock.scrapMust" binary="true"></p-checkbox>
+                  </td>
+                </tr>
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </p-tabPanel>
+
+      <!-- PURCHASING SCREEN TAB -->
+
+      <p-tabPanel header="{{ 'purchasing' | translate }}"
+        [disabled]="stock?.stockTypeId == 3 || (stock.make && !stock.buy)">
+        <!-- <ng-template pTemplate="content"> -->
+        <div class="card" *ngIf="this.stock.stockPurchasing">
+          <span class="card-header">{{ "purchasing-screen" | translate }}</span>
+          <div class="card-body">
+            <purchasing-new [stock]="stock"></purchasing-new>
+          </div>
+        </div>
+        <!-- </ng-template> -->
+
+      </p-tabPanel>
+
+      <!-- COSTING SCREEN TAB -->
+
+      <p-tabPanel header="{{ 'costing' | translate }}">
+        <div class="card">
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i>
+            {{ "costing-screen" | translate }}
+          </div>
+          <div class="card-body">
+            <table class="table table-bordered ui-fluid cost-screen">
+              <tbody>
+                <tr>
+                  <td>
+                    <strong>{{ "material" | translate }}:</strong> 
+                  </td>
+                  <td>
+                    {{stock?.stockNo}} | {{stock?.stockName}}
+                  </td>
+                </tr>
+                <!-- {{purchasingScreen | json}} -->
+                <tr>
+                  <td>
+                    <div class="d-flex">
+                      <span class="example-half-width"><strong>{{ "base-unit" | translate }}:</strong> </span>
+                      <span class="example-half-width"> {{stock?.baseUnit}}</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="d-flex">
+                      <span class="example-half-width"><strong>{{ "order-unit" | translate }}:</strong> </span>
+                      <span class="example-half-width"> {{ stock?.stockPurchasing?.orderUnit}}</span>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <span class="d-flex">
+                      <span class="example-half-width">
+                        <strong>{{ "procurement-type" | translate }}:</strong>
+                      </span>
+                      <span class="example-half-width">
+                        <select class="form-control" id="procurementType" name="procurementType"
+                          [(ngModel)]="stockCosting.procurementType">
+                          <option [value]="null">{{'please-select' | translate}}</option>
+                          <option [value]="procurementType" *ngFor="let procurementType of procurementTypes">
+                            {{procurementType | translate}}</option>
+                        </select>
+                        <!-- <p-dropdown [style]="{'width': '60%'}" id="procurementType" name="procurementType"
+                        [(ngModel)]="stockCosting.procurementType"></p-dropdown> -->
+                      </span>
+                    </span>
+                  </td>
+
+                  <td>
+                    <span class="d-flex">
+                      <span class="example-half-width">
+                        <strong>{{ "currency" | translate }}:</strong>
+                      </span>
+                      <span class="example-half-width">
+                        <!-- <p-dropdown [style]="{'width': '50%'}"></p-dropdown> -->
+                        <currency-auto-complete (selectedCurrencyEvent)="setCurrency($event)"></currency-auto-complete>
+                      </span>
+                    </span>
+                  </td>
+
+                </tr>
+                <tr>
+                  <td>
+                    <span class="d-flex">
+                      <span class="example-half-width">
+                        <strong>{{ "cost-center" | translate }}: </strong>
+                      </span>
+                      <span class="example-half-width">
+                        <cost-center-auto-complete 
+                        (selectedCostCenterEvent)="stockCosting.costCenterId=$event?.costCenterId" ></cost-center-auto-complete>  
+                      </span>
+                    </span>
+                  </td>
+                  <td>
+                    <span class="d-flex">
+                      <span class="example-half-width">
+                        <strong>{{ "update-date" | translate }}:</strong>
+                      </span>
+                      <span class="example-half-width">
+                        
+                      </span>
+                    </span>
+                  
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="cost-screen-header">
+              <p>{{ "costing-estimate" | translate }}</p>
+            </div>
+            <table class="table table-bordered ui-fluid cost-screen">
+              <tbody>
+                <tr>
+                  <td>
+                    <span class="d-flex">
+                      <span class="example-half-width">
+                        <strong>{{ "current-price" | translate }}:</strong>
+                      </span>
+                      <span *ngIf="!this.stockCosting.stockValuation.movingPriceSelection" class="example-half-width bg-readonly form-control">{{stockCosting.stockCostEstimate.standardPrice}}</span>
+                      <span *ngIf="this.stockCosting.stockValuation.movingPriceSelection" class="example-half-width bg-readonly form-control">{{stockCosting.stockCostEstimate.movingPrice}}</span>
+                    </span>
+                  </td>
+                  <td>
+                    <span class="d-flex">
+                      <span class="example-half-width">
+                        <strong>{{ "current-period" | translate }}:</strong>
+                      </span>
+                      <span class="example-half-width bg-readonly form-control">{{ currentPricePeriod }}</span>
+                      <!-- <span class="example-half-width">
+                        <p-calendar dateFormat="mm.yy" view="month" name="currentPricePeriod"
+                          hideOnDateTimeSelect="true" [monthNavigator]="true" [yearNavigator]="true"
+                          yearRange="1990:2100" id="currentPricePeriod" inputStyleClass="bg-readonly form-control"
+                          [(ngModel)]="stockCosting.stockCostEstimate.currentPricePeriod" [disabled]="true">
+                        </p-calendar>
+                      </span> -->
+                    </span>
+                  </td>
+
+                </tr>
+                <tr>
+                  <td>
+                    <span class="d-flex">
+                      <span class="example-half-width">
+                        <strong>{{ "planned-price" | translate }}:</strong>
+                      </span>
+                      <span class="example-half-width">
+                        <input type="text" id="plannedPrice" name="plannedPrice" pInputText
+                          [(ngModel)]="stockCosting.stockCostEstimate.plannedPrice" pKeyFilter="num" />
+                      </span>
+                    </span>
+                  </td>
+
+                  <td>
+                    <span class="d-flex">
+                      <span class="example-half-width">
+                        <strong>{{ "planned-period" | translate }}:</strong>
+                      </span>
+                      <span class="example-half-width">
+                        <p-calendar dateFormat="mm.yy" view="month" name="plannedPricePeriod"
+                        [appendTo]="'body'" [baseZIndex]="'9999'"
+                          hideOnDateTimeSelect="true" [monthNavigator]="true" [yearNavigator]="true"
+                          yearRange="1990:2100" [(ngModel)]="stockCosting.stockCostEstimate.plannedPricePeriod">
+                        </p-calendar>
+                      </span>
+                    </span>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <span class="d-flex">
+                      <span class="example-half-width">
+                        <strong>{{ "previous-price" | translate }}:</strong>
+                      </span>
+                      <span class="example-half-width bg-readonly form-control" >
+                        <!-- <input type="text" id="previousPrice" name="previousPrice" pInputText [disabled]="true"
+                          style="background: #ababab" [(ngModel)]="stockCosting.stockCostEstimate.previousPrice"
+                          pKeyFilter="num" /> -->
+                      </span>
+                    </span>
+                  </td>
+
+                  <td>
+                    <span class="d-flex">
+                      <span class="example-half-width">
+                        <strong>{{ "previous-period" | translate }}:</strong>
+                      </span>
+                      <span class="example-half-width bg-readonly form-control">
+                        <!-- <p-calendar dateFormat="mm.yy" view="month" name="previousPricePeriod"
+                          hideOnDateTimeSelect="true" [monthNavigator]="true" [yearNavigator]="true"
+                          yearRange="1990:2100" [(ngModel)]="stockCosting.stockCostEstimate.previousPricePeriod"
+                          [disabled]="true" [style]="{background: '#ababab'}"></p-calendar> -->
+                      </span>
+                    </span>
+                  </td>
+
+                </tr>
+
+                <tr>
+                  <td>
+                    <span class="d-flex">
+                      <span class="example-half-width">
+                        <strong>{{ "moving-price" | translate }}:</strong>
+                      </span>
+
+                      <span class="example-half-width bg-readonly form-control" *ngIf="!this.stockCosting.stockValuation.movingPriceSelection"></span>
+
+                      <span class="example-half-width"  *ngIf="this.stockCosting.stockValuation.movingPriceSelection">
+                        <span style="margin-right: 5px;">
+                          <input type="text" id="moving-price" name="moving-price" pInputText
+                            [(ngModel)]="stockCosting.stockCostEstimate.movingPrice" pKeyFilter="num" />
+                        </span>
+                      </span>
+                    </span>
+                  </td>
+
+                  <td>
+                    <span class="d-flex">
+                      <span class="example-half-width">
+                        <strong>{{ "standard-price" | translate }}:</strong>
+                      </span>
+                      <span class="example-half-width bg-readonly form-control" *ngIf="this.stockCosting.stockValuation.movingPriceSelection"></span>
+
+
+                      <span class="example-half-width" *ngIf="!this.stockCosting.stockValuation.movingPriceSelection">
+                        <input type="text" id="standard-price" name="standard-price" pInputText
+                          [(ngModel)]="stockCosting.stockCostEstimate.standardPrice" pKeyFilter="num" />
+                      </span>
+                    </span>
+                  </td>
+
+                </tr>
+
+                <tr>
+                  <td><strong>{{ "update-date" | translate }}</strong></td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="cost-screen-header">
+              <p>{{ "material-valuation" | translate }}</p>
+            </div>
+            <table class="table table-bordered ui-fluid cost-screen">
+              <tbody>
+                <tr>
+
+                  <td>
+                    <span class="d-flex">
+                      <span class="example-half-width">
+                        <strong>{{ "price-control" | translate }}:</strong>
+                      </span>
+                      <span class="example-half-width">
+                        <select class="form-control" id="movingPriceSelection" name="movingPriceSelection" [(ngModel)]=" stockCosting.stockValuation.movingPriceSelection"
+                          (ngModelChange)="setMovingPriceSelection($event)">
+                          <option value="{{movingPrice=='MOVING PRICE'}}" *ngFor="let movingPrice of movingPrices">
+                            {{movingPrice | translate}}
+                          </option>
+                        </select>
+                      </span>
+                    </span>
+                  </td>
+                  <td>
+                    <span class="d-flex">
+                      <span class="example-half-width">
+                        <strong>{{ "total-value" | translate }}: </strong>
+                      </span>
+                      <span class="example-half-width">
+                        <!-- <input type="text" id="total-value" name="total-value" pInputText
+                          [(ngModel)]="stockCosting.stockValuation.stockTotalValue" pKeyFilter="num" /> -->
+                      </span>
+                    </span>
+
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <span class="d-flex">
+                      <span class="example-half-width">
+                        <strong>{{ "valid-from" | translate }}:</strong>
+                      </span>
+                      <span class="example-half-width">
+                        <p-calendar dateFormat="dd.mm.yy" name="validFrom" 
+                        id="validFrom" hideOnDateTimeSelect="true"
+                        [appendTo]="'body'" [baseZIndex]="'9999'"
+                          [showIcon]="true" [(ngModel)]="stockCosting.stockValuation.validFrom"></p-calendar>
+                      </span>
+                    </span>
+                  </td>
+                  <td><strong>{{ "update-date" | translate }}:</strong></td>
+                </tr>
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </p-tabPanel>
+
+      <!-- SALES SCREEN TAB -->
+
+      <p-tabPanel header="{{ 'sales' | translate }}" [disabled]="
+          stock?.stockTypeId == 1 ||
+          stock?.stockTypeId == 9 ||
+          (stock.buy && !stock.make)
+        ">
+        <div class="card">
+          <span class="card-header">{{ "sales-screen" | translate }}
+            <button style="float: right;" type="button" class="btn btn-primary" data-toggle="modal"
+              (click)="params.dialog.title = 'salesScreen'; salesScreenShow()">
+              <i class="fa fa-plus-circle"></i>
+            </button>
+          </span>
+          <div class="card-body">
+            <table class="table">
+              <thead>
+                <tr align="center">
+                  <th>{{ "material" | translate }}</th>
+                  <th>{{ "warehouse" | translate }}</th>
+                </tr>
+              </thead>
+              <tbody *ngIf="stockSales">
+                <tr align="center">
+                  <td class="text-center">
+                    {{ stock.stockName }}
+                  </td>
+                  <td class="text-center">
+                    {{ stockSales.wareHouseName }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </p-tabPanel>
+<!-- WAREHOUSE SCREEN TAB -->
+<p-tabPanel header="{{'production'|translate}}" [disabled]="stock?.buy">
+  <div class="card">
+    <div class="card-header">
+      <i class="fa fa-align-justify"></i>{{ "production-screen" | translate }}
+    </div>
+    <div class="card-body">
+      <table class="table table-bordered" *ngIf="stock">
+        <tbody>
+          <tr>
+            <td width="40%">
+              <strong>{{ "material" | translate }}:</strong> 
+            </td>
+            <td>
+              {{stock?.stockNo}} | {{stock?.stockName}}
+            </td>
+          </tr>
+          <tr>
+            <td class="text-bold">{{'production-order-warehouse' | translate}}</td>
+            <td>
+              <warehouse-auto-complete [required]="true" [selectedWareHouseId]="stock.productionOrderWareHouseId"
+              (selectedWareHouseEvent)="stock.productionOrderWareHouseId = $event.wareHouseId"
+              [type]="warehouseType" [setDefaultSelected]="isDefaultSelected">
+            </warehouse-auto-complete>
+            </td>
+          </tr>
+          <!-- <tr>
+            <td class="text-bold">{{'product-tree-id' | translate}}</td>
+            <td>
+                <span *ngIf="stock.defaultProductTreeId" class="form-control bg-readonly" (click)="myProductTreeModal.show()">{{stock.defaultProductTreeId}} | {{stock.defaultProductTreereVisionNo}}</span>
+              <span *ngIf="!stock.defaultProductTreeId" class="form-control bg-readonly" (click)="myProductTreeModal.show()">{{'click-to-select'|translate}}</span>
+            </td>
+          </tr> -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+ </p-tabPanel>
+      <!-- QUALITY SCREEN TAB -->
+
+      <p-tabPanel header="{{ 'quality' | translate }}">
+        <ng-template pTemplate="content">
+          <quality-screen-new [stock]="stock"></quality-screen-new>
+        </ng-template>
+      </p-tabPanel>
+
+
+
+
+
+
+      <!-- Pallet SCREEN TAB -->
+
+      <!-- <p-tabPanel header="{{ 'pallet' | translate }}" [disabled]="!stock?.stockId">  -->
+      <p-tabPanel header="{{ 'pallet' | translate }}">
+        <pallet-screen-new [stock]="stock"></pallet-screen-new>
+      </p-tabPanel>
+
+      <!-- DOCUMENTATION SCREEN TAB -->
+
+      <p-tabPanel header="{{ 'documentation' | translate }}">
+        <div class="card">
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i>{{ "other-details" | translate }}
+          </div>
+          <div class="card-body">
+            <table class="table table-bordered">
+              <tbody>
+                <tr align="center">
+                  <td class="text-center" colspan="2">
+                    <image-adder [isFile]="true"></image-adder>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </p-tabPanel>
+
+      <!-- DIMENSION SCREEN TAB -->
+
+      <p-tabPanel header="{{ 'dimensions' | translate }}">
+        <div class="card">
+          <span class="card-header">{{ "unit-of-measures" | translate }}
+            <button style="float: right;" type="button" class="btn btn-primary" data-toggle="modal" (click)="
+                params.dialog.title = 'unitOfMeasures';
+                stockUnitMeasureListShow(null, 'NEW')
+              ">
+              <i class="fa fa-plus-circle"></i>
+            </button>
+          </span>
+          <div class="card-body">
+            <table class="table" style="table-layout: fixed; width: 100%;">
+              <thead>
+                <tr align="center">
+                  <th>{{ "denominator" | translate }}</th>
+                  <th>{{ "alternative-unit" | translate }}</th>
+                  <th>{{ "numerator" | translate }}</th>
+                  <th>{{ "base-unit-measure" | translate }}</th>
+                  <th width="80px">{{ "action" | translate }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr align="center" *ngFor="let item of stock.stockUnitMeasureList; let i = index">
+                  <td class="text-center">
+                    {{ item.denominator }}
+                  </td>
+                  <td class="text-center">
+                    {{ item.alternativeUnit }}
+                  </td>
+                  <td class="text-center">
+                    {{ item.numerator }}
+                  </td>
+                  <td class="text-center">
+                    {{ item.baseUnit }}
+                  </td>
+                  <td width="80px" style="display: flex;">
+                    <button class="btn btn-sm" (click)="
+                        params.dialog.title = 'unitOfMeasures';
+                        stockUnitMeasureListShow(i, 'EDIT')
+                      ">
+                      <i class="fa fa-edit"></i>
+                    </button>
+                    <button class="btn btn-sm" (click)="removeFromUnitMeasureList(i)">
+                      <i class="fa fa-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6">
+                <table class="table table-bordered">
+                  <tbody>
+                    <tr>
+                      <td width="20%">{{ "gross-weight" | translate }}</td>
+                      <td>
+                        <input type="text" id="grossWeight" name="grossWeight" class="form-control" class="form-control"
+                          [(ngModel)]="stock.grossWeight" />
+                      </td>
+                      <td width="20%">{{ "length" | translate }}</td>
+                      <td>
+                        <input type="number" id="length" name="length" class="form-control" class="form-control"
+                          [(ngModel)]="stock.length" />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{ "net-weight" | translate }}</td>
+                      <td>
+                        <input type="number" id="netWeight" name="netWeight" class="form-control" class="form-control"
+                          [(ngModel)]="stock.netWeight" />
+                      </td>
+                      <td>{{ "height" | translate }}</td>
+                      <td>
+                        <input type="number" id="height" name="height" class="form-control" class="form-control"
+                          [(ngModel)]="stock.height" />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{ "volume" | translate }}</td>
+                      <td>
+                        <input type="number" id="volume" name="volume" class="form-control" class="form-control"
+                          [(ngModel)]="stock.volume" />
+                      </td>
+                      <td>{{ "width" | translate }}</td>
+                      <td>
+                        <input type="number" id="width" name="width" class="form-control" class="form-control"
+                          [(ngModel)]="stock.width" />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{ "thickness" | translate }}(mm)</td>
+                      <td>
+                        <input type="number" id="thickness" name="thickness" class="form-control" class="form-control"
+                          [(ngModel)]="stock.thickness" />
+                      </td>
+                      <td>{{ "flexible_cut" | translate }}</td>
+                      <td>
+                            <p-checkbox name="buy" binary="true" [(ngModel)]="stock.flexibleCut">
+                            </p-checkbox>
+                      </td>
+                    </tr>
+                  
+                  </tbody>
+                </table>
+              </div>
+              <div class="col-md-6">
+                <table class="table table-bordered">
+                  <tbody>
+                    
+                    <tr>
+                      <td>{{ "outer-diameter" | translate }}</td>
+                      <td>
+                        <input type="number" id="outerDiameter" name="outerDiameter" class="form-control"
+                          [(ngModel)]="stock.outerDiameter" />
+                      </td>
+                      <td>{{ "weight-unit" | translate }}</td>
+                      <td>
+                        <unit-auto-complete [addIfMissing]="true" (unitChangeEvent)="stock.weightUnit=$event">
+                        </unit-auto-complete>
+                      </td>
+                      
+                    </tr>
+                    <tr>
+                      <td>{{ "inner-diameter" | translate }}</td>
+                      <td>
+                        <input type="number" id="innerDiameter" name="innerDiameter" class="form-control"
+                          [(ngModel)]="stock.innerDiameter" />
+                      </td>
+                      <td>{{ "dimension-unit" | translate }}</td>
+                      <td>
+                        <unit-auto-complete [addIfMissing]="true" (unitChangeEvent)="stock.dimensionUnit=$event">
+                        </unit-auto-complete>
+                      </td>
+                     
+                    </tr>
+                    <tr>
+                      <td>{{ "density" | translate }}</td>
+                      <td>
+                        <input type="number" id="density" name="density" class="form-control"
+                          [(ngModel)]="stock.density" />
+                      </td>
+                      <td>{{ "volume-unit" | translate }}</td>
+                      <td>
+                        <unit-auto-complete [addIfMissing]="true" (unitChangeEvent)="stock.volumeUnit=$event">
+                        </unit-auto-complete>
+                      </td>
+                     
+                    </tr>
+                    <tr>
+                      <td>{{ "formula" | translate }}</td>
+                      <td colspan="3">
+                        <input type="text" id="formula" name="formula" class="form-control"
+                          [(ngModel)]="stock.formula" />
+                      </td>
+                    </tr>
+                    
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+      </p-tabPanel>
+
+      <!-- REORDERING SCREEN TAB -->
+
+      <p-tabPanel header="{{ 'reorder-planning' | translate }}">
+        <div class="card">
+            <div class="card-header">
+              <i class="fa fa-align-justify"></i>
+              {{ "reorder-planning" | translate }}
+            </div>
+          <div class="card-body">
+            <table class="table table-bordered ui-fluid">
+              <tbody>
+                <!-- <tr>
+                  <td>{{ "max-stock-level" | translate }}</td>
+                  <td>
+                    <input type="number" id="maxStockLevel" name="maxStockLevel" class="form-control"
+                      [(ngModel)]="stock.maxStockLevel" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{ "reorder-point" | translate }}</td>
+                  <td>
+                    <input type="number" id="reorderPoint" name="reorderPoint" class="form-control"
+                      [(ngModel)]="stock.reorderPoint" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{ "safety-Stock" | translate }}</td>
+                  <td>
+                    <input type="number" id="safetyStock" name="safetyStock" class="form-control"
+                      [(ngModel)]="stock.safetyStock" />
+                  </td>
+                </tr> -->
+                <tr>
+                  <td>{{ "base-unit-measure" | translate }}</td>
+                  <td>
+                    <input type="text" readonly id="baseUnitlm" name="baseUnitlm" class="form-control"
+                      [(ngModel)]="stock.baseUnit" />
+                  </td>
+                </tr>
+                <!-- <tr>
+                  <td>{{ "reorder-strategy" | translate }}</td>
+                  <td>
+                    <div class="input-group">
+                      <select id="reorderStrategy" name="reorderStrategy" class="form-control"
+                        [(ngModel)]="stock.reorderStrategy">
+                        <option [value]="null">
+                          {{ "please-select" | translate }}</option>
+                        <option *ngFor="let status of reorderPlanningStrategyList" value="{{ status }}">
+                          {{ status| translate }}
+                        </option>
+                      </select>
+                    </div>
+                  </td>
+                </tr> -->
+                <tr>
+                  <td>{{'stock-management' | translate}}</td>
+                  <td>
+                    <p-checkbox name="stockManagement" binary="true" [(ngModel)]="stock.stockManagement"></p-checkbox>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </p-tabPanel>
+
+      <!-- BATCH SCREEN TAB -->
+
+      <p-tabPanel header="{{ 'batch' | translate }}"> </p-tabPanel>
+
+      <!-- SCHEDULE SCREEN TAB -->
+
+      <p-tabPanel header="{{'schedule'|translate}}">
+
+        <div class="card">
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i>
+            {{ "schedule" | translate }}
+          </div>
+          <div class="card-body">
+            <table class="table table-bordered ui-fluid">
+              <tbody>
+                <tr>
+                  <td style="width:50%">{{ "min-schedule-ready-percentage" | translate }}</td>
+                  <td style="width:50%">
+                    <input  style="width:30%" type="number" id="minSchReadyReservationPercentage"
+                    [(ngModel)]="stock.minSchReadyReservationPercentage" min="1" max="100"/>
+                    <span  style="width:20%">&nbsp;&nbsp;%</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </p-tabPanel>
+      <p-tabPanel header="{{ 'stock-strategy' | translate }}" [disabled]="!stock.stockId" > 
+        <ng-template pTemplate="content">
+          <app-stock-strategy [stockId]="stock.stockId"></app-stock-strategy>
+        </ng-template>
+      </p-tabPanel>
+
+    </p-tabView>
+
+    <div class="row col-md-12" *ngIf="fromChoosePane">
+      <button type="reset" class="btn btn-sm btn-danger" (click)="reset()">
+        <i class="fa fa-ban"></i>
+        {{ "reset" | translate }}
+      </button>
+      <button type="submit" class="btn btn-sm btn-primary" [disabled]="!materialForm.form.valid" (click)="save()">
+        <i class="fa fa-dot-circle-o"></i>
+        {{ "save" | translate }}
+      </button>
+    </div>
+  </form>
+</div>
+<!------------------------- Modals ---------------------------------------->
+
+<div bsModal [config]="{ backdrop: 'static' }" #myModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+  aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-success" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          <span *ngIf="params.dialog.title == 'unit'">{{
+            "unit" | translate
+          }}</span>
+          <span *ngIf="params.dialog.title == 'purchasingScreen'">{{
+            "purchasing-screen" | translate
+          }}</span>
+          <span *ngIf="params.dialog.title == 'unitOfMeasures'">{{
+            "unit-of-measures" | translate
+          }}</span>
+        </h4>
+        <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!---------- MODEL #2 ------------->
+        <span>
+          <div class="form-group row" *ngIf="params.dialog.title == 'unit'">
+            <label class="col-md-3 col-form-label" for="dialogUnit">
+              {{ "unit" | translate }}</label>
+            <div class="col-md-9" *ngIf="params.dialog.title == 'unit'">
+              <input type="text" id="dialogUnit" name="dialogUnit" [(ngModel)]="weightUnit.unit" class="form-control"
+                placeholder="{{ 'unit' | translate }}" />
+
+              <!--<span class="help-block">This is a help text</span>-->
+            </div>
+          </div>
+          <div class="form-group row" *ngIf="params.dialog.title == 'unit'">
+            <label class="col-md-3 col-form-label" for="dialogDimension">
+              {{ "dimension" | translate }}</label>
+            <div class="col-md-9" *ngIf="params.dialog.title == 'unit'">
+              <input type="text" id="dialogDimension" name="dialogDimension" [(ngModel)]="weightUnit.dimension"
+                class="form-control" placeholder="{{ 'dimension' | translate }}" />
+            </div>
+          </div>
+          <div class="form-group row" *ngIf="params.dialog.title == 'unit'">
+            <label class="col-md-3 col-form-label" for="dialogDescription">
+              {{ "description" | translate }}</label>
+            <div class="col-md-9" *ngIf="params.dialog.title == 'unit'">
+              <input type="text" id="dialogDescription" name="dialogDescription"
+                [(ngModel)]="weightUnit.unitDescription" class="form-control"
+                placeholder="{{ 'description' | translate }}" />
+            </div>
+          </div>
+          <div class="form-group row" *ngIf="params.dialog.title == 'purchasingScreen'">
+            <label class="col-md-3 col-form-label">
+              {{ "material" | translate }}</label>
+            <div class="col-md-9" *ngIf="params.dialog.title == 'purchasingScreen'">
+              <span class="bg-readonly form-control">{{
+                purchasingScreen.stockName
+              }}</span>
+            </div>
+          </div>
+
+          <div class="form-group row" *ngIf="params.dialog.title == 'purchasingScreen'">
+            <label class="col-md-3 col-form-label" for="dialogPlant">
+              {{ "warehouse" | translate }}</label>
+            <div class="col-md-9" *ngIf="params.dialog.title == 'purchasingScreen'">
+              <warehouse-auto-complete [required]="true" [selectedWareHouseId]="purchasingScreen.wareHouseId"
+                [plantId]="purchasingScreen?.plantId" (selectedWareHouseEvent)="setSelectedWarehouse($event)"
+                [eventFire]="true"></warehouse-auto-complete>
+            </div>
+          </div>
+          <div class="form-group row" *ngIf="params.dialog.title == 'purchasingScreen'">
+            <label class="col-md-3 col-form-label" for="dialogbaseUnitOfMeasure">
+              {{ "base-unit-measure" | translate }}</label>
+            <div class="col-md-9" *ngIf="params.dialog.title == 'purchasingScreen'">
+              <input type="text" id="dialogbaseUnitOfMeasure" name="dialogbaseUnitOfMeasure"
+                [(ngModel)]="stock.baseUnit" class="form-control" placeholder="{{ 'base-unit' | translate }}"
+                readonly />
+            </div>
+          </div>
+          
+          <div class="form-group row" *ngIf="params.dialog.title == 'purchasingScreen'">
+            <label class="col-md-3 col-form-label">
+              {{ "order-unit" | translate }}</label>
+            <div class="col-md-9 ui-fluid" *ngIf="params.dialog.title == 'purchasingScreen'">
+              <unit-auto-complete [addIfMissing]="true" (unitChangeEvent)="purchasingScreen.orderUnit = $event"
+                [selectedUnit]="purchasingScreen.orderUnit"></unit-auto-complete>
+            </div>
+          </div>
+          <div class="form-group row" *ngIf="params.dialog.title == 'purchasingScreen'">
+            <label class="col-md-3 col-form-label" for="dialogbatchManagement">
+              {{ "batch-management" | translate }}</label>
+            <div class="col-md-9" *ngIf="params.dialog.title == 'purchasingScreen'">
+              <p-checkbox id="dialogbatchManagement" [(ngModel)]="purchasingScreen.batchManagement" binary="true">
+              </p-checkbox>
+
+              <!--<span class="help-block">This is a help text</span>-->
+            </div>
+          </div>
+
+          <div class="form-group row" *ngIf="params.dialog.title == 'purchasingScreen'">
+            <label  class="col-md-3 col-form-label" >
+              {{ "supplier-lead-time-day" | translate }}</label>
+            <div class="col-md-9" *ngIf="params.dialog.title == 'purchasingScreen'">
+              <input type="number" id="supplierLeadTimeDay" class="form-control" 
+              [(ngModel)]="purchasingScreen.supplierLeadTimeDay"/>
+                 
+            </div>
+          </div>
+
+          <div class="form-group row" *ngIf="params.dialog.title == 'purchasingScreen'">
+            <label  class="col-md-3 col-form-label" >
+              {{ "max-order-size-per-week" | translate }}</label>
+            <div class="col-md-9" *ngIf="params.dialog.title == 'purchasingScreen'">
+              <input type="number" id="maxOrderSizePerWeek" class="form-control" 
+              [(ngModel)]="purchasingScreen.maxOrderSizePerWeek"/>
+                 
+            </div>
+          </div>
+
+
+
+          
+          
+          <div class="form-group row" *ngIf="params.dialog.title == 'unitOfMeasures'">
+            <label class="col-md-3 col-form-label" for="dialogdominator">
+              {{ "denominator" | translate }}</label>
+            <div class="col-md-9" *ngIf="params.dialog.title == 'unitOfMeasures'">
+              <input type="text" id="dialogdominator" name="dialogdominator" [(ngModel)]="unitOfMeasure.denominator"
+                class="form-control" placeholder="{{ 'denominator' | translate }}" />
+            </div>
+          </div>
+          <div class="form-group row" *ngIf="params.dialog.title == 'unitOfMeasures'">
+            <label class="col-md-3 col-form-label">
+              {{ "alternative-unit" | translate }}</label>
+            <div class="col-md-9" *ngIf="params.dialog.title == 'unitOfMeasures'">
+              <unit-auto-complete [addIfMissing]="true" [required]="true"
+                (unitChangeEvent)="unitOfMeasure.alternativeUnit = $event"
+                [selectedUnit]="unitOfMeasure.alternativeUnit">
+              </unit-auto-complete>
+            </div>
+          </div>
+
+          <div class="form-group row" *ngIf="params.dialog.title == 'unitOfMeasures'">
+            <label class="col-md-3 col-form-label" for="dialogUnitOfMeasureBase">
+              {{ "base-unit-measure" | translate }}</label>
+            <div class="col-md-9" *ngIf="params.dialog.title == 'unitOfMeasures'">
+              <input type="text" id="dialogUnitOfMeasureBase" name="dialogUnitOfMeasureBase"
+                [(ngModel)]="unitOfMeasure.baseUnit" class="form-control"
+                placeholder="{{ 'base-unit-measure' | translate }}" readonly />
+            </div>
+          </div>
+
+          <div class="form-group row" *ngIf="params.dialog.title == 'unitOfMeasures'">
+            <label class="col-md-3 col-form-label" for="dialogNumerator">
+              {{ "numerator" | translate }}</label>
+            <div class="col-md-9" *ngIf="params.dialog.title == 'unitOfMeasures'">
+              <input type="text" id="dialogNumerator" name="dialogNumerator" [(ngModel)]="unitOfMeasure.numerator"
+                class="form-control" placeholder="{{ 'numerator' | translate }}" />
+            </div>
+          </div>
+
+          <!-- sales-screen -->
+          <div class="form-group row" *ngIf="params.dialog.title == 'salesScreen'">
+            <label class="col-md-3 col-form-label" for="dialogMaterial">
+              {{ "material" | translate }}</label>
+            <div class="col-md-9" *ngIf="params.dialog.title == 'salesScreen'">
+              <input type="text" id="dialogMaterial" name="dialogMaterial" [(ngModel)]="stock.stockName"
+                class="form-control" placeholder="{{ 'material' | translate }}" readonly />
+            </div>
+          </div>
+
+          <div class="form-group row" *ngIf="params.dialog.title == 'salesScreen'">
+            <label class="col-md-3 col-form-label" for="dialogPlant">
+              {{ "warehouse" | translate }}</label>
+            <div class="col-md-9" *ngIf="params.dialog.title == 'salesScreen'">
+              <warehouse-auto-complete [required]="true" [selectedWareHouse]="stockSales" [plantId]="stock.plantId"
+                (selectedWareHouseEvent)="setSelectedSalesWarehouse($event)"  [type]="'SALES'"></warehouse-auto-complete>
+            </div>
+          </div>
+          <!-- endof sales screen -->
+        </span>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeModal()">
+          {{ "close" | translate }}
+        </button>
+        <span *ngIf="params.dialog.title == 'unit'">
+          <button type="button" class="btn btn-danger" (click)="resetWeightUnit()">
+            {{ "reset" | translate }}
+          </button>
+        </span>
+        <span *ngIf="params.dialog.title == 'unit'">
+          <button [disabled]="!isValidString(weightUnit.unit)" type="button" class="btn btn-success"
+            (click)="addWeightUnit(); myModal.hide()">
+            {{ "add" | translate }}
+          </button>
+        </span>
+        <span *ngIf="params.dialog.title == 'purchasingScreen'">
+          <button type="button" class="btn btn-danger" (click)="resetPurchasingScreen()">
+            {{ "reset" | translate }}
+          </button>
+        </span>
+        <!-- <span *ngIf="params.dialog.title == 'purchasingScreen'">
+          <button [disabled]="
+              !isValidPurchaseScreen(
+                stock.stockName,
+                purchasingScreen.plantName,
+                purchasingScreen.wareHouseId
+              )
+            " type="button" class="btn btn-success" (click)="addPurchasingScreen(); myModal.hide()">
+            {{ "add" | translate }}
+          </button>
+        </span> -->
+        <span *ngIf="params.dialog.title == 'unitOfMeasures'">
+          <button type="button" class="btn btn-danger" (click)="resetunitOfMeasure()">
+            {{ "reset" | translate }}
+          </button>
+        </span>
+        <span *ngIf="params.dialog.title == 'unitOfMeasures'">
+          <button [disabled]="
+              !isValidString(unitOfMeasure.baseUnit) ||
+              !isValidString(unitOfMeasure.alternativeUnit)
+            " type="button" class="btn btn-success" (click)="addUnitOfMeasures(); myModal.hide()">
+            {{ "add" | translate }}
+          </button>
+        </span>
+
+        <!-- sales-screen-buttons -->
+        <span *ngIf="params.dialog.title == 'salesScreen'">
+          <button type="button" class="btn btn-success" (click)="myModal.hide()">
+            {{ "add" | translate }}
+          </button>
+        </span>
+        <!-- end-sales-screen-buttons -->
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+
+
+<ng-template [ngIf]="warehouseLocationModal.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal" 
+  (onHidden)="warehouseLocationModal.active=false"
+    class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-success modal-lg" role="document">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h4 class="modal-title"> {{'warehouse-locations' | translate}}</h4>
+          <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <choose-warehouse-location-pane  [fromChoosePane]="true"
+            (selectedStockEvent)="stock.locationNo= $event?.warehouseLocationNo; warehouseLocationModal.active=false;">
+          </choose-warehouse-location-pane>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" style="background:lightslategray;"  class="btn rounded btn-outline-secondary"
+              (click)="myModal.hide()">{{'close' | translate}}
+          </button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</ng-template>

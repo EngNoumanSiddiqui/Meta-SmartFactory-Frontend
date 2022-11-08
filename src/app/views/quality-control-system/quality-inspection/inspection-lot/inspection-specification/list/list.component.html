@@ -1,0 +1,134 @@
+<p-confirmDialog key="inspection-specification"></p-confirmDialog>
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <p-table #dt [columns]="selectedColumns" scrollable="true" scrollHeight="55vh"
+            [value]="inspectionSpecifications" [rows]="pagination.rows" [totalRecords]="pagination.totalElements"
+            dataKey="inspectionSpecificationId" selectionMode="single" [(selection)]="selectedinspectionSpecifications"
+            (onRowSelect)="onRecordSelect($event)">
+            <ng-template pTemplate="caption">
+              <div style="text-align:left">
+                <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header" maxSelectedLabels="0"
+                  selectedItemsLabel="{{ 'columns-selected' | translate }}" [style]="{ minWidth: '200px' }"
+                  defaultLabel="Choose Columns" (onChange)="filtingAreaColumns($event)">
+                  <ng-template let-col let-i="index" pTemplate="item">
+                    {{ col.label | translate }}
+                  </ng-template>
+                </p-multiSelect>
+                <button pButton class="ui-button-success float-right ml-1" (click)="modalShow(null,'NEW')"
+                  label="{{ 'add-new' | translate }}"></button>
+                <button pButton class="ui-button-warning float-right ml-1" type="button" icon="fa fa-file-alt"
+                  iconPos="left" label="{{ 'export-all' | translate }}" (click)="dt.exportCSV()"></button>
+                <button pButton class="ui-button-warning float-right ml-1" type="button" icon="fa fa-file"
+                  iconPos="left" label="{{ 'export-selected' | translate }}"
+                  (click)="dt.exportCSV({ selectionOnly: true })"></button>
+              </div>
+            </ng-template>
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th *ngFor="let col of columns; let i = index" style="cursor: pointer" [ngClass]="{
+                    'bg-selected-order': pageFilter.orderByProperty == col.field
+                  }" (click)="reOrderData(i, col.field)">
+                  <i [ngClass]="'fa  fa-sort-alpha-' + classReOrder[i]"></i>
+                  {{ col.header | translate }}
+                </th>
+                <th width="80px" rowspan="2">{{ "action" | translate }}</th>
+              </tr>
+              <tr>
+                <th *ngFor="let col of columns" class="ui-fluid" [ngSwitch]="col.field">
+                  <select *ngSwitchCase="'usage'" id="usage" name="usage" class="form-control"
+                    [(ngModel)]="pageFilter.usage" (ngModelChange)="filter(pageFilter)">
+                    <option [ngValue]="null">
+                      {{ "please-select" | translate }}</option>
+                    <option *ngFor="let type of usages" value="{{ type.id }}">{{ type.name }}</option>
+                  </select>
+
+                  <span *ngSwitchCase="'plant'">Rade</span>
+                  <p-calendar *ngSwitchCase="'keyDate'" [(ngModel)]="pageFilter.keyDate"
+                    placeholder="{{'Key Date'|translate}}" appendTo="body" yearRange="1990:2100" [monthNavigator]="true"
+                    [yearNavigator]="true" (ngModelChange)="filter(pageFilter)" dateFormat="dd/mm/yy" [showIcon]="true">
+                  </p-calendar>
+
+                  <input *ngSwitchDefault style="width: 100%" [(ngModel)]="pageFilter[col.field]" pInputText type="text"
+                    (input)="filterByColumn($event.target.value, col.field)" />
+
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr [pSelectableRow]="rowData" class="ui-fluid cursor-pointer">
+                <td *ngFor="let col of columns" [ngSwitch]="col.field">
+                  <span *ngSwitchCase="'keyDate'">{{rowData.keyDate | date:'dd/MM/yyyy'}}</span>
+                  <span *ngSwitchDefault> {{
+                  rowData[col.field] ? (rowData[col.field] + "" | translate) : "" }} </span>
+                </td>
+                <td width="80px">
+                  <button class="btn btn-sm btn-outline-danger" type="button"
+                    (click)="delete(rowData.inspectionSpecificationId)">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                  <button class="btn btn-sm btn-outline-info" type="button"
+                    (click)="modalShow(rowData.inspectionSpecificationId, 'EDIT')">
+                    <i class="fa fa-edit"></i>
+                  </button>
+                  <button class="btn btn-sm btn-outline-warning" type="button"
+                    (click)="modalShow(rowData.inspectionSpecificationId,'DETAIL')">
+                    <i class="fa fa-eye"></i></button>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+
+          <br />
+          <div class="row">
+            <app-paging [showSearch]="false" [TotalElements]="pagination.totalElements"
+              [CurrentPage]="pagination.currentPage" [PageSize]="pagination.pageSize" [rows]="pagination.rows"
+              [TotalPageLinkButtons]="pagination.TotalPageLinkButtons"
+              [RowsPerPageOptions]="pagination.RowsPerPageOptions" (onPageChange)="myChanges($event)"></app-paging>
+
+            <span style="margin-left:2px; padding-top: 2px " class="text-muted">{{ "total-records" | translate }}:
+              {{ pagination?.totalElements }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- modals -->
+<ng-template [ngIf]="modal.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal" (onHidden)="modal.active=false"
+    class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-success modal-lg"
+      [ngStyle]="{'max-width:900px': inspectionSpecModal.modal!=='DETAIL'}" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"
+            *ngIf="inspectionSpecModal.modal=='DETAIL' || inspectionSpecModal.modal=='NEW' || inspectionSpecModal.modal=='EDIT'">
+            {{'inspection-specification' | translate}}
+          </h4>
+          <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <ng-template [ngIf]="inspectionSpecModal.modal=='DETAIL'">
+            <detail-inspection-spec [id]="inspectionSpecModal.id"></detail-inspection-spec>
+          </ng-template>
+          <ng-template [ngIf]="inspectionSpecModal.modal=='NEW'">
+            <new-inspection-spec [plantId]="pageFilter.plantId" (saveAction)="onSaveSuccessful($event, myModal)"></new-inspection-spec>
+          </ng-template>
+          <ng-template [ngIf]="inspectionSpecModal.modal=='EDIT'">
+            <edit-inspection-spec [plantId]="pageFilter.plantId" [id]="inspectionSpecModal.id" (saveAction)="onSaveSuccessful($event, myModal)">
+            </edit-inspection-spec>
+          </ng-template>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="myModal.hide()">{{'close' | translate}}</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</ng-template>

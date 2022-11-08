@@ -1,0 +1,22 @@
+<ng-template [ngIf]="scrapMaterialList">
+<p-table #dr [value]="scrapMaterialList" [columns]="cols" [rows]="10"
+         [totalRecords]="scrapMaterialList.length" [paginator]="scrapMaterialList.length>10" [responsive]="true" [autoLayout]= "true">
+
+  <ng-template pTemplate="header" let-columns>
+    <tr class="text-center">
+      <th *ngFor="let col of columns; ">
+        {{col.header|translate}}
+      </th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-rowData let-columns="columns" >
+    <tr [pSelectableRow]="rowData">
+      <td *ngFor="let col of columns" style="cursor: pointer"  [ngSwitch]="col.field">
+           <span  *ngSwitchDefault> {{rowData[col.field]}}</span>
+           <span  *ngSwitchCase="'percentage'"> {{rowData[col.field]}}%</span>
+      </td>
+
+    </tr>
+  </ng-template>
+</p-table>
+</ng-template>

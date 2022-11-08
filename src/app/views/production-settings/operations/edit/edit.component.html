@@ -1,0 +1,306 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <p-tabView class="col-md-12">
+      <p-tabPanel header="{{'details'| translate }}">
+          <div class="card">
+              <div class="card-header">
+                <i class="fa fa-align-justify"></i>{{'operation' | translate}} - {{'details' | translate}}
+              </div>
+              <div class="card-body">
+                <form #operationForm="ngForm">
+      
+      
+                <table class="table table-bordered">
+                  <tbody>
+                  <tr>
+                    <td>{{'operation' | translate}} - {{'no' | translate}}</td>
+                    <td><input name="operationNo" type="text" class="form-control" [(ngModel)]="operation.operationNo"/></td>
+                  </tr>
+                  <tr>
+                    <td>{{'operation' | translate}} - {{'name' | translate}}*</td>
+                    <td><input type="text" class="form-control" name="operationName" required [(ngModel)]="operation.operationName"/></td>
+                  </tr>
+                  <tr>
+                    <td>{{'operation' | translate}} - {{'type' | translate}}*</td>
+                    <td>
+                      <div class="input-group">
+      
+                        <select id="operationTypeIdx" name="operationTypeIdx" class="form-control"
+                                [(ngModel)]="operation.operationTypeId">
+                          <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                          <option *ngFor="let type of TypeList" value="{{type.operationTypeId}}">{{type.operationTypeName}}</option>
+                        </select>
+                        <!--<span class="input-group-btn">-->
+                        <!--<button type="button" class="btn btn-primary" data-toggle="modal"-->
+                        <!--(click)="params.dialog.title = 'operation-type'; myModal.show()"><i class="fa fa-plus-circle"></i></button>-->
+                        <!--</span>-->
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'factory-calendar' | translate}}</td>
+                    <td>
+                      <div class="input-group">
+      
+                        <select id="factoryCalender" name="factoryCalender" class="form-control"
+                          [(ngModel)]="operation.factoryCalendarId" >
+                          <option [value]="null"> {{'please-select' | translate}}</option>
+                          <option *ngFor="let type of factoryCalenderList" [value]="type.factoryCalendarId">{{type.code}}</option>
+                        </select>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'outsource' | translate}}</td>
+                    <td>
+                      <p-checkbox name="outsource" binary="true" [(ngModel)]="operation.outsource"></p-checkbox>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'postpone-next-operation' | translate}}</td>
+                    <td>
+                      <p-checkbox name="postponenextoperation" binary="true" [(ngModel)]="operation.postponeNextOperation"></p-checkbox>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'transfer' | translate}}</td>
+                    <td>
+                      <p-checkbox name="transfer" binary="true" [(ngModel)]="operation.transfer"></p-checkbox>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'plant' | translate}}</td>
+                    <td>
+                      <span
+                  *ngIf="operation.plantId && selectedPlant && operation.plantId=== selectedPlant.plantId">{{selectedPlant.plantName}}</span>
+                <plant-auto-complete *ngIf="!operation.plantId && !selectedPlant"
+                  [selectedPlantId]="operation.plantId" (selectedPlantEvent)="setSelectedPlant($event)"
+                  [eventFire]="true"></plant-auto-complete>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td>{{'location' | translate}} </td>
+                    <td>
+                      <location-auto-complete [addIfMissing]="true" 
+                      (selectedLocationEvent)="operation.locationId=$event?.locationId || null" [plantId]="operation.plantId"></location-auto-complete>
+                     
+                    </td>
+                  </tr>
+                  
+                  <tr>
+                    <td>{{'description' | translate}}</td>
+                    <td><textarea name="description" class="form-control" [(ngModel)]="operation.description"></textarea>  </td>
+                  </tr>
+      
+      
+      <!-- 
+                  <tr>
+                    <td colspan="2">
+                      <button type="submit" class="btn btn-sm btn-primary" [disabled]="!operationForm.form.valid" (click)="save()"><i class="fa fa-dot-circle-o"></i>
+                        {{'save' | translate}}</button>
+                    </td>
+                  </tr> -->
+                  </tbody>
+                </table>
+                </form>
+              </div>
+          </div>
+      </p-tabPanel>
+      <p-tabPanel header="{{'sub-operations'| translate }}" [disabled]="!operation.operationId">
+        <ng-template pTemplate="content">
+          <sub-operation-list [operationId]="operation.operationId" [operationName]="operation.operationName" [operationCode]="operation.operationNo"></sub-operation-list>  
+        </ng-template>
+      </p-tabPanel>
+     
+      <p-tabPanel header="{{'workstations'| translate }}">
+          <div class="card">
+              <div class="card-header">
+                {{'add' | translate}} {{'workstation' | translate}}
+                <div class="card-actions">
+                  <button type="button" class="btn btn-primary" data-toggle="modal"
+                          (click)="params.dialog.title='workstation';myModal.show()"><i class="fa fa-plus"></i></button>
+                </div>
+              </div>
+              <div class="card-body">
+                  <table class="table table-responsive-sm table-hover table-outline mb-0"
+                         *ngIf="selectedWorkStationIdList && selectedWorkStationIdList.length > 0">
+                    <thead class="table-secondary">
+                    <tr>
+                      <th>{{'no' | translate}}</th>
+                      <th>{{'name' | translate}}</th>
+                      <th>{{'default' |translate}}</th>
+                      <th>{{'co-efficient-cost'  |translate}}</th>
+                      <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let item of selectedWorkStationIdList; let i=index;">
+                      <td>{{item.workStationNo}}</td>
+                      <td>
+                        {{item.workStationName}}
+                        <div class="small text-muted">
+                          <b>{{'type' | translate}}: </b><span>{{item.workStationTypeName}}</span>
+                        </div>
+                      </td>
+                      <td>
+                        <p-checkbox binary="true" [(ngModel)]="item.defaultOperation" name="{{'workstation' + i}}"></p-checkbox>
+                      </td>
+                      <td>
+                        <input type="number" name='co-effiecnt{{i}}' [(ngModel)]="item.operationCostCoefficient" class="form-control" />
+                      </td>
+                      <td><a (click)="deleteWorkStationFromList(i)"><i class="fa fa-close"></i></a></td>
+                    </tr>
+                    </tbody>
+                  </table>
+              </div>
+          </div>
+      </p-tabPanel>
+      <p-tabPanel header="{{'costing' | translate}}">
+        <div class="row">
+          <div class="col-lg-12">
+            <table class="table table-bordered">
+              <tbody>
+                <tr>
+                  <td width="30%">{{'cost-rate' | translate}}</td>
+                  <td>
+                    <input class="form-control" type="number" min="1" name="operationCostRate" [(ngModel)]="operation.operationCostRate" />
+                  </td>
+                </tr>
+                <tr>
+                  <td width="30%">{{'currency' | translate}}</td>
+                  <td>
+                    <currency-auto-complete [selectedCurrency]="operation.currency" (selectedCurrencyEvent)="operation.currency=$event?.currencyCode"></currency-auto-complete>
+                  </td>
+                </tr>
+                <td>{{ "unit" | translate }}</td>
+                <td>
+                  <unit-auto-complete [selectedUnit]="operation.unit" [addIfMissing]="true" (unitChangeEvent)="operation.unit=$event">
+                  </unit-auto-complete>
+                </td>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </p-tabPanel>
+      <p-tabPanel header="{{'documentation'| translate }}">
+      </p-tabPanel>
+      <p-tabPanel header="{{'analysis'| translate }}">
+      </p-tabPanel>
+      <p-tabPanel header="{{'other'| translate }} {{'details'| translate }}">
+      </p-tabPanel>
+      <p-tabPanel header="{{'time'| translate }} {{'settings'| translate }}">
+        <div class="row">
+          <div class="col-lg-12">
+            <table class="table table-bordered">
+              <tbody>
+                <tr>
+                  <td width="35%">{{'single-duration' | translate}}</td>
+                  <td>
+                    <app-time [name]="'single'" [showMills]="true" [timeInMills]="operation.singleDuration"
+                      (timeChanged)="operation.singleDuration=$event"></app-time>
+                  </td>
+                </tr>
+                <tr>
+                  <td width="35%">{{'single-setup-duration' | translate}}</td>
+                  <td>
+                    <app-time [name]="'setup'" [showMills]="true" [timeInMills]="operation.singleSetupDuration"
+                      (timeChanged)="operation.singleSetupDuration=$event"></app-time>
+                  </td>
+                </tr>
+                <tr>
+                  <td width="35%">{{'max-single-standby-duration' | translate}}</td>
+                  <td>
+                    <app-time [name]="'standby'" [showMills]="true" [timeInMills]="operation.maxSingleStandbyDuration"
+                      (timeChanged)="operation.maxSingleStandbyDuration=$event"></app-time>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </p-tabPanel>
+    </p-tabView>
+    <div class="row col-md-12" *ngIf="isFromChoosePane">
+        <button type="submit" class="btn btn-sm btn-primary" (click)="save()"><i class="fa fa-dot-circle-o"></i>
+          {{'save' | translate}}</button>
+        <!-- <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i> 
+          {{'reset' | translate}}</button> -->
+    </div>
+  </div>
+</div>
+<!------------------------- Modals ---------------------------------------->
+
+<div bsModal [config]="{backdrop: 'static'}" #myModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-success modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          <span *ngIf="params.dialog.title == 'stocks'">{{'stocks' | translate}}</span>
+          <span *ngIf="params.dialog.title == 'workstation'">{{'workstations' | translate}}</span>
+        </h4>
+        <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="height: 501px; overflow-y: scroll;">
+
+        <!---------- MODEL #1 ------------->
+        <span *ngIf="params.dialog.title == 'workstation'">
+          <div class="form-group row">
+          <div class="col-md-12">
+
+            <div class="input-group">
+                  <span class="input-group-btn">
+                    <button type="button" class="btn btn-primary" (click)="getWorkStationItems()">
+                      <i class="fa fa-search"></i>{{'search'  |translate}}</button>
+                  </span>
+              <input type="text" id="input1-group2" name="input1-group2" class="form-control"
+                     placeholder="{{'search' | translate}}"
+                     [(ngModel)]="filterWorkStation.workStationName" (ngModelChange)="getWorkStationItems()">
+            </div>
+
+
+            <table class="table table-responsive-sm table-hover table-outline mb-0" *ngIf="WorkStationList">
+              <thead class="table-secondary">
+              <tr>
+                <th>{{'id' | translate}}</th>
+                <th>{{'name' | translate}}</th>
+                <th>{{'status'  |translate}}</th>
+                <th></th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let item of WorkStationList">
+                <td>{{item.workStationNo}}</td>
+                <td>
+                  {{item.workStationName}}
+                <div class="small text-muted">
+                    <b>{{'type' | translate}}: </b><span>{{item.workStationTypeName}}</span>
+                  </div>
+                </td>
+                <td>{{item.workStationStatus}}</td>
+                <td><button (click)="addList(item, myModal);"><i class="fa fa-plus"></i> </button></td>
+              </tr>
+              </tbody>
+            </table>
+
+          </div>
+        </div>
+        </span>
+
+
+        <!---------- MODEL #2 ------------->
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="myModal.hide()">{{'close' | translate}}</button>
+      </div>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!------------------------- Modals ---------------------------------------->
+

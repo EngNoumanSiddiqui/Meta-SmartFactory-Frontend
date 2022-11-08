@@ -1,0 +1,431 @@
+<p-confirmDialog></p-confirmDialog>
+
+<div class="row ui-fluid" *ngIf="stockTransferReceipt">
+
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header">
+        <i class="fa fa-align-justify"></i> {{'good-movements-information' | translate}}
+      </div>
+      <div class="card-body">
+        <form #transferForm="ngForm">
+          <table class="table table-bordered  ">
+            <tbody *ngIf="stockTransferReceipt">
+            <tr>
+              <td>{{'activity-type' | translate}}</td>
+              <td>
+                <div class="input-group">
+
+                  <select id="activityTypeList" name="activityTypeList" class="form-control"
+                          [(ngModel)]="stockTransferReceipt.goodsMovementActivityType" disabled
+                          required>
+                    <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                    <option *ngFor="let item of activityTypeList" value="{{item}}">{{item}}</option>
+                  </select>
+
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td>{{'document-type' | translate}}</td>
+              <td>
+                <div class="input-group">
+
+                  <select id="documentTypeList" name="documentTypeList" class="form-control"
+                          [(ngModel)]="stockTransferReceipt.goodMovementDocumentType" disabled
+                          required>
+                    <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                    <option *ngFor="let item of documentTypeList" value="{{item}}">{{item}}</option>
+                  </select>
+
+                </div>
+              </td>
+            </tr>
+
+            <!-- <ng-template [ngIf]="stockTransferReceipt.goodsMovementActivityType != 'TRANSFER_POSTING'"> -->
+              <ng-template [ngIf]="stockTransferReceipt.goodMovementDocumentType == 'PURCHASE_ORDER'">
+                <tr>
+                  <td>{{'purchase-order-id' | translate}}</td>
+                  <td><input type="text" style="width: 100%" name="purchaseOrderId" [(ngModel)]="stockTransferReceipt.purchaseOrderId" readonly/></td>
+                </tr>
+                <tr>
+                  <td>{{'purchase-order-detail-id' | translate}}</td>
+                  <td>
+                    <div class="input-group">
+                      <select id="purchaseOrderDetailId" name="purchaseOrderDetailId" class="form-control"
+                              [(ngModel)]="stockTransferReceipt.purchaseOrderId"
+                              required (ngModelChange)="onPurchaseOrderDetailChange($event)">
+                        <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                        <option *ngFor="let item of purchaseOrderDetailList" value="{{item.purchaseOrderDetailId}}">{{item.purchaseOrderDetailId}} | {{stockTransferReceipt.purchaseOrderNo}}</option>
+                      </select>
+
+                    </div>
+                  </td>
+                </tr>
+              </ng-template>
+
+              <ng-template [ngIf]="stockTransferReceipt.goodMovementDocumentType == 'PRODUCTION_ORDER' || stockTransferReceipt.goodMovementDocumentType == 'WORKSTATION' || stockTransferReceipt.goodMovementDocumentType == 'ON_SITE'">
+                <tr>
+                  <td>{{'production-order-id' | translate}}</td>
+                  <td><input type="text" style="width: 100%" name="productionOrderId" [(ngModel)]="stockTransferReceipt.prodOrderId" readonly/></td>
+                </tr>
+                <!-- <tr>
+                  <td>{{'job-order-id' | translate}}</td>
+                  <td>
+                    <div class="input-group">
+
+                      <select id="jobOrderId" name="jobOrderId" class="form-control"
+                              [(ngModel)]="stockTransferReceipt.jobOrderId" (ngModelChange)="onJobOrderChange($event)"
+                              required>
+                        <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                        <option *ngFor="let item of jobOrderList" value="{{item.jobOrderId}}">{{item.jobOrderId}}</option>
+                      </select>
+
+                    </div>
+                  </td>
+                </tr> -->
+              </ng-template>
+
+              <ng-template [ngIf]="stockTransferReceipt.goodMovementDocumentType == 'SALES_ORDER'">
+                <tr>
+                  <td>{{'sales-order-id' | translate}}</td>
+                  <td>
+                    <input type="text" style="width: 100%" name="saleOrderId" [(ngModel)]="stockTransferReceipt.saleOrderId +' | '+ stockTransferReceipt.saleOrderNo" readonly/>
+
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'sales-order-detail-id' | translate}}</td>
+                  <td>
+                    <div class="input-group">
+
+                      <select id="saleOrderDetailId" name="saleOrderDetailId" class="form-control"
+                              [(ngModel)]="stockTransferReceipt.orderDetailId" (ngModelChange)="onSaleOrderDetailChange($event)"
+                              required>
+                        <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                        <option *ngFor="let item of saleOrderDetailList" value="{{item.orderDetailId}}">{{item.orderDetailId}} | {{item.orderNo}}</option>
+                      </select>
+
+                    </div>
+                  </td>
+                </tr>
+              </ng-template>
+            <!-- </ng-template> -->
+
+            <tr>
+              <td>{{'document-no' | translate}}</td>
+              <td><input type="text" style="width: 100%" name="documentNo" [(ngModel)]="stockTransferReceipt.documentNo"/></td>
+            </tr>
+
+            <tr>
+              <td>{{'document-date' | translate}}</td>
+              <td>
+                <p-calendar [(ngModel)]="stockTransferReceipt.documentDate"
+                            [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                            name="documentDate" [showIcon]="true" dateFormat="dd/mm/yy"
+                            required></p-calendar>
+              </td>
+            </tr>
+
+            <tr>
+              <td>{{'posting-date' | translate}}</td>
+              <td>
+                <p-calendar [(ngModel)]="stockTransferReceipt.postingDate"
+                            [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                            name="postingDate" [showIcon]="true" dateFormat="dd/mm/yy"
+                            required></p-calendar>
+              </td>
+            </tr>
+
+            <tr>
+              <td colspan="2">
+                <button type="submit" class="btn btn-sm btn-primary"
+                        [disabled]="!transferForm.form.valid || stockTransferReceipt.responseStockTransferNotificationDetailList.length==0"
+                        (click)="saveStockTransfer()"><i class="fa fa-dot-circle-o"></i>
+                  {{'save' | translate}}
+                </button>
+
+                <!--<button type="button" class="btn btn-sm btn-secondary float-right" (click)="goPage()">-->
+                <!--<i class="icon-arrow-left-circle"></i> {{'cancel' | translate}} </button>-->
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header">
+        <i class="fa fa-align-justify"></i> {{'good-movements-details' | translate}}
+        <div class="card-actions">
+          <button type="button" class="btn btn-primary" data-toggle="modal"
+                  (click)="openTransferDetailsModal(-1)"><i class="fa fa-plus"></i></button>
+        </div>
+      </div>
+
+
+      <div class="card-body">
+        <form action="" method="post" class="form-horizontal">
+
+          <table class="table table-sm table-hover table-outline mb-0">
+            <thead class="table-secondary small">
+              <tr>
+                <th>{{'item-no' | translate}}</th>
+                <th>{{'plant' | translate}}</th>
+                <th>{{'material-no' | translate}}</th>
+                <th>{{'material' | translate}}</th>
+                <th>{{'defect' | translate}}</th>
+                <th>{{'batch-code' | translate}}</th>
+                <th>{{'warehouse-from' | translate}}</th>
+                <th *ngIf="stockTransferReceipt.goodsMovementActivityType == 'TRANSFER_POSTING'"> {{'warehouse-to' | translate}}</th>
+                <th>{{'height' |translate}}</th>
+                <th>{{'width' |translate}}</th>
+                <th>{{'quantity' |translate}}</th>
+                <th>{{'unit-of-measures' |translate}}</th>
+                <th>{{'dimension-unit' |translate}}</th>
+                <th *ngIf="showMovementCancelButton"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngFor="let item of stockTransferReceipt.responseStockTransferNotificationDetailList; let i = index">
+                <tr  style="cursor: pointer" [ngClass]="{'bg-success':selectedItemIndex==i}">
+                  <td>{{item.itemNo}}</td>
+                  <td>{{item.plantName}}</td>
+                  <td>{{item.materialNo}}</td>
+                  <td>{{item.materialName}}</td>
+                  <td>
+                    <input class="switch-input" type="checkbox" [(ngModel)]="item.defected"
+                           name="defected" disabled>
+                  </td>
+                  <td>{{item.batch}}</td>
+                  <td>{{item.wareHouseFromName}}</td>
+                  <td *ngIf="stockTransferReceipt.goodsMovementActivityType == 'TRANSFER_POSTING'">{{item.wareHouseToName}}</td>
+                  <td>{{item.height}}</td>
+                  <td>{{item.width}}</td>
+                  <td>{{item.quantity | number : '1.1-1'}}</td>
+                  <td>{{item.baseUnit}}</td>
+                  <td>{{item.dimensionUnit}}</td>
+                  <td *ngIf="showMovementCancelButton"><a (click)="deleteDetailItemFromList(i)"><i class="fa fa-close"></i></a></td>
+                </tr>
+              </ng-container>
+
+              <tr *ngIf="!stockTransferReceipt.responseStockTransferNotificationDetailList || stockTransferReceipt.responseStockTransferNotificationDetailList.length==0">
+                <td colspan="13" class="noData text-center">
+                  <strong class=""><i class="fa fa-warning "></i>{{'PLEASE_ADD_NEW_ITEM'|translate}}!</strong>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+
+        </form>
+      </div>
+
+    </div>
+  </div><!--/.col-->
+
+</div>
+
+<p-dialog header="{{'transfer-details' | translate}}" [(visible)]="params.dialog.visible" [style]="{width: '800px'}">
+    <div class="col-md-12 m-0 p-0">
+      <form #transferDetailForm="ngForm">
+        <table class="table table-bordered">
+          <tbody *ngIf="stockTransferReceipt">
+
+          <tr>
+            <td width="30%">{{'item-no' | translate}}</td>
+            <td><input name="itemNo" type="text" style="width: 100%" [(ngModel)]="newRequestCreateStockTransferDetailListItemDto.itemNo" readonly/>
+          </tr>
+
+          <ng-template [ngIf]="stockTransferReceipt.goodsMovementActivityType != 'TRANSFER_POSTING'">
+            <tr>
+              <td width="30%">{{'plant' | translate}}</td>
+              <td *ngIf="newRequestCreateStockTransferDetailListItemDto.plantId">
+                <span style="width: 100%;"> {{newRequestCreateStockTransferDetailListItemDto.plantName}} </span>
+              </td>
+              <td *ngIf="!newRequestCreateStockTransferDetailListItemDto.plantId">
+                <plant-auto-complete [required]="true"
+                (selectedPlantEvent)="setSelectedPlant($event)" [eventFire]="true">
+              </plant-auto-complete>
+              </td>
+            </tr>
+
+            <tr>
+              <td>{{'material' | translate}}</td>
+              <td class="ui-fluid">
+                <p-dropdown class="ui-dropdown" placeholder="{{'please-select' | translate}}" [options]="stockList" [(ngModel)]="selectedStock" optionLabel="stockName"
+                              filter="true" name="stockNames" (onChange)="onMaterialChange($event)" required> </p-dropdown>
+              </td>
+            </tr>
+          </ng-template>
+
+          <ng-template [ngIf]="stockTransferReceipt.goodsMovementActivityType == 'TRANSFER_POSTING'">
+            <tr>
+              <td width="30%">{{'plant' | translate}}</td>
+              <td>
+                <ng-template [ngIf]="newRequestCreateStockTransferDetailListItemDto.plantId">
+                  <span style="width: 100%;"> {{newRequestCreateStockTransferDetailListItemDto.plantName}} </span>
+                  </ng-template>
+                  <ng-template [ngIf]="!newRequestCreateStockTransferDetailListItemDto.plantId">
+                      <plant-auto-complete [required]="true"
+                        (selectedPlantEvent)="setSelectedPlant($event)" [eventFire]="true">
+                      </plant-auto-complete>
+                  </ng-template>
+              </td>
+            </tr>
+
+            <tr>
+              <td>{{'material' | translate}}</td>
+              <td>
+                <div class="input-group">
+
+
+                  <p-dropdown [style]="{'width':'400px'}" class="ui-dropdown" placeholder="{{'please-select' | translate}}" [options]="stockList" [(ngModel)]="selectedStock" optionLabel="stockName"
+                              filter="true" name="stockNames" (onChange)="onMaterialChange($event)" required> </p-dropdown>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+
+          <tr>
+            <td width="30%">{{'defect' | translate}}</td>
+            <td>
+              <p-checkbox name="defect" binary="true" [(ngModel)]="newRequestCreateStockTransferDetailListItemDto.defected"></p-checkbox>
+            </td>
+          </tr>
+
+          <tr>
+            <td >{{'batch-code' | translate}}</td>
+            <td class="ui-fluid">
+                  <batch-auto-complete [selectedBatchCode]="newRequestCreateStockTransferDetailListItemDto.batch" (selectedBatchEvent)="setSelectedBatch($event)"
+                    [plantId]="newRequestCreateStockTransferDetailListItemDto.plantId"
+                    [actId]= "supplierId"
+                      [batchLevel]="'GOODS_MOVEMENT'"
+                      [stockId]="newRequestCreateStockTransferDetailListItemDto.stockId"
+                      [addIfMissing]="true"></batch-auto-complete>
+            </td>
+          </tr>
+
+          <tr>
+            <td>{{'warehouse' | translate}}</td>
+            <td>
+              <!-- <div class="input-group"> -->
+
+                  <ng-template [ngIf]="newRequestCreateStockTransferDetailListItemDto.wareHouseFromId">
+                      <warehouse-auto-complete
+                      [selectedWareHouseId]="newRequestCreateStockTransferDetailListItemDto.wareHouseFromId" [required]="true" [selectedWareHouse]="wareHouseFrom"
+                          (selectedWareHouseEvent)="setSelectedWarehouseFrom($event)">
+                      </warehouse-auto-complete>
+                    </ng-template>
+                    <ng-template [ngIf]="!newRequestCreateStockTransferDetailListItemDto.wareHouseFromId">
+                      <warehouse-auto-complete [required]="true" [selectedWareHouse]="wareHouseFrom"
+                          (selectedWareHouseEvent)="setSelectedWarehouseFrom($event)">
+                      </warehouse-auto-complete>
+                    </ng-template>
+                <!-- <select id="wareHouseFromId" name="wareHouseFromId" class="form-control"
+                        [(ngModel)]="newRequestCreateStockTransferDetailListItemDto.wareHouseFromId"
+                        (ngModelChange)="onWareHouseFromChange($event)"
+                        required>
+                  <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                  <option *ngFor="let wh of warehouseList" value="{{wh.wareHouseId}}">{{wh.wareHouseName}}</option>
+                </select>
+              </div> -->
+            </td>
+          </tr>
+
+          <ng-template [ngIf]="stockTransferReceipt.goodsMovementActivityType == 'TRANSFER_POSTING'">
+            <tr>
+              <td>{{'warehouse-to' | translate}}</td>
+              <td>
+                  <ng-template [ngIf]="newRequestCreateStockTransferDetailListItemDto.wareHouseToId">
+                      <warehouse-auto-complete
+                      [selectedWareHouseId]="newRequestCreateStockTransferDetailListItemDto.wareHouseToId" [required]="true" [selectedWareHouse]="wareHouseTo"
+                          (selectedWareHouseEvent)="setSelectedWarehouseTo($event)">
+                      </warehouse-auto-complete>
+                    </ng-template>
+                    <ng-template [ngIf]="!newRequestCreateStockTransferDetailListItemDto.wareHouseToId">
+                      <warehouse-auto-complete [required]="true" [selectedWareHouse]="wareHouseTo"
+                          (selectedWareHouseEvent)="setSelectedWarehouseTo($event)">
+                      </warehouse-auto-complete>
+                    </ng-template>
+              </td>
+            </tr>
+          </ng-template>
+
+          <tr>
+            <td>{{'height' | translate}}</td>
+            <td>
+              <input type="number" class="form-control-sm" name="height"
+                [(ngModel)]="newRequestCreateStockTransferDetailListItemDto.height" min="1" />
+            </td>
+          </tr>
+          <tr>
+            <td>{{'width' | translate}}</td>
+            <td>
+              <input type="number" class="form-control-sm" name="width"
+                [(ngModel)]="newRequestCreateStockTransferDetailListItemDto.width" min="1" />
+            </td>
+          </tr>
+          <tr>
+            <td>{{'dimension-unit' | translate}}</td>
+            <td>
+              <select id="dimensionunit" name="dimensionunit" class="form-control"
+                  [disabled]="!unitList||unitList.length==0"
+                  [(ngModel)]="newRequestCreateStockTransferDetailListItemDto.dimensionUnit" required>
+                  <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                  <option *ngFor="let item of unitList" value="{{item.alternativeUnit}}">{{item.alternativeUnit}}
+                  </option>
+                </select>
+            </td>
+          </tr>
+            <tr>
+            <td>{{'quantity' | translate}}</td>
+            <td class="d-flex flex-row"><input type="number" class="flex-grow-1 form-control-sm"
+                                                [(ngModel)]="newRequestCreateStockTransferDetailListItemDto.quantity"
+                                                name="quantitys" min="1" required/>
+            <span *ngIf="stockTransferReceipt.goodsMovementActivityType == 'TRANSFER_POSTING'">{{newRequestCreateStockTransferDetailListItemDto.baseUnitOfQuantity}}</span>
+
+          </tr>
+
+          <tr>
+            <td>{{'unit-of-measures' | translate}}</td>
+            <td>
+              <div class="input-group">
+
+                <select id="baseUnitList" name="baseUnitList" class="form-control"
+                        [disabled]="!unitList||unitList.length==0"
+                        [(ngModel)]="newRequestCreateStockTransferDetailListItemDto.baseUnit"
+                        required>
+                  <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                  <option *ngFor="let item of unitList" value="{{item.alternativeUnit}}">{{item.alternativeUnit}}</option>
+                </select>
+
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <td colspan="2">
+              <button class="btn btn-sm btn-danger" (click)="resetNewItemDetails()"><i class="fa fa-ban"></i>
+                {{'reset' | translate}}
+              </button>
+              <button type="submit" class="btn btn-sm btn-primary"
+                      [disabled]="!transferDetailForm.form.valid"
+                      (click)="addDetails()"><i class="fa fa-dot-circle-o"></i>
+                {{'add' | translate}}
+              </button>
+
+            </td>
+          </tr>
+
+          </tbody>
+        </table>
+      </form>
+    </div>
+</p-dialog>
+
+

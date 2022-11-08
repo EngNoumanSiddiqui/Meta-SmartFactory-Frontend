@@ -1,0 +1,41 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i>{{'operation-type-to-ws-type' | translate}} {{'information' | translate}}
+        </div>
+        <div class="card-body">
+          <table class="table table-bordered">
+            <tbody *ngIf="data">
+              <tr>
+                <td width="45%">{{'operation-type-to-ws-type-id' | translate}}</td>
+                <td>
+                  {{data.operationTypeToWsTypeId}}
+                </td>
+              </tr>
+              <tr>
+                <td>{{'workstation-type' | translate}}</td>
+                <td>
+                  {{data.workStationType?.workStationTypeName}}
+                </td>
+              </tr>
+              <tr>
+                <td>{{'operation-type-name' | translate}}</td>
+                <td>
+                  {{data.operationType?.operationTypeName}}
+                </td>
+              </tr>
+              <tr>
+                <td>{{'operation-type-description' | translate}}</td>
+                <td>
+                  {{data.operationType?.operationTypeDescription}}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

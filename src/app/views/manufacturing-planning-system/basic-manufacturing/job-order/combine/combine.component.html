@@ -1,0 +1,270 @@
+<form #joinForm="ngForm" *ngIf="selectedReadyJobOrders">
+
+  <p-tabView>
+
+    <p-tabPanel header="{{'detail'|translate}}">
+      <div class="row form-group">
+
+        <table class="table table-bordered table-sm">
+          <tbody>
+
+          <tr>
+            <td width="20%"><strong>{{'job-quantity' | translate}}:</strong></td>
+            <td><input type="number" id="newManualJobOrder.quantity" name="newManualJobOrder.quantity" min="1"
+                       class="form-control" required
+                       [(ngModel)]="planningJoin.jobOrderQuantity"></td>
+          </tr>
+
+          <tr>
+            <td width="20%"><strong>{{'workstation' | translate}}:</strong></td>
+            <td>
+
+              <workstation-auto-complete [required]="true" [dropdown]="true" [plantId]="planningJoin.plantId"
+                                         (selectedWorkStationEvent)="planningJoin.workstationId=$event?$event.workStationId:null"></workstation-auto-complete>
+
+          </tr>
+          <tr>
+            <td><strong>{{'operation-repeat' | translate}}:</strong></td>
+            <td><input type="number" min="1" required name="operationRepeat"
+                       class="form-control"
+                       [(ngModel)]="planningJoin.operationRepeat"></td>
+          </tr>
+          <tr>
+            <td><strong>{{'process-control-frequency' | translate}}:</strong></td>
+            <td><input type="number" min="1" required name="processControlFrequency"
+                       class="form-control"
+                       [(ngModel)]="planningJoin.processControlFrequency"></td>
+          </tr>
+          <tr>
+            <td>
+              <strong>{{'single-setup-duration'|translate}}</strong>
+            </td>
+            <td>
+              <app-time [timeInMills]="planningJoin.singleSetupDuration"
+                        (timeChanged)="planningJoin.singleSetupDuration=$event"></app-time>
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              <strong>{{'single-duration'|translate}}*</strong>
+            </td>
+            <td>
+              <app-time [timeInMills]="planningJoin.singleDuration"
+                        (timeChanged)="planningJoin.singleDuration=$event"></app-time>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <strong>{{'expected-setup-duration'|translate}}</strong>
+            </td>
+            <td>
+              <app-time [timeInMills]="planningJoin.expectedSetupDuration"
+                        (timeChanged)="planningJoin.expectedSetupDuration=$event"></app-time>
+            </td>
+          </tr>
+<!--          <tr>-->
+<!--            <td>-->
+<!--              <strong>{{'single-standby-duration'|translate}}</strong>-->
+<!--            </td>-->
+<!--            <td>-->
+<!--              <app-time [timeInMills]="planningJoin.singleStandbyDuration"-->
+<!--                        (timeChanged)="planningJoin.singleStandbyDuration=$event"></app-time>-->
+<!--            </td>-->
+<!--          </tr>-->
+          <tr>
+            <td>
+              <strong>{{'max-single-standby-duration'|translate}}*</strong>
+            </td>
+            <td>
+              <app-time [timeInMills]="planningJoin.maxSingleStandbyDuration"
+                        (timeChanged)="planningJoin.maxSingleStandbyDuration=$event"></app-time>
+            </td>
+          </tr>
+
+          <tr>
+            <td><strong>{{'batch'|translate}}</strong></td>
+            <td>
+              <batch-auto-complete [required]="true" [addIfMissing]="true" [plantId]="planningJoin.plantId"
+                                   (selectedBatchEvent)="setSelectedBatch($event)"></batch-auto-complete>
+            </td>
+          </tr>
+
+          <tr>
+            <td><strong>{{'production-order-type'|translate}}</strong></td>
+            <td><select id="prodOrderTypeList" name="prodOrderTypeList" class="form-control"
+                        [(ngModel)]="planningJoin.prodOrderType">
+              <option [ngValue]="null"> {{'please-select' | translate}}</option>
+              <option *ngFor="let item of prodOrderTypeList" value="{{item}}">{{item}}</option>
+            </select>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>{{'plant'|translate}}</strong></td>
+            <td>
+              <plant-auto-complete [required]="true" [addIfMissing]="false"
+                                   (selectedPlantEvent)="setSelectedJoinPlant($event)" [eventFire]="true"></plant-auto-complete>
+
+            </td>
+          </tr>
+
+          <tr>
+
+            <td><strong>{{'warehouse'|translate}}</strong></td>
+            <td>
+              <warehouse-auto-complete [disabled]="!planningJoin.plantId" [required]="true" [selectedWareHouse]="planningJoin.wareHouse"
+                                       [plantId]="planningJoin.plantId" (selectedWareHouseEvent)="setSelectedWarehouse($event)"></warehouse-auto-complete>
+
+          </tr>
+
+
+
+          <tr>
+            <td><strong>{{'production-order-start-date'|translate}}</strong></td>
+            <td>
+              <p-calendar [(ngModel)]="planningJoin.startDate"
+                          [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                          name="startDate" [showIcon]="true" dateFormat="dd/mm/yy"
+                          required></p-calendar>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>{{'production-order-finish-date'|translate}}</strong></td>
+            <td>
+              <p-calendar [(ngModel)]="planningJoin.finishDate"
+                          [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                          name="finishDate" [showIcon]="true" dateFormat="dd/mm/yy"
+                          required></p-calendar>
+            </td>
+          </tr>
+
+
+          </tbody>
+        </table>
+
+
+      </div>
+
+      <button class="btn btn-sm cancel btn-secondary" (click)="panel.visible=false"> {{'cancel'|translate}}</button>
+      <button class="btn btn-sm float-right btn-success" (click)="saveJoin()"
+              [disabled]="!joinForm.form.valid
+            || !planningJoin.workstationId
+            || planningJoin.singleDuration==0
+            || planningJoin.maxSingleStandbyDuration==0
+            || planningJoin.jobOrderOperations.length==0"> {{'save'|translate}}
+      </button>
+    </p-tabPanel>
+
+    <p-tabPanel header="{{'component'|translate}}">
+      <div class="row form-group">
+
+        <table class="table table-bordered table-sm">
+          <tbody>
+          <tr>
+            <td width="20%"><strong>{{'change-component'|translate}}:</strong></td>
+            <td>
+              <p-checkbox name="groupname" value="val" [(ngModel)]="planningJoin.checkbox" binary="true"></p-checkbox>
+
+            </td>
+          </tr>
+          <tr *ngIf="planningJoin.checkbox">
+            <td colspan="2">
+              <job-order-component-list [direction]="-1" [tableData]="choosedComponents"
+                                        (saveEvent)="choosedComponents=$event"></job-order-component-list>
+            </td>
+
+
+          </tr>
+
+
+          </tbody>
+        </table>
+        <ng-container *ngIf="!planningJoin.checkbox">
+          <p-table [value]="planningJoin.jobOrderList" [rows]="10"
+                   [scrollable]="true" scrollHeight="600px" scrollWidth="100%">
+            <ng-template pTemplate="header">
+              <tr>
+                <th width="20%">{{'job-order'|translate}}</th>
+                <th>{{'component'|translate}}</th>
+              </tr>
+
+
+            </ng-template>
+
+            <ng-template pTemplate="body" let-job let i="index">
+              <tr>
+                <td width="20%" >
+                  <a href="javascript:;" (click)="showJobOrderDetail(job.jobOrderId)">{{job.jobOrderId}}</a>
+                </td>
+                <td>
+                  <job-order-component-list [direction]="-1" [tableData]="job.jobOrderStockUseList"
+                                            (saveEvent)="job.jobOrderStockUseList=$event"></job-order-component-list>
+                </td>
+
+              </tr>
+            </ng-template>
+
+          </p-table>
+        </ng-container>
+
+      </div>
+    </p-tabPanel>
+    <p-tabPanel header="{{'material'|translate}}">
+      <div class="row form-group">
+
+        <p-table [value]="planningJoin.jobOrderList" [rows]="10"
+                 [scrollable]="true" scrollHeight="600px" scrollWidth="100%">
+          <ng-template pTemplate="header">
+            <tr>
+              <th width="20%">{{'job-order'|translate}}</th>
+              <th>{{'material'|translate}}</th>
+
+            </tr>
+
+
+          </ng-template>
+
+          <ng-template pTemplate="body" let-job let i="index">
+            <tr>
+              <td width="20%" >
+                <a href="javascript:;" (click)="showJobOrderDetail(job.jobOrderId)">{{job.jobOrderId}}</a>
+              </td>
+              <td>
+                <job-order-component-list [direction]="1" [tableData]="job.jobOrderStockProduceList"
+                                          (saveEvent)="job.jobOrderStockProduceList=$event"></job-order-component-list>
+              </td>
+
+            </tr>
+          </ng-template>
+
+        </p-table>
+
+      </div>
+    </p-tabPanel>
+
+    <p-tabPanel header="{{'operations'|translate}}">
+      <job-order-operation-list [tableData]="planningJoin.jobOrderOperations" (saveEvent)="planningJoin.jobOrderOperations=$event"></job-order-operation-list>
+    </p-tabPanel>
+    <p-tabPanel header="{{'equipments'|translate}}">
+      <job-order-equipment-list [tableData]="planningJoin.jobOrderEquipmentList" (saveEvent)="planningJoin.jobOrderEquipmentList=$event"></job-order-equipment-list>
+    </p-tabPanel>
+    <p-tabPanel header="{{'workstation-program'|translate}}">
+      <job-order-workstation-program-list [tableData]="planningJoin.workstationProgramList" (saveEvent)="planningJoin.workstationProgramList=$event"></job-order-workstation-program-list>
+    </p-tabPanel>
+
+  </p-tabView>
+
+
+
+
+  <!--------- UST TABLOLAR -------------->
+
+
+
+
+
+
+
+</form>
+
+

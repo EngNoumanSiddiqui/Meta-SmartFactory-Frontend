@@ -1,0 +1,135 @@
+<div class="animated fadeIn">
+  <p-tabView class="col-md-12" (onChange)="handleChange($event)">
+    <p-tabPanel header="{{'inspection-characteristic-detail'|translate}}">
+        <div class="card" *ngIf="inspChar">
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i> {{'inspection-characteristic-detail' | translate}}
+          </div>
+          <div class="card-body">
+            <form #stockForm="ngForm">
+              <table class="table table-striped table-outline">
+                <tbody>
+                <tr>
+                  <td width="30%" class="text-bold">{{'insp-char-id' | translate}} <span style="width: 0 !important;" class="float-right">:</span> </td>
+                  <td>{{inspChar.inspectionCharacteristicId}}</td>
+                </tr>
+                <tr>
+                  <td width="30%" class="text-bold">{{'insp-char-code' | translate}} <span style="width: 0 !important;" class="float-right">:</span> </td>
+                  <td>{{inspChar.inspectionCharacteristicCode}}</td>
+                </tr>
+                <tr>
+                  <td class="text-bold">{{'insp-char-name' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                  <td>{{inspChar.inspectionCharacteristicName}}</td>
+                </tr>
+                <tr>
+                  <td class="text-bold">{{'plant' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                  <td>{{inspChar.plant?.plantName}}</td>
+                </tr>
+                <tr>
+                  <td class="text-bold">{{'insp-char-type' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                  <td>{{inspChar.qualityInspectionCharacteristicType}}</td>
+                </tr>
+                <tr>
+                  <td class="text-bold">{{'shortText' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                  <td>{{inspChar.inspectionCharacteristicShortText}}</td>
+                </tr>
+                <tr>
+                  <td class="text-bold">{{'validFrom' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                  <td>{{inspChar.validFrom | date :'dd/MM/yyyy HH:mm'}}</td>
+                </tr>
+                <tr>
+                  <td class="text-bold">{{'status' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                  <td>{{inspChar.qualityInspectionCharacteristicStatus}}</td>
+                </tr>
+                </tbody>
+              </table>
+            </form>
+          </div>
+        </div>
+    </p-tabPanel>
+
+    <p-tabPanel header="{{'control-indicators'|translate}}">
+      <div *ngIf="inspChar">
+        <p-table
+            #dt
+            [columns]="selectedColumns"
+            scrollable="true"
+            scrollHeight="55vh"
+            [value]="controlIndicators"
+            dataKey="controlIndicatorId"
+          >
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th
+                  *ngFor="let col of columns; let i = index"
+                  style="cursor: pointer"
+                >
+                  {{ col.header | translate }}
+                </th>
+                <th width="80px" rowspan="2">{{ "action" | translate }}</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr [pSelectableRow]="rowData" class="ui-fluid cursor-pointer">
+                <td
+                  *ngFor="let col of columns"
+                >
+                  <span> {{
+                    rowData[col.field] ? (rowData[col.field] + "" | translate) : "" }} </span>
+                </td>
+                <td width="80px">
+                  <button
+                    class="btn btn-sm btn-outline-info"
+                    type="button"
+                    (click)="modalShow(rowData.controlIndicatorId, 'DISPLAY-DETAIL')"
+                  >
+                    <i class="fa fa-leaf"></i>
+                  </button>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+      </div>
+    </p-tabPanel>
+
+    <p-tabPanel header="{{'inspection-methods'|translate}}">
+
+    </p-tabPanel>
+
+    <p-tabPanel header="{{'catalogs'|translate}}">
+
+    </p-tabPanel>
+
+    <p-tabPanel header="{{'sample-drawing'|translate}}">
+
+    </p-tabPanel>
+  </p-tabView>
+</div>
+
+<!-- display modals -->
+<ng-template [ngIf]="modal.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal" (onHidden)="modal.active=false" class="modal fade"
+       tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+       aria-hidden="true">
+  <div class="modal-dialog modal-success modal-lg"
+   role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"> {{'inspection-characteristic-detail' | translate}}</h4>
+        <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+       <ng-template [ngIf]="displayControlIndicatorModal.modal=='DISPLAY-DETAIL'">
+        <list-display-control-indicator [id]="displayControlIndicatorModal.id" ></list-display-control-indicator>
+       </ng-template>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="myModal.hide()">{{'close' | translate}}</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+</ng-template>
+

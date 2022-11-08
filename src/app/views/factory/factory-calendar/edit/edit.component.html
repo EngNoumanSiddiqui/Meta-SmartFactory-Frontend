@@ -1,0 +1,215 @@
+<p-confirmDialog></p-confirmDialog>
+<div class="animated fadeIn row">
+  <div class="col-md-4">
+    <form #calendarForm="ngForm">
+      <div class="form-group row align-items-center">
+        <label class="col-md-4 col-form-label" for="plantId"> {{'plant' | translate}} :</label>
+        <div class="col-md-6">
+          <span *ngIf="reqDto.plantId && selectedPlant && reqDto.plantId=== selectedPlant.plantId">{{selectedPlant.plantName}}</span>
+          <plant-auto-complete *ngIf="!reqDto.plantId && !selectedPlant" [selectedPlantId]="reqDto.plantId" (selectedPlantEvent)="setSelectedPlant($event)" [eventFire]="true"></plant-auto-complete>
+        </div>
+    </div>
+      <div class="form-group row align-items-center">
+          <label class="col-md-4 col-form-label" for="calendarCode"> {{'calendar-code' | translate}} :</label>
+          <div class="col-md-6">
+            <input type="text" id="calendarCode" name="calendarCode" [(ngModel)]="reqDto.code"
+                    class="form-control" placeholder="{{'calendar-code' | translate}}" required>
+          </div>
+      </div>
+      <div class="form-group row align-items-center">
+          <label class="col-md-4 col-form-label" for="calendarCategory"> {{'calendar-category' | translate}} :</label>
+          <div class="col-md-6">
+            <input type="text" id="calendarCategory" name="calendarCategory" [(ngModel)]="reqDto.category"
+                    class="form-control" placeholder="{{'calendar-category' | translate}}" required>
+          </div>
+      </div>
+
+      <div class="form-group row align-items-center">
+        <label class="col-md-4 col-form-label" for="calendarCategory"> {{'default' | translate}} {{'calendar' | translate}} :</label>
+        <div class="col-md-6">
+          <p-checkbox id="defaultCalendar" name="defaultCalendar" [(ngModel)]="reqDto.defaultCalendar" binary="true" inputId="binary"></p-checkbox>
+        </div>
+      </div>
+
+      <br />
+      <div class="row pl-3">
+          <button class="btn btn-sm btn-danger" (click)="resetReqDto()"><i class="fa fa-ban"></i>
+            {{'reset' | translate}}
+          </button>
+          <button type="submit" class="btn btn-sm btn-primary"
+                  [disabled]="!calendarForm.form.valid"
+                  (click)="addFactoryCalendar()"><i class="fa fa-dot-circle-o"></i>
+            {{'save' | translate}}
+          </button>
+      </div>
+    </form>
+  </div>
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header">
+          {{'factory-calendar' | translate}}
+      </div>
+      <div class="card-body">
+        <table class="table table-bordered">
+          <tr>
+            <th>{{'workstation' | translate}}</th>
+            <th>{{'code' | translate}}</th>
+            
+            <!-- <th>{{'calendar-code' | translate}}</th> -->
+            <th>{{'work-day' | translate}}</th>
+            <!-- <th>{{'shift' | translate}}</th> -->
+            <th>{{'holiday' | translate}}</th>
+            <!-- <th>Work Day Name</th> -->
+            <th>{{'start-time' | translate}}</th>
+            <th>{{'end-time' | translate}}</th>
+            <th>{{'description' | translate}}</th>
+            <th>
+                <button pButton  class="ui-button-success float-right ml-1" 
+                  label="{{'add-new'|translate}}" (click)="resetCalendarHolidayDto(); pDialog.visible=true; pDialog.title='factory-calendar-detail-information'; selectedIndex=-1;"></button>
+            </th>
+          </tr>
+          <ng-template [ngIf]="reqDto.factoryCalendarDetailList">
+              <tr *ngFor="let holiday of reqDto.factoryCalendarDetailList; let i=index;">
+                <td>{{holiday?.workstationName}}</td>
+                <td>{{holiday?.code}}</td>
+                
+                <!-- <td>{{holiday?.factoryCalendarCode}}</td> -->
+                <td>{{holiday?.workdayName}}</td>
+                <!-- <td>
+                  <a href="javascript:;" (click)="openShiftModal(holiday?.shiftId)">
+                    {{holiday?.shiftId}}
+                  </a>
+                </td> -->
+                <td>
+                  <p-checkbox name="holiday{{i}}" [disabled]="true" [(ngModel)]="holiday.holiday"  binary="true" inputId="holiday{{i}}"></p-checkbox>
+                </td>
+                <!-- <td>{{holiday?.workdayName}}</td> -->
+                <td>
+                  <span *ngIf="holiday.holiday">{{holiday?.startTime | date: 'dd/MM/yyyy HH:mm'}}</span>
+                  <span *ngIf="!holiday.holiday">{{holiday?.startTime | date: 'HH:mm'}}</span>
+                </td>
+                <td>
+                  <span *ngIf="holiday.holiday">{{holiday?.endTime | date: 'dd/MM/yyyy HH:mm'}}</span>
+                  <span *ngIf="!holiday.holiday">{{holiday?.endTime | date: 'HH:mm'}}</span>
+                </td>
+                <td>{{holiday?.description}}</td>
+                <td>
+                    <button class="btn btn-sm btn-outline-danger" (click)="deleteHoliday(holiday, i)" type="button">
+                        <i class="fa fa-trash"></i></button>
+                    <button class="btn btn-sm btn-outline-info" (click)="openEditDialog(holiday, i)" type="button">
+                        <i class="fa fa-edit"></i></button>
+                </td>
+              </tr>
+            </ng-template>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template [ngIf]="pDialog.visible">
+  <p-dialog [header]="'factory-calendar-details'|translate" [autoZIndex]="false" [contentStyle]="{'min-height':'400px'}" 
+    [style]="{'max-width': '60%','width': '40%'}" [(visible)]="pDialog.visible">
+    <div class="animated fadeIn">
+      <div class="col-md-12" >
+        <div class="card">
+          <div class="card-header">
+           {{pDialog.title|translate}}
+          </div>
+          <div class="card-body">
+            <form #holidayForm="ngForm" >
+              <div class="col-md-12 p-0">
+                <table class="table table-outline">
+                  <tbody>
+                    <tr>
+                      <td>{{'workstation' | translate}}</td>
+                      <td>
+                        <workstation-auto-complete [selectedWorkStationId]="calendarHoliday.workstationId" (selectedWorkStationEvent)="calendarHoliday.workstationId=$event?.workStationId; calendarHoliday.workstationName=$event?.workStationName;"></workstation-auto-complete>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label for="calendarDetailCode"> {{'calendar-code' | translate}}</label>
+                      </td>
+                      <td>
+                      <input type="text" id="calendarDetailCode" name="calendarCode" [(ngModel)]="calendarHoliday.code"
+                              class="form-control" placeholder="{{'calendar-code' | translate}}" required>
+                      </td>
+                    </tr>
+                    <!-- <tr>
+                      <td>
+                        <label for="shift">{{'shift' | translate}}</label>
+                      </td>
+                      <td>
+                        <select id="shift" name="shift" class="form-control" [(ngModel)]="calendarHoliday.shiftId">
+                          <option [value]="null"> {{'please-select' | translate}}</option>
+                          <option *ngFor="let shift of shiftList" [value]="shift.shiftId">{{shift.shiftName}}</option>
+                        </select>
+                      </td>
+                    </tr> -->
+                    <tr *ngIf="!calendarHoliday.holiday">
+                      <td>
+                        <label for="workday">{{'work-day' | translate}}</label>
+                      </td>
+                      <td>
+                        <select id="workday" name="workday" class="form-control" required [(ngModel)]="calendarHoliday.workdayName">
+                          <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                          <option *ngFor="let shift of workDayList" [value]="shift.workdayName">{{shift.workdayName}}</option>
+                        </select>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        {{'holiday' | translate}}
+                      </td>
+                      <td>
+                        <p-checkbox name="holiday" [(ngModel)]="calendarHoliday.holiday"  binary="true" inputId="holiday"></p-checkbox>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                          <label for="startTime">{{'start-time' | translate}}</label>
+                      </td>
+                      <td>
+                          <p-calendar *ngIf="calendarHoliday.holiday" name="startTime" id="startTime" placeholder="{{'start-time' | translate}}" [(ngModel)]="calendarHoliday.startTime" [showTime]="true"></p-calendar>
+                          <p-calendar *ngIf="!calendarHoliday.holiday" name="startTime" id="startTime" placeholder="{{'start-time' | translate}}" [(ngModel)]="calendarHoliday.startTime" [timeOnly]="true"></p-calendar>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                          <label for="endTime">{{'end-time' | translate}}</label>
+                      </td>
+                      <td>
+                        <p-calendar *ngIf="calendarHoliday.holiday" name="endTime" id="endTime"  placeholder="{{'end-time' | translate}}" [(ngModel)]="calendarHoliday.endTime" [showTime]="true"></p-calendar>
+                          <p-calendar *ngIf="!calendarHoliday.holiday" name="endTime" id="endTime" placeholder="{{'end-time' | translate}}" [(ngModel)]="calendarHoliday.endTime" [timeOnly]="true"></p-calendar>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                          <label for="description">{{'description' | translate}}</label>
+                      </td>
+                      <td>
+                          <textarea id="description" name="description" type="text" [(ngModel)]="calendarHoliday.description" pInputTextarea></textarea> 
+                          
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="col-md-12 p-0">
+                  <button class="btn btn-sm btn-danger" (click)="resetCalendarHolidayDto()"><i class="fa fa-ban"></i>
+                    {{'reset' | translate}}
+                  </button>
+                  <button type="submit" class="btn btn-sm btn-primary"
+                          [disabled]="!holidayForm.form.valid"
+                          (click)="addCalendarHoliday()"><i class="fa fa-dot-circle-o"></i>
+                    {{'add' | translate}}
+                  </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </p-dialog>
+</ng-template>

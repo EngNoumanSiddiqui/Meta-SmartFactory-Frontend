@@ -1,0 +1,40 @@
+<div class="animated fadeIn">
+  <div class="card" *ngIf="controlIndicator">
+    <div class="card-header">
+      <i class="fa fa-align-justify"></i> {{'control-indicator-detail' | translate}}
+    </div>
+    <div class="card-body">
+      <form #stockForm="ngForm">
+        <table class="table table-striped table-outline">
+          <tbody>
+          <tr>
+            <td width="30%" class="text-bold">{{'control-indicator-id' | translate}} <span style="width: 0 !important;" class="float-right">:</span> </td>
+            <td>{{controlIndicator.controlIndicatorId}}</td>
+          </tr>
+          <tr>
+            <td width="30%" class="text-bold">{{'control-indicator-code' | translate}} <span style="width: 0 !important;" class="float-right">:</span> </td>
+            <td>{{controlIndicator.controlIndicatorCode}}</td>
+          </tr>
+          <tr>
+            <td class="text-bold">{{'control-indicator-type' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+            <td>{{controlIndicator.qualityCharacteristicControlIndicatorType}}</td>
+          </tr>
+          <tr>
+            <td class="text-bold">{{'control-indicator-sample' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+            <td>{{controlIndicator.controlIndicatorSample}}</td>
+          </tr>
+          <tr>
+            <td class="text-bold">{{'control-indicator-result' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+            <td>{{controlIndicator.controlIndicatorResult}}</td>
+          </tr>
+          <tr>
+            <td class="text-bold">{{'defect-recording' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+            <td>{{controlIndicator.defectRecording}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </form>
+    </div>
+  </div>
+</div>
+

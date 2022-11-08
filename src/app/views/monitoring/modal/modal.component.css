@@ -1,0 +1,60 @@
+.card-body table tbody tr td {    background: #ddd;    padding-left: 10px;}
+
+.card-header { font-weight: bold;}
+
+.card .card-header:nth-child(1) { background: #A8A9AA; border: 3px solid #000; text-align: center;}
+
+.card .card-header:nth-child(2) { background: #A9DEFD; border-left: 3px solid #000; border-right: 3px solid #000; border-top: 0px; border-bottom: 0px;text-align: center;}
+
+.card-body table tbody tr td { background: #A8A9AA; padding-left: 10px;}
+
+.card-body table tbody tr:last-child td {    border-bottom: 3px solid #000; }
+
+.card-body table tbody tr td:last-child { border-right: 3px solid #000; }
+
+.card-body table tbody tr td:first-child { background: gray; border-left: 3px solid #000;}
+
+.modal-body,.card { margin: 0; padding: 0px;}
+
+/*progress{ background: #66D14A; width: 96%;  text-align:center; position: relative; height: 16px; color: white;}*/
+
+/*progress:after { content: attr(value) '%';    position: absolute; top: -3px; left: 44%; }*/
+
+.modal-content{
+  background-color: #555;
+}
+
+
+progress {
+  text-align: center;
+  height: 16px;
+  background: #66D14A; width: 96%;
+  -webkit-appearance: none;
+  border: none;
+  color: white;
+  /* Set the progressbar to relative */
+  position:relative;
+}
+progress:before {
+  content: attr(value) '%';
+  font-size: 0.8em;
+  vertical-align: 0;
+
+  /*Position text over the progress bar */
+  position:absolute;
+  left:0;
+  right:0;
+}
+progress::-webkit-progress-bar {
+  background-color: #c9c9c9;
+}
+progress::-webkit-progress-value {
+  background-color: #66D14A;
+}
+progress::-moz-progress-bar {
+  background-color: #66D14A;
+}
+
+.modal_header{border: 3px solid #000; text-align:center;}
+
+

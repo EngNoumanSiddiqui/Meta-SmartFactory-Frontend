@@ -1,0 +1,343 @@
+<div class="animated fadeIn">
+  <div class="row" *ngIf="reservationDetail">
+
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i> {{'reservation-information' | translate}}
+        </div>
+        <div class="card-body">
+
+          <form #reservationEditForm="ngForm" class="row p-3">
+            <div class="col-md-6">
+              <table class="table table-bordered table-sm">
+                <tbody *ngIf="reservationDetail">
+                <tr class>
+                  <td>{{'reservation-number' | translate}}</td>
+                  <td>
+                    <div class="input-group input-group-sm">
+  
+                      <input type="text" class="form-control" name="reservationNumber"
+                             [(ngModel)]="reservationDetail.reservationId" readonly/>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td width="40%">{{'plant'| translate}}</td>
+                  <td>
+                  <span style="width: 100%;">{{reservationDetail.plantName}}</span>
+                    <!-- <div class="input-group input-group-sm">
+                      <input type="text" class="form-control" name="plant"
+                             [(ngModel)]="reservationDetail.plantName" readonly/>
+                    </div> -->
+  
+                  </td>
+                </tr>
+                <tr>
+                  <td width="40%">{{'movement-type'| translate}}</td>
+                  <td>
+                    <div class="input-group input-group-sm">
+                      <input type="text" class="form-control" name="movementType"
+                                [(ngModel)]="reservationDetail.movementType" readonly/>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'production-order' | translate}}</td>
+                  <td>
+                    <div class="input-group input-group-sm">
+                      <input type="text" class="form-control" name="prodOrderId"
+                             [(ngModel)]="reservationDetail.prodOrderId" readonly/>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td width="40%">{{'job-order-id'| translate}}</td>
+                  <td>
+                    <div class="input-group input-group-sm">
+                      <input type="text" class="form-control" name="jobOrderId"
+                             [(ngModel)]="reservationDetail.itemNo" readonly/>
+                    </div>
+                  </td>
+                </tr>
+  
+                <tr>
+                  <td>{{'sales-order-id' | translate}}</td>
+                  <td>
+                    <div class="input-group input-group-sm">
+                      <input type="text" class="form-control" name="saleOrderId"
+                             [(ngModel)]="reservationDetail.saleOrderId" readonly/>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td width="40%">{{'sales-order-detail-id'| translate}}</td>
+                  <td>
+                    <div class="input-group input-group-sm">
+  
+                      <input type="text" class="form-control" name="saleOrderDetailId"
+                             [(ngModel)]="reservationDetail.orderDetailId" readonly/>
+  
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td width="40%">{{'material-name'| translate}}</td>
+                  <td>
+                    <div class="d-flex">
+                      <div class="input-group input-group-sm">
+                        <input type="text" class="form-control" name="materialName"
+                               [(ngModel)]="reservationDetail.materialName" readonly/>
+                      </div>
+                      <button class="btn btn-sm btn-outline-info" type="button"
+                      (click)="modal2.active=true;"
+                      ><i class="fa fa-edit"></i></button>
+                    </div>
+                    
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'height' | translate}}</td>
+                  <td>
+                    <input type="number" class="form-control-sm" name="height"
+                      [(ngModel)]="reservationDetail.height" min="1" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'width' | translate}}</td>
+                  <td>
+                    <input type="number" class="form-control-sm" name="width"
+                      [(ngModel)]="reservationDetail.width" min="1" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'dimension-unit' | translate}}</td>
+                  <td>
+                    <select id="dimensionunit" name="dimensionunit" class="form-control"
+                        [disabled]="!unitList||unitList.length==0"
+                        [(ngModel)]="reservationDetail.dimensionUnit">
+                        <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                        <option *ngFor="let item of unitList" value="{{item.unit}}">{{item.unit}}
+                        </option>
+                      </select>
+                  </td>
+                </tr>
+             
+                <tr>
+                  <td colspan="2">
+                    <button type="button" class="btn btn-sm btn-danger" (click)="resetFormFields()"><i class="fa fa-ban"></i>
+                      {{'reset' | translate}}
+                    </button>
+                    <button type="submit" class="btn btn-sm btn-primary" [disabled]="!reservationEditForm.form.valid"
+                            (click)="save()"><i class="fa fa-dot-circle-o"></i>
+                      {{'save' | translate}}
+                    </button>
+  
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="col-md-6">
+
+              <table class="table table-bordered table-sm">
+                <tbody>
+                  <tr>
+                    <td width="40%">{{'quantity'| translate}}</td>
+                    <td>
+                      <div class="input-group input-group-sm">
+                      <input class="form-control form-control-sm" type="number" [(ngModel)]="reservationDetail.requirementQuantity"
+                             name="requirementQuantity" min="1"/>
+    
+                      </div>
+    
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="40%">{{'quantity-unit'| translate}}</td>
+                    <td>
+                      <div class="input-group input-group-sm">
+                        <select id="enteredUnitMeasure" name="enteredUnitMeasure" class="form-control form-control-sm"
+                                [(ngModel)]="reservationDetail.enteredUnitMeasure" required>
+                          <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                          <option *ngFor="let item of unitList" value="{{item.unit}}">{{item.unit}}</option>
+                        </select>
+    
+                      </div>
+    
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="40%">{{'warehouse-name'| translate}}</td>
+                    <td>
+                     
+                        <warehouse-auto-complete 
+                        [selectedWareHouseId]="reservationDetail.fromWarehouseId" 
+                          (selectedWareHouseEvent)="reservationDetail.fromWarehouseId=$event?.wareHouseId;">
+                        </warehouse-auto-complete>
+    
+                    </td>
+                  </tr>
+                   <tr>
+                    <td width="40%">{{'batch'| translate}}</td>
+                    <td>
+                     <batch-auto-complete [selectedBatchCode]="reservationDetail.batch"
+                      [stockId]="reservationDetail.materialId"
+                      [addIfMissing]="true"
+                      (selectedBatchEvent)="reservationDetail.batch=$event?.batchCode"></batch-auto-complete>
+    
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="40%">{{'barcode'| translate}}</td>
+                    <td>
+                        <input type="text" class="form-control" name="barcode"
+                               [(ngModel)]="reservationDetail.barcode" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="40%">{{'location-no'| translate}}</td>
+                    <td>
+                      {{reservationDetail.locationNo}}
+                      <button class="btn btn-sm btn-outline-primary" 
+                      (click)="modal.active=true;">
+                        <i class="fa fa-edit"></i>
+                      </button>
+                    </td>
+                  </tr>
+                   <tr>
+                    <td width="40%">{{'final-issue'| translate}}</td>
+                    <td>
+                      <p-checkbox name="finalIssue" binary="true" disabled="true"
+                                  [(ngModel)]="reservationDetail.finalIssue"
+                                  pTooltip="{{'final-issue'  | translate}}"
+                                  tooltipPosition="top"></p-checkbox>
+    
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="40%">{{'requirement-date'| translate}}</td>
+                    <td>
+                      <div class="input-group input-group-sm ui-fluid">
+                        <!---->
+                        <p-calendar [(ngModel)]="reservationDetail.requirementDate"
+                        [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                                    name="requirementDate" [showIcon]="true" dateFormat="dd/mm/yy"></p-calendar>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="40%">{{'requirement-quantity'| translate}}</td>
+                    <td>
+                      <div class="input-group input-group-sm">
+                        <input type="text" class="form-control" name="requirementQuantity"
+                               [(ngModel)]="reservationDetail.requirementQuantity" readonly/>
+                      </div>
+    
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="40%">{{'withdrawn-quantity'| translate}}</td>
+                    <td>
+                      <div class="input-group input-group-sm">
+                        <input type="text" class="form-control" name="withdrawnQuantity"
+                               [(ngModel)]="reservationDetail.withdrawnQuantity" readonly/>
+                      </div>
+    
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="40%">{{'base-unit-measure'| translate}}</td>
+                    <td>
+                      <div class="input-group input-group-sm">
+                        <select id="baseUnitMeasure" name="baseUnitMeasure" class="form-control form-control-sm"
+                                [(ngModel)]="reservationDetail.baseUnitMeasure" disabled>
+                          <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                          <option *ngFor="let item of unitList" value="{{item.unit}}">{{item.unit}}</option>
+                        </select>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="40%">{{'status'| translate}}</td>
+                    <td>
+                      <div class="input-group input-group-sm">
+                        <input type="text" class="form-control" name="status"
+                               [(ngModel)]="reservationDetail.status" readonly/>
+                      </div>
+    
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+           
+          </form>
+        </div>
+      </div>
+    </div>
+   
+  </div>
+</div>
+
+
+<ng-template [ngIf]="modal.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal" (onHidden)="modal.active=false"
+    class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-success modal-lg" role="document">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h4 class="modal-title"> {{'warehouse-locations' | translate}}</h4>
+          <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <choose-warehouse-location-pane  [fromChoosePane]="true"
+            [warehouseName]="reservationDetail.warehouseName"
+            (selectedStockEvent)="reservationDetail.locationNo=$event?.warehouseLocationNo; myModal.hide();">
+          </choose-warehouse-location-pane>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" style="background:lightslategray;"  class="btn rounded btn-outline-secondary"
+              (click)="myModal.hide()">{{'close' | translate}}
+          </button>
+
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</ng-template>
+
+<ng-template [ngIf]="modal2.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myListModal="bs-modal" 
+  (onHidden)="modal2.active=false;" class="modal fade"
+       tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+       aria-hidden="true">
+  <div class="modal-dialog modal-success modal-lg" role="document" style="max-width: 90%;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"> {{'advanced-stock-reports' | translate}}</h4>
+        <button type="button" class="close" (click)="myListModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <!--step2-->
+      <div class="modal-body">
+          <choose-advanced-stock-report-list
+          [isFilterMaterial]="true"
+          [filteredData]="{
+            materialNo:reservationDetail.materialNo, 
+            materialName:reservationDetail.materialName, 
+            barcode:reservationDetail.barcode}"
+          (selectedStockEvent)="onSelectedTransferNotification($event)"
+          ></choose-advanced-stock-report-list>
+      </div>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+</ng-template>

@@ -1,0 +1,31 @@
+<div class="animated fadeIn">
+    <div class="col-md-12" (onChange)="handleChange($event)">
+      <div class="card" *ngIf="qualitySystem">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i> {{'quality-system-details' | translate}}
+        </div>
+        <div class="card-body">
+          <form #stockForm="ngForm">
+            <table class="table table-striped table-outline">
+              <tbody>
+                <tr>
+                  <td width="30%" class="text-bold">{{'quality-system-id' | translate}} <span style="width: 0 !important;" class="float-right">:</span> </td>
+                  <td>{{qualitySystem.qualitySystemId}}</td>
+                </tr>
+                <tr>
+                  <td class="text-bold">{{'quality-system-code' | translate}} <span style="width: 0 !important;" class="float-right">:</span> </td>
+                  <td>{{qualitySystem.qualitySystemCode}}</td>
+                </tr>
+                <tr>
+                  <td class="text-bold">{{'quality-system-name' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                  <td>{{qualitySystem.qualitySystemText}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  

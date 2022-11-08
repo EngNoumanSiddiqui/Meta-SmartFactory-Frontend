@@ -1,0 +1,195 @@
+<p-confirmDialog key="defect-recording"></p-confirmDialog>
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="">
+          <p-table 
+            #dt 
+            [columns]="selectedColumns"
+            scrollable="true"
+            scrollHeight="55vh"
+            [value]="defectRecordings"
+            [rows]="pagination.rows"
+            [totalRecords]="pagination.totalElements"
+            dataKey="defectRecordingId"
+            [(selection)]="selectedDefectRecordings"
+            (onHeaderCheckboxToggle)="onRecordSelectAll($event)"
+            (onRowSelect)="onRecordSelect($event)"
+            (onRowUnselect)="onRecordDeselect($event)"
+          >
+          <ng-template pTemplate="caption" style="width: 100%;">
+            <div style="text-align:left; width: 100%; height: 36px;" >
+              <p-multiSelect
+                [options]="cols"
+                [(ngModel)]="selectedColumns"
+                optionLabel="header"
+                maxSelectedLabels="0"
+                selectedItemsLabel="{{ 'columns-selected' | translate }}"
+                [style]="{ minWidth: '200px' }"
+                defaultLabel="Choose Columns"
+              >
+                <ng-template let-col let-i="index" pTemplate="item">
+                  {{ col.label | translate }}
+                </ng-template>
+              </p-multiSelect>
+            <button
+              pButton
+              class="ui-button-success float-right ml-1"
+              (click)="modalShow(null,'NEW')"
+              icon="fa fa-plus-circle"
+              iconPo="center"
+            ></button>
+              <button
+                pButton
+                class="ui-button-warning float-right ml-1"
+                type="button"
+                icon="fa fa-file-alt"
+                iconPos="left"
+                label="{{ 'export-all' | translate }}"
+                (click)="dt.exportCSV()"
+              ></button>
+              <button
+                pButton
+                class="ui-button-warning float-right ml-1"
+                type="button"
+                icon="fa fa-file"
+                iconPos="left"
+                label="{{ 'export-selected' | translate }}"
+                (click)="dt.exportCSV({ selectionOnly: true })"
+              ></button>
+              <button
+                pButton
+                class="ui-button-primary float-right ml-1"
+                label="{{ 'notification' | translate }}"
+                (click)="modalShow(null, 'NOTIFICATION')"
+                [disabled]="!anyRecordSelected"
+              ></button>
+            </div>
+          </ng-template>
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th style="width: 3em" rowspan="2">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th
+                  *ngFor="let col of columns; let i = index"
+                  style="cursor: pointer"
+                >
+                  {{ col.header | translate }}
+                </th>
+                <th width="80px" rowspan="2">{{ "action" | translate }}</th>
+              </tr>
+              
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr [pSelectableRow]="rowData" class="ui-fluid cursor-pointer">
+                <td style="width: 3em">
+                  <p-tableCheckbox [value]="rowData" (onChange)="onRecordSelect($event)" (onRowSelect)="onRecordSelect($event)" (change)="onRecordSelect($event)"></p-tableCheckbox>
+                </td>
+                <td
+                  *ngFor="let col of columns"
+                  (click)="modalShow(rowData.defectRecordingId, 'DETAIL')"
+                  [ngSwitch]="col.field"
+                >
+                <span *ngSwitchCase="'qualityCodeGroup'"> 
+                  {{ rowData[col.field]}} 
+                </span>
+                <span *ngSwitchCase="'qualityDefectType'"> 
+                  {{ rowData[col.field]?.defectTypeText}} 
+                </span>
+                <span *ngSwitchCase="'qualityInspectionCharacteristic'"> 
+                  {{ rowData[col.field]?.inspectionCharacteristicName}} 
+                </span>
+                <span *ngSwitchCase="'qualityInspectionOperation'"> 
+                  {{ rowData[col.field]?.inspectionOperationName}} 
+                </span>
+                <span *ngSwitchCase="'stock'"> 
+                  {{ rowData[col.field]?.stockName}} 
+                </span>
+                <span *ngSwitchDefault> {{
+                  rowData[col.field] ? (rowData[col.field] + "" | translate) : "" }} </span>
+                </td>
+              
+                <td width="80px"> 
+                  <button
+                    class="btn btn-sm btn-outline-danger"
+                    type="button"
+                    (click)="delete(rowData.defectRecordingId)"
+                  >
+                    <i class="fa fa-trash"></i>
+                  </button>
+                  <button
+                    class="btn btn-sm btn-outline-info"
+                    type="button"
+                    (click)="modalShow(rowData.defectRecordingId, 'EDIT')"
+                  >
+                    <i class="fa fa-edit"></i>
+                  </button>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+
+          <br />
+          <div class="row">
+            <app-paging
+              [showSearch]="false"
+              [TotalElements]="pagination.totalElements"
+              [CurrentPage]="pagination.currentPage"
+              [PageSize]="pagination.pageSize"
+              [rows]="pagination.rows"
+              [TotalPageLinkButtons]="pagination.TotalPageLinkButtons"
+              [RowsPerPageOptions]="pagination.RowsPerPageOptions"
+              (onPageChange)="myChanges($event)"
+            ></app-paging>
+
+            <span style="margin-left:2px; padding-top: 2px " class="text-muted"
+              >{{ "total-records" | translate }}:
+              {{ pagination?.totalElements }}</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> 
+</div>
+
+<!-- modals -->
+<ng-template [ngIf]="modal.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal" (onHidden)="modal.active=false" class="modal fade"
+       tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+       aria-hidden="true">
+      
+  <div class="modal-dialog modal-success"
+   [ngClass]="{'modal-lg': defectRecordingModal.modal==='DETAIL' || defectRecordingModal.modal==='NOTIFICATION'}" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" *ngIf="defectRecordingModal.modal!=='NOTIFICATION'"> {{'defect-recording' | translate}}</h4>
+        <h4 class="modal-title" *ngIf="defectRecordingModal.modal=='NOTIFICATION'"> {{'quality-notification' | translate}}</h4>
+        <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+       <ng-template [ngIf]="defectRecordingModal.modal=='DETAIL'">
+        <detail-defect-recording [id]="defectRecordingModal.id" ></detail-defect-recording>
+       </ng-template>
+       <ng-template [ngIf]="defectRecordingModal.modal=='NEW'">
+        <new-defect-recording (saveAction)="myModal.hide(); filter(pageFilter);"></new-defect-recording>
+       </ng-template>
+       <ng-template [ngIf]="defectRecordingModal.modal=='EDIT'">
+        <edit-defect-recording [id]="defectRecordingModal.id" (saveAction)="myModal.hide(); filter(pageFilter);"></edit-defect-recording>
+       </ng-template>
+       <!--NOTIFICATION -->
+       <ng-template [ngIf]="defectRecordingModal.modal=='NOTIFICATION'">
+        <new-quality-notification [selectedInspectionLot]="selectedInspectionLot"></new-quality-notification>
+       </ng-template>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="myModal.hide()">{{'close' | translate}}</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+</ng-template>

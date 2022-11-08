@@ -1,0 +1,188 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <p-tabView class="col-md-12" [activeIndex]="activeTab">
+      <p-tabPanel header="{{ 'detail' | translate }}" [disabled]="inspectionLot.inspectionLotId">
+        <div class="card">
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i> {{'inspection-lot-information' | translate}}
+          </div>
+          <div class="card-body">
+            <form #inspForm="ngForm">
+              <div class="row">
+                <div class="col-md-12 pd-0" style="display: flex;">
+                  <div class="col-md-6  pd-0">
+                    <table class="table table-bordered">
+                      <tr>
+                        <td>{{'inspection-lot-code' | translate}}</td>
+                        <td>
+                          <input type="text" id="inspectionLotCode" name="inspectionLotCode"
+                            [(ngModel)]="inspectionLot.inspectionLotCode" class="form-control" />
+                        </td>
+                      </tr>
+                      <!-- <tr>
+                        <td>{{'inspection-lot-status' | translate}}</td>
+                        <td>
+                          <select id="inspectionLotStatus" name="inspectionLotStatus" class="form-control"
+                            [(ngModel)]="inspectionLot.inspectionLotStatus">
+                            <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                            <option value="{{status}}" *ngFor="let status of inspectionLotStatusList">{{status}}
+                            </option>
+                          </select>
+                        </td>
+                      </tr> -->
+                      <tr>
+                        <td>{{'material' | translate}}</td>
+                        <td>
+                          <stock-auto-complete [dropdown]="true" [required]="true" [plantId]="selectedPlant.plantId"
+                            [selectedStockId]="inspectionLot.stockId"
+                            (selectedStockEvent)="inspectionLot.stockId=$event.stockId"></stock-auto-complete>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>{{'plant' | translate}}</td>
+                        <td class="display-flex">
+                          <span style="width: 100%;" *ngIf="selectedPlant"> {{selectedPlant.plantName}}</span>
+                          <plant-auto-complete *ngIf="!selectedPlant" [addIfMissing]="false"
+                            [selectedPlantId]="inspectionLot.plantId"
+                            (selectedPlantEvent)="inspectionLot.plantId = $event.plantId"
+                            [selectedPlant]="inspectionLot.plantId"></plant-auto-complete>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>{{'operation' | translate}}</td>
+                        <td>
+                          <quality-inspection-operation-auto-complete 
+                          [selectedInspectionOperationId]="inspectionLot.qualityInspectionOperationId"
+                          (selectedInspectionOperationEvent)="inspectionLot.qualityInspectionOperationId=$event.inspectionOperationId" [addIfMissing]="false"></quality-inspection-operation-auto-complete>
+                          <!-- <select id="qualityInspectionOperationId" name="qualityInspectionOperationId"
+                            class="form-control" [(ngModel)]="inspectionLot.qualityInspectionOperationId">
+                            <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                            <option value="{{inspectionOperation.inspectionOperationId}}"
+                              *ngFor="let inspectionOperation of inspectionOperations">
+                              {{inspectionOperation.inspectionOperationCode}}
+                            </option>
+                          </select> -->
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td>{{'production-order-ID' | translate}}</td>
+                        <td>
+                          <select id="prodOrderId" name="prodOrderId" class="form-control"
+                            [(ngModel)]="inspectionLot.prodOrderId">
+                            <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                            <option value="{{prodOrder.prodOrderId}}" *ngFor="let prodOrder of prodOrders">
+                              {{prodOrder.prodOrderId}}
+                            </option>
+                          </select>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>{{'job-order-ID' | translate}}</td>
+                        <td>
+                          <p-dropdown [options]="jobOrders" [filter]="true" name="jobOrderId" [autoDisplayFirst]="false"
+                            [(ngModel)]="selectedJobOrder"
+                            optionLabel="jobOrderId" dataKey="jobOrderId" [style]="{width: '100%'}"
+                            (ngModelChange)="setSelectedJobOrder($event)"></p-dropdown>
+                        </td>
+                      </tr>
+
+                    </table>
+                  </div>
+                  <div class="col-md-6">
+                    <table class="table table-bordered">
+
+                      <tr>
+                        <td>{{'sales-order-ID' | translate}}</td>
+                        <td>
+                          <p-dropdown [options]="orders" [filter]="true"
+                            name="orderId" [autoDisplayFirst]="false" optionLabel="orderName" dataKey="orderId"
+                            [style]="{width: '100%'}" (onChange)="setSelectedOrder($event.value)"></p-dropdown>
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td>{{'inspection-type' | translate}}</td>
+                        <td>
+                          <select id="inspectionType" name="inspectionType" class="form-control"
+                            [(ngModel)]="inspectionLot.inspectionType">
+                            <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                            <option value="{{inspectionType}}"
+                              *ngFor="let inspectionType of inspectionTypes">
+                              {{inspectionType}}
+                            </option>
+                          </select>
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td>{{'lot-quantity' | translate}}</td>
+                        <td>
+                          <!-- <input type="number" pKeyFilter="pint" id="inpectionLotQuantity" name="inpectionLotQuantity" [(ngModel)]="inspectionLot.lotQuantity"
+                            class="form-control" min="1" #inpectionLotQuantity="ngModel" 
+                            [ngClass]="{ 'is-invalid': inpectionLotQuantity.touched && inpectionLotQuantity.invalid }" 
+                            pattern="^[0-9]*$"/>
+                              <div *ngIf="inpectionLotQuantity.invalid && inpectionLotQuantity.touched" class="alert alert-danger">
+                                <div *ngIf="inpectionLotQuantity.errors.pattern">It should be only number</div>
+                              </div> -->
+                          
+
+                              <input type="number" id="inpectionLotQuantity" name="inpectionLotQuantity" [(ngModel)]="inspectionLot.lotQuantity"
+                              class="form-control" step="1" pattern="\d+" #inpectionLotQuantity="ngModel" required />
+                            <div *ngIf="(inpectionLotQuantity.dirty || inpectionLotQuantity.touched) && inpectionLotQuantity.invalid"
+                              class="alert alert-danger p-0 m-0" role="alert">
+                              <strong>It should be only number </strong>
+                            </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>{{'quantity-unit' | translate}}</td>
+                        <td>
+                          <unit-auto-complete [required]="true" [selectedUnit]="inspectionLot.quanityUnit"
+                            (unitChangeEvent)="inspectionLot.quanityUnit=$event"></unit-auto-complete>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>{{'batch-code' | translate}}</td>
+                        <td>
+                          <batch-auto-complete [addIfMissing]="true" [plantId]="inspectionLot.plantId"
+                            (selectedBatchEvent)="setSelectedBatch($event)"></batch-auto-complete>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>{{'start-date' | translate}}</td>
+                        <td>
+                          <p-calendar class="start-date" name="lotCreatedOn" showTime="true" timeFormat="HH:mm"
+                            [showIcon]="true" dateFormat="dd/mm/yy" [monthNavigator]="true" [yearNavigator]="true"
+                            yearRange="1990:2100" [(ngModel)]="inspectionLot.lotCreatedOn"></p-calendar>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>{{'end-date' | translate}}</td>
+                        <td>
+                          <p-calendar class="end-date" name="lotCreatedTo" showTime="true" timeFormat="HH:mm"
+                            [showIcon]="true" dateFormat="dd/mm/yy" [monthNavigator]="true" [yearNavigator]="true"
+                            yearRange="1990:2100" [(ngModel)]="inspectionLot.lotCreatedTo"></p-calendar>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="row col-md-12">
+          <button type="submit" class="btn btn-sm btn-primary" [disabled]="!inspForm.form.valid || !inspectionLot.quanityUnit" (click)="save()">
+            <i class="fa fa-dot-circle-o"></i>
+            {{ "save" | translate }}
+          </button>
+        </div>
+      </p-tabPanel>
+      <p-tabPanel header="{{ 'inspection-specifications' | translate }}" [disabled]="!inspectionLot.inspectionLotId">
+        <new-inspection-specification [inspectionLotId]="inspectionLot.inspectionLotId">
+        </new-inspection-specification>
+      </p-tabPanel>
+    </p-tabView>
+  </div>
+</div>

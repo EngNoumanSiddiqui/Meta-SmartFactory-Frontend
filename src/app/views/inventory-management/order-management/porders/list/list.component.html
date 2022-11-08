@@ -1,0 +1,303 @@
+<p-confirmDialog  [autoZIndex]="true" [baseZIndex]="999999"></p-confirmDialog>
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body" >
+          <div  class="d-flex ">
+            <div class="col-md-12 d-flex badge-light border border-bottom-0 m-minus-10 p-2">
+              <!-- <div class="col-md-2 px-1 ui-fluid ">
+                <p-multiSelect  [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
+                                maxSelectedLabels="0"  selectedItemsLabel="{{'columns-selected'|translate}}"
+                                defaultLabel="Choose Columns">
+                  <ng-template let-col let-i="index" pTemplate="item">
+                    {{col.label|translate}}
+                  </ng-template>
+                </p-multiSelect>
+              </div> -->
+
+              <div class="col-md-2 px-1 ui-fluid" >
+                <p-calendar [(ngModel)]="pageFilter.startDate"
+                            [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                            [showIcon]="true" dateFormat="dd/mm/yy" (ngModelChange)="pageFilter.startDate=$event;filter(pageFilter)"
+                            placeholder="{{'order-start-date'|translate}}"></p-calendar>
+              </div>
+
+              <div class="col-md-2 px-1 ui-fluid" >
+                <p-calendar [(ngModel)]="pageFilter.endDate"
+                            [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                            placeholder="{{'order-end-date'|translate}}" (ngModelChange)="pageFilter.endDate=$event;filter(pageFilter)"
+                            [showIcon]="true" dateFormat="dd/mm/yy">
+                </p-calendar>
+              </div>
+
+              <!-- <div class="offset-md-6"> -->
+                <!-- <button pButton style="margin-left: 4px" type="button" class="ui-button-warning float-right "
+                        label="{{'reset'  |translate}}" (click)="resetFilter()"></button>
+                <button pButton class="ui-button-success float-right " (click)="modalShow(null,'NEW')"
+                        label="{{'add-new'|translate}}"></button>
+                <button pButton style="margin-right: 5px" class="ui-button-warning float-right " type="button"
+                        icon="fa fa-file-alt" iconPos="left" label="{{'export-all'|translate}}"
+                        (click)="dt.exportCSV()"></button>
+                <button pButton style="margin-right: 5px" class="ui-button-warning float-right " type="button"
+                        icon="fa fa-file" iconPos="left" label="{{'export-selected'|translate}}"
+                        (click)="dt.exportCSV({selectionOnly:true})"
+                ></button> -->
+              <!-- </div> -->
+              <div class="col">
+                <button pButton type="button" class="float-right" icon="fa fa-refresh" name="refresh" (click)="filter(pageFilter);"></button>
+              </div>
+            </div>
+
+            <!--<hr>-->
+          </div>
+          <p-table #dt [columns]="selectedColumns" [value]="porders" scrollable="true" scrollHeight="55vh" [rows]="pagination.rows"
+                   [totalRecords]="pagination.totalElements" dataKey="porderId" [(selection)]="selectedCauses" >
+            
+              <ng-template pTemplate="caption">
+              <div style="text-align:left">
+                <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header" maxSelectedLabels="0"  selectedItemsLabel="{{'columns-selected'|translate}}"
+                                [style]="{minWidth: '200px'}" defaultLabel="Choose Columns">
+
+                  <ng-template let-col let-i="index" pTemplate="item">
+                    {{col.label|translate}}
+                  </ng-template>
+                </p-multiSelect>
+                <button pButton style="margin-left: 4px" type="button" class="ui-button-warning float-right" label="{{'reset'  |translate}}" (click)="resetFilter()"></button>
+                <!--step1-->
+                <button pButton  class="ui-button-success float-right" (click)="modalShow(null,'NEW', null)" label="{{'add-new'|translate}}"> </button>
+                <!--step1-->
+                <!-- <button pButton style="margin-right: 5px" class="ui-button-warning float-right" type="button"  icon="fa fa-file-alt" iconPos="left" label="{{'export-all'|translate}}" (click)="dt.exportCSV()"></button>
+                <button pButton style="margin-right: 5px" class="ui-button-warning float-right" type="button"  icon="fa fa-file" iconPos="left" label="{{'export-selected'|translate}}" (click)="dt.exportCSV({selectionOnly:true})"
+                ></button> -->
+                <p-splitButton [style]="{'margin-right' : '5px'}"  label="{{'export-all'|translate}}" 
+                icon="fa fa-file-alt" [model]="menuItems" 
+                styleClass="ui-button-warning float-right">
+              </p-splitButton>
+              <p-splitButton [style]="{'margin-right' : '5px'}"  label="{{'export-selected'|translate}}" 
+                icon="fa fa-file" [model]="selecteMenuItems" 
+                styleClass="ui-button-warning float-right">
+              </p-splitButton>
+              </div>
+            </ng-template>
+              <ng-template pTemplate="header" let-columns>
+              <tr >
+                <th style="width: 3em" rowspan="2">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th *ngFor="let col of columns let i=index" style="cursor: pointer" [ngClass]="{'bg-selected-order':pageFilter.orderByProperty ==col.field}" (click)="reOrderData(i,col.field)"><i [ngClass]="'fa fa-sort-alpha-' + classReOrder[i]"></i>
+                  {{col.header|translate}}
+                </th>
+                <th width="80px" rowspan="2">{{'action' | translate}}</th>
+              </tr>
+              <tr>
+                <th *ngFor="let col of columns" class="ui-fluid" [ngSwitch]="col.field">
+
+                  <p-multiSelect display="chip" appendTo="body" *ngSwitchCase="'purchaseOrderStatus'"
+                  [options]="listPorderStatus" [(ngModel)]="pageFilter.purchaseOrderStatusList"
+                  (ngModelChange)="filter(pageFilter)" optionLabel="name"
+                  optionValue="name"
+                  selectedItemsLabel="{{'select-options'|translate}}" [style]="{minWidth: '100px'}"
+                  defaultLabel="Choose Options">
+                </p-multiSelect>
+
+                  <!-- <select *ngSwitchCase="'purchaseOrderStatus'" id="status" name="status" class="form-control" [(ngModel)]="pageFilter.purchaseOrderStatus" (ngModelChange)="filter(pageFilter)">
+                    <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                    <option *ngFor="let status of listPorderStatus" value="{{status}}">{{status}}</option>
+                  </select> -->
+                  <p-multiSelect display="chip" appendTo="body" *ngSwitchCase="'purchaseOrderType'"
+                  [options]="purchaseOrderType" [(ngModel)]="pageFilter.purchaseOrderTypeList"
+                  (ngModelChange)="filter(pageFilter)" optionLabel="name"
+                  optionValue="name"
+                  selectedItemsLabel="{{'select-options'|translate}}" [style]="{minWidth: '100px'}"
+                  defaultLabel="Choose Options">
+                </p-multiSelect>
+                  <!-- <select *ngSwitchCase="'purchaseOrderType'" id="purchaseOrderTypes" name="purchaseOrderTypes" class="form-control" [(ngModel)]="pageFilter.purchaseOrderType" (ngModelChange)="filter(pageFilter)">
+                    <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                    <option *ngFor="let item of purchaseOrderType" value="{{item}}">{{item}}</option>
+                  </select> -->
+
+                  <span *ngSwitchCase="'unit'"></span>
+
+                  <p-calendar *ngSwitchCase="'porderDate'" [(ngModel)]="pageFilter[col.field]" placeholder="{{'order-date'|translate}}"
+                    appendTo="body" yearRange="1990:2100" [monthNavigator]="true" [yearNavigator]="true" (ngModelChange)="filter(pageFilter)"
+                    dateFormat="dd-mm-yy"
+                   >
+                  </p-calendar>
+                  <!-- <div *ngSwitchCase="'porderDate'" class="px-1 ui-fluid" >
+                      <p-calendar [(ngModel)]="pageFilter[col.field]"
+                                  [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                                  placeholder="{{'order-date'|translate}}" (ngModelChange)="filter(pageFilter)"
+                                  [showIcon]="true" dateFormat="dd/mm/yy">
+                      </p-calendar>
+                  </div> -->
+
+                  <input *ngSwitchCase="'costCenter'" style="width: 100%;" 
+                    [(ngModel)]="pageFilter['costCenterName']" pInputText type="text" 
+                    (input)="filterByColumn($event.target.value, 'costCenterName')">
+                  <input *ngSwitchCase="'porderNo'" style="width: 100%; text-transform: uppercase;" [(ngModel)]="pageFilter[col.field]" pInputText type="text" (input)="filterByColumn($event.target.value,col.field)">
+                  <input *ngSwitchDefault style="width: 100%" [(ngModel)]="pageFilter[col.field]" pInputText type="text" (input)="filterByColumn($event.target.value,col.field)">
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr [pSelectableRow]="rowData">
+                <td style="width: 3em">
+                  <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                </td>
+                <td *ngFor="let col of columns" style="cursor: pointer" [ngSwitch]="col.field">
+                  <a href="javascript:;" *ngSwitchCase="'porderId'" (click)="modalShow(rowData.porderId,'DETAIL', rowData)"> {{rowData.porderId}}</a>
+
+                  <p *ngSwitchCase="'deliveryDate'" (click)="modalShow(rowData.porderId,'DETAIL', rowData)">
+                    {{rowData[col.field]|date:'dd/MM/yyyy HH:mm'}}</p>
+                  <p *ngSwitchCase="'porderDate'" (click)="modalShow(rowData.porderId,'DETAIL', rowData)">
+                    {{rowData[col.field]|date:'dd/MM/yyyy HH:mm'}}</p>
+                  <!-- <p *ngSwitchCase="'costCenter'" (click)="modalShow(rowData.porderId,'DETAIL', rowData)">
+                      {{rowData[col.field]?.costCenterName}}</p> -->
+                      <a href="javascript:;" *ngSwitchCase="'costCenter'"  
+                      (click)="showCostCenterDetailDialog(rowData[col.field]?.costCenterId)">
+                      {{rowData[col.field]?.costCenterName}}
+                    </a>
+                  <p *ngSwitchCase="'referenceId'" style="width: 77px;">
+                    <ng-container *ngFor="let item of rowData.purchaseOrderDetailList; last as oLast;">
+                      {{item.referenceId}}
+                      <span *ngIf="!oLast && item.referenceId">, </span>
+                      <br *ngIf="!oLast && item.referenceId"/>
+                    </ng-container>
+                  </p>
+                  <p *ngSwitchDefault (click)="modalShow(rowData.porderId,'DETAIL', rowData)">{{rowData[col.field]}}</p>
+                  <a href="javascript:;" *ngSwitchCase="'batch'" (click)="showBatchDetail(rowData.batch)"> {{rowData.batch}}</a>
+                  <a href="javascript:;" *ngSwitchCase="'supplierName'" (click)="showSupplierDetail(rowData.supplierId)">
+                    {{rowData.supplierName}}</a>
+                  <!--remove the model-->
+                </td>
+                <td width="80px">
+                  <button *ngIf="rowData.purchaseOrderStatus === 'PARTIAL_COMPLETED'" class="btn btn-sm btn-outline-info"
+                    pTooltip="Make it Complete" tooltipPosition="top" type="button" (click)="completePOrder(rowData)">
+                    <i class="fa fa-check"></i>
+                  </button>
+                  <button *ngIf="rowData.purchaseOrderStatus === 'REQUESTED'" class="btn btn-sm btn-outline-danger" type="button"
+                    (click)="delete(rowData.porderId)">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                  <button class="btn btn-sm btn-outline-info" type="button" (click)="modalShow(rowData.porderId,'EDIT', rowData)">
+                    <i class="fa fa-edit"></i>
+                  </button>
+                  <button class="btn btn-sm btn-outline-info" type="button"
+                  pTooltip="{{'invoice'|translate}}" tooltipPosition="top" placeholder="Top" 
+                  (click)="selectedCauses=[]; selectedCauses=[rowData]; invoiceModal.active=true;">
+                  <i class="fa fa-file"></i></button>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+          <br/>
+          <div class="row">
+          <app-paging
+            [showSearch]="false"
+            [TotalElements]="pagination.totalElements"
+            [CurrentPage]="pagination.currentPage"
+            [PageSize]="pagination.pageSize"            [rows]="pagination.rows"
+            [TotalPageLinkButtons]="pagination.TotalPageLinkButtons"
+            [RowsPerPageOptions]="pagination.RowsPerPageOptions"
+            (onPageChange)="myChanges($event)"
+          ></app-paging>
+          <span style="margin-left:2px; padding-top: 2px " class="text-muted" >{{'total-records'|translate}}: {{pagination?.totalElements}}</span>
+
+        </div>
+        </div>
+      </div>
+    </div>
+    <!--/.col-->
+  </div>
+</div>
+
+<ng-template [ngIf]="modal2.active">
+    <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    (onHidden)="modal2.active=false; porderModal.modal=null; porderModal.id=null; porderModal.data=null"
+    aria-hidden="true">
+    <div class="modal-dialog modal-success modal-lg" role="document" style="max-width: 90%;">
+    <div class="modal-content">
+     <div class="modal-header">
+       <h4 class="modal-title"> {{'porder-information' | translate}}</h4>
+       <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+         <span aria-hidden="true">&times;</span>
+       </button>
+     </div>
+     <div class="modal-body">
+       <ng-template [ngIf]="porderModal.modal=='NEW'">
+       <!--follow new design-->
+         <porder-new (saveAction)="myModal.hide();search(pageFilter)"></porder-new>
+       <!--follow new design-->
+         </ng-template>
+       <ng-template [ngIf]="porderModal.modal=='EDIT'">
+         <!--
+           <porder-edit [id]="porderModal.id" (saveAction)="myModal.hide(); filter(pageFilter)"></porder-edit>
+         -->
+         <app-porder-edit [id]="porderModal.id" (saveAction)="myModal.hide(); search(pageFilter)"></app-porder-edit>
+       </ng-template>
+       <ng-template [ngIf]="porderModal.modal=='DETAIL'">
+         <porder-detail [id]="porderModal.id" ></porder-detail>
+       </ng-template>
+     </div>
+     <div class="modal-footer">
+
+
+      <button *ngIf="porderModal.modal!=='NEW'"  type="button" class="btn btn-sm btn-primary mr-1" 
+          (click)="sendMail2()"><i class="fa fa-envelope"></i>
+          {{'send-mail' | translate}}
+        </button>
+       <button type="button" *ngIf="porderModal.modal!=='NEW'"  class="btn rounded btn-warning" (click)="getPrintHtmlDocument()"><i class="fa fa-file"></i>
+         {{'print-document' | translate}}</button>
+       <print-component *ngIf="printComponent.active" 
+        [requestPrintDto]="requestPrintDto" [editMode]="true" 
+        [active]="printComponent.active" (activeEvent)="printComponent.active=$event"></print-component>
+
+       <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary" (click)="myModal.hide()">{{'close' | translate}}</button>
+       <!--
+         <button *ngIf="porderModal.modal=='DETAIL'" type="button" class="btn rounded btn-primary" (click)="porderModal.modal='NEW'">{{'new' | translate}}</button>
+       <button *ngIf="porderModal.modal=='DETAIL'" type="button" class="btn rounded btn-primary" (click)="porderModal.modal='NEW'">{{'new' | translate}}</button>
+       !-->
+       <button *ngIf="porderModal.modal=='DETAIL'" type="button" class="btn rounded btn-success"
+               (click)="porderModal.modal='EDIT'">{{'edit' | translate}}
+       </button>
+     </div>
+    </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+</ng-template>
+
+
+
+<ng-template [ngIf]="invoiceModal.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal" 
+  (onHidden)="invoiceModal.active=false;" class="modal fade"
+       tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+       aria-hidden="true">
+  <div class="modal-dialog modal-success modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"> {{'invoice-information' | translate}}</h4>
+        <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <!--step2-->
+      <div class="modal-body">
+        <invoice-new [plantId]="pageFilter.plantId" [organizationId]="pageFilter.organizationId" 
+        [referenceId]="selectedCauses[0]?.porderId" [invoiceType]="'PURCHASE_ORDER'"
+        (saveAction)="myModal.hide();"></invoice-new>
+      </div>
+      <!--step2-->
+      <!-- <div class="modal-footer">
+
+       
+        <button *ngIf="salesModal.modal=='DETAIL'" type="button" style="background:lightslategray;" 
+                class="btn rounded btn-outline-secondary" (click)="myModal.hide()">
+                {{'close' | translate}}
+        </button>
+      </div> -->
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+</ng-template>

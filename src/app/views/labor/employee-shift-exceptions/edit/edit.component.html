@@ -1,0 +1,99 @@
+<div class="animated fadeIn">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+              <i class="fa fa-align-justify"></i>{{'exception-definition'|translate}}
+            </div>
+            <div class="card-body">
+              <form #exceptionForm="ngForm">
+              <table class="table table-bordered">
+              <tbody>
+                <tr>
+                  <td>{{'is-group'|translate}}</td>
+                  <td>
+                      <p-checkbox name="groupname" value="val" [(ngModel)]="showHide" binary="true" (onChange)="showHideEmployeeList($event)"></p-checkbox>
+                  </td>
+                </tr>
+                <tr *ngIf="hideEmployeeList">
+                  <td>{{'employee'|translate}}</td>
+                  <td>
+                    <employee-auto-complete [plantId]="selectedPlant?.plantId" [selectedEmployeeId]="employeeShiftExceptions.employeeId"
+                    (selectedEmployeeEvent)="employeeShiftExceptions.employeeId=$event?.employeeId"></employee-auto-complete>
+                  </td>
+                </tr>
+                <tr *ngIf="hideEmployeeGroup">
+                  <td>{{'group'|translate}}-{{'code'|translate}}</td>
+                  <td>
+                      <div class="input-group">
+                        <select id="GroupedEmployee" name="GroupedEmployee" class="form-control" [(ngModel)]="employeeShiftExceptions.employeeGroupId">
+                              <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                              <option *ngFor="let empGroup of employeeGroup" value="{{empGroup.employeeGroupId}}">{{empGroup.groupName}}</option>
+                        </select>
+                      </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'types-code'|translate}}</td>
+                  <td>
+                      <div class="input-group">
+                        <select id="GroupedEmployee" name="GroupedEmployee" class="form-control" [(ngModel)]="employeeShiftExceptions.exceptionalTypesEnum">
+                              <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                              <option *ngFor="let exception of exceptionTypesList" value="{{exception}}">{{exception}}</option>
+                        </select>
+                      </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'start-date'|translate}}</td>
+                  <td class="ui-fluid">
+                      <p-calendar [showIcon]="true"[(ngModel)]="employeeShiftExceptions.startTime"  name="startDate" [monthNavigator]="true"
+                      [yearNavigator]="true" [showTime]="true" [appendTo]="'body'" [baseZIndex]="99999" yearRange="1960:2100"  dateFormat="dd/mm/yy">
+                     </p-calendar>
+                     <!--
+                       <input type="time"  name="contactName"  [(ngModel)]="employeeShiftExceptions.startTime"
+                      class="form-control" placeholder="{{'start-time' | translate}}">
+                      !-->
+
+                    </td>
+
+               </tr>
+              <tr>
+                  <td>{{'finish-date'|translate}}</td>
+                  <td class="ui-fluid">
+                      <p-calendar [showIcon]="true" [(ngModel)]="employeeShiftExceptions.endTime"  name="finishDate" [monthNavigator]="true"
+                      [yearNavigator]="true" [showTime]="true" yearRange="1960:2100" [appendTo]="'body'" [baseZIndex]="99999"  dateFormat="dd/mm/yy">
+                      </p-calendar>
+                    <!--
+                       <input type="time"  name="contactName"  [(ngModel)]="employeeShiftExceptions.endTime"
+                      class="form-control" placeholder="{{'finish-time' | translate}}">
+                    </td>
+                    !-->
+
+              </tr>
+                <tr>
+                    <td>{{'shift'|translate}}</td>
+                    <td>
+                        <div class="input-group">
+                          <select id="empShift" name="empShift" class="form-control" [(ngModel)]="employeeShiftExceptions.shiftId">
+                                <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                                <option *ngFor="let shift of shiftSettingList" value="{{shift.shiftId}}">{{shift.shiftName}}</option>
+                          </select>
+                        </div>
+                    </td>
+                  </tr>
+               <tr>
+                <td colspan="2">
+                  <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+                    {{'reset' | translate}}</button>
+                  <button type="submit" class="btn btn-sm btn-primary"  [disabled]="!exceptionForm.form.valid"  (click)="save()"><i class="fa fa-dot-circle-o"></i>
+                    {{'save' | translate}}
+                  </button>
+                </td>
+              </tr>
+              </tbody>
+              </table>
+              </form>
+            </div>
+          </div>
+    </div>
+  </div>

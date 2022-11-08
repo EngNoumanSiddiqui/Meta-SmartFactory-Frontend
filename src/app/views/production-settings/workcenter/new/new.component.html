@@ -1,0 +1,133 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-lg-6">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i>{{'workcenter-information' | translate}}
+        </div>
+        <div class="card-body">
+          <form #workCenterForm="ngForm">
+          <table class="table table-bordered">
+            <tbody>
+            <tr>
+              <td>{{'workcenter-no' | translate}}</td>
+              <td><input type="text" class="form-control" name="workCenterNo" [(ngModel)]="workcenter.workCenterNo" /> </td>
+            </tr>
+            <tr>
+              <td>{{'workcenter-name' | translate}}*</td>
+              <td><input type="text" class="form-control"  name="workCenterName" required [(ngModel)]="workcenter.workCenterName"/> </td>
+            </tr>
+
+            <tr>
+              <td>{{'workcenter-type' | translate}}</td>
+              <td>
+                <div class="input-group">
+                  <select id="type" name="type" class="form-control" [(ngModel)]="workcenter.workCenterTypeIdx">
+                    <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                    <option *ngFor="let type of workcenterTypeList" value="{{type.workCenterTypeId}}">{{type.workCenterTypeName}}</option>
+                  </select>
+                  <span class="input-group-btn">
+                       <button type="button" class="btn btn-primary" data-toggle="modal"
+                               (click)="params.dialog.title = 'workcenter-type'; myModal.show()"><i class="fa fa-plus-circle"></i></button>
+                   </span>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>{{'plant' | translate}}</td>
+              <td>
+                <span
+                *ngIf="workcenter.plantId && selectedPlant && workcenter.plantId=== selectedPlant.plantId">{{selectedPlant.plantName}}</span>
+              <plant-auto-complete *ngIf="!workcenter.plantId && !selectedPlant"
+                [selectedPlantId]="workcenter.plantId" (selectedPlantEvent)="setSelectedPlant($event)"
+                [eventFire]="true"></plant-auto-complete>
+              </td>
+            </tr>
+
+            <tr>
+              <td>{{'schedule-max-change-over-count' | translate}}</td>
+              <td><input name="maxChangeOverCount" type="number" min="0" class="form-control" style="width: 100%"
+                         [(ngModel)]="workcenter.maxChangeOverCount"/>
+            </tr>
+            
+            <tr>
+              <td>{{'description' | translate}}</td>
+              <td><textarea class="form-control" name="description" [(ngModel)]="workcenter.description"></textarea>
+               </td>
+            </tr>
+
+            <tr *ngIf="fromModal">
+              <td colspan="2">
+                <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+                  {{'reset' | translate}}</button>
+                <button type="submit" class="btn btn-sm btn-primary"  [disabled]="!workCenterForm.form.valid" (click)="save()"><i class="fa fa-dot-circle-o"></i>
+                  {{'save' | translate}}</button>
+               <!-- <button type="button" class="btn btn-sm btn-secondary float-right" (click)="goPage()">
+                  <i class="icon-arrow-left-circle"></i> {{'cancel' | translate}} </button> -->
+              </td>
+            </tr>
+            </tbody>
+          </table>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i>{{'picture'  |translate}}
+        </div>
+        <div class="card-body">
+          <table class="table table-bordered">
+            <tbody>
+            <tr align="center">
+              <td colspan="2" class="text-center">
+                <image-adder></image-adder>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <!--edit-->
+  </div>
+</div>
+<!------------------------- Modals ---------------------------------------->
+<div bsModal [config]="{backdrop: 'static', keyboard: false}" #myModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-success" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          <span *ngIf="params.dialog.title == 'workcenter-type'">{{'new' |translate}} {{'workcenter' | translate}}  {{'type' | translate}}</span>
+        </h4>
+        <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!---------- MODEL # ------------->
+        <span>
+           <div class="form-group row">
+          <label class="col-md-3 col-form-label" for="dialogInput"> {{'name' | translate}}</label>
+          <div class="col-md-9">
+            <input type="text" id="dialogInput" name="dialogInput" [(ngModel)]="params.dialog.inputValue"
+                   class="form-control" placeholder="{{'name' | translate}}">
+          </div>
+        </div>
+        </span>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="myModal.hide()">{{'close' | translate}}</button>
+        <span *ngIf="params.dialog.title == 'workcenter-type'">
+          <button type="button" class="btn btn-success" (click)="saveWorkcenterType(); myModal.hide()">{{'save' | translate}}</button>
+        </span>
+      </div>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+

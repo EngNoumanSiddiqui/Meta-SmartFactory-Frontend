@@ -1,0 +1,97 @@
+<div class="col-md-12">
+
+  <p-tabView>
+    <p-tabPanel header="{{'report'|translate}}">
+      <div class="row" *ngIf="detailItems && detailItems.length > 0">
+        <p-table #dt [columns]="cols" [value]="detailItems" [rows]="20" [paginator]="true" scrollable="true" scrollHeight="55vh"
+                 [(selection)]="selectedRowData"  dataKey="recordStartDate">
+          <ng-template pTemplate="caption">
+            <div class="ui-helper-clearfix" style="text-align:left">
+              <button pButton style="margin-right: 5px" class="ui-button-info float-left" type="button"
+                      icon="fa fa-file-alt" iconPos="left" label="{{'export-image'|translate}}"
+                      (click)="exportAsPng('print-section')"></button>
+
+              <button pButton style="margin-right: 5px" class="ui-button-warning float-right" type="button"
+                      icon="fa fa-file-alt" iconPos="left" label="{{'export-all'|translate}}"
+                      (click)="dt.exportCSV()"></button>
+              <button pButton style="margin-right: 5px" class="ui-button-warning float-right" type="button"
+                      icon="fa fa-file" iconPos="left" label="{{'export-selected'|translate}}"
+                      (click)="dt.exportCSV({selectionOnly:true})">
+              </button>
+            </div>
+            <!--<hr>-->
+          </ng-template>
+         <ng-template pTemplate="header" let-columns>
+            <tr>
+              <th style="width: 3em">
+                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+              </th>
+              <th *ngFor="let col of columns">
+                <!--<span *ngSwitchDefault> {{col.header|translate}} </span>-->
+                <span> {{col.header | translate}}</span>
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData let-columns="columns">
+            <tr [pSelectableRow]="rowData">
+              <td style="width: 3em">
+                <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+              </td>
+              <td *ngFor="let col of columns" style="cursor: pointer" [ngSwitch]="col.field">
+                <span
+                  *ngSwitchCase="'shiftStartDate'"> {{(rowData[col.field])|date:'dd/MM/yyyy HH:mm'}}</span>
+                <span
+                  *ngSwitchCase="'recordStartDate'"> {{(rowData[col.field])|date:'dd/MM/yyyy HH:mm'}}</span>
+                <span
+                  *ngSwitchCase="'recordFinishDate'"> {{(rowData[col.field])|date:'dd/MM/yyyy HH:mm'}}</span>
+                <span *ngSwitchDefault> {{rowData[col.field]}}</span>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </p-tabPanel>
+     <p-tabPanel header="{{'capacity-efficiency'|translate}}">
+      <p-chart type="line" [data]="capacityEfficiencyData" [options]="efficiencyOptions"></p-chart>
+    </p-tabPanel>
+    <p-tabPanel header="{{'time-efficiency'|translate}}">
+      <p-chart type="line" [data]="timeEfficiencyData" [options]="efficiencyOptions"></p-chart>
+    </p-tabPanel>
+    <p-tabPanel header="{{'power-cost'|translate}}">
+      <p-chart type="line" [data]="linePowerCostData" [options]="costOptions"></p-chart>
+    </p-tabPanel>
+    <p-tabPanel header="{{'power-consumption'|translate}}">
+      <p-chart type="line" [data]="linePowerConsumpData" [options]="consumpOptions"></p-chart>
+    </p-tabPanel>
+    <p-tabPanel header="{{'net-working-time'|translate}}">
+      <p-chart type="line" [data]="lineNetWorkingTimeData" [options]="timeOptions"></p-chart>
+    </p-tabPanel>
+    <p-tabPanel header="{{'job-waiting-time'|translate}}">
+    <p-chart type="line" [data]="lineJobWaitingTimeData" [options]="timeOptions"></p-chart>
+  </p-tabPanel>
+
+    <p-tabPanel header="{{'stops'|translate}}">
+      <div class="row text-center noData" *ngIf=" (!stops|| stops.length==0)">
+        <strong class=""><i class="fa fa-warning "></i>{{'NO_STOP_FOUND'|translate}}!</strong>
+      </div>
+      <ng-container *ngIf=" (stops&& stops.length>0)">
+        <stop-analysis [injected]="stops"></stop-analysis>
+      </ng-container>
+    </p-tabPanel>
+    <p-tabPanel header="{{'machine-status'|translate}}">
+      <div class="row text-center noData" *ngIf=" (!machineStops|| machineStops.length==0)">
+        <strong class=""><i class="fa fa-warning "></i>{{'NO_STATUS_FOUND'|translate}}!</strong>
+      </div>
+      <ng-container *ngIf=" (machineStops&& machineStops.length>0)">
+        <machine-status-analysis [injected]="machineStops"></machine-status-analysis>
+      </ng-container>
+    </p-tabPanel>
+
+  </p-tabView>
+
+</div>
+
+
+
+
+

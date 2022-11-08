@@ -1,0 +1,175 @@
+<div class="col-lg-12 card bg-gray-light">
+  <div class="row ">
+
+    <div class="col-lg-6  d-flex flex-column p-2">
+      <div class="row bg-gray-dark  shadow-sm m-0 mb-1 ">
+        <div class="col display-8 py-3   text-warning">
+          <div class=" row">
+            <div class="col-3">Resource:</div>
+            <div class="col-9 text-bold">Welding Machine</div>
+          </div>
+        </div>
+      </div>
+      <div class="row bg-gray-dark  shadow-sm m-0 mb-1 ">
+        <div class="col display-9 py-3   text-light">
+          <div class=" row">
+            <div class="col-3">Product:</div>
+            <div class="col-9 text-bold">Welding Machine</div>
+          </div>
+
+        </div>
+      </div>
+      <div class="row my-0 ">
+        <div class="col-6 display-9 pr-1   text-light">
+          <div class="bg-gray-dark p-3">
+            <div class=" row">
+              <div class="col-6">Date:</div>
+              <div class="col-6 text-bold">10/10/2018</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 display-9 pl-1   text-light">
+          <div class="bg-gray-dark p-3">
+            <div class=" row">
+              <div class="col-6">Shift:</div>
+              <div class="col-6 text-bold">2</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row my-1 ">
+        <div class="col-6 display-9 pr-1   text-light">
+          <div class="bg-gray-dark p-3">
+            <div class=" row">
+              <div class="col-6">Actual Oee:</div>
+              <div class="col-6 text-bold">0,8989448</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 display-9 pl-1   text-light">
+          <div class="bg-gray-dark p-3">
+            <div class=" row">
+              <div class="col-6">Status:</div>
+              <div class="col-6 text-success text-bold">Running</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row bg-gray-dark   m-0  py-4 align-items-end flex-grow-1">
+        <div class="col-4 text-center" >
+          <span class="d-block display-7 text-light text-bold pb-2 ">OEE %</span>
+          <circle-progress
+            [percent]="85"
+            [showTitle]="true"
+            [subtitle]="85"
+            [title]="'%'"
+          ></circle-progress>
+        </div>
+        <div class="col text-center">
+          <span class=" display-9 text-light m-0 p-0 pb-2">Availability</span>
+          <circle-progress
+            [percent]="85"
+            [showTitle]="true"
+            [subtitle]="85"
+            [title]="'%'"
+          ></circle-progress>
+        </div>
+        <div class="col text-center">
+          <span class=" display-9 text-light m-0 p-0 pb-2">Performance</span>
+          <circle-progress
+            [percent]="85"
+            [showTitle]="true"
+            [subtitle]="85"
+            [title]="'%'"
+          ></circle-progress>
+        </div>
+        <div class="col text-center">
+          <span class=" display-9 text-light m-0 p-0 pb-2">Quality</span>
+          <circle-progress
+            [percent]="85"
+            [showTitle]="true"
+            [title]="'%'"
+            [subtitle]="85"
+          ></circle-progress>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6 p-2 d-flex flex-column">
+
+      <div class="row bg-gray-dark   m-0 mb-1 ">
+        <div class="col display-8 py-3   text-light">
+          <div class=" row">
+            <div class="col-5"> Product Capacity:</div>
+            <div class="col-4 text-success text-bold ">20000</div>
+            <div class="col-3 text-light small ">(units/hour)</div>
+          </div>
+        </div>
+      </div>
+      <div class="row bg-gray-dark  m-0  mb-1 ">
+        <div class="col display-8 py-3   text-success">
+          <div class=" row">
+            <div class="col-5"> Actual Production:</div>
+            <div class="col-7 text-success text-bold ">18955</div>
+          </div>
+
+        </div>
+      </div>
+      <!-- Work Hours -->
+      <div class="row bg-gray-dark m-0 mb-1  px-1 pt-3 flex-grow-1">
+        <div class="col-md-12">
+          <p-chart type="bar" [data]="barData" [options]="options"></p-chart>
+        </div>
+      </div>
+
+      <div class="row mb-1 ">
+        <div class="col-4  pr-1   text-light text-center">
+
+          <div class="bg-gray-dark p-1 ">
+            <span class="d-block display-10 text-light">Avaibility (min)</span>
+            <span class=" display-9 text-success text-bold"> 4770</span>
+          </div>
+
+        </div>
+        <div class="col-4  px-1    text-center">
+          <div class="bg-gray-dark p-1 ">
+            <span class="d-block display-10 text-light">Expected Units</span>
+            <span class=" display-9 text-success text-bold"> 4770</span>
+          </div>
+        </div>
+        <div class="col-4  pl-1    text-center">
+          <div class="bg-gray-dark p-1 ">
+            <span class="d-block display-10 text-light">Good Units</span>
+            <span class=" display-9 text-success text-bold"> 4770</span>
+          </div>
+        </div>
+      </div>
+      <div class="row  ">
+        <div class="col-4  pr-1   text-light text-center">
+
+          <div class="bg-gray-dark p-1 ">
+            <span class="d-block display-10 text-light">Running Time (min)</span>
+            <span class=" display-9 text-warning text-bold"> 4770</span>
+          </div>
+
+        </div>
+        <div class="col-4  px-1    text-center">
+          <div class="bg-gray-dark p-1 py-1 ">
+            <span class="d-block display-10 text-light">Produced Units</span>
+            <span class=" display-9 text-info text-bold"> 4615</span>
+          </div>
+        </div>
+        <div class="col-4  pl-1    text-center">
+          <div class="bg-gray-dark p-1 ">
+            <span class="d-block display-10 text-light">Rejected Units</span>
+            <span class=" display-9 text-danger text-bold"> 456</span>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+</div>
+
+

@@ -1,0 +1,70 @@
+<!--<form #orderEdit="ngForm" >-->
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          {{'workstation-program'|translate}}
+        </div>
+        <div class="card-body">
+          <form #saleForm="ngForm" class="form-horizontal ui-fluid">
+            <table class="table table-bordered">
+              <tbody>
+                <tr>
+                  <td width="35%">{{'workstation' | translate}}</td>
+                  <td>
+                    <workstation-auto-complete [plantId]="plantId" (selectedWorkStationEvent)="setSelectedWorkStation($event)"></workstation-auto-complete>
+                  </td>
+                </tr>
+                <!-- <tr>
+                  <td width="35%">{{'code' | translate}}</td>
+                  <td><input id="code" class="form-control" [(ngModel)]="dataModel.code" name="code" required />
+                  </td>
+                </tr> -->
+                <tr>
+                  <td width="35%">{{'name' | translate}}</td>
+                  <td><input id="description" class="form-control" [(ngModel)]="dataModel.description" name="description"/>
+                  </td>
+                </tr>
+                <tr>
+                  <td width="35%">{{'plc-code' | translate}}</td>
+                  <td><input id="plcCode" class="form-control" [(ngModel)]="dataModel.plcCode" name="plcCode" />
+                  </td>
+                </tr>
+                <tr>
+                  <td width="35%">{{'plc-value' | translate}}</td>
+                  <td><input id="plcValue" class="form-control" [(ngModel)]="dataModel.plcValue" name="plcValue" />
+                  </td>
+                </tr>
+                <tr>
+                  <td width="35%">{{'unit' | translate}}</td>
+                  <!-- <td><input id="unit" class="form-control" [(ngModel)]="dataModel.unit" name="unit" /> -->
+                    <td>
+                      <!-- <select name="unit" [(ngModel)]="dataModel.unit" class="form-control">
+                        <option value="{{unitList.unit}}" *ngFor="let unitList of workStationUnitList">{{unitList.unit}}</option>
+                      </select> -->
+                        <unit-auto-complete (unitChangeEvent)="dataModel.unit=$event"></unit-auto-complete>
+                    </td>
+                </tr>
+                
+              </tbody>
+
+            </table>
+
+          </form>
+        </div>
+        <div class="card-footer">
+          <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+            {{'reset' | translate}}
+          </button>
+          <button type="submit" class="btn btn-sm btn-primary" [disabled]="!saleForm.form.valid" (click)="save()"><i
+              class="fa fa-dot-circle-o"></i>
+            {{'save' | translate}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--/.row-->
+</div>
+<!--</form>-->

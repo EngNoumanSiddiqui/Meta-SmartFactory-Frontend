@@ -1,0 +1,105 @@
+<ng-template ngFor let-breadcrumb [ngForOf]="breadcrumbs" let-last=last>
+    <h3 class="breadcrumb-item text-white" *ngIf="last">
+        <!-- {{breadcrumb.label.title|translate}} -->
+        <ng-container [ngSwitch]="breadcrumb.label.title">
+            <ng-template [ngSwitchCase]="'sales-orders'"> 
+                <a class="a-color-active" [routerLink]="breadcrumb.url">{{breadcrumb.label.title | translate}}</a> | 
+                <a class="a-color" [routerLink]="['/inventory-management/order-management/sales-orders/base/items']">{{'sales-orders-items' | translate}}</a> |
+                <a class="a-color" [routerLink]="['/inventory-management/order-management/sales-orders/base/items/reports']">{{'reports' | translate}}</a>
+            </ng-template>
+            <ng-template [ngSwitchCase]="'sales-orders-items'"> 
+                <a class="a-color" [routerLink]="['/inventory-management/order-management/sales-orders/base']">{{'sales-orders' | translate}}</a> | 
+                <a class="a-color-active" [routerLink]="breadcrumb.url">{{breadcrumb.label.title | translate}}</a> |
+                <a class="a-color" [routerLink]="['/inventory-management/order-management/sales-orders/base/items/reports']">{{'reports' | translate}}</a>
+            </ng-template>
+            <ng-template [ngSwitchCase]="'reports'"> 
+                <a class="a-color" [routerLink]="['/inventory-management/order-management/sales-orders/base']">{{'sales-orders' | translate}}</a> | 
+                <a class="a-color" [routerLink]="['/inventory-management/order-management/sales-orders/base/items']">{{'sales-orders-items' | translate}}</a> | 
+                <a class="a-color-active" [routerLink]="breadcrumb.url">{{breadcrumb.label.title | translate}}</a>
+            </ng-template>
+            <ng-template [ngSwitchCase]="'sales-quotations'"> 
+                <a class="a-color-active" [routerLink]="breadcrumb.url">{{breadcrumb.label.title | translate}}</a> | 
+                <a class="a-color" [routerLink]="['/inventory-management/order-management/sales-orders/quotations/items']">{{'sales-quotations-items' | translate}}</a>
+            </ng-template>
+            <ng-template [ngSwitchCase]="'sales-quotations-items'"> 
+                <a class="a-color" [routerLink]="['/inventory-management/order-management/sales-orders/quotations']">{{'sales-quotations' | translate}}</a> | 
+                <a class="a-color-active" [routerLink]="breadcrumb.url">{{breadcrumb.label.title | translate}}</a>
+            </ng-template>
+            <!-- Purchase Order Nav  -->
+            <ng-template [ngSwitchCase]="'purchase-orders'"> 
+                <a class="a-color-active" [routerLink]="breadcrumb.url">{{breadcrumb.label.title | translate}}</a> | 
+                <a class="a-color" [routerLink]="['/inventory-management/order-management/purchase-orders/base/items']">{{'purchase-orders-items' | translate}}</a>
+                <!-- <a class="a-color" [routerLink]="['/inventory-management/order-management/purchase-quotations']">{{'purchase-quotations' | translate}}</a> | 
+                <a class="a-color" [routerLink]="['/inventory-management/order-management/purchase-quotations/list']">{{'purchase-quotation-items' | translate}}</a> -->
+            </ng-template>
+            <ng-template [ngSwitchCase]="'purchase-orders-items'"> 
+                <a class="a-color" [routerLink]="['/inventory-management/order-management/purchase-orders/base']">{{'purchase-orders' | translate}}</a> | 
+                <a class="a-color-active" [routerLink]="breadcrumb.url">{{breadcrumb.label.title | translate}}</a>
+                <!-- <a class="a-color" [routerLink]="['/inventory-management/order-management/purchase-quotations']">{{'purchase-quotations' | translate}}</a> | 
+                <a class="a-color" [routerLink]="['/inventory-management/order-management/purchase-quotations/list']">{{'purchase-quotation-items' | translate}}</a> -->
+            </ng-template>
+
+            <ng-template [ngSwitchCase]="'purchase-quotations'"> 
+                <!-- <a class="a-color" [routerLink]="['/inventory-management/order-management/purchase-orders/base']">{{'purchase-orders' | translate}}</a> | 
+                <a class="a-color" [routerLink]="['/inventory-management/order-management/purchase-orders/items']">{{'purchase-orders-items' | translate}}</a> |  -->
+                <a class="a-color-active" [routerLink]="breadcrumb.url">{{breadcrumb.label.title | translate}}</a> | 
+                <a class="a-color" [routerLink]="['/inventory-management/order-management/purchase-orders/quotations/items']">{{'purchase-quotation-items' | translate}}</a>
+            </ng-template>
+            <ng-template [ngSwitchCase]="'purchase-quotation-items'"> 
+                <!-- <a class="a-color" [routerLink]="['/inventory-management/order-management/purchase-orders/base']">{{'purchase-orders' | translate}}</a> | 
+                <a class="a-color" [routerLink]="['/inventory-management/order-management/purchase-orders/items']">{{'purchase-orders-items' | translate}}</a> |  -->
+                <a class="a-color" [routerLink]="['/inventory-management/order-management/purchase-orders/quotations']">{{'purchase-quotations' | translate}}</a> | 
+                <a class="a-color-active" [routerLink]="breadcrumb.url">{{breadcrumb.label.title | translate}}</a>
+            </ng-template>
+
+            <!-- End Purchase Order Nav  -->
+
+            <ng-template [ngSwitchCase]="'automatic_dispatching_management'"> 
+                <a class="a-color" [routerLink]="['/inventory-management/warehouse-management-system/advance/notification-dashboard']">{{'automatic_dispatching_dashboard' | translate}}</a> | 
+                <a class="a-color-active" [routerLink]="breadcrumb.url">{{breadcrumb.label.title | translate}}</a>
+            </ng-template>
+            <ng-template [ngSwitchCase]="'automatic_dispatching_dashboard'"> 
+                <a class="a-color-active" [routerLink]="breadcrumb.url">{{breadcrumb.label.title | translate}}</a> | 
+                <a class="a-color" [routerLink]="['/inventory-management/warehouse-management-system/advance/notification-management']">{{'automatic_dispatching_management' | translate}}</a>
+            </ng-template>
+            <ng-template [ngSwitchCase]="'automatic_dispatching_management_dispatcher'"> 
+                <a class="a-color" [routerLink]="['/inventory-management/warehouse-management-system/advance/notification-dashboard-dispatcher/dispatcher']">{{'automatic_dispatching_dashboard' | translate}}</a> | 
+                <a class="a-color-active" [routerLink]="breadcrumb.url">{{'automatic_dispatching_management' | translate}}</a>
+            </ng-template>
+            <ng-template [ngSwitchCase]="'automatic_dispatching_dashboard_dispatcher'"> 
+                <a class="a-color-active" [routerLink]="breadcrumb.url">{{'automatic_dispatching_dashboard' | translate}}</a> | 
+                <a class="a-color" [routerLink]="['/inventory-management/warehouse-management-system/advance/notification-management-dispatcher/dispatcher']">{{'automatic_dispatching_management' | translate}}</a>
+            </ng-template>
+
+
+            <!-- Advance Stock Reports And Warehouse Locations  -->
+<!-- 
+            <ng-template [ngSwitchCase]="'advanced-stock-reports'"> 
+                <a class="a-color-active" [routerLink]="breadcrumb.url">{{breadcrumb.label.title | translate}}</a> | 
+                <a class="a-color" [routerLink]="['/inventory-management/warehouse-management-system/advance/warehouse-locations']">
+                    {{'warehouse-locations' | translate}}</a>
+            </ng-template>
+            <ng-template [ngSwitchCase]="'warehouse-locations'"> 
+                <a class="a-color" [routerLink]="['/inventory-management/warehouse-management-system/advance/advanced-stock-reports']">{{'advanced-stock-reports' | translate}}</a> | 
+                <a class="a-color-active" [routerLink]="breadcrumb.url">{{breadcrumb.label.title | translate}}</a>
+            </ng-template> -->
+
+            <!-- End Advance Stock Reports And Warehouse Locations  -->
+            
+            <ng-template ngSwitchDefault>
+                {{breadcrumb.label.title|translate}}
+            </ng-template>
+        </ng-container>
+       
+        <!-- <ng-container *ngIf="breadcrumb.url === '//job-order//list'">
+            <p-inputSwitch [style]="{'float': 'right'}" [styleClass]="'ui-button-success'" (onChange)="handleChange($event)"></p-inputSwitch>
+        </ng-container> -->
+    </h3>
+    <!--<li class="breadcrumb-item"-->
+    <!--*ngIf="breadcrumb.label.title&&breadcrumb.url.substring(breadcrumb.url.length-1) == '/'||breadcrumb.label.title&&last"-->
+    <!--[ngClass]="{active: last}">-->
+    <!--<a *ngIf="!last" [routerLink]="breadcrumb.url">{{breadcrumb.label.title}}</a>-->
+    <!--<span *ngIf="last" [routerLink]="breadcrumb.url">{{breadcrumb.label.title}}</span>-->
+    <!--</li>-->
+    
+  </ng-template>

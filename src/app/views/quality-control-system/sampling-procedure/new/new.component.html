@@ -1,0 +1,98 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i> {{'sampling-procedure-information' | translate}}
+          </div>
+          <div class="card-body">
+            <form #inspForm="ngForm">
+              <table class="table table-bordered">
+                <tr>
+                  <td>{{'sampling-procedure-code' | translate}}</td>
+                  <td>
+                    <input
+                      type="text"
+                      id="samplingProcedureCode"
+                      name="samplingProcedureCode"
+                      [(ngModel)]="samplingProcedure.samplingProcedureCode"
+                      class="form-control"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'sampling-procedure' | translate}}</td>
+                  <td>
+                    <input
+                      type="text"
+                      id="samplingProcedureName"
+                      name="samplingProcedureName"
+                      [(ngModel)]="samplingProcedure.samplingProcedureName"
+                      class="form-control"
+                      required
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'sampling-type' | translate}}</td>
+                  <td>
+                   <quality-sampling-type-auto-complete [addIfMissing]="true" (selectedSamplingTypeEvent)="onselectSamplingType($event)"></quality-sampling-type-auto-complete>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'valuation-mode' | translate}}</td>
+                  <td>
+                    <quality-sampling-proc-value-mode-auto-complete [addIfMissing]="true" (selectedSamplingProcValueModeEvent)="onselectSamplingProcValueMode($event)"></quality-sampling-proc-value-mode-auto-complete>
+                   
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'inspection-points' | translate}}</td>
+                  <td>
+                    <quality-sampling-proc-insp-point-auto-complete [addIfMissing]="true" (selectedSamplingProcInspPointEvent)="onselectInspPoint($event)"></quality-sampling-proc-insp-point-auto-complete>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'sampling-size' | translate}}</td>
+                  <td>
+                    <input
+                      type="number"
+                      id="sampleSize"
+                      name="sampleSize"
+                      [(ngModel)]="samplingProcedure.sampleSize"
+                      class="form-control"
+                      required
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'acceptance-number' | translate}}</td>
+                  <td>
+                    <input
+                      type="number"
+                      id="acceptance"
+                      name="acceptance"
+                      [(ngModel)]="samplingProcedure.acceptance"
+                      class="form-control"
+                    />
+                  </td>
+                </tr>
+              </table>
+            </form>
+          </div>
+        </div>
+
+      <div class="row col-md-12">
+        <button
+          type="submit"
+          class="btn btn-sm btn-primary"
+          [disabled]="!inspForm.form.valid"
+          (click)="save()"
+        >
+          <i class="fa fa-dot-circle-o"></i>
+          {{ "save" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

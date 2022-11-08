@@ -1,0 +1,285 @@
+<div class="card" id="print-section">
+
+  <div class="col-lg-12">
+
+    <div class="row ui-fluid  badge-light border p-2 ">
+      <div class=" col-md-3">
+        <workstation-auto-complete [plantId]="plantId"
+          (selectedWorkStationEvent)="setSelectedWorkStation($event)"></workstation-auto-complete>
+      </div>
+
+      <div class="col-md-3 ">
+        <p-calendar [showIcon]="true" dateFormat="dd.mm.yy"
+                    [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                    [(ngModel)]="filterCon.startDate" placeholder="{{'start-date'|translate}}"></p-calendar>
+      </div>
+
+      <div class="col-md-3 ">
+        <p-calendar [showIcon]="true" dateFormat="dd.mm.yy"
+                    [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                    [(ngModel)]="filterCon.endDate" placeholder="{{'end-date'|translate}}"></p-calendar>
+      </div>
+      <div class="col-auto">
+        <button type="button" pButton class="ui-button-info   "
+                [disabled]="!filterCon.workstationId || !filterCon.endDate||!filterCon.startDate"
+                (click)="analyze()" label="{{'analyze' | translate}}">
+        </button>
+
+      </div>
+    </div>
+    <ng-template [ngIf]="myItems && myItems.length>0">
+      <p-tabView>
+        <p-tabPanel header="{{'overall'|translate}}">
+          <p-table #dtOverAll [columns]="colsAvg" [value]="myAvgItems" [rows]="20" [paginator]="true" dataKey="shiftStartDate"
+                   scrollable="true" scrollHeight="55vh">
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th *ngFor="let col of columns" [ngSwitch]="col.field">
+                  <!--<span *ngSwitchDefault> {{col.header|translate}} </span>-->
+                  <span> {{col.header | translate}} Avg. </span>
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr>
+                <td *ngFor="let col of columns" style="cursor: pointer">
+                  <span> {{rowData[col.field]}} </span>
+                </td>
+              </tr>
+            </ng-template>
+
+          </p-table>
+        </p-tabPanel>
+        <p-tabPanel header="{{'report'|translate}}">
+          <div class="row">
+            <p-table #dt [columns]="cols" [value]="myItems" [rows]="20" [paginator]="true" dataKey="shiftStartDate"
+                     scrollable="true" scrollHeight="55vh"
+                     [(selection)]="selectedWorkStations">
+
+              <ng-template pTemplate="caption">
+                <div class="ui-helper-clearfix" style="text-align:left">
+                  <button pButton style="margin-right: 5px" class="ui-button-info float-left" type="button"
+                          icon="fa fa-file-alt" iconPos="left" label="{{'export-image'|translate}}"
+                          (click)="exportAsPng('print-section')"></button>
+
+                  <button pButton style="margin-right: 5px" class="ui-button-warning float-right" type="button"
+                          icon="fa fa-file-alt" iconPos="left" label="{{'export-all'|translate}}"
+                          (click)="dt.exportCSV()"></button>
+                  <button pButton style="margin-right: 5px" class="ui-button-warning float-right" type="button"
+                          icon="fa fa-file" iconPos="left" label="{{'export-selected'|translate}}"
+                          (click)="dt.exportCSV({selectionOnly:true})">
+                  </button>
+                </div>
+                <!--<hr>-->
+
+              </ng-template>
+              <ng-template pTemplate="header" let-columns>
+                <tr>
+                  <th style="width: 3em">
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                  </th>
+                  <th *ngFor="let col of columns" [ngSwitch]="col.field">
+
+                    <div *ngSwitchCase="'jobWaitingTime'"
+                         style="display:inline-block;position:relative; cursor: pointer">
+                      <span (mouseenter)="opJobWaitingTime.show($event)"
+                            (mouseleave)="opJobWaitingTime.hide()">{{col.header|translate}}<i
+                        class="text-info p-1 fa fa-question-circle"></i></span>
+                    </div>
+
+                    <div *ngSwitchCase="'netWorkingTime'"
+                         style="display:inline-block;position:relative; cursor: pointer">
+                      <span (mouseenter)="opNetWorkingTime.show($event)"
+                            (mouseleave)="opNetWorkingTime.hide()">{{col.header|translate}}<i
+                        class="text-info p-1 fa fa-question-circle"></i></span>
+                    </div>
+
+                    <div *ngSwitchCase="'timeEfficiency'"
+                         style="display:inline-block;position:relative; cursor: pointer">
+                      <span (mouseenter)="opTimeEfficiency.show($event)"
+                            (mouseleave)="opTimeEfficiency.hide()">{{col.header|translate}}<i
+                        class="text-info p-1 fa fa-question-circle"></i></span>
+                    </div>
+
+                    <div *ngSwitchCase="'capacityEfficiency'"
+                         style="display:inline-block;position:relative; cursor: pointer">
+                      <span (mouseenter)="opCapacityEfficiency.show($event)"
+                            (mouseleave)="opCapacityEfficiency.hide()">{{col.header|translate}}<i
+                        class="text-info p-1 fa fa-question-circle"></i></span>
+                    </div>
+                    <div *ngSwitchCase="'machineOccupancy'"
+                         style="display:inline-block;position:relative; cursor: pointer">
+                      <span (mouseenter)="opMachineOccupancy.show($event)"
+                            (mouseleave)="opMachineOccupancy.hide()">{{col.header|translate}}</span>
+                    </div>
+
+
+                    <span *ngSwitchDefault style="width: 100%">{{col.header|translate}}</span>
+                  </th>
+                  <th width="50px"></th>
+                </tr>
+
+              </ng-template>
+              <ng-template pTemplate="body" let-rowData let-columns="columns">
+                <tr [pSelectableRow]="rowData">
+                  <td style="width: 3em">
+                    <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                  </td>
+                  <td *ngFor="let col of columns" style="cursor: pointer" [ngSwitch]="col.field">
+
+                    <span *ngSwitchCase="'shiftStartDate'"> {{(rowData[col.field])|date:'dd/MM/yyyy HH:mm'}}</span>
+                    <span *ngSwitchCase="'shiftEndDate'"> {{(rowData[col.field])|date:'dd/MM/yyyy HH:mm'}}</span>
+                    <span *ngSwitchDefault> {{rowData[col.field]}}</span>
+                  </td>
+                  <td width="50px">
+                    <button class="btn btn-sm btn-outline-info" type="button"
+                            (click)="showWorkstationReportDetail(rowData)"><i class="fa fa-line-chart "></i>
+                    </button>
+                  </td>
+                </tr>
+
+              </ng-template>
+            </p-table>
+
+          </div>
+        </p-tabPanel>
+        <!--<div class="row red-border">-->
+        <!--<div class=" mybadge" ><span class="text-white " >{{'jor-order-stop-analysis'|translate}}</span></div>-->
+        <!--<div class="col-11">-->
+        <!--<job-order-stops [items]="myItems"></job-order-stops>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--<hr>-->
+        <p-tabPanel header="{{'power-analysis'|translate}}">
+          <div class="row green-border">
+            <div class=" mybadge "><span class="text-white ">{{'power-analysis'|translate}}</span></div>
+            <div class="col-11">
+              <production-quantity-anlyz [items]="myOriginalItems"></production-quantity-anlyz>
+            </div>
+          </div>
+        </p-tabPanel>
+        <p-tabPanel header="{{'working-times'|translate}}">
+          <div class="row blue-border">
+            <div class=" mybadge "><span class="text-white ">{{'working-times'|translate}}</span></div>
+            <div class="col-11">
+              <total-times [items]="myOriginalItems"></total-times>
+            </div>
+          </div>
+        </p-tabPanel>
+        <p-tabPanel header="{{'stops'|translate}}">
+          <div class="row orange-border" *ngIf="myStops">
+            <div class=" mybadge "><span class="text-white ">{{'stop-cause-analysis'|translate}}</span></div>
+            <div class="col-11">
+
+              <div class="row text-center noData" *ngIf=" (!myStops|| myStops.length==0)">
+                <strong class=""><i class="fa fa-warning "></i>{{'NO_STOP_FOUND'|translate}}!</strong>
+              </div>
+              <ng-container *ngIf=" (myStops&& myStops.length>0)">
+                <stop-analysis [injected]="myStops"></stop-analysis>
+              </ng-container>
+
+            </div>
+          </div>
+        </p-tabPanel>
+        <!--<hr>-->
+
+        <!--<div class="row orange-border">-->
+        <!--<div class=" mybadge " ><span class="text-white " >{{'load-time-analysis'|translate}}</span></div>-->
+        <!--<div class="col-11">-->
+        <!--<load-time-anlyz [items]="myItems"></load-time-anlyz>-->
+        <!--</div>-->
+        <!--</div>-->
+
+      </p-tabView>
+    </ng-template>
+    <div class="row text-center noData" *ngIf="!isLoading() && (!myItems|| myItems.length==0)&&!firstLoad">
+      <strong class=""><i class="fa fa-warning "></i>{{'NO_WORK_DETAIL_FOUND'|translate}}!</strong>
+    </div>
+  </div>
+
+</div>
+
+
+
+<ng-template [ngIf]="chartModal.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal"   (onHidden)="chartModal.active=false" class="modal fade"
+       tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog modal-success modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"> {{'workstation-report' | translate}} <small class="pl-1">({{'shift'|translate}}:&nbsp;  {{chartModal?.data?.shiftStartDate|date:'dd/MM/yyyy HH:mm'}})</small></h4>
+          <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+
+          <workstation-report-chart [data]="chartModal.data" [averageValues]="myAvgOriginalItems"></workstation-report-chart>
+
+
+        </div>
+
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</ng-template>
+
+
+<p-overlayPanel #opNetWorkingTime [dismissable]="true" appendTo="body" baseZIndex="9999">
+  <div style="width:500px;" class="p-1">
+    <p>
+      <strong>{{'analyse.production-order.net-working-time-formula' | translate}}</strong>
+      <br>
+      <strong>{{'analyse.production-order.net-working-time-text' | translate}}</strong>: {{'analyse.production-order.net-working-time-definition' | translate}}
+      <br>
+      <strong>{{'analyse.production-order.running-time-text' | translate}}</strong>: {{'analyse.production-order.running-time-definition' | translate}}
+      <br>
+      <strong>{{'analyse.production-order.total-preparing-time-text' | translate}}</strong>: {{'analyse.production-order.total-preparing-time-text' | translate}}
+    </p>
+  </div>
+</p-overlayPanel>
+
+<p-overlayPanel #opJobWaitingTime [dismissable]="true" appendTo="body" baseZIndex="9999">
+  <div style="width:500px;" class="p-1">
+    <p>
+      <strong>{{'analyse.production-order.job-waiting-time-formula' | translate}}</strong>
+      <br>
+      <strong>{{'analyse.production-order.down-time-text' | translate}}</strong>: {{'analyse.production-order.down-time-definition' | translate}}
+      <br>
+      <strong>{{'analyse.production-order.setup-time-text' | translate}}</strong>: {{'analyse.production-order.setup-time-definition' | translate}}
+    </p>
+  </div>
+</p-overlayPanel>
+<p-overlayPanel #opTimeEfficiency [dismissable]="true" appendTo="body" baseZIndex="9999">
+  <div style="width:500px;" class="p-1">
+    <p>
+      <strong>{{'analyse.workstation.time-efficiency-formula' | translate}}</strong>
+      <br>
+      <strong>{{'analyse.workstation.time-efficiency-text' | translate}}</strong>: {{'analyse.workstation.time-efficiency-definition' | translate}}
+    </p>
+  </div>
+</p-overlayPanel>
+
+<p-overlayPanel #opCapacityEfficiency [dismissable]="true" appendTo="body" baseZIndex="9999">
+  <div style="width:500px;" class="p-1">
+    <p>
+      <strong>{{'analyse.production-order.capacity-efficiency-formula' | translate}}</strong>
+      <br>
+      <strong>{{'analyse.production-order.capacity-efficiency-text' | translate}}</strong>: {{'analyse.production-order.capacity-efficiency-definition' | translate}}
+      <br>
+    </p>
+  </div>
+</p-overlayPanel>
+
+
+<p-overlayPanel #opMachineOccupancy [dismissable]="true" appendTo="body" baseZIndex="9999">
+  <div style="width:500px;" class="p-1">
+    <p>
+      <strong>{{'analyse.workstation.machine-occupancy-formula' | translate}}</strong>
+      <br>
+      <strong>{{'analyse.production-order.machine-occupancy-text' | translate}}</strong>: {{'analyse.workstation.machine-occupancy-definition' | translate}}
+      <br>
+    </p>
+  </div>
+</p-overlayPanel>

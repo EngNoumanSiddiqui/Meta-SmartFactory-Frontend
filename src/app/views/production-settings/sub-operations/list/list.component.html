@@ -1,0 +1,147 @@
+
+<div class="animated fadeIn">
+
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-header">
+          {{'add' | translate}} {{'sub-operation' | translate}}
+          <div class="card-actions">
+            <button type="button" class="btn btn-primary" data-toggle="modal"
+            (click)="modalShow(null,'NEW')"><i class="fa fa-plus"></i></button>
+          </div>
+        </div>
+
+        <div class="card-body"  >
+          <p-table #dt [columns]="selectedColumns" scrollable="true" scrollHeight="55vh"
+           [value]="subOperations" [rows]="pagination.rows" 
+           [totalRecords]="pagination.totalElements" dataKey="subOperationId" [(selection)]="selectedSubOperations" >
+
+            <!-- <ng-template pTemplate="caption">
+              <div style="text-align:left">
+                <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header" maxSelectedLabels="0"  selectedItemsLabel="{{'columns-selected'|translate}}"
+                               [style]="{minWidth: '200px'}" defaultLabel="Choose Columns">
+                  <ng-template let-col let-i="index" pTemplate="item">
+                    {{col.label|translate}}
+                  </ng-template>
+                </p-multiSelect>
+                <button *ngIf="!isDetail" pButton  class="ui-button-success float-right" (click)="modalShow(null,'NEW')" label="{{'add-new'|translate}}"> </button>
+                <button pButton style="margin-right: 5px" class="ui-button-warning float-right" type="button"  icon="fa fa-file-alt" iconPos="left" label="{{'export-all'|translate}}" (click)="dt.exportCSV()"></button>
+                <button pButton style="margin-right: 5px" class="ui-button-warning float-right" type="button"  icon="fa fa-file" iconPos="left" label="{{'export-selected'|translate}}" (click)="dt.exportCSV({selectionOnly:true})"
+                ></button>
+              </div>
+
+            </ng-template> -->
+            <ng-template pTemplate="header" let-columns>
+
+              <tr >
+                <th style="width: 3em" rowspan="2">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <!-- style="cursor: pointer" [ngClass]="{'bg-selected-order':pageFilter.orderByProperty ==col.field}" (click)="reOrderData(i,col.field)"><i [ngClass]="'fa fa-sort-alpha-' + classReOrder[i]"></i> -->
+                <th *ngFor="let col of columns let i=index" >
+                  {{col.header|translate}}
+                </th>
+                <th *ngIf="!isDetail" width="80px" rowspan="2">{{'action' | translate}}</th>
+              </tr>
+              <!-- <tr>
+                <th *ngFor="let col of columns" class="ui-fluid" [ngSwitch]="col.field">
+                  <input *ngSwitchDefault style="width: 100%"  pInputText type="text" [(ngModel)]="pageFilter[col.field]" (input)="filterByColumn($event.target.value,col.field)">
+                </th>
+
+              </tr> -->
+
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr [pSelectableRow]="rowData">
+                <td style="width: 3em">
+                  <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                </td>
+                <td *ngFor="let col of columns" style="cursor: pointer" [ngSwitch]="col.field">
+                  <a href="javascript:;" *ngSwitchCase="'subOperationId'" (click)="modalShow(rowData.subOperationId,'DETAIL')">{{ rowData[col.field] }}</a>
+                  <span *ngSwitchDefault (click)="modalShow(rowData.subOperationId,'DETAIL')">  {{rowData[col.field]}}</span>
+                </td>
+                <td *ngIf="!isDetail" width="80px" >
+                  <button class="btn btn-sm btn-outline-danger" type="button" (click)="delete(rowData.subOperationId)">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                  
+                  <button class="btn btn-sm btn-outline-info" type="button" (click)="modalShow(rowData.subOperationId,'EDIT')">
+                    <i class="fa fa-edit"></i></button>
+                </td>
+              </tr>
+
+            </ng-template>
+          </p-table>
+          <br/>
+
+          <div class="row">
+            <app-paging
+              [TotalElements]="pagination.totalElements"
+              [CurrentPage]="pagination.currentPage"
+              [PageSize]="pagination.pageSize"            [rows]="pagination.rows"
+              [TotalPageLinkButtons]="pagination.TotalPageLinkButtons"
+              [RowsPerPageOptions]="pagination.RowsPerPageOptions"
+              (onPageChange)="myChanges($event)"
+            ></app-paging>
+            <span style="margin-left:2px; padding-top: 2px " class="text-muted" >{{'total-records'|translate}}: {{pagination?.totalElements}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--/.col-->
+  </div>
+</div>
+<!-- [ngClass]="{'modal-lg': subOperationModal.modal!=='DETAIL', 'modal-md': subOperationModal.modal==='DETAIL'}" -->
+<div bsModal [config]="{backdrop: 'static', keyboard: false}" #mySubOperationModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true" (onHidden)="subOperationModal.modal=null; subOperationModal.id=null;">
+  <div class="modal-dialog modal-success modal-md"
+   role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"> {{'sub-operation-information' | translate}}</h4>
+        <button type="button" class="close" (click)="mySubOperationModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <ng-template [ngIf]="subOperationModal.modal=='NEW'">
+          <sub-operation-new [operationId]="operationId" [operationCode]="operationCode" [operationName]="operationName" (saveAction)="onSaveSuccessful($event, mySubOperationModal)"></sub-operation-new>
+        </ng-template>
+        <ng-template [ngIf]="subOperationModal.modal=='EDIT'">
+          <sub-operation-edit [operationId]="operationId" [operationCode]="operationCode" [operationName]="operationName" [id]="subOperationModal.id" (saveAction)="onSaveSuccessful($event, mySubOperationModal)"></sub-operation-edit>
+        </ng-template>
+        <ng-template [ngIf]="subOperationModal.modal=='DETAIL'">
+          <sub-operation-detail [id]="subOperationModal.id" ></sub-operation-detail>
+        </ng-template>
+      </div>
+
+      <div class="modal-footer">
+        <div class="col-md-12 d-flex justify-content-center ">
+            <button *ngIf="subOperationModal.modal=='DETAIL'" type="button" class="btn rounded btn-outline-primary ml-2 mr-2"
+              (click)="subOperationModal.modal='NEW'">{{'add' | translate}} {{'new' | translate}}
+            </button>
+            <button *ngIf="subOperationModal.modal=='NEW' || subOperationModal.modal=='CLONE' || subOperationModal.modal=='EDIT'" 
+            type="button" class="btn rounded btn-outline-primary ml-2 mr-2"
+            (click)="SaveActionFire(false)">{{'save' | translate}}
+            </button>
+            <button  *ngIf="subOperationModal.modal=='NEW' || subOperationModal.modal=='CLONE' || subOperationModal.modal=='EDIT'" 
+              type="button" class="btn rounded btn-outline-primary ml-2 mr-2"
+              (click)="SaveActionFire(true)">{{'save' | translate}} & {{'new' | translate}}
+            </button>
+            
+            <button *ngIf="subOperationModal.modal=='DETAIL'" type="button" class="btn rounded btn-outline-success ml-2 mr-2"
+                    (click)="subOperationModal.modal='EDIT'">{{'edit' | translate}}
+            </button>
+            <!-- <button *ngIf="subOperationModal.modal=='DETAIL' || subOperationModal.modal=='EDIT'" pButton class="ui-button-primary ml-2 mr-2" label="{{'Clone'|translate}}"
+            [disabled]="selectedSubOperations && selectedSubOperations.length !=1" (click)="modalClone('CLONE',selectedSubOperations)" >
+            </button> -->
+            <button type="button" class="btn rounded btn-outline-danger ml-2 mr-2"
+            (click)="mySubOperationModal.hide()">{{'cancel' | translate}}
+          </button>
+        </div>
+      </div>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

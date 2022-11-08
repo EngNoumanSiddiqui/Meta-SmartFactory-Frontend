@@ -1,0 +1,240 @@
+<div class="col-lg-12">
+  <div class="row ui-fluid  badge-light border p-2  mb-2">
+    <!-- <div class=" col-md d-flex">
+      <strong class="p-1 text-muted" style="align-self: center;"> {{'plant'|translate}}</strong>
+      <strong *ngIf="filterModel.plantId" class="flex-grow-1 text-muted" style="align-self: center; margin-left: 30px;"> {{selectedPlant.plantName}} </strong>
+    </div> -->
+    <div class="px-1 ui-fluid" style="width: 200px;">
+      
+        <p-multiSelect class="flex-grow-1 col p-0" [options]="simulations" [(ngModel)]="selectedSimulation" 
+        optionLabel="scheduleSimulationName"
+        
+        defaultLabel="Select Simulation"
+        (onChange)="simulationChanged($event)">
+      </p-multiSelect>
+
+  </div>
+
+  <div class="px-1 ui-fluid" style="width: 200px;">
+    
+      <p-multiSelect class="flex-grow-1 col p-0" [options]="graphs" [(ngModel)]="selectedGraphs" 
+      optionLabel="name" (onChange)="onGraphSelected($event)" defaultLabel="Select Graph"></p-multiSelect>
+      
+    </div>
+    <div class="col-md-2 px-1 ui-fluid" >
+     
+      <workcenter-auto-complete class="flex-grow-1 col p-0" [plantId]="filterDto.plantId" (selectedWorkCenterEvent)="setSelectedWorkCenter($event)"></workcenter-auto-complete>
+    </div>
+    <div class="col-md-2 px-1 ui-fluid" >
+      
+      <workstation-auto-complete class="flex-grow-1 col-md-8 p-0" [selectedWorkStationId]="workStationId" [workCenterId]="filterDto.workCenterId" [plantId]="filterDto.plantId" (selectedWorkStationEvent)="setSelectedWorkstation($event)"></workstation-auto-complete>
+
+    </div>
+   
+    <div class="px-1 ui-fluid" style="width: 150px;">
+      <p-calendar [(ngModel)]="filterDto.startDate" [monthNavigator]="true"
+        [yearNavigator]="true" yearRange="1990:2100" [showIcon]="true" dateFormat="dd/mm/yy"
+        placeholder="{{'start-date'|translate}}"></p-calendar>
+    </div>
+    <div class="px-1 ui-fluid" style="width: 150px;">
+      <p-calendar [(ngModel)]="filterDto.finishDate" [monthNavigator]="true"
+        [yearNavigator]="true" yearRange="1990:2100" placeholder="{{'finish-date'|translate}}" [showIcon]="true"
+        dateFormat="dd/mm/yy"></p-calendar>
+    </div>
+    <div class="col-md-1 px-1 ui-fluid" >
+      <button type="button" pButton class="ui-button-info"
+              [disabled]="!filterDto.startDate||!filterDto.finishDate"
+        (click)="analyze()" label="{{'analyze' | translate}}">
+      </button>
+    </div>
+  </div>
+    
+    
+  <div class="row mb-2">
+    <!-- <div class="d-flex flex-column bg-white justify-content-center" style="width: 15%; padding: 10px;">
+      <div class="field-checkbox">
+        <p-checkbox [(ngModel)]="availableCapacityChecked" (ngModelChange)="onChangeCheckbox($event)" [binary]="true" inputId="availableCapacityChecked"></p-checkbox>
+        <label class="ml-1" for="availableCapacityChecked">Available Capacity</label>
+      </div>
+      <div class="field-checkbox">
+        <p-checkbox [(ngModel)]="allocatedCapacityChecked" (ngModelChange)="onChangeCheckbox($event)" [binary]="true" inputId="allocatedCapacityChecked"></p-checkbox>
+        <label class="ml-1" for="allocatedCapacityChecked">Allocated Capacity</label>
+      </div>
+      <div class="field-checkbox">
+        <p-checkbox [(ngModel)]="percentageCapacityChecked" (ngModelChange)="onChangeCheckbox($event)" [binary]="true" inputId="percentageCapacityChecked"></p-checkbox>
+        <label class="ml-1" for="percentageCapacityChecked">Allocation Percentage</label>
+      </div>
+      <div class="field-checkbox">
+        <p-checkbox [(ngModel)]="laborAllocationChecked" (ngModelChange)="onChangeCheckbox($event)" [binary]="true" inputId="laborAllocationChecked"></p-checkbox>
+        <label class="ml-1" for="laborAllocationChecked">Labour Allocation</label>
+      </div>
+      <div class="field-checkbox">
+        <p-checkbox [(ngModel)]="machineWaitTimeChecked" (ngModelChange)="onChangeCheckbox($event)" [binary]="true" inputId="machineWaitTimeChecked"></p-checkbox>
+        <label class="ml-1" for="machineWaitTimeChecked">Machine Wait Time</label>
+      </div>
+      <div class="field-checkbox">
+        <p-checkbox [(ngModel)]="plannedSetupChecked" (ngModelChange)="onChangeCheckbox($event)" [binary]="true" inputId="plannedSetupChecked"></p-checkbox>
+        <label class="ml-1" for="plannedSetupChecked">Planned Setup</label>
+      </div> -->
+      <!-- <div class="field-checkbox">
+        <p-checkbox [(ngModel)]="gainedSetupChecked" (ngModelChange)="onChangeCheckbox($event)" [binary]="true" inputId="gainedSetupChecked"></p-checkbox>
+        <label class="ml-1" for="gainedSetupChecked">Gained Setup</label>
+      </div>
+      <div class="field-checkbox">
+        <p-checkbox [(ngModel)]="jobOrderEarlyChecked" (ngModelChange)="onChangeCheckbox($event)" [binary]="true" inputId="jobOrderEarlyChecked"></p-checkbox>
+        <label class="ml-1" for="jobOrderEarlyChecked">Job Order Early Time</label>
+      </div>
+      <div class="field-checkbox">
+        <p-checkbox [(ngModel)]="jobOrderLateChecked" (ngModelChange)="onChangeCheckbox($event)" [binary]="true" inputId="jobOrderLateChecked"></p-checkbox>
+        <label class="ml-1" for="jobOrderLateChecked">Job Order Late Time</label>
+      </div>
+      <div class="field-checkbox">
+        <p-checkbox [(ngModel)]="plannedCostChecked" (ngModelChange)="onChangeCheckbox($event)" [binary]="true" inputId="plannedCostChecked"></p-checkbox>
+        <label class="ml-1" for="plannedCostChecked">Planned Cost</label>
+      </div>
+      <div class="field-checkbox">
+        <p-checkbox [(ngModel)]="actualCostChecked" (ngModelChange)="onChangeCheckbox($event)" [binary]="true" inputId="actualCostChecked"></p-checkbox>
+        <label class="ml-1" for="actualCostChecked">Actual Cost</label>
+      </div> -->
+      <!-- <div class="field-checkbox">
+        <p-checkbox [(ngModel)]="erpAllocationChecked" (ngModelChange)="onChangeCheckbox($event)" [binary]="true" inputId="erpAllocationChecked"></p-checkbox>
+        <label class="ml-1" for="erpAllocationChecked">ERP Allocation</label>
+      </div>
+    </div> -->
+    
+    <div class="col-12 col-md-5 p-0 bg-white">
+      <div style="position: absolute; right: 1px; z-index:5;">
+        <button class="btn btn-info btn-xs" 
+        (click)="viewChart(dailyOptions, dailyChartData)" >{{'view' | translate}}</button>
+      </div>
+      <div style="overflow-x: auto;">
+        <p-chart type="bar" [data]="dailyChartData" [options]="dailyOptions"
+        [height]="'400px'" [width]="getwidth(dailyChartData?.datasets[0]?.data?.length)"></p-chart>
+      </div>
+     
+    </div>
+    <div class="col-12 col-md-4 p-0 bg-white">
+      <div style="position: absolute; right: 1px; z-index:5;">
+        <button class="btn btn-info btn-xs" 
+        (click)="viewChart(weeklyOptions, weeklyChartData)" >{{'view' | translate}}</button>
+      </div>
+      <p-chart type="bar" [data]="weeklyChartData" [options]="weeklyOptions" 
+      [height]="'400px'" [width]="'100%'"></p-chart>
+    </div>
+    <div class="col-12 col-md-3 p-0 bg-white" style="position: relative;">
+      <div style="position: absolute; right: 1px; z-index:5;">
+        <button class="btn btn-info btn-xs" 
+        (click)="viewChart(monthlyOptions, monthlyChartData)">{{'view' | translate}}</button>
+      </div>
+      <p-chart type="bar" [data]="monthlyChartData" [options]="monthlyOptions" 
+      [height]="'400px'" [width]="'100%'"></p-chart>
+    </div>
+    
+  </div>
+  <div class="row mb-2 d-flex">
+    <div class="col-md-9 p-0 bg-white" style="position: relative;">
+      <div style="position: absolute; right: 1px; z-index:5;">
+        <button class="btn btn-info btn-xs" 
+        (click)="viewChart(totalAllocationOptions, totalAllocationChartData)">{{'view' | translate}}</button>
+      </div>
+      <div style="overflow-x: auto;">
+        <p-chart type="bar" [data]="totalAllocationChartData" [options]="totalAllocationOptions" 
+          [height]="(totalAllocationChartData?.datasets[0]?.data?.length > 10 ? '450px' : '400px')" 
+          [width]="getwidth(totalAllocationChartData?.datasets[0]?.data?.length)"></p-chart>
+      </div>
+    </div>
+    <div class="bg-white" style="width:13%;">
+      <div style=" margin: 20px 3px 5px 10px; padding: 5px; display: flex; height: 40px; border-radius: 5px; background-color: #e5e5e5; border: 2px solid #999393; justify-content: space-between; align-items: center;">
+          {{'capacity-occupancy'| translate}}
+        <span class="font-weight-bold">{{this.capacityOccupancy}}%</span>
+      </div>
+      <p-chart type="bar" [data]="capacityOccupancyChartData" [options]="capacityOccupancyOptions" 
+      [height]="'330px'" [width]="'100%'"></p-chart>
+    </div>
+    <div class="bg-white d-flex flex-column pt-5" 
+    style="padding: 10px; width:12%;">
+        <div class="mt-5">{{'total-available-capacity'| translate}} (Hours)</div>
+        <div class="font-weight-bold">{{totalAvailableCapacity}}</div>
+        <div class="mt-3">{{'total-allocated-capacity'| translate}} (Hours)</div>
+        <div class="font-weight-bold">{{totalAllocatedCapacity}}</div>
+        <div class="mt-3">{{'labor-allocation'| translate}} (Hours)</div>
+        <div class="font-weight-bold">0</div>
+        <div class="mt-3">{{'total-number-of-job-orders'| translate}}</div>
+        <div class="font-weight-bold">0</div>
+    </div>
+   
+  </div>
+</div>
+
+
+<ng-container *ngIf="modal.active">
+  <p-dialog [header]="dailogOptions?.title?.text" [(visible)]="modal.active" [autoZIndex]="true"  
+    [baseZIndex]="9999" dismissableMask="true" (onHide)="onHide()"
+    [style]="{'max-width': '90%','width': '90%', overflow: 'auto'}" appendTo="body">
+    <div class="d-flex justify-content-center">
+      <div class="col-md-10 bg-white p-0" style="margin-left:5%; margin-right: 5%;"
+        [ngStyle]="{'margin-right':  dailogOptions?.title?.text==='Total Allocation Report' ? '0' : '5%'}">
+        <p-chart type="bar" [data]="dialogChartData" [options]="dailogOptions" 
+        [height]="'460px'" [width]="(widthSize!==1 ? widthSize+'px':'100%')"></p-chart>
+      </div>
+      <!-- <div *ngIf="dailogOptions?.title?.text==='Total Allocation Report'" class="d-flex flex-column justify-content-center">
+        <div class="mt-5">{{'total-available-capacity'| translate}} (Hours)</div>
+        <div class="font-weight-bold">{{totalAvailableCapacity}}</div>
+        <div class="mt-3">{{'total-allocated-capacity'| translate}} (Hours)</div>
+        <div class="font-weight-bold">{{totalAllocatedCapacity}}</div>
+        <div class="mt-3">{{'labor-allocation'| translate}} (Hours)</div>
+        <div class="font-weight-bold">0</div>
+        <div class="mt-3">{{'total-number-of-job-orders'| translate}}</div>
+        <div class="font-weight-bold">0</div>
+      </div> -->
+    </div>
+    
+  </p-dialog>
+</ng-container>
+
+
+
+<ng-template [ngIf]="allocationModal.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal" 
+  (onHidden)="allocationModal.active=false; userClicked=false;" class="modal fade" style="z-index:99999;"
+       tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+       aria-hidden="true">
+  <div class="modal-dialog modal-success" style="max-width: 98%;" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"> {{selectedWorkstation?.workStationName}} {{'allocation-report' | translate}}</h4>
+        <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-simulation-report [userClicked]="userClicked" [workStationId]="selectedWorkstation?.workstationId"></app-simulation-report>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+</ng-template>
+
+<ng-template [ngIf]="jobGantViewModal.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal" 
+  (onHidden)="jobGantViewModal.active=false;" class="modal fade" style="z-index:99999;"
+       tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+       aria-hidden="true">
+  <div class="modal-dialog modal-success" style="max-width: 98%;" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"> {{'production-sschedule' | translate}}</h4>
+        <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <simulation-job-order-gantt-view [filterDto]="filterDto"></simulation-job-order-gantt-view>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+</ng-template>
+
+
+

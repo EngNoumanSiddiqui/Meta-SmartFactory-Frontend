@@ -1,0 +1,299 @@
+<div class="animated fadeIn"*ngIf="dataModel">
+  <div class="row ui-fluid">
+    <div class="col-lg-12 m-auto">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i>{{'maintenance-plan-information' | translate}}
+        </div>
+        <div class="card-body">
+          <p-tabView>
+            <p-tabPanel header="Maintenance Order Plan">
+              <div class="row col-md-12 p-0">
+                <div class="col-md-4 pr-0">
+                  <div class="card">
+                    <div class="card-header">
+                      {{'maintenance-plan-information'|translate}}
+                    </div>
+                    <div class="card-body">
+                      <table class="table table-bordered">
+                        <tbody >
+                        <tr>
+                          <td width="35%">{{'maintenance-plan-name' | translate}}</td>
+                          <td>{{dataModel.maintenancePlanPlanName}}</td>
+                        </tr>
+                        <tr>
+                          <td> {{'maintenance-plan-type' | translate}} </td>
+                          <td>{{dataModel.maintenanceOrderPlanType}}</td>
+                        </tr>
+                       </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-8 pr-0">
+                  <div class="card">
+                    <span class="card-header">{{'maintenance-plan-items'|translate}}</span>
+                    <div class="card-body p-0">
+                      <table class="table table-bordered">
+                        <thead>
+                          <tr>
+                            <th>{{'item-no'|translate}}</th>
+                            <th>{{'plan-item-name'|translate}}</th>
+                            <th>{{'plant'|translate}}</th>
+                            <th>{{'functional-location'|translate}}</th>
+                            <th>{{'equipment'|translate}}</th>
+                            <th>{{'equipment-task' | translate}}</th>
+                            <th>{{'planner-group'|translate}}</th>
+                            <th>{{'priority'|translate}}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let item of dataModel.maintenanceOrderPlanItemList; let i = index">
+                            <td>
+                              {{i + 1}}
+                            </td>
+                            <td>
+                              {{item.maintenancePlanItemName}}
+                            </td>
+                            <td>
+                              {{item.planningPlant?.plantName}}
+                            </td>
+        
+                            <td>
+                              {{item.maintenanceFunctionalLocation?.description}}
+                            </td>
+                            <td>
+                              {{item.equipment?.equipmentName}}
+                            </td>
+                            <td>
+                              {{item.equipmentTask?.taskDescription}}
+                            </td>
+                            <td>
+                              {{item.maintenancePlannerGroup?.plannerGroup}}
+                            </td>
+                            <td>
+                              {{item.priority}}
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </p-tabPanel>
+            <p-tabPanel header="{{'maintenance-plan-cycle-items'|translate}}">
+              <div class="card">
+                <div class="card-header">
+                  <i class="fa fa-align-justify"></i>{{'maintenance-plan-cycle-item' | translate}}
+                </div>
+                <div class="card-body">
+                  <table class="table table-bordered">
+                    <thead>
+                      <th *ngIf="(dataModel.maintenanceOrderPlanTypeId === 'MULTIPLE_COUNTER_PLAN' || dataModel.maintenanceOrderPlanTypeId == 'PERFORMANCE_BASED_SINGLE_CYCLE_PLAN' || dataModel.maintenanceOrderPlanTypeId == 'PERFORMANCE_BASED_STRATEGY_PLAN')">
+                          {{'counter' | translate}}
+                      </th>
+                      <th>
+                          {{'cycle' | translate}}
+                      </th>
+                      <th>
+                          {{'maintenanceCycleText' | translate}}
+                      </th>
+                      <th>
+                          {{'offset' | translate}}
+                      </th>
+                      <th>
+                          {{'offset-short-text' | translate}}
+                      </th>
+                      <th *ngIf="dataModel.maintenanceOrderPlanTypeId === 'MULTIPLE_COUNTER_PLAN'">
+                          {{'description' | translate}}
+                      </th>
+                    </thead>
+                    <tbody *ngIf="dataModel.maintenanceOrderPlanCycleItemList && dataModel.maintenanceOrderPlanCycleItemList.length > 0">
+                      <tr *ngFor="let item of dataModel.maintenanceOrderPlanCycleItemList">
+                         <td *ngIf="(dataModel.maintenanceOrderPlanTypeId === 'MULTIPLE_COUNTER_PLAN' || dataModel.maintenanceOrderPlanTypeId == 'PERFORMANCE_BASED_SINGLE_CYCLE_PLAN' || dataModel.maintenanceOrderPlanTypeId == 'PERFORMANCE_BASED_STRATEGY_PLAN')">{{item.counter}}</td>
+                         <td>{{item.cycle}}</td>
+                         <td>{{item.maintenanceCycleText}}</td>
+                         <td>{{item.offset}}</td>
+                         <td>{{item.offsetShortText}}</td>
+                         <td *ngIf="dataModel.maintenanceOrderPlanTypeId === 'MULTIPLE_COUNTER_PLAN'">
+                          {{item.description}}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </p-tabPanel>
+            <p-tabPanel header="{{'scheduling-parameters' | translate}}">
+              <div class="card">
+                <div class="card-header">
+                  <i class="fa fa-align-justify"></i> {{'scheduling-parameters' | translate}}
+                </div>
+                <div class="card-body">
+                  <table class="table maintable">
+                    <tbody>
+                      <tr>
+                        <td>
+                          <table class="table table-bordered">
+                            <tbody>
+                              <tr>
+                                <td class="font-weight-bold" *ngIf="!((dataModel.maintenanceOrderPlanTypeId == 'PERFORMANCE_BASED_SINGLE_CYCLE_PLAN') || (dataModel.maintenanceOrderPlanTypeId == 'PERFORMANCE_BASED_STRATEGY_PLAN'))" width="35%">{{'scheduling-indicator' | translate}}</td>
+                                <td *ngIf="!((dataModel.maintenanceOrderPlanTypeId == 'PERFORMANCE_BASED_SINGLE_CYCLE_PLAN') || (dataModel.maintenanceOrderPlanTypeId == 'PERFORMANCE_BASED_STRATEGY_PLAN'))">
+                                  {{dataModel.schedulingIndicator}}
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class="font-weight-bold" width="35%">{{'call-horizon' | translate}}</td>
+                                <td>
+                                  {{dataModel.callHorizan}} %
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class="font-weight-bold">{{'completion-requirement' | translate}}</td>
+                                <td>
+                                    <p-checkbox name="completionRequirement" [(ngModel)]="dataModel.completionRequirement" binary="true"></p-checkbox>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class="font-weight-bold">{{'start-of-cycle-date' | translate}}</td>
+                                <td>
+                                  {{dataModel.startOfCycleDate| date:'dd/MM/yyyy'}}
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class="font-weight-bold">{{'start-of-cycle-counter' | translate}}</td>
+                                <td>
+                                  {{dataModel.startOfCycleCounter}}
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class="font-weight-bold">{{'cycle-counter-unit' | translate}}</td>
+                                <td>
+                                  {{dataModel.startOfCycleCounterUnit}}
+                                </td>
+                              </tr>
+                              <tr *ngIf="dataModel.maintenanceOrderPlanType=='MULTIPLE_COUNTER_PLAN'">
+                                <td class="font-weight-bold">{{'operation-type' | translate}}</td>
+                                <td>{{dataModel.schedulingOperationType}}</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </td>
+                        <td>
+                          <table class="table table-bordered">
+                            <tbody>
+                              <tr>
+                                <td class="font-weight-bold" width="40%">{{'scheduling-period' | translate}}</td>
+                                <td >
+                                  {{dataModel.schedulingPeriod}}
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class="font-weight-bold">{{'period-unit' | translate}}</td>
+                                <td>
+                                  {{dataModel.schedulingPeriodUnit}}
+                                  <!-- <input type="text" class="form-control" name="schedulingPeriodUnit" [(ngModel)]="dataModel.schedulingPeriodUnit"/> -->
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class="font-weight-bold">{{'shift-factor-late-completion' | translate}}</td>
+                                <td>
+                                  {{dataModel.shiftFactorLateCompletion}} %
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class="font-weight-bold">{{'shift-factor-late-tolerance' | translate}}</td>
+                                <td>
+                                  {{dataModel.shiftFactorLateTolerance}} %
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class="font-weight-bold">{{'shift-factor-early-completion' | translate}}</td>
+                                <td>
+                                   {{dataModel.shiftFactorEarlyCompletion}} %
+                                </td>
+                              </tr>
+                              <tr>    
+                                <td class="font-weight-bold">{{'shift-factor-early-tolerance' | translate}}</td>
+                                <td>
+                                  {{dataModel.shiftFactorEarlyTolerance}} %
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class="font-weight-bold">{{'cycle-modification-factor' | translate}}</td>
+                                <td>
+                                 {{dataModel.cycleModificationFactor}}
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </p-tabPanel>
+            <p-tabPanel header="{{'scheduled-calls' | translate}}">
+              <ng-template pTemplate="content">
+                <schedule-call-list [isDetail]="true" [maintenanceOrderPlanId]="dataModel.maintenancePlanId"></schedule-call-list>
+              </ng-template>
+              <!-- <div class="card">
+                <div class="card-header">
+                  <i class="fa fa-align-justify"></i>{{'scheduled-calls' | translate}}
+                </div>
+                <div class="card-body">
+                  <table class="table table-bordered">
+                    <thead>
+                      <th>
+                          {{'cycle-no' | translate}}
+                      </th>
+                      <th>
+                          {{'plan-date' | translate}}
+                      </th>
+                      <th>
+                          {{'call-date' | translate}}
+                      </th>
+                      <th>
+                          {{'completion-date' | translate}}
+                      </th>
+                      <th>
+                          {{'due-packages' | translate}}
+                      </th>
+                      <th>
+                          {{'actual-cycle' | translate}}
+                      </th>
+                      <th>
+                        {{'cycle-unit' | translate}}
+                    </th>
+                    <th>
+                      {{'scheduling-type' | translate}}
+                    </th>
+                    <th>
+                      {{'scheduling-status' | translate}}
+                    </th>
+                    </thead>
+                    <tbody *ngIf="dataModel.maintenanceOrderPlanScheduleCallList && dataModel.maintenanceOrderPlanScheduleCallList.length > 0">
+                      <tr *ngFor="let item of dataModel.maintenanceOrderPlanScheduleCallList; let i=index;">
+                         <td>{{item.cycle}}</td>
+                         <td>{{item.planDate | date:'shortDate'}}</td>
+                         <td>{{item.callDate | date:'shortDate'}}</td>
+                         <td>{{item.completionDate | date:'shortDate'}}</td>
+                         <td></td>
+                         <td>{{item.actualCycle}}</td>
+                         <td>{{item.unit}}</td>
+                         <td>{{item.schedulingType}}</td>
+                         <td>{{item.schedulingStatus}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div> -->
+            </p-tabPanel>
+          </p-tabView>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

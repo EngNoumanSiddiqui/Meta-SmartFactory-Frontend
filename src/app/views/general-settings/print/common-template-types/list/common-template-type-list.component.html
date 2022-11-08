@@ -1,0 +1,126 @@
+<p-confirmDialog></p-confirmDialog>
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <p-table #dt [columns]="selectedColumns" scrollable="true" scrollHeight="55vh"
+           [value]="cmsTypes" [rows]="pagination.rows"
+                   [totalRecords]="pagination.totalElements" dataKey="commonTempleteTypeId"
+                   [(selection)]="selectedParts">
+            <ng-template pTemplate="caption">
+              <div style="text-align:left">
+                <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header" maxSelectedLabels="0"
+                               selectedItemsLabel="{{'columns-selected'|translate}}" [style]="{minWidth: '200px'}"
+                               defaultLabel="Choose Columns">
+                  <ng-template let-col let-i="index" pTemplate="item">
+                    {{col.label|translate}}
+                  </ng-template>
+                </p-multiSelect>
+                <button pButton class="ui-button-success float-right" (click)="modalShow(null,'NEW')"
+                        label="{{'add-new'|translate}}"></button>
+                <button pButton style="margin-right: 5px" class="ui-button-warning float-right" type="button"
+                        icon="fa fa-file-alt" iconPos="left" label="{{'export-all'|translate}}"
+                        (click)="dt.exportCSV()"></button>
+                <button pButton style="margin-right: 5px" class="ui-button-warning float-right" type="button"
+                        icon="fa fa-file" iconPos="left" label="{{'export-selected'|translate}}"
+                        (click)="dt.exportCSV({selectionOnly:true})"></button>
+              </div>
+              <!--<hr>-->
+            </ng-template>
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th style="width: 3em" rowspan="2">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th *ngFor="let col of columns let i=index" style="cursor: pointer"
+                    [ngClass]="{'bg-selected-order':pageFilter.orderByProperty ==col.field}"
+                    (click)="reOrderData(i,col.field)"><i [ngClass]="'fa fa-sort-alpha-' + classReOrder[i]"></i>
+                  {{col.header|translate}}
+                </th>
+                <th width="80px" rowspan="2">{{'action' | translate}}</th>
+              </tr>
+              <tr>
+                <th *ngFor="let col of columns" class="ui-fluid" [ngSwitch]="col.field">
+
+                  <span *ngSwitchCase="'amount'"></span>
+                  <input *ngSwitchDefault style="width: 100%" pInputText type="text" [(ngModel)]="pageFilter[col.field]"
+                         (input)="filterByColumn($event.target.value,col.field)">
+                </th>
+
+              </tr>
+
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr [pSelectableRow]="rowData">
+                <td style="width: 3em">
+                  <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                </td>
+                <td *ngFor="let col of columns" style="cursor: pointer" [ngSwitch]="col.field" (click)="modalShow(rowData.commonTempleteTypeId,'DETAIL')">
+                  <span *ngSwitchCase="'createDate'">{{rowData[col.field]|date:'dd-MM-yyyy HH:mm:ss':'-000'}} </span>
+                  <span *ngSwitchCase="'updateDate'">{{rowData[col.field]|date:'dd-MM-yyyy HH:mm:ss':'-000'}} </span>
+                  <span *ngSwitchDefault >{{rowData[col.field]}}</span>
+                </td>
+                <td width="80px">
+                  <button class="btn btn-sm btn-outline-danger" type="button"
+                          (click)="delete(rowData.commonTempleteTypeId)">
+                    <i class="fa fa-trash"></i></button>
+                  <button class="btn btn-sm btn-outline-info" type="button"
+                          (click)="modalShow(rowData.commonTempleteTypeId,'EDIT')">
+                    <i class="fa fa-edit"></i></button>
+                </td>
+              </tr>
+
+            </ng-template>
+          </p-table>
+
+          <br/>
+          <div class="row">
+            <app-paging [TotalElements]="pagination.totalElements" [CurrentPage]="pagination.currentPage"
+                        [PageSize]="pagination.pageSize" [rows]="pagination.rows"
+                        [TotalPageLinkButtons]="pagination.TotalPageLinkButtons"
+                        [RowsPerPageOptions]="pagination.RowsPerPageOptions"
+                        (onPageChange)="myChanges($event)"></app-paging>
+            <span style="margin-left:2px; padding-top: 2px " class="text-muted">{{'total-records'|translate}}:
+              {{pagination?.totalElements}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--/.col-->
+  </div>
+
+</div>
+<div bsModal [config]="{backdrop: 'static', keyboard: false}" #myModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-success modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"> {{'common-template-type-information' | translate}}</h4>
+        <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <ng-template [ngIf]="partModal.modal=='NEW'">
+          <common-template-type-new (saveAction)="myModal.hide(); filter(pageFilter)"></common-template-type-new>
+        </ng-template>
+        <ng-template [ngIf]="partModal.modal=='EDIT'">
+          <common-template-type-edit [id]="partModal.id"
+                                     (saveAction)="myModal.hide(); filter(pageFilter)"></common-template-type-edit>
+        </ng-template>
+        <ng-template [ngIf]="partModal.modal=='DETAIL'">
+          <common-template-type-detail [id]="partModal.id"></common-template-type-detail>
+        </ng-template>
+      </div>
+      <div class="modal-footer">
+        <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary"
+                (click)="myModal.hide()">{{'close' | translate}}</button>
+        <button *ngIf="partModal.modal=='DETAIL'" type="button" class="btn rounded btn-primary"
+                (click)="partModal.modal='NEW'">{{'new' | translate}}</button>
+        <button *ngIf="partModal.modal=='DETAIL'" type="button" class="btn rounded btn-success"
+                (click)="partModal.modal='EDIT'">{{'edit' | translate}}</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

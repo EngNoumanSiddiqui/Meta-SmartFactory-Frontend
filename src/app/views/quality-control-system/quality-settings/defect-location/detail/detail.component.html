@@ -1,0 +1,31 @@
+<div class="animated fadeIn">
+    <div class="col-md-12" (onChange)="handleChange($event)">
+      <div class="card" *ngIf="defectLocationType">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i> {{'defect-location-details' | translate}}
+        </div>
+        <div class="card-body">
+          <form #stockForm="ngForm">
+            <table class="table table-striped table-outline">
+              <tbody>
+                <tr>
+                  <td width="30%" class="text-bold">{{'defect-location-id' | translate}} <span style="width: 0 !important;" class="float-right">:</span> </td>
+                  <td>{{defectLocationType.defectLocationId}}</td>
+                </tr>
+                <tr>
+                  <td class="text-bold">{{'code' | translate}} <span style="width: 0 !important;" class="float-right">:</span> </td>
+                  <td>{{defectLocationType.defectLocationCode}}</td>
+                </tr>
+                <tr>
+                  <td class="text-bold">{{'defect-location' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                  <td>{{defectLocationType.text}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  

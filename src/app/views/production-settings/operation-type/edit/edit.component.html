@@ -1,0 +1,59 @@
+<div class="animated fadeIn">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <i class="fa fa-align-justify"></i>{{'operation-type-information' | translate}}
+              </div>
+              <div class="card-body">
+                <form #workCenterForm="ngForm">
+                  <table class="table table-bordered">
+                    <tbody>
+                    <tr>
+                      <td>
+                        {{'operation-type-name' | translate}}
+                      </td>
+                      <td><input type="text" class="form-control"  name="industryName" required [(ngModel)]="payLoadObject.operationTypeName"/>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'plant' | translate}}</td>
+                      <td>
+                        <span
+                        *ngIf="payLoadObject.plantId && selectedPlant && payLoadObject.plantId=== selectedPlant.plantId">{{selectedPlant.plantName}}</span>
+                      <plant-auto-complete *ngIf="!payLoadObject.plantId && !selectedPlant"
+                        [selectedPlantId]="payLoadObject.plantId" (selectedPlantEvent)="setSelectedPlant($event)"
+                        [eventFire]="true"></plant-auto-complete>
+                      </td>
+                    </tr>
+                    
+                    <tr>
+                      <td>{{'operation-type-description' | translate}}</td>
+                      <td>
+                        <!-- <input type="text" class="form-control" name="industryCode" [(ngModel)]="payLoadObject.operationTypeDescription"/></td>
+                         -->
+                        <textarea class="form-control" name="mf4" placeholder="{{'description' | translate}}"
+                        [(ngModel)]="payLoadObject.operationTypeDescription"
+                        rows="3">
+                      </textarea>
+                    </tr>
+                    <tr>
+                      <td colspan="2">
+                        <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+                          {{'reset' | translate}}
+                        </button>
+                        <button type="submit" class="btn btn-sm btn-primary" [disabled]="!workCenterForm.form.valid"
+                                (click)="save()"><i class="fa fa-dot-circle-o"></i>
+                          {{'save' | translate}}
+                        </button>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      

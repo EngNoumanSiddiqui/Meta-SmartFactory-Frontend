@@ -1,0 +1,382 @@
+<!--<form #orderEdit="ngForm" >-->
+<div class="animated fadeIn">
+  <div class="row col-md-12">
+    <div class="col-md-12" *ngIf="data">
+      <p-tabView>
+        <p-tabPanel header="{{'maintenance-order-detail' | translate}}">
+          <div class="card">
+            <div class="card-header">
+              {{'maintenance-order'|translate}}
+            </div>
+            <div class="card-body">
+              <table class="table m-0" style="border-top: 5px solid white;">
+                <tbody>
+                  <tr>
+                    <td width="50%">
+                      <table class="table table-bordered">
+                        <tbody>
+                          <tr>
+                            <td class="font-weight-bold" width="35%">{{'maintenance-order-id' | translate}}</td>
+                            <td>{{data.maintenanceId}}</td>
+
+                          </tr>
+                          <tr>
+                            <td class="font-weight-bold" width="35%">{{'maintenance-notification-order-id' | translate}}
+                            </td>
+                            <td>
+                              <a href="javascript:;" (click)="showDetailModal(data.maintenanceNotification?.maintenanceNotificationId,
+                       modalType.MAINTENANCENOTIFICATION)">
+                                {{data.maintenanceNotification?.maintenanceNotificationId}}
+                              </a>
+                            </td>
+
+                          </tr>
+                          <tr>
+                            <td class="font-weight-bold">{{'functional-location' | translate}}</td>
+                            <td>
+                              <a href="javascript:;" (click)="showDetailModal(data?.maintenanceFunctionalLocation?.maintenanceFunctionalLocationId,
+                       modalType.FUNCTIONALLOCATION)">
+                                {{data?.maintenanceFunctionalLocation?.description}}
+                              </a>
+                            </td>
+
+                          </tr>
+                          <tr>
+                            <td class="font-weight-bold">{{'equipment' | translate}}</td>
+                            <td>
+                              <a href="javascript:;"
+                                (click)="showDetailModal(data?.equipment?.equipmentId, modalType.EQUIPMENT)">
+                                {{data?.equipment?.equipmentName}}
+                              </a>
+                            </td>
+
+                          </tr>
+                          <tr>
+                            <td class="font-weight-bold">{{'maintenance-order-type' | translate}}</td>
+                            <td>{{data.maintenanceOrderType}}</td>
+
+                          </tr>
+                          <tr>
+                            <td class="font-weight-bold">{{'planner-group' | translate}}</td>
+                            <td>
+                              <a href="javascript:;"
+                                (click)="showDetailModal(data?.plannerGroup?.plannerGroupId, modalType.PLANNERGROUP)">
+                                {{data?.plannerGroup?.plannerGroup}}
+                              </a>
+                            </td>
+
+                          </tr>
+                          <tr>
+                            <td class="font-weight-bold">{{'workstation' | translate}}</td>
+                            <td>
+                              <a href="javascript:;"
+                                (click)="showDetailModal(data?.mainWorkStation?.workStationId, modalType.WORKSTATION)">
+                                {{data?.mainWorkStation?.workStationName}}
+                              </a>
+                            </td>
+
+                          </tr>
+                          <tr>
+                            <td class="font-weight-bold">{{'planning-plant' | translate}}</td>
+                            <td>
+                              <a href="javascript:;"
+                                (click)="showDetailModal(data?.planningPlant?.plantId, modalType.PLANT)">
+                                {{data?.planningPlant?.plantName}}
+                              </a>
+                            </td>
+                            <!-- <td>{{'assembly' | translate}}</td>
+                    <td>{{data.assembly}}</td> -->
+
+                          </tr>
+                          <tr>
+                            <td class="font-weight-bold">{{'maintenance-system-condition' | translate}}</td>
+                            <td>
+                              <a href="javascript:;" (click)="showDetailModal(data?.maintenanceSystemCondition?.maintenanceSystemConditionId,
+                       modalType.MAINTENANCESYSTEMCONDITION)">
+                                {{data?.maintenanceSystemCondition?.description}}
+                              </a>
+
+                            </td>
+
+                          </tr>
+                          <tr>
+                            <td class="font-weight-bold">{{'maintenance-activity-type' | translate}}</td>
+                            <td>
+
+                              {{data?.maintenanceActivityType}}
+
+                            </td>
+
+                          </tr>
+                          <tr>
+                            <td class="font-weight-bold">{{'maintenance-category' | translate}}</td>
+                            <td>
+                              <a href="javascript:;" (click)="showDetailModal(data?.maintenanceCategory?.maintenanceCategoryId,
+                       modalType.MAINTENANCECATEGORYTYPE)">
+                                {{data?.maintenanceCategory?.description}}
+                              </a>
+                            </td>
+
+                          </tr>
+
+                          <tr>
+                            <td class="font-weight-bold"
+                              *ngIf="data.maintenanceStatus==='COMPLETED' || data.maintenanceStatus==='INPROCESS'">
+                              {{'actual-start-date' | translate}}</td>
+                            <td *ngIf="data.maintenanceStatus==='COMPLETED' || data.maintenanceStatus==='INPROCESS'">
+                              {{data?.actualStartDate |date:'short'}}</td>
+
+                          </tr>
+                        </tbody>
+
+                      </table>
+                    </td>
+                    <td>
+                      <table class="table table-bordered">
+                        <tbody>
+                          <tr>
+                            <td class="font-weight-bold" width="30%">{{'response-by' | translate}}</td>
+                            <td>
+                              <a href="javascript:;" (click)="showDetailModal(data?.responseby?.employeeId,
+                           modalType.STAFF)">
+                                {{data?.responseby?.firstName}} {{data?.responseby?.lastName}}
+                              </a>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td class="font-weight-bold">{{'status' | translate}}</td>
+                            <td>{{data.maintenanceStatus}}</td>
+                          </tr>
+                          <tr>
+                            <td class="font-weight-bold">{{'priority' | translate}}</td>
+                            <td>{{data.priority}}</td>
+                          </tr>
+                          <tr>
+                            <td class="font-weight-bold">{{'date-priority' | translate}}</td>
+                            <td>{{data.datePriority}}</td>
+                          </tr>
+                          <tr>
+                            <td class="font-weight-bold">{{'address' | translate}}</td>
+                            <td>{{data.address}}</td>
+                          </tr>
+                          <tr>
+                            <td class="font-weight-bold">{{'date-revision' | translate}}</td>
+                            <td>{{data.dateRevision}}</td>
+                          </tr>
+                          <tr>
+                            <td class="font-weight-bold">{{'problem-definition' | translate}}</td>
+                            <td>{{data.problemDefination}}</td>
+                          </tr>
+                          <tr>
+                            <td class="font-weight-bold">{{'date-basic-start' | translate}}</td>
+                            <td>{{data.dateBasicStart|date:'dd/MM/yyyy'}}</td>
+                          </tr>
+                          <tr>
+                            <td class="font-weight-bold">{{'date-basic-finish' | translate}}</td>
+                            <td>{{data.datebasicFinish|date:'dd/MM/yyyy'}}</td>
+                          </tr>
+                          <tr>
+                            <td class="font-weight-bold">{{'maintenance-reason' | translate}}</td>
+                            <td> {{data?.maintenanceReason?.description}}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td class="font-weight-bold" *ngIf="data.maintenanceStatus==='COMPLETED'">
+                              {{'actual-finish-date' | translate}}</td>
+                            <td *ngIf="data.maintenanceStatus==='COMPLETED'">{{data?.actualFinishDate |date:'short'}}
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </p-tabPanel>
+        <p-tabPanel header="{{'operation-details' | translate}}">
+          <maintenance-order-operation-list [isDetail]="true" [maintenanceOrderId]="data.maintenanceId">
+          </maintenance-order-operation-list>
+        </p-tabPanel>
+        <p-tabPanel header="{{'component-details' | translate}}">
+          <maintenance-order-component-list [isDetail]="true" [maintenanceOrderId]="data.maintenanceId"
+            (reservationAndNotificationList)="OnComponentData($event)"></maintenance-order-component-list>
+        </p-tabPanel>
+        <p-tabPanel header="{{'document-details' | translate}}">
+          <div class="card">
+            <div class="card-header">
+              <i class="fa fa-align-justify"></i>{{ "documentation" | translate }}
+            </div>
+            <div class="card-body">
+              <table class="table table-bordered">
+                <tbody>
+                  <tr align="center">
+                    <td class="text-center" colspan="2">
+                      <image-adder [isFile]="true"></image-adder>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </p-tabPanel>
+        <p-tabPanel header="{{'reservation-list'|translate}}">
+          <div class="row">
+            <div class="col-md-12">
+              <p-table [columns]="reservationSelectedColumns" [value]="reservationList" autoLayout="true">
+                <ng-template pTemplate="caption">
+                  <div class="row">
+                    <p-multiSelect class="col-md-3" [options]="reservationCols" [(ngModel)]="reservationSelectedColumns"
+                      optionLabel="header" maxSelectedLabels="0" selectedItemsLabel="{{'columns-selected'|translate}}"
+                      [style]="{minWidth: '200px'}" defaultLabel="Choose Columns">
+                      <ng-template let-col let-i="index" pTemplate="item">
+                        {{col.label|translate}}
+                      </ng-template>
+                    </p-multiSelect>
+                    <div class="col-md-5" style="text-align: center;align-self: center;">
+                      {{'reservation-list'|translate}}
+                    </div>
+                  </div>
+                </ng-template>
+                <ng-template pTemplate="header" let-columns>
+                  <tr>
+                    <th *ngFor="let col of columns">
+                      {{col.header | translate}}
+                    </th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-rowData let-columns="columns">
+                  <tr>
+                    <td *ngFor="let col of columns" style="cursor: pointer" [ngSwitch]="col.field">
+
+                      <a href="javascript:;" *ngSwitchCase="'batch'" (click)="showBatchDetail(rowData.batch)">
+                        {{rowData.batch}}</a>
+
+                      <p-checkbox *ngSwitchCase="'finalIssue'" name="finalIssue" binary="true" disabled="true"
+                        [(ngModel)]="rowData.finalIssue" pTooltip="{{'final-issue'  | translate}}"
+                        tooltipPosition="top">
+                      </p-checkbox>
+                      <a *ngSwitchCase="'materialName'" href="javascript:;"
+                        (click)="showStockDetail(rowData.materialId)">{{rowData[col.field]}}</a>
+                      <a *ngSwitchCase="'purchaseOrderDetailId'" href="javascript:;"
+                        (click)="showPurchaseOrderDetailItem(rowData.purchaseOrderDetailId)">{{rowData[col.field]}}</a>
+                      <span *ngSwitchDefault> {{rowData[col.field]}} </span>
+
+
+                      <a *ngSwitchCase="'reservationId'" href="javascript:;"
+                        (click)="showDetailModal(rowData?.reservationId, modalType.RESERVATION)">
+                        {{rowData.reservationId}}
+                      </a>
+                      <a *ngSwitchCase="'plantName'" href="javascript:;"
+                        (click)="showDetailModal(rowData?.plantId, modalType.PLANT)">
+                        {{rowData?.plantName}}
+                      </a>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </div>
+          </div>
+        </p-tabPanel>
+        <p-tabPanel header="{{'notification'|translate}}">
+          <div class="row">
+            <div class="col-md-12">
+              <p-table [columns]="notificationSelectedColumns" [value]="notificationList"
+                [dataKey]="'stockTransferNotificationDetailId'">
+                <!-- <ng-template pTemplate="caption">
+                  <div class="row">
+                    <p-multiSelect class="col-md-3" [options]="notificationColumns"
+                      [(ngModel)]="notificationSelectedColumns" optionLabel="header" maxSelectedLabels="0"
+                      selectedItemsLabel="{{'columns-selected'|translate}}" [style]="{minWidth: '200px'}"
+                      defaultLabel="Choose Columns">
+                      <ng-template let-col let-i="index" pTemplate="item">
+                        {{col.label|translate}}
+                      </ng-template>
+                    </p-multiSelect>
+                    <div class="col-md-12" style="text-align: center;align-self: center;">
+                      {{'notification'|translate}}
+                    </div>
+                  </div>
+                </ng-template> -->
+                <ng-template pTemplate="header" let-columns>
+                  <tr>
+                    <th style="width: 3em"></th>
+                    <ng-container *ngFor="let col of columns" [ngSwitch]="col.field">
+                      <th *ngSwitchDefault>{{col.header | translate}}</th>
+                      <!-- <th *ngSwitchCase="'quantity'" style="width: 4em;">{{col.header | translate}}</th> -->
+                      <!-- <th *ngSwitchCase="'baseUnit'" style="width: 4em;">{{col.header | translate}}</th> -->
+                      <th *ngSwitchCase="'stockTransferReceiptNotificationId'" style="width: 4em;">{{col.header |
+                        translate}}</th>
+                      <th *ngSwitchCase="'stockTransferNotificationDetailId'" style="width: 5em;">{{col.header |
+                        translate}}</th>
+                    </ng-container>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-rowData let-expanded="expanded" let-columns="columns">
+                  <tr>
+                    <td>
+                      <a href="#" [pRowToggler]="rowData">
+                        <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+                      </a>
+                    </td>
+                    <td *ngFor="let col of columns" style="cursor: pointer" [ngSwitch]="col.field">
+
+                      <a href="javascript:;" *ngSwitchCase="'batch'" (click)="showBatchDetail(rowData.batch)">
+                        {{rowData.batch}}</a>
+                      <a *ngSwitchCase="'materialName'" href="javascript:;"
+                        (click)="showStockDetail(rowData.materialId)">{{rowData[col.field]}}</a>
+                      <span *ngSwitchCase="'pallet'"> {{rowData[col.field]?.palletId}} </span>
+                      <span *ngSwitchCase="'postingDate'"> {{rowData[col.field] | date:'dd/MM/yyyy HH:mm'}} </span>
+                      <span *ngSwitchCase="'documentDate'"> {{rowData[col.field] | date:'dd/MM/yyyy HH:mm'}} </span>
+                      <span *ngSwitchCase="'updateDate'"> {{rowData[col.field] | date:'dd/MM/yyyy HH:mm'}} </span>
+                      <span *ngSwitchCase="'createDate'"> {{rowData[col.field] | date:'dd/MM/yyyy HH:mm'}} </span>
+                      <span *ngSwitchDefault> {{rowData[col.field]}} </span>
+                    </td>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="rowexpansion" let-rowData let-columns="columns">
+                  <tr>
+                    <td colspan="2"></td>
+                    <td colspan="4">
+                  <tr>
+                    <td><strong>{{'prod-order-id' | translate}}</strong> : {{rowData.prodOrderId}}</td>
+                  </tr>
+                  <tr>
+                    <td><strong>{{'pallet-id' | translate}}</strong> : {{rowData.pallet?.palletId}}</td>
+                  </tr>
+                  <tr>
+                    <td><strong>{{'defect' | translate}}</strong> : {{rowData.defected ? 'Yes' : 'No'}}</td>
+                  </tr>
+                  <tr>
+                    <td><strong>{{'warehouse-from-name' | translate}}</strong> : {{rowData.wareHouseFromName}}</td>
+                  </tr>
+                  </td>
+                  <td colspan="4">
+                    <tr>
+                      <td><strong>{{'batch' | translate}}</strong> : {{rowData.batch}}</td>
+                    </tr>
+                    <tr>
+                      <td><strong>{{'create-date' | translate}}</strong> : {{rowData.createDate | date:'dd/MM/yyyy
+                        HH:mm'}}</td>
+                    </tr>
+                    <tr>
+                      <td><strong>{{'description' | translate}}</strong> : {{rowData.description}}</td>
+                    </tr>
+                    <tr>
+                      <td *ngIf="rowData.goodsMovementActivityType==='TRANSFER_POSTING'"><strong>{{'warehouse-to-name' |
+                          translate}}</strong> : {{rowData.wareHouseToName}}</td>
+                    </tr>
+                  </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </div>
+          </div>
+        </p-tabPanel>
+      </p-tabView>
+    </div>
+  </div>
+  <!--/.row-->
+</div>
+<!--</form>-->

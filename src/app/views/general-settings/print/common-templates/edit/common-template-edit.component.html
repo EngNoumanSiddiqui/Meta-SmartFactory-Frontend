@@ -1,0 +1,109 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i> {{'common-template-detail' | translate}}
+        </div>
+        <div class="card-body">
+          <form #partForm="ngForm">
+            <table class="table table-bordered">
+              <tbody>
+              <tr>
+                <td width="30%">{{'common-template-type' | translate}}*</td>
+                <td>
+                  <select id="commonTemplateTypeList" required name="commonTemplateTypeList" class="form-control"
+                          [(ngModel)]="commonTemplateDto.commonTemplateType">
+                    <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                    <option *ngFor="let item of commonTemplateTypeList"
+                            value="{{item}}">{{item}}</option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'common-template-title' | translate}}*</td>
+                <td><input type="text" name="commonTemplateTitle" required class="form-control"
+                           [(ngModel)]="commonTemplateDto.templeteTitle"/></td>
+              </tr>
+              <tr>
+                <td>{{'default' | translate}}</td>
+                <td>
+                  <p-checkbox id="defaultTemplate" name="defaultTemplate" [(ngModel)]="commonTemplateDto.defaultTemplate" binary="true" inputId="binary"></p-checkbox>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'common-template-text' | translate}}*</td>
+<!--                <td><input type="text" name="commonTemplateText" required class="form-control"-->
+<!--                           [(ngModel)]="commonTemplateDto.templeteText"/></td>-->
+                <td>
+<!--                  <ckeditor [editor]="EditorDocument" name="commonTemplateText"-->
+<!--                            [(ngModel)]="commonTemplateDto.templeteText" (ready)="onReady($event)"-->
+<!--                            (change)="onChange($event)"></ckeditor>-->
+
+<!--                  <ckeditor id="editor1" name="commonTemplateText"-->
+<!--                            [(ngModel)]="commonTemplateDto.templeteText"-->
+<!--                            (dataChange)="onChange($event)"></ckeditor>-->
+
+                  <angular-editor [config]="editorConfig" name="commonTemplateText" [placeholder]="'Enter text here...'"
+                                  [(ngModel)]="commonTemplateDto.templeteText"></angular-editor>
+                </td>
+              </tr>
+
+              <tr>
+                <td>{{'email-body' | translate}}</td>
+                <td>
+                  <angular-editor [config]="editorConfigEmailBody" name="emailBody" [placeholder]="'Enter text here...'"
+                                  [(ngModel)]="commonTemplateDto.emailBody"></angular-editor>
+                </td>
+              </tr>
+
+              <tr>
+                <td>{{'customer' | translate}}</td>              
+                <td>
+                  <act-auto-complete [addIfMissing]="true" [both]="true" [selectedAct]="detailCommonTemplateDto?.act"
+                                     (selectedActEvent)="setSelectedCustomer($event)"></act-auto-complete>
+                </td>
+              </tr>
+
+
+              <tr>
+                <td>{{'common-template-print-size' | translate}}</td>
+                <td><input type="text" name="commonTemplatePrintSize" class="form-control"
+                           [(ngModel)]="commonTemplateDto.templetePrintSize"/></td>
+              </tr>
+              <tr>
+                <td>{{'lang-code' | translate}}</td>
+                <td>
+                  <select id="langCode" name="langCode" class="form-control"
+                          [(ngModel)]="commonTemplateDto.langCode">
+                    <option [ngValue]="null">{{'please-select' | translate}}</option>
+                    <option *ngFor="let item of langCodes"
+                            value="{{item.value}}">{{item.value}}</option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                  <button type="button" class="btn btn-sm btn-warning" (click)="getPrintHtmlDocument()"><i class="fa fa-file"></i>
+                    {{'print-preview' | translate}}</button>
+                  <print-component [active]="printComponent.active" [editMode]="false" [requestPrintDto]="requestPrintDto"
+                                   (activeEvent)="printComponent.active=$event"></print-component>
+
+                  <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+                    {{'reset' | translate}}</button>
+                  <button type="submit" class="btn btn-sm btn-primary" [disabled]="!partForm.form.valid"
+                          (click)="save()"><i class="fa fa-dot-circle-o"></i>
+                    {{'save' | translate}}</button>
+                  <!--<button type="button" class="btn btn-sm btn-secondary float-right" (click)="goPage()">
+                    <i class="icon-arrow-left-circle"></i> {{'cancel' | translate}} </button>-->
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

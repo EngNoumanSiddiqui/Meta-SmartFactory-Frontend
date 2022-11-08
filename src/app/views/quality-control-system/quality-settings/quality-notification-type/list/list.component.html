@@ -1,0 +1,206 @@
+<p-confirmDialog key="quality-notification-type"></p-confirmDialog>
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <p-table
+            #dt
+            [columns]="selectedColumns"
+            scrollable="true"
+            scrollHeight="55vh"
+            [value]="qualityNotificationTypes"
+            [rows]="pagination.rows"
+            [totalRecords]="pagination.totalElements"
+            dataKey="qualityNotificationTypeId"
+            [(selection)]="selectedQualityNotificationTypes"
+          >
+            <ng-template pTemplate="caption">
+              <div style="text-align:left">
+                <p-multiSelect
+                  [options]="cols"
+                  [(ngModel)]="selectedColumns"
+                  optionLabel="header"
+                  maxSelectedLabels="0"
+                  selectedItemsLabel="{{ 'columns-selected' | translate }}"
+                  [style]="{ minWidth: '200px' }"
+                  defaultLabel="Choose Columns"
+                  (onChange) = "filtingAreaColumns($event)"
+                >
+                  <ng-template let-col let-i="index" pTemplate="item">
+                    {{ col.label | translate }}
+                  </ng-template>
+                </p-multiSelect>
+                <button
+                  pButton
+                  class="ui-button-success float-right ml-1"
+                  (click)="modalShow(null,'NEW')"
+                  label="{{ 'add-new' | translate }}"
+                ></button>
+                <button
+                  pButton
+                  class="ui-button-warning float-right ml-1"
+                  type="button"
+                  icon="fa fa-file-alt"
+                  iconPos="left"
+                  label="{{ 'export-all' | translate }}"
+                  (click)="dt.exportCSV()"
+                ></button>
+                <button
+                  pButton
+                  class="ui-button-warning float-right ml-1"
+                  type="button"
+                  icon="fa fa-file"
+                  iconPos="left"
+                  label="{{ 'export-selected' | translate }}"
+                  (click)="dt.exportCSV({ selectionOnly: true })"
+                ></button>
+              </div>
+            </ng-template>
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th style="width: 3em" rowspan="2">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th
+                  *ngFor="let col of columns; let i = index"
+                  style="cursor: pointer"
+                  [ngClass]="{
+                    'bg-selected-order': pageFilter.orderByProperty == col.field
+                  }"
+                  (click)="reOrderData(i, col.field)"
+                >
+                  <i [ngClass]="'fa  fa-sort-alpha-' + classReOrder[i]"></i>
+                  {{ col.header | translate }}
+                </th>
+                <th width="80px" rowspan="2">{{ "action" | translate }}</th>
+              </tr>
+              <tr>
+                <th
+                  *ngFor="let col of columns"
+                  class="ui-fluid"
+                  [ngSwitch]="col.field"
+                >
+                   <span *ngSwitchCase="'description'"></span>
+
+                  <input
+                    *ngSwitchDefault
+                    style="width: 100%"
+                    [(ngModel)]="pageFilter[col.field]"
+                    pInputText
+                    type="text"
+                    (input)="filterByColumn($event.target.value, col.field)"
+                  />
+
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr [pSelectableRow]="rowData" class="ui-fluid cursor-pointer">
+                <td style="width: 3em">
+                  <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                </td>
+                <td
+                  *ngFor="let col of columns"
+                  (click)="modalShow(rowData.qualityNotificationTypeId, 'DETAIL')"
+                  [ngSwitch]="col.field"
+                >
+                <span *ngSwitchDefault> {{
+                  rowData[col.field] ? (rowData[col.field] + "" | translate) : "" }} </span>
+                </td>
+                <td width="80px">
+                  <button
+                    class="btn btn-sm btn-outline-danger"
+                    type="button"
+                    (click)="delete(rowData.qualityNotificationTypeId)"
+                  >
+                    <i class="fa fa-trash"></i>
+                  </button>
+                  <button
+                    class="btn btn-sm btn-outline-info"
+                    type="button"
+                    (click)="modalShow(rowData.qualityNotificationTypeId, 'EDIT')"
+                  >
+                    <i class="fa fa-edit"></i>
+                  </button>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+
+          <br />
+          <div class="row">
+            <app-paging
+              [showSearch]="false"
+              [TotalElements]="pagination.totalElements"
+              [CurrentPage]="pagination.currentPage"
+              [PageSize]="pagination.pageSize"
+              [rows]="pagination.rows"
+              [TotalPageLinkButtons]="pagination.TotalPageLinkButtons"
+              [RowsPerPageOptions]="pagination.RowsPerPageOptions"
+              (onPageChange)="myChanges($event)"
+            ></app-paging>
+
+            <span style="margin-left:2px; padding-top: 2px " class="text-muted"
+              >{{ "total-records" | translate }}:
+              {{ pagination?.totalElements }}</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 
+ 
+<!-- modals -->
+<ng-template [ngIf]="modal.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal" (onHidden)="modal.active=false" class="modal fade"
+       tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+       aria-hidden="true">
+  <div class="modal-dialog modal-success modal-lg" [ngStyle]="{'max-width:900px': qualityNotificationTypeModal.modal!=='DETAIL'}"
+  [ngClass]="{'modal-lg': qualityNotificationTypeModal.modal==='DETAIL', 'modal-md': qualityNotificationTypeModal.modal!=='DETAIL'}"
+   role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"> {{'quality-notification-type' | translate}}</h4>
+        <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+       <ng-template [ngIf]="qualityNotificationTypeModal.modal=='DETAIL'">
+        <detail-quality-notification-type [id]="qualityNotificationTypeModal.id" ></detail-quality-notification-type>
+        <!-- DETAILS FOOTER -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="myModal.hide()">{{'close' | translate}}</button>
+          <button
+                  class="btn btn-primary btn-sm"
+                  (click)="modalShow(null,'NEW')"
+                >
+                {{'add-new' | translate}}
+              </button>
+                <button 
+                    class="btn btn-success btn-sm"
+                    type="button"
+                    (click)="modalShow(qualityNotificationTypeModal.id, 'EDIT')"
+                  >
+                  {{'EDIT' | translate }}
+                </button>
+        </div>
+       </ng-template>
+       <ng-template [ngIf]="qualityNotificationTypeModal.modal=='NEW'">
+        <new-quality-notification-type [plantId]="pageFilter.plantId" (saveAction)="onSaveSuccessful($event, myModal)"></new-quality-notification-type>
+       </ng-template> 
+       <ng-template [ngIf]="qualityNotificationTypeModal.modal=='EDIT'">
+        <edit-quality-notification-type [plantId]="pageFilter.plantId" [id]="qualityNotificationTypeModal.id" (saveAction)="onSaveSuccessful($event, myModal)"></edit-quality-notification-type>
+       </ng-template>
+      </div>
+      <div *ngIf="qualityNotificationTypeModal.modal!='DETAIL'">
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="myModal.hide()">{{'close' | translate}}</button>
+      </div>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+</ng-template>

@@ -1,0 +1,43 @@
+
+    <div class="ui-inputgroup  d-flex ui-fluid">
+      <p-autoComplete  [(ngModel)]="selectedForkLift" [suggestions]="filteredForkLift"
+                      [disabled]="disabled"
+                       (completeMethod)="searchForkLift($event)" field="forkliftName"
+                       [dropdown]="dropdown" [required]="required" [forceSelection]="true"  dataKey="forkliftId"
+                       placeholder="{{placeholder|translate}}" [minLength]="1" name="forkliftautocomplete"
+                       (onDropdownClick)="handleDropdownClickForForkLift()" (ngModelChange)="onChangeForkLift($event)" >
+      </p-autoComplete>
+      <button *ngIf="addIfMissing" pButton icon="fa fa-plus-circle" type="button"
+            [disabled]="disabled" (keydown.enter)="$event.preventDefault();"
+              (click)="modalShow($event)">
+      </button>
+    </div>
+
+
+    <ng-template [ngIf]="modal.active">
+
+
+      <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal" class="modal fade"   (onHidden)="modal.active=false"
+           tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+           aria-hidden="true">
+        <div class="modal-dialog modal-success modal-md" style="width: 850px; max-width: 900px;" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">
+                <span >{{'new-forklift' | translate}}</span>
+              </h4>
+              <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+
+              <!-- <batch-new [PORData]="PORData" (saveAction)="setBatch($event);myModal.hide()" [batchLevel]="RequestBatchDto.batchLevel"></batch-new> -->
+
+
+            </div>
+          </div> <!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div><!-- /.modal -->
+
+    </ng-template>

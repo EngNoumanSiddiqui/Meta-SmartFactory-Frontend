@@ -1,0 +1,21 @@
+<div class="  d-flex ui-fluid">
+<p-autoComplete [(ngModel)]="selectedEmployee" [suggestions]="filteredEmployee" field="fullName" [required]="required"
+                [forceSelection]="true" [dropdown]="dropdown" (onDropdownClick)="handleDropdownClickForEmployee()"
+                dataKey="employeeId" name="employeeName"
+                [disabled]="disabled"
+                (completeMethod)="searchEmployee($event)" placeholder="{{placeholder | translate}}" [minLength]="1"
+                (ngModelChange)="onChangeEmployee($event)">
+  <ng-template let-em pTemplate="item">
+    <div class="ui-helper-clearfix" style="border-bottom:1px solid #D5D5D5">
+      <div style="font-size:14px;float:left;margin: 5px 0 0 2px">{{em.employeeId}}</div>
+      <div style="font-size:14px;float:right;margin:5px 2px 0 0">{{em.firstName +' '+em.lastName}}</div>
+    </div>
+  </ng-template>
+  <ng-template let-em pTemplate="selectedItem">
+    <div class="ui-helper-clearfix" style="border-bottom:1px solid #D5D5D5">
+      <div style="font-size:14px;float:left;margin: 5px 0 0 2px">{{em.employeeId}}</div>
+      <div style="font-size:14px;float:right;margin:5px 2px 0 0">{{em.firstName +' '+em.lastName}}</div>
+    </div>
+  </ng-template>
+</p-autoComplete>
+</div>

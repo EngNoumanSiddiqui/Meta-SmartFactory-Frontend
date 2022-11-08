@@ -1,0 +1,40 @@
+
+    <div class="ui-inputgroup  d-flex ui-fluid">
+      <p-autoComplete  [(ngModel)]="selectedMaintenanceSystemCondition" [suggestions]="filteredMaintenanceSystemCondition"
+                       (completeMethod)="searchMaintenanceSystemCondition($event)" field="description"
+                       [dropdown]="dropdown" [required]="required" [forceSelection]="true"  dataKey="maintenanceSystemConditionId"
+                       placeholder="{{placeholder|translate}}" [minLength]="1" name="description"
+                       (onDropdownClick)="handleDropdownClickForMaintenanceSystemCondition()" (ngModelChange)="onChangeMaintenanceSystemCondition($event)" >
+      </p-autoComplete>
+      <button *ngIf="addIfMissing" pButton icon="fa fa-plus-circle"
+              (click)="modalShow()">
+      </button>
+    </div>
+
+
+     <ng-template [ngIf]="modal.active">
+
+<div bsModal [config]="{backdrop: 'static',  show: true}" #myModal="bs-modal" class="modal fade" (onHidden)="modal.active=false"
+           tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+           aria-hidden="true">
+        <div class="modal-dialog modal-success " role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">
+                <span >{{'new-maintenance-system-condition' | translate}}</span>
+              </h4>
+              <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+
+              <maintenance-system-condition-new  (saveAction)="setMaintenanceSystemCondition($event);myModal.hide()"></maintenance-system-condition-new>
+
+
+            </div>
+          </div> <!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div><!-- /.modal -->
+
+    </ng-template>

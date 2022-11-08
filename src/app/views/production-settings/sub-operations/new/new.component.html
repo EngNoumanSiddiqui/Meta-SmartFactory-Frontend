@@ -1,0 +1,36 @@
+<div class="animated fadeIn">
+  
+      <div class="card">
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i>{{'sub-operation' | translate}} - {{'details' | translate}}
+          </div>
+          <div class="card-body">
+            <form #operationForm="ngForm">
+            <table class="table table-bordered">
+              <tbody >
+              <tr>
+                <td>{{'sub-operation-name' | translate}}</td>
+                <td><input name="SubOperationName" required type="text"  class="form-control" [(ngModel)]="subOperation.subOperationName"/>  </td>
+              </tr>
+              <tr>
+                <td>{{'operation-name' | translate}}</td>
+                <td><input name="operationName" type="text" disabled class="form-control" [(ngModel)]="subOperation.operationName"/> </td>
+              </tr>
+              <!-- <tr>
+                <td>{{'top-skill-value' | translate}}</td>
+                <td>
+                </td>
+              </tr> -->
+              </tbody>
+            </table>
+            </form>
+          </div>
+      </div>
+    <!-- <div class="row col-md-12">
+        <button type="submit" class="btn btn-sm btn-primary" (click)="save()"><i class="fa fa-dot-circle-o"></i>
+          {{'save' | translate}}</button>
+        <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i> 
+          {{'reset' | translate}}</button>
+    </div> -->
+  
+</div>

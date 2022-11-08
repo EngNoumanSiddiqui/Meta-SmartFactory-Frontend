@@ -1,0 +1,18 @@
+<div class="d-flex ui-fluid">
+    <p-autoComplete [(ngModel)]="selectedWorkStation" [suggestions]="filteredWorkStation"
+    (completeMethod)="searchWorkStation($event)" field="workStationName"
+    appendTo="body" [baseZIndex]="9999999"
+     [dropdown]="dropdown" [required]="required" [forceSelection]="true"  dataKey="workStationId"
+     placeholder="{{placeholder|translate}}" [minLength]="1" name="workStation"
+     [disabled]="disabled"
+     (onDropdownClick)="handleDropdownClickForWorkStation()" (ngModelChange)="onChangeWorkStation($event)" >
+     <ng-template let-ws pTemplate="item">
+        <div class="ui-helper-clearfix d-flex">
+            <div>{{ws.workStationNo}}</div>
+            <div class="text-bold"> | {{ws.workStationName}}</div>
+            <div class="text-muted">| {{ws.workStationId}}</div>
+        </div>
+    </ng-template>
+</p-autoComplete>
+
+</div>

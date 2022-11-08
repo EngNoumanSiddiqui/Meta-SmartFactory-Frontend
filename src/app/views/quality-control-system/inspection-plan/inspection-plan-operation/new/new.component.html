@@ -1,0 +1,102 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <p-tabView class="col-md-12" [activeIndex]="activeIndex" (activeIndexChange)="activeIndex=$event;">
+      <p-tabPanel header="{{ 'operation' | translate }} {{ 'details' | translate }}">
+        <div class="card">
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i> {{'inspection-plan' | translate}} {{'operation' | translate}} {{'details' | translate}}
+          </div>
+          <div class="card-body">
+            <form #inspForm="ngForm">
+              <table class="table table-bordered">
+                <tr>
+                  <td>{{'inspection-plan-operation-code' | translate}}</td>
+                  <td>
+                    <input
+                      type="text"
+                      id="inspectionPlanOperationCode"
+                      name="inspectionPlanOperationCode"
+                      [(ngModel)]="inspectionPlanOperation.inspectionPlanOperationCode"
+                      class="form-control"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'inspection-operation' | translate}}</td>
+                  <td>
+                    <quality-inspection-operation-auto-complete (selectedInspectionOperationEvent)="inspectionPlanOperation.qualityInspectionOperationId=$event.inspectionOperationId" [addIfMissing]="false"></quality-inspection-operation-auto-complete>
+                    <!-- <select id="qualityInspectionOperationId" name="qualityInspectionOperationId" class="form-control" [(ngModel)]="inspectionPlanOperation.qualityInspectionOperationId" required>
+                      <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                      <option value="{{inspectionOperation.inspectionOperationId}}" *ngFor="let inspectionOperation of inspectionOperationList">{{inspectionOperation.inspectionOperationText}}
+                      </option>
+                    </select> -->
+                  </td>
+                </tr> 
+                <!-- <tr>
+                  <td>{{'inspection-plan' | translate}}</td>
+                  <td>
+                    <select id="qualityInspectionPlanId" name="qualityInspectionPlanId" class="form-control" [(ngModel)]="inspectionPlanOperation.qualityInspectionPlanId" required>
+                      <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                      <option value="{{inspectionOperation.inspectionPlanId}}" *ngFor="let inspectionOperation of inspectionPlanList">{{inspectionOperation.inspectionPlanCode}}
+                      </option>
+                    </select>
+                  </td>
+                </tr>  -->
+                <!-- <tr>
+                  <td>{{'plant' | translate}}</td>
+                  <td class="display-flex">
+                    <plant-auto-complete [required]="true" class="flex-grow-1" [addIfMissing]="false" [eventFire]="true"
+                             (selectedPlantEvent)="setSelectedPlant($event)"></plant-auto-complete>
+                  </td>
+                </tr> -->
+                <tr>
+                  <td>{{'work-center' | translate}}</td>
+                  <td>
+                    <workcenter-auto-complete (selectedWorkCenterEvent)="inspectionPlanOperation.workCenterId=$event.workCenterId"></workcenter-auto-complete>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'control-key' | translate}}</td>
+                  <td>
+                    <select id="controlKey" name="controlKey" class="form-control" [(ngModel)]="inspectionPlanOperation.qualityControlKeyId" required>
+                      <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                      <option value="{{controlKey.qmControlKeyId}}" *ngFor="let controlKey of controlKeys">{{controlKey.qmControlKeyText}}
+                      </option>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'description' | translate}}</td>
+                  <td>
+                    <input
+                      type="text"
+                      id="description"
+                      name="description"
+                      [(ngModel)]="inspectionPlanOperation.description"
+                      class="form-control"
+                    />
+                  </td>
+                </tr>
+              </table>
+            </form>
+            <div class="row col-md-12">
+              <button
+                type="submit"
+                class="btn btn-sm btn-primary"
+                [disabled]="!inspForm.form.valid"
+                (click)="save()"
+              >
+                <i class="fa fa-dot-circle-o"></i>
+                {{ "save" | translate }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </p-tabPanel>
+      <p-tabPanel header="{{ 'inspection-characteristic' | translate }}" [disabled]="!inspectionPlanOperation.inspectionPlanOperationId">
+        <list-inspection-characteristic [inspectionPlanOperationId]="inspectionPlanOperation.inspectionPlanOperationId"></list-inspection-characteristic>
+      </p-tabPanel>
+     
+    </p-tabView>
+  </div>
+</div>

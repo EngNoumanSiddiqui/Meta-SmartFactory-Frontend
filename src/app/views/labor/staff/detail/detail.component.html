@@ -1,0 +1,245 @@
+<div class="animated fadeIn">
+  <p-tabView>
+    <p-tabPanel header="{{'personal-details' | translate}}">
+  <div class="row">
+
+
+    <div class="col-lg-6">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i>{{'personal-information' | translate}}
+        </div>
+        <div class="card-body">
+          <table class="table table-bordered">
+            <tbody *ngIf="staff != null">
+              <tr>
+                <td width="30%">{{'personal-id' | translate}}</td>
+                <td>{{staff.employeeId}}</td>
+              </tr>
+            <tr>
+              <td width="30%">{{'personal-no' | translate}}</td>
+              <td>{{staff.employeeNo}}</td>
+            </tr>
+            <tr>
+              <td>{{'first-name' | translate}}</td>
+              <td>{{staff.firstName}}</td>
+            </tr>
+            <tr>
+              <td>{{'last-name' | translate}}</td>
+              <td>{{staff.lastName}}</td>
+            </tr>
+            <tr>
+              <td>{{'title' | translate}}</td>
+              <td>{{staff.employeeTitleName}}</td>
+            </tr>
+            <tr>
+              <td>{{'group-type' | translate}}</td>
+              <td>{{staff.groupType}}</td>
+            </tr>
+            <tr>
+              <td>{{'birth-date' | translate}}</td>
+              <td>{{staff.birthDate}}</td>
+            </tr>
+            <tr>
+              <td>{{'gender' | translate}}</td>
+              <td>{{staff.gender}}</td>
+            </tr>
+            <tr>
+              <td>{{'blood-type' | translate}}</td>
+              <td>{{staff.bloodGroup}}</td>
+            </tr>
+
+            <!-- <tr>
+                <td>{{'rf-id'  | translate}}</td>
+                <td>{{staff.rfid ? '*****' : ''}}</td>
+              </tr>
+            <tr> -->
+            <tr>
+                <td>{{'plant'  | translate}}</td>
+                <td>{{staff.plant?.plantName}}</td>
+              </tr>
+              <tr>
+                <td>{{'description' | translate}}</td>
+                <td>{{staff.description}}</td>
+              </tr>
+            <tr>
+              <td>{{'start-date' | translate}}</td>
+              <td>{{staff.jobEntryDate | date : 'dd/MM/yyyy' }}</td>
+            </tr>
+            <tr>
+              <td>{{'end-date' | translate}}</td>
+              <td>{{staff.jobExitDate | date : 'dd/MM/yyyy' }}</td>
+            </tr>
+            <tr>
+              <td>{{'dummy' | translate}}</td>
+              <td>{{staff.dummy ? ('yes' | translate) : ('no' | translate) }}</td>
+            </tr>
+            <!--<tr>
+              <td colspan="2">
+                <button class="btn btn-outline-primary active" type="button" (click)="goPage(staff.employeeId)" >{{'edit' | translate}} {{'employee' | translate}}</button>
+                <button class="btn btn-outline-secondary active" type="button" (click)="goPage(-1)"> {{'new' | translate}} {{'employee' | translate}}</button>
+              </td>
+            </tr>-->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i>{{'contact-information' | translate}}
+        </div>
+        <div class="card-body">
+          <table class="table table-bordered">
+            <tbody *ngIf="staff !== null">
+            <tr align="center">
+              <td colspan="2">
+                  <image-adder></image-adder>
+                <!-- <div *ngIf="picture" class="row justify-content-md-center">
+                  <img  [src]="picture" style="display: block;  height: 300px; max-width: 100%">
+                </div>
+                <div *ngIf="!picture" class="row justify-content-md-center" >
+                  <img [src]="'assets/img/avatars/avatar.png'" style="display: block;  height: 300px; max-width: 100%">
+                </div> -->
+              </td>
+            </tr>
+
+            <tr>
+              <td width="30%">{{'mobile' | translate}}</td>
+              <td>{{staff.gsm}}</td>
+            </tr>
+            <tr>
+              <td>{{'phone' | translate}}</td>
+              <td>{{staff.phone}}</td>
+            </tr>
+            <tr>
+              <td>{{'email' | translate}}</td>
+              <td>{{staff.email}}</td>
+            </tr>
+
+
+            <tr>
+              <td>{{'address' | translate}} - 1</td>
+              <td>{{staff.address1}}</td>
+            </tr>
+            <tr>
+              <td>{{'address' | translate}} - 2</td>
+              <td>{{staff.address2}}</td>
+            </tr>
+            <!--<tr>-->
+              <!--<td>{{'district' | translate}}</td>-->
+              <!--<td>{{staff.districtName}}</td>-->
+            <!--</tr>-->
+            <tr>
+              <td>{{'country' | translate}} </td>
+              <td>{{staff.countryName}}</td>
+            </tr>
+            <tr>
+              <td>{{'city' | translate}} </td>
+              <td>{{staff.cityName}}</td>
+            </tr>
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i>{{'security-information' | translate}}
+        </div>
+        <div class="card-body">
+          <table class="table table-bordered">
+            <tbody *ngIf="staff !== null">
+              <tr>
+                <td>{{'id-code'  | translate}}</td>
+                <td>{{staff.identity}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-12">
+            <table class="table table-bordered">
+              <thead>
+                <th class="card-header">{{'roles' | translate}}</th>
+                <!-- <th class="card-header">{{'permissions' | translate}}</th> -->
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div *ngFor="let role of staff.employeeRoleDtoList">
+                      <label class="switch switch-3d switch-success">
+                        <input checked class="switch-input" type="checkbox" disabled>
+                        <span class="switch-label"></span>
+                        <span class="switch-handle"></span>
+                      </label>
+                      {{role.defaultRoleName}}
+                    </div>
+                  </td>
+                  <!-- <td>
+                    <div *ngFor="let permission of staff.employeePermissionDtoList">
+                      <label class="switch switch-3d switch-success">
+                        <input class="switch-input" type="checkbox" disabled *ngIf="permission.isActive === false">
+                        <input checked class="switch-input" type="checkbox" disabled *ngIf="permission.isActive === true">
+                        <span class="switch-label"></span>
+                        <span class="switch-handle"></span>
+                      </label>
+                      {{permission.name}} (
+                      <span *ngIf="permission.isInternal">Internal</span>
+                      <span *ngIf="permission.isExternal">External</span>
+                      )
+
+                    </div>
+                  </td> -->
+                </tr>
+              </tbody>
+            </table>
+    </div>
+  </div>
+  </p-tabPanel>
+  <p-tabPanel header="{{'send-email' | translate}}">
+    <div class="row">
+      <div class="col-lg-12">
+        <table class="table table-bordered">
+          <tbody>
+            <tr>
+              <td width="30%">{{'cc' | translate}}</td>
+              <td>
+                <input class="form-control" type="text" name="ccList" [(ngModel)]="staff.ccList" />
+              </td>
+            </tr>
+            <tr>
+              <td width="30%">{{'bcc' | translate}}</td>
+              <td>
+                <input class="form-control" type="text" name="bccList" [(ngModel)]="staff.bccList" />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </p-tabPanel>
+  <p-tabPanel header="{{'costing' | translate}}">
+    <div class="row">
+      <div class="col-lg-12">
+        <table class="table table-bordered">
+          <tbody>
+            <tr>
+              <td width="30%">{{'cost-rate' | translate}}</td>
+              <td>
+                {{staff.employeeCostRate}}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </p-tabPanel>
+  </p-tabView>
+</div>

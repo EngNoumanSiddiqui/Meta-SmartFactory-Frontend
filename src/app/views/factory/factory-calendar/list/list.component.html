@@ -1,0 +1,136 @@
+<p-confirmDialog *ngIf="calendarModal.modal !=='EDIT'"></p-confirmDialog>
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body" >
+          <p-table #dt [columns]="selectedColumns" [value]="tableData" [rows]="pagination.rows" [totalRecords]="pagination.totalElements"
+                   dataKey="factoryCalendarId" scrollable="true" scrollHeight="55vh" >
+            <ng-template pTemplate="caption">
+              <div style="text-align:left">
+                <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header" maxSelectedLabels="0"  selectedItemsLabel="{{'columns-selected'|translate}}"
+                               [style]="{minWidth: '200px'}" defaultLabel="Choose Columns">
+                  <ng-template let-col let-i="index" pTemplate="item">
+                    {{col.label|translate}}
+                  </ng-template>
+                </p-multiSelect>
+                <button pButton  type="button" class="ui-button-warning float-right ml-1" (click)="resetFilter()" label="{{'reset'  |translate}}"></button>
+                <button pButton  class="ui-button-success float-right ml-1" label="{{'add-new'|translate}}" (click)="modalShow(null, 'NEW')"> </button>
+                <button pButton class="ui-button-warning float-right ml-1" type="button"  icon="fa fa-file-alt" iconPos="left" label="{{'export-all'|translate}}" (click)="dt.exportCSV()"></button>
+                <button pButton  class="ui-button-warning float-right ml-1" type="button"  icon="fa fa-file" iconPos="left" label="{{'export-selected'|translate}}" (click)="dt.exportCSV({selectionOnly:true})"></button>
+              </div>
+              <!--<hr>-->
+
+            </ng-template>
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th style="width: 3em" rowspan="2">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th *ngFor="let col of columns let i=index" style="cursor: pointer"
+                  [ngStyle]="{'width': col.field === 'workDays' ? '50%' : '' }"
+                  [ngClass]="{'bg-selected-order':pageFilter.orderByProperty ==col.field}" (click)="reOrderData(i,col.field)"><i [ngClass]="'fa fa-sort-alpha-' + classReOrder[i]"></i>
+                    <span *ngIf="col.field == 'defaultCalendar'">{{'default'|translate}} {{'calendar'|translate}}</span>
+                    <span *ngIf="col.field != 'defaultCalendar'">{{col.header|translate}}</span>
+                </th>
+                <th width="80px" rowspan="2">{{'action' | translate}}</th>
+              </tr>
+              <tr>
+                <th *ngFor="let col of columns" class="ui-fluid" [ngSwitch]="col.field">
+                  <span *ngSwitchCase="'defaultCalendar'"></span>
+                  <span *ngSwitchCase="'plant'" >{{selectedPlant?.plantName}}</span>
+                  <input *ngSwitchCase="'code'" style="width: 100%"  pInputText type="text"[(ngModel)]="pageFilter[col.field]"  (input)="filterByColumn($event.target.value,col.field)">
+                  <input *ngSwitchCase="'category'" style="width: 100%"  pInputText type="text"[(ngModel)]="pageFilter[col.field]"  (input)="filterByColumn($event.target.value,col.field)">
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+              <tr [pSelectableRow]="rowData">
+                <td style="width: 3em">
+                  <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                </td>
+                <td *ngFor="let col of columns; let i=index;" style="cursor: pointer"
+                 [ngSwitch]="col.field" [ngStyle]="{'width': col.field === 'workDays' ? '50%' : '' }">
+
+                 <span *ngSwitchCase="'defaultCalendar'">
+                  <p-checkbox id="defaultCalendar" name="defaultCalendar" [(ngModel)]="rowData.defaultCalendar" binary="true" inputId="binary" disabled></p-checkbox>
+              </span>
+                  <span *ngSwitchDefault (click)="modalShow(rowData.factoryCalendarId,'DETAIL', rowData)">{{rowData[col.field]}}</span>
+
+                  <a *ngSwitchCase="'plant'" href="javascript:;" (click)="showPlantDetail(rowData[col.field]?.plantId)"> {{rowData[col.field]?.plantName}}</a>
+                  <a *ngSwitchCase="'factoryCalendarId'" href="javascript:;" (click)="modalShow(rowData.factoryCalendarId,'DETAIL', rowData)"> {{rowData[col.field]}}</a>
+
+                  <span *ngSwitchCase="'factoryCalendarDetailList'" class="col-md-12">
+                      <!-- <div class="ui-g">
+                          <div ><p-checkbox name="monday" [(ngModel)]="rowData[col.field].MONDAY"  binary="true" label="Monday" inputId="ny"></p-checkbox></div>
+                          <div ><p-checkbox name="tues" [(ngModel)]="rowData[col.field].TUESDAY"  binary="true" label="Tueday" inputId="ny"></p-checkbox></div>
+                          <div ><p-checkbox name="wednes" [(ngModel)]="rowData[col.field].WEDNESDAY"  binary="true" label="Wednesday" inputId="ny"></p-checkbox></div>
+                          <div ><p-checkbox name="thurs" [(ngModel)]="rowData[col.field].THURSDAY"  binary="true" label="Thursday" inputId="ny"></p-checkbox></div>
+                          <div ><p-checkbox name="fri" [(ngModel)]="rowData[col.field].FRIDAY"  binary="true" label="Friday" inputId="ny"></p-checkbox></div>
+                          <div ><p-checkbox name="satur" [(ngModel)]="rowData[col.field].SATURDAY"  binary="true" label="Saturday" inputId="ny"></p-checkbox></div>
+                          <div ><p-checkbox name="sun" [(ngModel)]="rowData[col.field].SUNDAY"  binary="true" label="Sunday" inputId="ny"></p-checkbox></div>
+                      </div> -->
+                  </span>
+                </td>
+                <td width="80px" >
+                  <button class="btn btn-sm btn-outline-danger" type="button" (click)="delete(rowData.factoryCalendarId)">
+                    <i class="fa fa-trash"></i></button>
+                  <button class="btn btn-sm btn-outline-info" type="button" (click)="modalShow(rowData.factoryCalendarId, 'EDIT', rowData)" >
+                    <i class="fa fa-edit"></i></button>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+          <br/>
+          <div class="row">
+            <app-paging
+              [showSearch]="false"
+              [TotalElements]="pagination.totalElements"
+              [CurrentPage]="pagination.currentPage"
+              [PageSize]="pagination.pageSize"
+              [rows]="pagination.rows"
+              [TotalPageLinkButtons]="pagination.TotalPageLinkButtons"
+              [RowsPerPageOptions]="pagination.RowsPerPageOptions"
+              (onPageChange)="myPageChanged($event)"
+            ></app-paging>
+            <span style="margin-left:2px; padding-top: 2px " class="text-muted" >{{'total-records'|translate}}: {{pagination?.totalElements}}</span>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- [ngClass]="{'modal-md': calendarModal.modal==='NEW','modal-lg': calendarModal.modal!=='NEW'}" -->
+<ng-template [ngIf]="calendarModal.active">
+    <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal"   (onHidden)="calendarModal.active=false; calendarModal.modal=null" class="modal fade"
+         tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+    <div class="modal-dialog modal-success modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"> {{'factory-calendar' | translate}}</h4>
+          <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+         <ng-template [ngIf]="calendarModal.modal=='NEW'">
+            <factory-calendar-new (saveAction)="myModal.hide(); filter(pageFilter)"></factory-calendar-new>
+         </ng-template>
+          <ng-template [ngIf]="calendarModal.modal=='EDIT'">
+            <factory-calendar-edit [data]="calendarModal.data" (saveAction)="myModal.hide();filter(pageFilter)" ></factory-calendar-edit>
+         </ng-template>
+          <ng-template [ngIf]="calendarModal.modal=='DETAIL'">
+            <factory-calendar-details [data]="calendarModal.data"></factory-calendar-details>
+         </ng-template>
+        </div>
+        <div class="modal-footer">
+          <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary"  (click)="myModal.hide()">{{'close' | translate}}</button>
+          <button *ngIf="calendarModal.modal=='DETAIL'" type="button" class="btn rounded btn-primary" (click)="calendarModal.modal='NEW'">{{'new' | translate}}</button>
+            <button *ngIf="calendarModal.modal=='DETAIL'" type="button" class="btn rounded btn-success" (click)="calendarModal.modal='EDIT'">{{'edit' | translate}}</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</ng-template>

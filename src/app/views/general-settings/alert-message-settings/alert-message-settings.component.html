@@ -1,0 +1,59 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+
+        <div class="card-body">
+          <table class="table table table-hover">
+            <thead>
+            <tr>
+              <th style="text-align: center;" colspan="2">Alert Message Titles</th>
+            </tr>
+            </thead>
+            <tbody *ngFor="let alert of alertSubjectList, let i=index">
+
+            <tr >
+              <td width="100px">
+                <p-inputSwitch class="ui-inputswitch" (onChange)="setActive(i)"
+                               [(ngModel)]="alert.active"></p-inputSwitch>
+              </td>
+              <td (click)="showMailSettings(alert.alertMessageSubjectId,alert.name)" style="cursor: pointer;">
+                <span style=" font-size: 15px">{{alert.name}}</span>
+
+            </tr>
+
+            </tbody>
+          </table>
+        </div>
+        <!-- -->
+
+      </div>
+    </div>
+  </div>
+</div>
+<p-dialog [(visible)]="display" [style]="{width: '600px'}" [header]="alertSubjectTitle">
+  <p class="ui-messages-info" style="text-align: center;"><strong>Message Receiver</strong></p>
+  <ul class="list-group" id="mailAddressList">
+    <li class="list-group-item">
+      <button class="button button-action button-box" style="float: right" (click)="addColumn()"><i
+        class="fa fa-plus"></i></button>
+    </li>
+    <ng-template [ngIf]="emailList">
+      <ng-container *ngFor="let email of emailList.slice().reverse(), let  i= index" id="emailContainer">
+        <li class="list-group-item"><input type="text" class="form-control float-left" style="width: 80%"
+                                           name="email" [(ngModel)]="email.eMail">
+          <button class="btn btn-sm btn-outline-danger float-right" type="button"
+                  (click)="delete(emailList.length-i-1)">
+            <i class="fa fa-trash"></i></button>
+        </li>
+
+      </ng-container>
+    </ng-template>
+  </ul>
+
+  <div class="ui-panel" style="margin-top: 10px; float: right;">
+    <button type="button" class="btn btn-success rounded" (click)="saveEmailList()">Save</button>
+  </div>
+
+</p-dialog>
+

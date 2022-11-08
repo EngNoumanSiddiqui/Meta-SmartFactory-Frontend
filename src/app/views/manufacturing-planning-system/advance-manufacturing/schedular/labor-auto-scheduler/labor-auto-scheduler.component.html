@@ -1,0 +1,130 @@
+<div class="animated fadeIn position-relative">
+  <div id="topDiv"
+    class="d-flex justify-content-around badge-light border flex-lg-row flex-column position-static mx-auto p-2 ui-fluid">
+    <div style="width: 13%;">
+      <employee-auto-complete [plantId]="selectedPlant?.plantId" (selectedEmployeeEvent)="setSelectedEmployee($event)"></employee-auto-complete>
+    </div>
+    <div style="width: 13%;">
+     <workstation-auto-complete [plantId]="selectedPlant?.plantId" (selectedWorkStationEvent)="setSelectedWorkstation($event)"></workstation-auto-complete>
+    </div>
+    <div style="width: 11%;">
+      <job-order-autocomplete [plantId]="selectedPlant?.plantId" (selectedJobOrderEvent)="setSelectedJobOrder($event)"></job-order-autocomplete>
+    </div>
+    <div style="width: 10%;">
+      <select class="form-control" [(ngModel)]="presetView">
+        <option [value]="'hourAndDay'">Hourly</option>
+        <option [value]="'dayAndWeek'">Daily</option>
+        <option [value]="'weekAndMonth'">Weekly</option>
+        <option [value]="'monthAndYear'">Monthly</option>
+      </select>
+    </div>
+    <div style="width: 12%;">
+      <p-calendar [(ngModel)]="requestScheduleLaborDto.startDate"
+      [monthNavigator]="true" name="startDate" [yearNavigator]="true" yearRange="1990:2100"
+      [showIcon]="true" dateFormat="dd/mm/yy"
+      placeholder="{{'start-date'|translate}}"></p-calendar>
+    </div>
+    <div style="width: 12%;">
+      <p-calendar [(ngModel)]="requestScheduleLaborDto.finishDate"
+      [monthNavigator]="true" name="ednDate" [yearNavigator]="true" yearRange="1990:2100"
+      [showIcon]="true" dateFormat="dd/mm/yy"
+      placeholder="{{'finish-date'|translate}}"></p-calendar>
+    </div>
+    <div class="width: 10%;">
+      <button pButton label="{{'load-data'|translate}}" class="ui-button-success"
+              (click)="filter()"></button>
+    </div>
+    <div class="ml-1">
+      <button pButton data-ref="exportButton" id="b-button-18" class="ui-button-warning float-right ml-1" type="button"  icon="fa fa-file-alt"
+       iconPos="left" label="{{'export-pdf'|translate}}" 
+       (click)="exportToPDF()"></button>
+    </div>
+    <div class="ml-1">
+      <button pButton data-ref="exportButton" id="b-button-18" class="ui-button-warning float-right ml-1" type="button"  icon="fa fa-file-alt"
+       iconPos="left" label="{{'export-excel'|translate}}" 
+       (click)="exportToExcel()"></button>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12" id="app">
+      <div class="row text-center noData" *ngIf="!showLoader&&resources.length<1">
+        <strong class=""><i class="fa fa-warning "></i>{{'NO_DATA_FOUND'|translate}}!</strong>
+      </div>
+      <div class="row">
+        <button type="button" class="btn btn-primary" 
+        *ngIf="resources.length>0"
+        data-toggle="tooltip" data-placement="top" title="Report" (click)="showAllcationByShiftGraph(null, 'workstation')"
+        style="margin-left: 38.5em;"><i class="fa fa-line-chart"></i></button>
+      </div>
+      <!-- [configtimeRanges]="timeRanges" -->
+      <scheduler *ngIf="!showLoader&&resources.length>0"
+                 #scheduler
+                 [frameHeight] = "findTotalHeight()"
+                 [rowHeight]=50
+                 [autoHeight]=false
+                 [barMargin]="barMargin"
+                 [createEventOnDblClick]="false"
+                 [events]="events"
+                 [resources]="resources"
+                 [enableDeleteKey]="false"
+                 
+                 [featuretimeRanges]="featuretimeRanges"
+                 [startDate]="startDate"
+                 [pdfExport]="pdfExport"
+                 [excelExporter]="excelExporter"
+                 [stripe]="true"
+                 [viewPreset]="presetView"
+                 [endDate]="endDate"
+                 [columns]="columns"
+                 [eventDragCreate]="false"
+                 [eventEdit]="true"
+                 [eventContextMenu]="false"
+                 [eventContextMenu]="eventContextMenu"
+                 [showAddEventInContextMenu]="false"
+                 [showRemoveRowInContextMenu]="false"
+                 eventStyle="border"
+                 [nonWorkingTime]="true"
+                 [eventResize]="false"
+                 [eventRenderer]="eventRenderer"
+                 [eventDrag]="eventDrag"
+                 [stopCauseList]="stopCauseList"
+                 (onSchedulerEventSelected)="onSchedulerEventSelected($event)"
+                 (onSchedulerEventDropped)="onSchedulerEventDropped($event)"
+                 (onSchedulerEventUpdated)="onSchedulerEventUpdated($event)"
+                 (onSchedulerEventDbClicked)="onSchedulerEventDbClicked($event)">
+
+      </scheduler>
+    </div>
+  </div>
+  <!-- <div class="row col-md-12">
+    <app-paging
+      [showSearch]="false"
+      [TotalElements]="pagination.totalElements"
+      [CurrentPage]="pagination.currentPage"
+      [PageSize]="pagination.pageSize"            [rows]="pagination.rows"
+      [TotalPageLinkButtons]="pagination.TotalPageLinkButtons"
+      [RowsPerPageOptions]="pagination.RowsPerPageOptions"
+      (onPageChange)="myChanges($event)"
+    ></app-paging>
+    <span style="margin-left:2px; padding-top: 2px " class="text-muted" >{{'total-records'|translate}}: {{pagination?.totalElements}}</span>
+
+  </div> -->
+</div>
+
+<div bsModal [config]="{backdrop: 'static', keyboard: false}" #allocationModal="bs-modal" class="modal fade" tabindex="-1"
+  role="dialog" aria-labelledby="allocationModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-success modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"> {{ allocationParams.dialog.title | translate}}</h4>
+        <button type="button" class="close" (click)="allocationModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p-chart *ngIf="barData" type="bar" [data]="barData" [options]="options" [height]="'350px'"></p-chart>
+      </div>
+    </div>
+  </div>
+</div>

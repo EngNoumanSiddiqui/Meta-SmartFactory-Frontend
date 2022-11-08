@@ -1,0 +1,65 @@
+<!--<form #orderEdit="ngForm" >-->
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12" *ngIf="data">
+      <p-tabView>
+        <p-tabPanel header="{{'operation-detail' | translate}}">
+          <div class="card">
+            <div class="card-header">
+              {{'task-operation'|translate}}
+            </div>
+            <div class="card-body">
+              <form #saleForm="ngForm" class="form-horizontal ui-fluid">
+                <table class="table table-striped table-outline">
+                  <tbody>
+                  <tr>
+                    <td class="text-bold" width="35%">{{'task-operation-id' | translate}} <span class="float-right">:</span></td>
+                    <td>{{data.equipmentTaskOperationId}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'equipment-operation' | translate}}<span class="float-right">:</span></td>
+                    <td>{{data?.equipmentOperation?.operationCode}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'operation-order' | translate}}<span class="float-right">:</span></td>
+                    <td> {{data.operationOrder}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'work' | translate}}<span class="float-right">:</span></td>
+                    <td> {{data.work}}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'work-unit' | translate}}<span class="float-right">:</span></td>
+                    <td> {{data.workUnit}}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'duration' | translate}}<span class="float-right">:</span></td>
+                    <td> {{data.duration}}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'duration-unit' | translate}}<span class="float-right">:</span></td>
+                    <td> {{data.durationUnit}}</td>
+                  </tr>
+
+                  </tbody>
+
+                </table>
+
+              </form>
+            </div>
+          </div>
+        </p-tabPanel>
+        <p-tabPanel header="{{'operation-component' | translate}}">
+          <task-operation-component-list [equipmentTaskOperationId]="data.equipmentTaskOperationId"></task-operation-component-list>
+        </p-tabPanel>
+        <p-tabPanel header="{{'operation-service' | translate}}">
+          <task-operation-service-list [equipmentTaskOperationId]="data.equipmentTaskOperationId"></task-operation-service-list>
+        </p-tabPanel>
+      </p-tabView>
+    </div>
+  </div><!--/.row-->
+</div>
+<!--</form>-->

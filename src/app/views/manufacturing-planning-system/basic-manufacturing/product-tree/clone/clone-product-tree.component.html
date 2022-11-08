@@ -1,0 +1,413 @@
+<div class="animated fadeIn">
+
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card" style="margin-bottom: 0px !important;">
+
+        <div class="card-header">{{'stock' | translate}}
+          <div class="card-actions">
+            <button class="btn-minimize" type="button" data-toggle="collapse" data-target=""
+              (click)="hideFilterBody=!hideFilterBody" aria-expanded="false" aria-controls="collapseExample"
+              pTooltip="{{'hide-show' | translate}}" tooltipPosition="top">
+              <i [ngClass]="{'icon-arrow-up': !hideFilterBody, 'icon-arrow-down': hideFilterBody}"></i>
+            </button>
+
+          </div>
+
+        </div>
+
+        <div class="card-body" [hidden]="hideFilterBody">
+          <form #prodTreeForm="ngForm">
+            <div class="form-group row">
+              <div class="col-7">
+
+                <div class="row ui-fluid">
+
+                  <div class="col-5" *ngIf="dataModel">
+                    <div class="form-group">
+                      <label *ngIf="dataModel.reverse">{{'reverse-product-tree' |translate}}</label>
+                      <label *ngIf="!dataModel.reverse">{{'product' |translate }}</label>
+                      <!-- <stock-auto-complete [plantId]="this.dataModel.plantId" [excludeRawMaterial]="true"
+                        [fromProductTreeMaterial]="true"
+                        [disabled]="dataModel.reverse"
+                        [selectedStock]="dataModel.material" [required]="true"
+                        (selectedStockEvent)="setSelectedStock($event)"></stock-auto-complete> -->
+                        <span *ngIf="dataModel.material" class="form-control bg-readonly" 
+                        (click)="openMaterialModal(myModal)"
+                        >{{dataModel.material?.stockNo}} | {{dataModel.material?.stockName}}
+                        </span>
+                        <!-- (click)="myModal.show()" -->
+                        <span *ngIf="!dataModel.material" class="form-control bg-readonly" 
+                        (click)="openMaterialModal(myModal)">
+                          {{'click-to-select'|translate}}
+                        </span>
+                    </div>
+                  </div>
+                  <div class="col-3">
+                    <div class="form-group">
+                      <label>{{'plant' |translate}}</label><br />
+                      <label *ngIf="dataModel.plantId !== null">{{plantName}}</label>
+                      <plant-auto-complete [disabled]="isPlantdisable" *ngIf="dataModel.plantId === null"
+                        [required]="true" [addIfMissing]="false" [selectedPlant]="dataModel.plant"
+                        (selectedPlantEvent)="setPlant($event)"></plant-auto-complete>
+
+                    </div>
+                  </div>
+                  <div class="col-4">
+                    <div class="form-group">
+                      <label>{{'status' |translate}}</label><br />
+                        <select id="status" name="status" class="form-control" [(ngModel)]="dataModel.status" >
+                          <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                          <option *ngFor="let type of productTreeStatusList" value="{{type}}">{{type}}</option>
+                        </select>
+
+                    </div>
+                  </div>
+                  <div class="col-5">
+                    <div class="form-group">
+                      <label>{{'start-date' |translate}}</label><br />
+                      <p-calendar [(ngModel)]="dataModel.startDate" [monthNavigator]="true" [yearNavigator]="true"
+                        yearRange="1990:2100" name="startDate" [showIcon]="true" dateFormat="dd/mm/yy"></p-calendar>
+                    </div>
+                  </div>
+                  <div class="col-3">
+                    <div class="form-group">
+                      <label>{{'expiry-date' |translate}}</label><br />
+                      <p-calendar [(ngModel)]="dataModel.expiryDate"
+                        [minDate]="dataModel.startDate"
+                       [monthNavigator]="true" [yearNavigator]="true"
+                        yearRange="1990:2100" name="expiryDate" [showIcon]="true" dateFormat="dd/mm/yy"></p-calendar>
+                    </div>
+                  </div>
+                  <div class="col-4">
+                    <div class="form-group">
+                      <label>{{'last-mode-date' |translate}}</label><br />
+                      <p-calendar [(ngModel)]="dataModel.lastModeDate" [monthNavigator]="true" [yearNavigator]="true"
+                        yearRange="1990:2100" name="lastModeDate" [showIcon]="true" dateFormat="dd/mm/yy"></p-calendar>
+                    </div>
+                  </div>
+                  <div class="col-5">
+                    <div class="form-group">
+
+                      <label>{{'revision-no' |translate}}</label><br />
+
+                      <input type="text" class="form-control" placeholder="{{'revision-no' | translate}}"
+                        [(ngModel)]="dataModel.revisionNo" name="revisionNo">
+                    </div>
+                  </div>
+                  <div class="col-3">
+                    <div class="form-group">
+
+                      <label>{{'estimated-cost' |translate}}</label><br />
+
+                      <input type="number" class="form-control"
+                        [(ngModel)]="dataModel.estimatedCost" name="estimatedCost">
+                    </div>
+                  </div>
+                  <div class="col-4">
+                    <div class="form-group">
+
+                      <label>{{'final-cost' |translate}}</label><br />
+
+                      <input type="number" class="form-control" readonly
+                        [(ngModel)]="dataModel.finalCost" name="finalCost">
+                    </div>
+                  </div>
+                  <div class="col-5" style="align-self: center;">
+                    <div class="d-flex">
+                      <label class="col-6 p-0">{{'auto-fill-process' |translate}}</label><br />
+
+                      <p-checkbox class="col-6 p-0" name="autoFillProcess"  binary="true" 
+                      [(ngModel)]="dataModel.autoFillProcess" (ngModelChange)="onAutoFillProcessChecked($event)"></p-checkbox>
+                    </div>
+                  
+                  </div>
+                  <div class="col-3" style="align-self: center;">
+                    <stock-auto-complete [stockTypeName]="'Process materials'"
+                    [selectedStock]="selectedProcessMaterial"
+                    [disabled]="!dataModel.autoFillProcess"
+                    (selectedStockEvent)="setSelectedProcessMaterial($event)"
+                    ></stock-auto-complete>
+                  </div>
+                 
+                  <div class="col-4">
+                    <div class="form-group">
+                      <label>{{'description' |translate}}</label><br />
+
+                      <textarea type="text" class="form-control" placeholder="{{'description' | translate}}"
+                        [(ngModel)]="dataModel.description" name="description"></textarea>
+                    </div>
+                  </div>
+                 
+
+                </div>
+              </div>
+
+              <div class="col-auto align-self-end text-left pl-0">
+                <button class="btn btn-primary" type="button"
+                (click)="onTreeViewClicked()"
+                >{{'tree-view' | translate}}</button>
+              </div>
+              <div class="col-4 text-center p-0">
+                <p-accordion>
+                  <p-accordionTab header="Document" [selected]="true">
+                    <image-adder [tableType]="tableType"></image-adder>
+                  </p-accordionTab>
+                </p-accordion>
+                
+              </div>
+
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <product-tree-detail-list [plant]="dataModel.plant" [material]="dataModel.material" [tableData]="dataModel.productTreeDetailList"
+                  [selectedProcessMaterial]="selectedProcessMaterial"
+                  [productTreeId]="dataModel.productTreeId" [reverse]="isReverse" (saveEvent)="onSaveProductDetails($event)">
+                </product-tree-detail-list>
+              </div>
+            </div>
+
+
+            <button type="submit" class="btn btn-sm btn-primary"
+              [disabled]="!prodTreeForm.form.valid || !dataModel.plantId " (click)="save()"><i
+                class="fa fa-dot-circle-o"></i>
+              {{'save' | translate}}
+            </button>
+
+            <div class="d-flex justify-content-end col-md-3 float-right p-0">
+
+              <label class="col-6 p-0">{{'auto-fill-semi-finished' |translate}}</label><br />
+
+              <p-checkbox class="col-6 p-0" name="autoFillMaterials"  binary="true" 
+              [(ngModel)]="dataModel.autoFillMaterials" (ngModelChange)="onAutoFillMaterialChecked($event)"></p-checkbox>
+            </div>
+
+          </form>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+
+
+<ng-template [ngIf]="dialog.visible">
+  <p-dialog class="custom-dialog" [blockScroll]="true" 
+     [(visible)]="dialog.visible" 
+    [style]="{'min-width': '90%'}"    [maximizable]="true" #dOrderDetails
+    [contentStyle]="{'min-height':'60vh'}" [focusOnShow]="false" modal="true" dismissableMask="true">
+    <p-header>
+      <div class="d-flex justify-content-between">
+        <div class="position-absolute font-weight-bold">{{'tree-view' | translate}}</div>
+        <div (click)="isProcessMaterial=!isProcessMaterial;" style="position: absolute; align-items: center;display: flex; cursor:pointer; right: 49%;">
+          <div [ngClass]="{'muted-value': !isProcessMaterial}" style="width: 40px; height: 20px; background-color: #94618f;"></div>
+          <span [ngClass]="{'muted-value': !isProcessMaterial}" class="mr-2">Process Material</span>
+        </div>
+        <div (click)="isSemiFinished=!isSemiFinished;" style="position: absolute; align-items: center;display: flex; cursor:pointer; right: 38%;">
+          <div [ngClass]="{'muted-value': !isSemiFinished}" style="width: 40px; height: 20px; background-color: #25b7e8;"></div>
+          <span [ngClass]="{'muted-value': !isSemiFinished}" class="mr-2">Semi Finished</span>
+        </div>
+        <div (click)="isRawMaterial=!isRawMaterial;" style="position: absolute; align-items: center;display: flex; cursor:pointer; right: 27%;">
+          <div [ngClass]="{'muted-value': !isRawMaterial}" style="width: 40px; height: 20px; background-color: #e87625;"></div>
+          <span [ngClass]="{'muted-value': !isRawMaterial}" class="mr-2">Raw Material</span>
+        </div>
+        <div style="position: absolute;right: 14%;">
+          <div class="field-checkbox">
+            <p-checkbox [(ngModel)]="showComponentChecked" [binary]="true" [inputId]="'showComponent'"></p-checkbox>
+            <label [for]="'showComponent'" class="m-0 ml-2">{{'show-components' |translate}}</label>
+          </div>
+        </div>
+        <div style="position: absolute;right: 10px;margin-right: 44px;top: 8px;">
+          <button pButton style="margin-right: 5px" class="ui-button-warning float-right" type="button"  icon="fa fa-file-alt" iconPos="left"
+          [label]="'export-as-pdf'|translate"
+          (click)="exportPDF()"></button>
+        </div>
+      </div>
+    </p-header>
+    <div class="d-flex col-lg-12 align-items-center"  style="min-height: 50vh;">
+      <p-tree [value]="TreeViewFiles" layout="horizontal" selectionMode="single" [(selection)]="selectedTreeViewFile"
+      [style]="{'background-color': '#f4f4f4'}" id="product-tree-content">
+        <ng-template let-node  pTemplate="default">
+          <div class="d-flex flex-column" (click)="selectedTreeViewFile=node;openProductTreePanel.toggle($event);">
+            <span style="font-weight:bold">{{node.label}}</span> 
+            <ng-container *ngFor="let op of node?.data?.operationList">
+              <ng-container *ngFor="let comp of getOutputList(op); last as last;">
+                {{comp.component?.stockNo}} | {{comp.component?.stockName}}
+                <span *ngIf="!last">, </span>
+              </ng-container>
+            </ng-container>
+            <span *ngIf="showComponentChecked">
+              <br />
+              {{'components'| translate}}: <br />
+              <ng-container *ngFor="let op of node.data?.operationList">
+                <ng-container *ngFor="let comp of getInputList(op); last as last;">
+                  <ng-container *ngIf="((comp.component?.stockTypeId== 9) && isProcessMaterial)
+                  || ((comp.component?.stockTypeId== 2) && isSemiFinished)
+                  || ((comp.component?.stockTypeId== 1) && isRawMaterial)">
+                    <span [pTooltip]="comp?.stockNo" appendTo="body" [tooltipZIndex]="999999" 
+                    tooltipPosition="top"
+                    [ngStyle]="{'color': ((comp.component?.stockTypeId === 1) ? '#e87625' : ((comp.component?.stockTypeId === 2) ? '#25b7e8' : ((comp.component?.stockTypeId === 9) ? '#94618f' : '')))}">
+                      {{comp.component?.stockNo}} - {{comp.component?.stockName}} </span>
+                    <span *ngIf="!last">,<br /></span>
+                  </ng-container>
+                 
+                </ng-container>
+              </ng-container>
+            </span>
+          </div>
+          <!-- <input [(ngModel)]="node.label" type="text" style="width:100%"> -->
+        </ng-template>
+      </p-tree>
+    </div>
+  </p-dialog>
+</ng-template>
+
+
+<p-overlayPanel #openProductTreePanel [showCloseIcon]="true" [style]="{'width': '30%'}" appendTo="body" baseZIndex="9999">
+
+  <ng-template pTemplate>
+    <div class="form-group row align-items-center">
+      <label class="col-md-5 col-form-label font-weight-bold" for="level"> {{'step-no' | translate}}</label>
+      <div class="col-md-7">
+        {{selectedTreeViewFile.data.stepFNo}}
+      </div>
+    </div>
+   
+    <div class="form-group row align-items-center">
+      <label class="col-md-5 col-form-label font-weight-bold" for="length"> {{'product-tree-detail-id' | translate}}</label>
+      <div class="col-md-7">
+        {{selectedTreeViewFile.data.productTreeDetailId}}
+      </div>
+    </div>
+    <div class="form-group row align-items-center">
+      <label class="col-md-5 col-form-label"style="font-weight:bold" for="operation"> {{'operation' | translate}}</label>
+      <div class="col-md-7">
+        <ng-container *ngFor="let op of selectedTreeViewFile.data.operationList; last as last;">
+          {{op.operation.operationNo}} - 
+          <span style="font-weight:bold">{{op.operation.operationName}}</span>
+          
+          <span *ngIf="!last">, <br /></span>
+        </ng-container>
+      </div>
+    </div>
+    <div class="form-group row align-items-center">
+      <label class="col-md-5 col-form-label" style="font-weight:bold" for="operation"> {{'component-output' | translate}}</label>
+      <div class="col-md-7">
+        <ng-container *ngFor="let op of selectedTreeViewFile.data.operationList">
+          <ng-container *ngFor="let comp of getOutputList(op); last as last;">
+            <span [pTooltip]="'Quantity: ' +comp?.quantity" appendTo="body" [tooltipZIndex]="99999999" tooltipPosition="top">
+            <span style="font-weight:bold">- {{comp.component?.stockNo}}</span>
+             | {{comp.component?.stockName}} </span>
+            <span *ngIf="!last">, <br /></span>
+          </ng-container>
+        </ng-container>
+      </div>
+    </div>
+    <div class="form-group row align-items-center">
+      <label class="col-md-5 col-form-label"style="font-weight:bold" for="operation">{{'component-input' | translate}}</label>
+      <div class="col-md-7">
+        
+        <ng-container *ngFor="let op of selectedTreeViewFile.data.operationList">
+          <ng-container *ngFor="let comp of getInputList(op); last as last;">
+            <span [pTooltip]="'Quantity: ' +comp?.quantity" appendTo="body" [tooltipZIndex]="99999999" tooltipPosition="top"
+            [ngStyle]="{
+              'color': ((comp.component.stockTypeId === 1) ? '#e87625' : ((comp.component.stockTypeId === 2) ? '#25b7e8' : ((comp.component.stockTypeId === 9) ? '#94618f' : '')))
+            }">
+              <span style="font-weight:bold">- {{comp.component?.stockNo}}</span>
+               | {{comp.component?.stockName}} </span>
+            <span style="font-weight:bold" *ngIf="comp.component?.defaultProductTreeId!=null">  | PT :  
+              <a href="javascript:;"  (click)="showProductTreeDetail(comp.component?.defaultProductTreeId)">
+                {{comp.component?.defaultProductTreeId}}</a>
+            </span>
+            <span *ngIf="!last">, <br /></span>
+          </ng-container>
+        </ng-container>
+      </div>
+    </div>
+    <div class="form-group row align-items-center">
+      <label class="col-md-5 col-form-label font-weight-bold" for="operation"> {{'workstation' | translate}}</label>
+      <div class="col-md-7">
+        <ng-container *ngFor="let op of selectedTreeViewFile.data.operationList; last as last;">
+            <span>{{op.workStation?.workStationName}} </span>
+            <span *ngIf="!last">,<br /></span>
+        </ng-container>
+      </div>
+    </div>
+    <div class="form-group row align-items-center">
+      <label class="col-md-5 col-form-label font-weight-bold" for="operation"> {{'single-duration' | translate}}</label>
+      <div class="col-md-7">
+        <ng-container *ngFor="let op of selectedTreeViewFile.data.operationList">
+          {{getReadableTime(op.singleDuration)}}
+        </ng-container>
+      </div>
+    </div>
+    <div class="form-group row align-items-center">
+      <label class="col-md-5 col-form-label font-weight-bold" for="operation"> {{'single-total-duration' | translate}}</label>
+      <div class="col-md-7">
+        <ng-container *ngFor="let op of selectedTreeViewFile.data.operationList">
+          {{getReadableTime(op.singleTotalDuration)}}
+        </ng-container>
+      </div>
+    </div>
+
+    <div class="form-group row align-items-center">
+      <label class="col-md-5 col-form-label font-weight-bold" for="operation"> {{'order-no' | translate}}</label>
+      <div class="col-md-7">
+        <ng-container *ngFor="let op of selectedTreeViewFile.data.operationList">
+          {{op.operationOrder}}
+        </ng-container>
+      </div>
+    </div>
+
+    <!-- <div class="form-group row">
+      <label class="col-md-4 col-form-label" for="operation"> {{'operation' | translate}}</label>
+      <div class="col-md-8">
+        <ng-container *ngFor="let op of selectedTreeViewFile.operationList">
+          {{op.operation.operationNo}}-{{op.operation.operationName}}, 
+        </ng-container>
+      </div>
+    </div> -->
+  </ng-template>
+</p-overlayPanel>
+
+<!------------------------- Modals ---------------------------------------->
+<div bsModal [config]="{backdrop: 'static', keyboard: false}" #myModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-success modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          {{'material'|translate}}
+        </h4>
+        <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <!---------- MODEL #Stocks ------------->
+      <!--[(visible)]="display"-->
+      <div class="modal-body" *ngIf="myModal.isShown">
+        <div class="form-group row">
+          <!--keep the modal open!!!!!-->
+          <div class="col-md-12">
+            <choose-stock-pane [plantId]="this.dataModel.plant?.plantId" 
+            [excludeRawMaterial]="true"
+            [removeTopButtons]="true"
+            [fromProductTreeMaterial]="true"
+             (selectedEvent)="setSelectedStock($event);myModal.hide()"></choose-stock-pane>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="myModal.hide()">{{'close' | translate}}</button>
+      </div>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+

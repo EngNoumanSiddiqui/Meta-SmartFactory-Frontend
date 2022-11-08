@@ -1,0 +1,111 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div>
+        <div class="card">
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i> {{'quality-notification-processing' | translate}}
+          </div>
+          <div class="card-body">
+            <form #inspForm="ngForm"> 
+              <table class="table table-bordered">
+                <!-- <tr>
+                  <td>{{'priority' | translate}}</td>
+                  <td>
+                      <select id="priority" name="priority" class="form-control" [(ngModel)]="processing." required>
+                          <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                          <option value="{{priority}}" *ngFor="let priority of priorityList">{{priority}}
+                          </option>
+                        </select>
+                  </td>
+                </tr>  -->
+                <tr>
+                  <td>{{'required-start' | translate}}</td>
+                  <td>
+                      <p-calendar class="valid-from" name="requiredStart" showTime="true" timeFormat="HH:mm" [showIcon]="true"  dateFormat="dd/mm/yy"
+                      [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                      [readonlyInput]="true"
+                      [(ngModel)]="processing.requiredStart"></p-calendar>
+                  </td>
+                </tr>
+                <tr> 
+                  <td>{{'required-end' | translate}}</td>
+                  <td>
+                      <p-calendar class="valid-from" name="requiredEnd" showTime="true" timeFormat="HH:mm" [showIcon]="true" dateFormat="dd/mm/yy"
+                      [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                      [readonlyInput]="true"
+                      [(ngModel)]="processing.requiredEnd"></p-calendar>
+                  </td>
+                </tr>
+                <tr>
+                  <tr>
+                      <td>{{'malfunction-start' | translate}}</td>
+                      <td>
+                          <p-calendar class="valid-from" name="malfunctionStart" [showIcon]="true" showTime="true" timeFormat="HH:mm" dateFormat="dd/mm/yy"
+                          [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                          [readonlyInput]="true"
+                          [(ngModel)]="processing.malfunctionStart"></p-calendar>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'malfunction-end' | translate}}</td>
+                      <td>
+                          <p-calendar class="valid-from" name="malfunctionEnd" [showIcon]="true" showTime="true" timeFormat="HH:mm" dateFormat="dd/mm/yy"
+                          [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                          [readonlyInput]="true"
+                          [(ngModel)]="processing.malfunctionEnd"></p-calendar>
+                      </td> 
+                    </tr>
+                    <tr>
+                  <td>{{'deparment-responsible' | translate}}</td>
+                  <td>
+                     <employee-auto-complete (selectedEmployeeEvent)="processing.departmentResponsible=$event.firstName + ' ' +$event.lastName"></employee-auto-complete>
+                  </td>
+                </tr> 
+                <tr>
+                  <td>{{'coordinator' | translate}}</td>
+                  <td>
+                    <employee-auto-complete (selectedEmployeeEvent)="processing.coordinator=$event.firstName + ' ' +$event.lastName"></employee-auto-complete>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'reported-by' | translate}}</td>
+                  <td>
+                    <employee-auto-complete (selectedEmployeeEvent)="processing.reportedBy=$event.firstName + ' ' +$event.lastName"></employee-auto-complete>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'break-down' | translate}}</td>
+                  <td>
+                      <div class="ui-g-6">
+                          <p-checkbox name="breakDown" [(ngModel)]="processing.breakDown"></p-checkbox>
+                        </div>
+                  </td>
+                </tr>
+              </table>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="row col-md-12">
+        <button
+          type="submit"
+          class="btn btn-sm btn-danger"
+          (click)="reset()"
+        >
+        <i class="fa fa-ban" aria-hidden="true"></i>
+          {{ "reset" | translate }}
+        </button>
+        <button
+          type="submit"
+          class="btn btn-sm btn-primary"
+          [disabled]="!inspForm.form.valid"
+          (click)="save()"
+        >
+          <i class="fa fa-dot-circle-o"></i>
+          {{ "save" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,62 @@
+<!--<form #orderEdit="ngForm" >-->
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12" *ngIf="data">
+      <div class="card">
+        <div class="card-header">
+          {{'workstation-program'|translate}}
+        </div>
+        <div class="card-body">
+          <table class="table table-bordered">
+            <tbody>
+              <tr>
+                <td>{{'workstation-program-id' | translate}}</td>
+                <td>{{data.workstationProgramId}}
+                </td>
+              </tr>
+              <tr>
+                <td>{{'workstation-id' | translate}}</td>
+                <td>{{data.workStation?.workStationId}}
+                </td>
+              </tr>
+              <tr>
+                <td>{{'workstation-name' | translate}}</td>
+                <td>{{data.workStation?.workStationName}}
+                </td>
+              </tr>
+              <!-- <tr>
+                <td>{{'code' | translate}}</td>
+                <td>{{data.code}}
+                </td>
+              </tr> -->
+              <tr>
+                <td>{{'name' | translate}}</td>
+                <td> {{data.description}}
+                </td>
+              </tr>
+              <tr>
+                <td>{{'plc-code' | translate}}</td>
+                <td>{{data.plcCode}}
+                </td>
+              </tr>
+              <tr>
+                <td>{{'plc-value' | translate}}</td>
+                <td>{{data.plcValue}}
+                </td>
+              </tr>
+              <tr>
+                <td>{{'unit' | translate}}</td>
+                <td>{{data.unit}}
+                </td>
+              </tr>
+            </tbody>
+
+          </table>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--/.row-->
+</div>
+<!--</form>-->

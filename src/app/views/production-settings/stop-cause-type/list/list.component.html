@@ -1,0 +1,109 @@
+<p-confirmDialog></p-confirmDialog>
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body" >
+
+          <p-table #dt [columns]="selectedColumns" scrollable="true" scrollHeight="55vh" [value]="stopTypes" dataKey="stopCauseTypeId">
+            <ng-template pTemplate="caption">
+              <div style="text-align:left">
+                <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header" maxSelectedLabels="0"  selectedItemsLabel="{{'columns-selected'|translate}}"
+                               [style]="{minWidth: '200px'}" defaultLabel="Choose Columns">
+                  <ng-template let-col let-i="index" pTemplate="item">
+                    {{col.label|translate}}
+                  </ng-template>
+                </p-multiSelect>
+                <button pButton   class="ui-button-success float-right" (click)="modalShow(null,'NEW',null)" label="{{'add-new'|translate}}"> </button>
+                <button pButton style="margin-right: 5px" class="ui-button-warning float-right" type="button"  icon="fa fa-file-alt" iconPos="left" label="{{'export-all'|translate}}" (click)="dt.exportCSV()"></button>
+                <button pButton style="margin-right: 5px" class="ui-button-warning float-right" type="button"  icon="fa fa-file" iconPos="left" label="{{'export-selected'|translate}}" (click)="dt.exportCSV({selectionOnly:true})">
+                 </button>
+              </div>
+              <!--<hr>-->
+            </ng-template>
+            <ng-template pTemplate="header" let-columns>
+              <tr >
+                <th style="width: 3em" rowspan="2">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th *ngFor="let col of columns; let i=index;" style="cursor: pointer">
+                  {{col.header|translate}}
+                </th>
+                <th width="80px" rowspan="2">{{'action' | translate}}</th>
+              </tr>
+              <tr>
+
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr [pSelectableRow]="rowData">
+                <td style="width: 3em">
+                  <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                </td>
+                <td *ngFor="let col of columns" style="cursor: pointer" (click)="modalShow(rowData.stopCauseTypeId,'DETAIL',rowData)" [ngSwitch]="col.field">
+                  <span *ngSwitchDefault>{{rowData[col.field]}}</span>
+
+                  <span *ngSwitchCase="'groupType'">{{rowData[col.field]}}</span>
+                </td>
+                <td width="80px" >
+
+                  <button class="btn btn-sm btn-outline-info" type="button" (click)="modalShow(rowData.stopCauseTypeId,'EDIT',rowData)">
+                    <i class="fa fa-edit">
+                    </i></button>
+                    <button class="btn btn-sm btn-outline-danger" type="button" (click)="delete(rowData.stopCauseTypeId)">
+                        <i class="fa fa-trash"></i>
+                      </button>
+
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+          <br/>
+
+        </div>
+      </div>
+    </div>
+    <!--/.col-->
+  </div>
+</div>
+
+<div bsModal [config]="{backdrop: 'static',keyboard: false}" #myModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-success " role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"> {{'stop-cause-information' | translate}}</h4>
+        <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <ng-template [ngIf]="stopTypeModal.modal=='NEW'">
+          <!--; filter(pageFilter)-->
+          <stop-cause-type-new (saveAction)="myModal.hide(); filter()"></stop-cause-type-new>
+        </ng-template>
+        <ng-template [ngIf]="stopTypeModal.modal=='EDIT'">
+
+            <!-- <stop-cause-type-edit [id]="workcenterModal.id" (saveAction)="myModal.hide(); filter(pageFilter)"></stop-cause-type-edit>
+             -->
+             <stop-cause-type-edit [data]="stopTypeModal.data" (saveAction)="myModal.hide();"></stop-cause-type-edit>
+
+        </ng-template>
+        <ng-template [ngIf]="stopTypeModal.modal=='DETAIL'">
+          <!-- <plant-detail [data]="workcenterModal.data" ></plant-detail>
+           -->
+            <stop-cause-type-detail [data]="stopTypeModal.data"></stop-cause-type-detail>
+        </ng-template>
+      </div>
+      <div class="modal-footer">
+        <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary" (click)="myModal.hide()">{{'close' | translate}}</button>
+        <button *ngIf="stopTypeModal.modal=='DETAIL'" type="button" class="btn rounded btn-success"
+                (click)="stopTypeModal.modal='EDIT'">{{'edit' | translate}}
+        </button>
+      </div>
+    </div>
+</div>
+</div>
+<!-- /.modal -->
+<!-- /.modal-dialog -->
+  <!-- /.modal-content -->

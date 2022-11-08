@@ -1,0 +1,38 @@
+/* .ui-card-title {
+  overflow-wrap: break-word;
+} */
+.activity-table {
+  width: 100%;
+  margin-bottom: 1rem;
+  color: #151b1e;
+}
+.activity-table td {
+  padding: 0.75rem;
+  vertical-align: top;
+  border-bottom: 1px solid #a4b7c1;
+}
+
+.good-issue {
+  background-color: blue;
+  color: white;
+  text-align: center;
+}
+.layout-dashboard .my-contacts .ui-panel-content {
+  max-height: initial;
+  height: 740px;
+}
+
+.layout-dashboard .stats-box:hover {
+  text-shadow: none;
+  line-height: 0.1em;
+}
+.layout-dashboard .stats-box:hover .statistics {
+  color: red;
+  cursor: pointer;
+}
+.ui-card-title{
+  margin-bottom: .6em;
+}
+.ui-card-body{
+  padding: 1.2em;
+}

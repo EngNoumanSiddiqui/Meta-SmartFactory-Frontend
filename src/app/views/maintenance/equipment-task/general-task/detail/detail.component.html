@@ -1,0 +1,135 @@
+<!--<form #orderEdit="ngForm" >-->
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12" *ngIf="data">
+      <p-tabView>
+        <p-tabPanel header="{{'task-detail' | translate}}">
+          <div class="card">
+            <div class="card-header">
+              {{'equipment-task'|translate}}
+            </div>
+            <div class="card-body">
+              <form #saleForm="ngForm" class="form-horizontal ui-fluid">
+                <table class="table table-outline table-striped">
+                  <tbody>
+                  <tr>
+                    <td class="text-bold" width="35%">{{'equipment-task-id' | translate}}<span class="float-right">:</span></td>
+                    <td>{{data.equipmentTaskId}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'equipment' | translate}}<span class="float-right">:</span></td>
+                    <td>{{data?.equipment?.equipmentName}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'equipment-task-name' | translate}}<span class="float-right">:</span></td>
+                    <td>{{data?.taskDescription}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'equipment-task-type' | translate}}<span class="float-right">:</span></td>
+                    <td>{{data.equipmentTaskType}}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'equipment-planner-group' | translate}}<span class="float-right">:</span></td>
+                    <td> {{data?.equipmentPlannerGroup?.plannerGroup}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'workstation' | translate}}<span class="float-right">:</span></td>
+                    <td> {{data?.workStation?.workStationName}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'planning-plant' | translate}}<span class="float-right">:</span></td>
+                    <td> {{data?.planningPlant?.plantName}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'maintenance-system-condition' | translate}}<span class="float-right">:</span></td>
+                    <td> {{data?.maintenanceSystemCondition?.description}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'maintenance-strategy' | translate}}<span class="float-right">:</span></td>
+                    <td> {{data?.maintenanceStrategy?.description}}
+                    </td>
+                  </tr>
+                  <tr *ngIf="data && data.maintenanceStrategy && data.maintenanceStrategy.maintenanceStrategyPackageList">
+                    <td class="text-bold">{{'maintenance-strategy-packages' | translate}}<span class="float-right">:</span></td>
+                    <td>
+                        <table class="table table-outline table-striped">
+                          <tbody>
+                            <tr *ngFor="let packg of data.maintenanceStrategy.maintenanceStrategyPackageList; let i=index;">
+                                <td class="text-bold">{{'package' | translate}} {{i+1}}<span class="float-right"> => </span></td>
+                                <td class="text-bold">{{'maintenance-cycle-text' | translate}}<span class="float-right"> : </span></td>
+                                <td> {{packg.maintenanceCycleText}}</td>
+                                <td class="text-bold">{{'hierarchy-text' | translate}}<span class="float-right"> : </span></td>
+                                <td> {{packg.hierarchyText}}</td>
+                                <td class="text-bold">{{'cycle-length' | translate}}<span class="float-right"> : </span></td>
+                                <td> {{packg.cycleLenght}}</td>
+                                <td class="text-bold">{{'cycle-short-text' | translate}}<span class="float-right"> : </span></td>
+                                <td> {{packg.cycleShortText}}</td>
+                                <td class="text-bold">{{'cycle-unit' | translate}}<span class="float-right"> : </span></td>
+                                <td> {{packg.cycleUnit}}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'functional-location' | translate}}<span class="float-right">:</span></td>
+                    <td> {{data?.maintenanceFunctionalLocation?.maintenanceFunctionalLocationId}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'group' | translate}}<span class="float-right">:</span></td>
+                    <td>{{data.group}}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'group-counter' | translate}}<span class="float-right">:</span></td>
+                    <td>{{data.groupCounter}}</td>
+                  </tr>
+                  <!-- <tr>
+                    <td class="text-bold">{{'task-code' | translate}}<span class="float-right">:</span></td>
+                    <td>{{data.taskCode}}</td>
+                  </tr> -->
+                  <!-- <tr>
+                    <td class="text-bold">{{'task-description' | translate}}<span class="float-right">:</span></td>
+                    <td>{{data.taskDescription}}</td>
+                  </tr> -->
+                  </tbody>
+
+                </table>
+
+              </form>
+            </div>
+          </div>
+        </p-tabPanel>
+        <p-tabPanel header="{{'operation' | translate}}">
+          <task-operation-list [isDetails]="true" [equipmentTaskId]="data.equipmentTaskId"></task-operation-list>
+        </p-tabPanel>
+        <p-tabPanel header="{{'document-details'|translate}}">
+          <div class="card">
+            <div class="card-header">
+              <i class="fa fa-align-justify"></i>{{ "documentation" | translate }}
+            </div>
+            <div class="card-body">
+              <table class="table table-bordered">
+                <tbody>
+                  <tr align="center">
+                    <td class="text-center" colspan="2">
+                      <image-adder [isFile]="true"></image-adder>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </p-tabPanel>
+      </p-tabView>
+    </div>
+  </div><!--/.row-->
+</div>
+<!--</form>-->

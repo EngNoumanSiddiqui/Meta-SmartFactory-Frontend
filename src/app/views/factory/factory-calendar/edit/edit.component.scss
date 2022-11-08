@@ -1,0 +1,12 @@
+.fc-day {
+    &.fc-widget-content {
+        &.fc-sat {
+            &.fc-today {
+                background: #1365c0;
+                color: white;
+                font-weight: bolder;
+                font-size: large;
+            }
+        }
+    }
+}

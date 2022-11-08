@@ -1,0 +1,653 @@
+<div class="col-lg-12  bg-gray-light border-0" id="monitoring-detail" style="padding-left: 10px; padding-right: 10px;" >
+  <div class="row ">
+    <div class="p-0" [ngClass]="{'col-lg-4 ':models && models.length>1,'col-lg-6 ': !models || models.length<=1}">
+      <div class="d-flex flex-column p-0 px-2 pt-2 " >
+        <div class="row bg-gray-dark  shadow-sm m-0  flex-grow-1">
+          <div class="col display-9 py-3  text-light ">
+            <div class=" row ">
+              <div class="col-6 text-bold font-xl">{{'factory-monitoring.machine-status'|translate}}:
+                <span  class=" font-xl"
+                                               [ngClass]="{'monitoring-machine-status_standby': models[0].machineStatus=='StandBy',
+                     'monitoring-machine-status_prod': models[0].machineStatus=='Running',
+                     'monitoring-machine-status_stopped': models[0].machineStatus=='Stopped',
+                     'monitoring-machine-status_setup': models[0].machineStatus=='Setup',
+                     'monitoring-machine-status_closed': models[0].machineStatus=='Closed'
+                     }">
+                {{models[0].machineStatus|translate}}</span>
+              </div>
+              <div class="col-6  "
+                   [ngClass]="{
+                   'workstation-status-prod': models[0].status == 'PRODUCTION' ,
+                   'workstation-status-setup': models[0].status == 'SETUP' ,
+                   'workstation-status-setup_overtime': models[0].status == 'SETUP_OVERTIME' ,
+                   'workstation-status-maintenance'  :  models[0].status ==  'MAINTENANCE' ,
+                    'workstation-status-waiting-for-job'  :  models[0].status ==  'WAITING_FOR_JOB'|| models[0].status ==  'MANIPULATION',
+                    'workstation-status-waiting-for-labor'  :  models[0].status ==  'WAITING_FOR_LABOR' ,
+                    'workstation-status-waiting-for-maintenance'  :  models[0].status ==  'WAITING_FOR_MAINTENANCE' ,
+                    'workstation-status-waiting-for-quality'  :  models[0].status ==  'WAITING_FOR_QUALITY' ,
+                     'workstation-status-stop'  : models[0].status == 'STOPPED' ||models[0].status == 'CLOSED'||models[0].status == 'UNKNOWN_STOPPED'}">
+                <div class="float-right text-bold font-xl">
+                  {{models[0].status|translate}}
+                  <span *ngIf="models[0].status == 'STOPPED'
+                  ||models[0].status == 'CLOSED'
+                  ||models[0].status == 'UNKNOWN_STOPPED'"
+                  class=" display-9 text-danger text-bold"> ({{models[0].lastStopReason||'-'}})</span>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="py-1 px-2 d-flex flex-column ">
+
+        <div class="row bg-gray-dark  shadow-sm m-0 mb-1 ">
+            <div class="col  pt-2  text-light p-0">
+              <div class="row display-9 mb-2 ml-2">
+                <div class="row col-md-12">
+                  <div class="col-md-3 d-flex justify-content-between p-0 pl-1">
+                    <span class="col-md-6 p-0">{{'reference-id' | translate}}
+                      <span class="float-right">:</span>
+                    </span>
+
+                    <a href="javascript:;" style="color: #ffba06; padding-right:4px;"
+                      (click)="showJobOrderOperationDetail(models[0].jobOrderOperationId)">
+                    {{models[0].referenceId}}</a>
+                    <!-- <span>{{models[0].referenceId||'-'}}</span> -->
+                  </div>
+                  <div class="col-md-4 p-0 m-0">
+                    <div class="row col-md-12 d-flex justify-content-between">
+                      <span class="col-md-8 p-0">{{'job-order-id' | translate}}</span>
+                      <span>:</span>
+                       <a href="javascript:;" style="color:white;"
+                       (click)="openJobORderDetails(models[0].jobOrderId)">
+                       {{models[0].jobOrderId}}</a>
+                   </div>
+
+                   <div class="row col-md-12 d-flex justify-content-between">
+                     <span class="col-md-8 p-0"> {{'job-order-operation-id' | translate}}</span>
+                     <span>:</span>
+                     <a href="javascript:;" style="color: #ffba06;" (click)="showJobOrderOperationDetail(models[0].jobOrderOperationId)">
+                     {{models[0].jobOrderOperationId}}</a>
+
+                   </div>
+                   <div class="row col-md-12 d-flex justify-content-between">
+                    <span class="col-md-8 p-0"> {{'reference-id' | translate}}</span>
+                    <span>:</span>
+                    <a href="javascript:;" style="color: #ffba06;" >
+                    {{models[0].referenceId}}</a>
+
+                  </div>
+                  </div>
+
+                  <div class="col-md-5 p-0 m-0">
+                    <div class="col-lg-12 col-md-12 bg-gray-dark text-light pl-0 pr-0">
+
+                      <table style="margin-bottom: 0.3rem;word-break: break-word;"
+                      class=" table table-borderless table-sm text-light">
+                        <tr>
+                          <td class="display-10">
+                            <div class="d-flex">
+                              <div class="text-warning">
+                                <i *ngIf="openedEmployees !== true" (click)="openedEmployees = true" class="fa fa-angle-right" style="cursor: pointer;"></i>
+                                <i *ngIf="openedEmployees === true" (click)="openedEmployees = false" class="fa fa-angle-down" style="cursor: pointer;"></i>
+                              </div>
+                              <div class="ml-2">
+                                {{'name' | translate}}
+                              </div>
+                            </div>
+                          </td>
+                          <td  class="display-10">{{'goods' | translate }}</td>
+                          <td  class="display-10">{{'scrap' | translate}}</td>
+                          <td  class="display-10">{{'rework' | translate}}</td>
+                          <!-- <td  class="display-10">{{'unit' | translate}}</td> -->
+                        </tr>
+                        <tbody *ngIf="openedEmployees && models[0] && models[0].employeeDtoList && models[0].employeeDtoList.length>0">
+                        <tr *ngFor="let emp of models[0].employeeDtoList">
+                            <td class="display-10" style="color: #ffba06;">
+                              <a class="ml-3 display-10" href="javascript:;"  style="color: #ffba06;" (click)="showEmployeeDetail(emp.employeeId)">
+                                {{emp.firstName}} {{emp.lastName}}
+                                </a>
+                              </td>
+                            <td class="display-10" style="color: #ffba06;">
+                              {{models[0].employeeDtoList[0].goodQuantity}}
+                            </td>
+                            <td class="display-10" style="color: #ffba06;">{{models[0].employeeDtoList[0].scrapQuantity}}</td>
+                            <td class="display-10" style="color: #ffba06;">{{models[0].employeeDtoList[0].reworkQuantity}}</td>
+                            <!-- <td class="display-10" style="color: #ffba06;">{{emp.}}</td> -->
+                        </tr>
+                        </tbody>
+                      </table>
+
+                    </div>
+                  </div>
+                </div>
+                <!-- <div class="col-md-6 d-flex justify-content-between">
+                    <span style="width: 33%;">{{'employee' | translate}}
+                      <span class="float-right">:</span>
+                    </span>
+                    <span *ngFor="let em of models[0].employeeDtoList; let olast=last;">
+                      <a href="javascript:;" style="color: white;"
+                      (click)="showEmployeeDetail(em.employeeId)">
+                      {{em.employeeId}}-{{em.firstName}} {{em.lastName}}</a>
+                      <span *ngIf="!olast">, <br /></span>
+                    </span>
+                </div> -->
+              </div>
+            </div>
+          </div>
+          <div class="row shadow-sm m-0 mb-1">
+            <div class="col-lg-12 col-md-12 bg-gray-dark text-light pl-0 pr-0">
+              <table style="margin-bottom: 0.3rem; word-break: break-word;"
+              class="ml-2 table table-borderless table-sm text-light">
+                <tr>
+                  <td width="15%"  class="display-10" >{{'no' | translate}}</td>
+                  <td  width="25%" class="display-10">{{'material' | translate}}</td>
+                  <td  width="10%" class="display-10">{{'unit' | translate}}</td>
+                  <td  width="10%" class="display-10">{{'planned' | translate}}</td>
+                  <td  width="10%" class="display-10">{{'goods' | translate}}</td>
+                  <td  width="10%" class="display-10">{{'scrap' | translate}}</td>
+                  <td  width="10%" class="display-10">{{'rework' | translate}}</td>
+                  <td  width="10%" class="display-10">{{'buffer' | translate}}</td>
+                </tr>
+
+                <tbody *ngIf="models[0] && models[0].materiaList">
+                <tr *ngFor="let mat of models[0].materiaList">
+                  <td class="display-10">
+                    <a class="display-10" href="javascript:;" style="color: #72b5fa;"  (click)="openmaterialDetails(mat.materialId)">{{mat.materialNo}}
+                    </a>
+                  </td>
+                  <td class="display-10">
+                    <a class="display-10" href="javascript:;" style="color:#72b5fa;"  (click)="openmaterialDetails(mat.materialId)">{{mat.materialName}}
+                    </a></td>
+                  <td class="display-10"  style="color: #72b5fa;">{{mat.materialUnit}}</td>
+                  <td class="display-10" style="color: #72b5fa;">{{mat.plannedQuantity}}</td>
+                  <td class="display-10 text-success text-bold">{{mat.producedQuantity}}</td>
+                  <td class="display-10 text-danger text-bold">{{mat.scrapQuantity}}</td>
+                  <td class="display-10" style="color: #ffba06;">{{mat.reworkQuantity}}</td>
+                  <td class="display-10 text-info text-bold">{{mat.bufferQuantity}}</td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="col-lg-12 col-md-12 bg-gray-dark text-light pl-0 pr-0">
+              <table style="margin-bottom: 0.3rem;word-break: break-word;" class="ml-2 table table-borderless table-sm text-light">
+                <tr>
+                  <td  width="15%" class="display-10">{{'no' | translate}}</td>
+                  <td  width="25%" class="display-10">{{'component' | translate}}</td>
+                  <td  width="10%" class="display-10">{{'unit' | translate}}</td>
+                  <td  width="10%" class="display-10">{{'needed' | translate}}</td>
+                  <td  width="10%" class="display-10">{{'used' | translate}}</td>
+                  <td  width="10%" class="display-10">{{'scrap' | translate}}</td>
+                  <td  width="10%" class="display-10">{{'rework' | translate}}</td>
+                  <td  width="10%"></td>
+
+                </tr>
+                <tbody *ngIf="models[0] && models[0].componentList">
+                <tr *ngFor="let compt of ((showFullComponents) ? models[0].componentList : models[0].componentList.slice(0,3))">
+                  <td class="display-10" style="color: #ffba06;">
+                    <a class="display-10" href="javascript:;"  style="color: #ffba06;" (click)="openmaterialDetails(compt.materialId)">{{compt.materialNo}}
+                      </a>
+                    </td>
+                    <td class="display-10" style="color: #ffba06;">
+                      <a class="display-10" href="javascript:;"  style="color: #ffba06;" (click)="openmaterialDetails(compt.materialId)">{{compt.materialName}}
+                        </a>
+                    </td>
+                    <td class="display-10" style="color: #ffba06;">{{compt.materialUnit}}</td>
+                    <td class="display-10" style="color: #ffba06;">{{compt.neededQuantity}}</td>
+                    <td class="display-10" style="color: #ffba06;">{{compt.producedQuantity}}</td>
+                    <td class="display-10" style="color: #ffba06;">{{compt.scrapQuantity}}</td>
+                    <td class="display-10" style="color: #ffba06;">{{compt.reworkQuantity}}</td>
+                    <td></td>
+
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <!-- <div class="row shadow-sm m-0 mb-1">
+             <div class="col-lg-5 bg-gray-dark text-light pl-0 pr-0">
+
+                        <table style="margin-bottom: 0.3rem;word-break: break-word;" class=" table table-borderless table-sm text-light">
+                          <tr>
+                            <td class="display-10">{{'component' | translate}}</td>
+                            <td  class="display-10">{{'goods' | translate }}</td>
+                            <td  class="display-10">{{'used' | translate}}</td>
+                            <td  class="display-10">{{'scrap' | translate}}</td>
+                            <td  class="display-10">{{'rework' | translate}}</td>
+                            <td  class="display-10">{{'unit' | translate}}</td>
+                          </tr>
+                          <tbody *ngIf="models[0] && models[0].componentList">
+                          <tr *ngFor="let compt of ((showFullComponents) ? models[0].componentList : models[0].componentList.slice(0,3))">
+                              <td class="display-10" style="color: #ffba06;">
+                                <a class="display-10" href="javascript:;"  style="color: #ffba06;" (click)="openmaterialDetails(compt.materialId)">{{compt.materialName}}
+                                  </a>
+                                </td>
+                              <td class="display-10" style="color: #ffba06;">{{compt.neededQuantity}}</td>
+                              <td class="display-10" style="color: #ffba06;">{{compt.producedQuantity}}</td>
+                              <td class="display-10" style="color: #ffba06;">{{compt.scrapQuantity}}</td>
+                              <td class="display-10" style="color: #ffba06;">{{compt.reworkQuantity}}</td>
+                              <td class="display-10" style="color: #ffba06;">{{compt.materialUnit}}</td>
+                          </tr>
+                          </tbody>
+                        </table>
+
+             </div>
+             <div class="col-lg-7 bg-gray-dark text-light m-0 pl-0 pr-0">
+                        <table style="margin-bottom: 0.3rem; word-break: break-word;"
+                        class=" table table-borderless table-sm text-light">
+                          <tr>
+                            <td  class="display-10" >{{'no' | translate}}</td>
+                            <td  class="display-10">{{'material' | translate}}</td>
+                            <td  class="display-10">{{'planned' | translate}}</td>
+                            <td  class="display-10" width="10%">{{'unit' | translate}}</td>
+                            <td  class="display-10">{{'goods' | translate}}</td>
+                            <td  class="display-10" width="14%">{{'scrap' | translate}}</td>
+                            <td  class="display-10">{{'rework' | translate}}</td>
+                            <td  class="display-10">{{'buffer' | translate}}</td>
+                          </tr>
+
+                          <tbody *ngIf="models[0] && models[0].materiaList">
+                          <tr *ngFor="let mat of models[0].materiaList">
+                            <td class="display-108" style="">
+                              <a class="display-10" href="javascript:;" style="color: white;"  (click)="openmaterialDetails(mat.materialId)">{{mat.materialNo}}
+                              </a>
+                            </td>
+                            <td class="display-10" style="text-align: center;">
+                              <a class="display-10" href="javascript:;" style="color: white;"  (click)="openmaterialDetails(mat.materialId)">{{mat.materialName}}
+                              </a></td>
+                            <td class="display-10" style="color: #72b5fa; text-align: center;">{{mat.plannedQuantity}}</td>
+                            <td class="display-10"  style="color: #72b5fa; text-align: center;">{{mat.materialUnit}}</td>
+                            <td class="display-10 text-success text-bold text-center">{{mat.producedQuantity}}</td>
+                            <td class="display-10 text-danger text-bold text-center">{{mat.scrapQuantity}}</td>
+                            <td class="display-10" style="color: #ffba06;">{{mat.reworkQuantity}}</td>
+                            <td class="display-10 text-info text-bold text-center">{{mat.bufferQuantity}}</td>
+                          </tr>
+                          </tbody>
+                        </table>
+                  <button pButton *ngIf="models[0].componentList && models[0].componentList.length > 3"
+                  style="width: 98%; color: rgb(195,195,195); background-color: rgb(61,83,99);
+                  position: absolute; border: 1px solid rgb(153, 162, 169); bottom: 3%;"
+                   type="button" [icon]="showFullComponents === false? 'fa fa-caret-down' : 'fa fa-caret-up'" (click)="showFullComponents = !showFullComponents" iconPos="right" [label]="showFullComponents === false ? ('show-more'|translate) : ('show-less'|translate)"></button>
+             </div>
+          </div> -->
+
+          <!-- <div class="row shadow-sm m-0 mb-1">
+
+
+
+          </div> -->
+
+        <div class="row m-0 mb-1 bg-gray-dark ">
+          <div class="col-4  px-0   text-light text-center">
+
+            <div class="bg-gray-dark p-1 px-0">
+              <span class="d-block display-10 text-light">{{'operation-time' | translate}}:</span>
+              <span class=" display-9 text-success text-bold"> {{(models[0].jobOperationTimeAsString)}}</span>
+            </div>
+
+          </div>
+          <div class="col-4  px-0 text-center ">
+            <div class="bg-gray-dark p-1 px-0">
+              <span class="d-block display-10 text-light">{{'planned-production-cycle' | translate}}</span>
+              <span class=" display-9 text-success text-bold"> {{models[0].plannedQuantity}}<small> psc</small></span>
+            </div>
+          </div>
+          <!-- <div class="col-3  px-0 text-center ">
+              <div class="bg-gray-dark p-1 px-0">
+                <span class="d-block display-10 text-light">{{'unit' | translate}}</span>
+                <span class=" display-9 text-success text-bold"></span>
+              </div>
+          </div> -->
+          <div class="col-4  px-0    text-center">
+            <div class="bg-gray-dark p-1 px-0 ">
+              <span class="d-block display-10 text-light">{{'production-cycle-quantity' | translate}}</span>
+              <span class=" display-9 text-success text-bold"> {{models[0].producedQuantity}}<small> psc</small></span>
+            </div>
+          </div>
+          <div class="col-12 py-1">
+            <div class="progress">
+              <div class="progress-bar  bg-success " role="progressbar"
+                   attr.aria-valuenow="{{(models[0].position *100)|number:'1.2-2'}}" aria-valuemin="0" aria-valuemax="100"
+                   [ngStyle]="{'width': ((models[0].position *100)|number:'1.2-2')+'%'}"> {{((models[0].position *100)|number:'1.1-1') +'%'}}</div>
+            </div>
+          </div>
+        </div>
+        <div class="row m-0 mb-1 bg-gray-dark ">
+          <div class="col-6  px-0   text-light text-center">
+
+            <div class="bg-gray-dark p-1 px-0">
+              <span class="d-block display-10 text-light">{{'daily-job-loaded-time' | translate}}</span>
+              <span class=" display-10 text-info text-bold"> {{(models[0].dailyJobLoadedTimeAsString)}}</span>
+            </div>
+
+          </div>
+
+          <div class="col-6  px-0    text-center">
+            <div class="bg-gray-dark p-1 px-0 ">
+              <span class="d-block display-10 text-light">{{'daily-stop-duration' | translate}}</span>
+              <span class=" display-10 text-danger text-bold"> {{(models[0].dailyStopDurationAsString)}}</span>
+            </div>
+          </div>
+        </div>
+        <div class="row bg-gray-dark m-0 py-4" *ngIf="oEE">
+          <div class="col-md-6 border-right ">
+            <div class="row mb-4 mx-5 py-2 align-items-center justify-content-center border-bottom">
+              <span class="text-white">{{'oee-reports-by-shift' |translate}}</span>
+            </div>
+            <div class="row m-0 p-0 align-items-center justify-content-center">
+
+              <div class="col-md-6 text-center p-2">
+                <div style="display:inline-block;position:relative">
+                  <p-overlayPanel #op [dismissable]="true"  appendTo="body" baseZIndex="9999">
+                    OEE=Availability x Performance x Quality
+                  </p-overlayPanel>
+                <span class="d-block display-7 text-light text-bold"
+                (mouseenter)="op.show($event)" (mouseleave)="op.hide()" >{{'oee-per' | translate}}</span>
+
+
+                </div>
+                <circle-progress
+                  [percent]="oEE.oee1||0"
+                  [showTitle]="true"
+                  [subtitle]="oEE.oee1||'-'"
+                  [title]="'%'"
+                ></circle-progress>
+              </div>
+              <div class="col-md-6 text-center p-2">
+                <div  style="display:inline-block;position:relative">
+                  <p-overlayPanel #op2 [dismissable]="true"  appendTo="body" baseZIndex="9999">
+                    TEEP=OEE x Schedule Loss Percentage
+                  </p-overlayPanel>
+                  <span class="d-block display-7 text-light text-bold" (mouseenter)="op2.show($event)" (mouseleave)="op2.hide()">{{'teep-per' | translate}}</span>
+                </div>
+                <circle-progress
+                  [percent]="oEE.teep||0"
+                  [showTitle]="true"
+                  [subtitle]="oEE.teep||'-'"
+                  [title]="'%'"
+                ></circle-progress>
+              </div>
+              <div class="col-md-4 pt-3 text-center">
+                <span class=" display-10 text-light m-0 p-0 pb-2">{{'availability'|translate}}</span>
+                <circle-progress
+                  [percent]="oEE.availability||0"
+                  [showTitle]="true"
+                  [subtitle]="oEE.availability||'-'"
+                  [title]="'%'"
+                  [titleFontSize]="40"
+                ></circle-progress>
+              </div>
+              <div class="col-md-4 pt-3 text-center">
+                <span class=" display-10 text-light m-0 p-0 pb-2">{{'performance'|translate}}</span>
+                <circle-progress
+                  [percent]="oEE.actualPerformance||0"
+                  [showTitle]="true"
+                  [subtitle]="oEE.actualPerformance||'-'"
+                  [title]="'%'"
+                ></circle-progress>
+              </div>
+              <div class="col-md-4 pt-3 text-center">
+                <span class=" display-10 text-light m-0 p-0 pb-2">{{'quality'|translate}}</span>
+                <circle-progress
+                  [percent]="oEE.quality||0"
+                  [showTitle]="true"
+                  [title]="'%'"
+                  [subtitle]="oEE.quality||'-'"
+                ></circle-progress>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="row mb-4 mx-5 py-2 align-items-center justify-content-center border-bottom">
+              <span class="text-white">{{'real-time-performance' |translate}}</span>
+            </div>
+            <div class="row m-0 p-0 align-items-end flex-grow-1">
+              <div class="col-md-6 text-center p-4">
+                <span class=" display-10 text-light m-0 p-0 pb-2">{{'workstation' | translate}}<br> {{'on-schedule'|translate}}</span>
+                <circle-progress
+                  [percent]="models[0].onSchedule||0"
+                  [showTitle]="true"
+                  [title]="'%'"
+                  [subtitle]="models[0].onSchedule||'-'"
+                ></circle-progress>
+              </div>
+
+              <div class="col-md-6 text-center p-4">
+                <span class=" display-10 text-light m-0 p-0 pb-2">{{'employee' | translate}}<br>  {{'on-schedule'|translate}}</span>
+                <circle-progress
+                  [percent]="models[0].onScheduleEmployee||0"
+                  [showTitle]="true"
+                  [title]="'%'"
+                  [subtitle]="models[0].onScheduleEmployee||'-'"
+                ></circle-progress>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="p-0 pr-2" [ngClass]="{'col-lg-4 ':models && models.length>1,'col-lg-6 ': !models || models.length<=1}">
+      <p-tabView id="machine-style-tab">
+        <p-tabPanel header="{{'stop-causes' | translate}}">
+          <div class="d-flex flex-column p-0">
+            <div class="row bg-gray-dark   m-0 my-auto flex-grow-1 ">
+              <div class="col display-9 py-3 align-self-center  text-light">
+                <div class=" row ">
+                  <div class="col text-light"> {{'workstation-name'|translate}}:</div>
+                  <div class="col text-warning text-bold ">
+                    <a href="javascript:;" class="text-warning text-bold " (click)="openWorkstationDetails(models[0].workStationId)">
+                      {{models[0].workStationName}}
+                    </a>
+                  </div>
+                </div>
+                <div class=" row ">
+                  <div class="col text-light"> {{'workstation-id'|translate}}:</div>
+                  <div class="col text-warning">
+                    <a href="javascript:;" class="text-warning text-bold " (click)="openWorkstationDetails(models[0].workStationId)">
+                      {{models[0].workStationId}}
+                    </a>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="py-1 px-0 d-flex flex-column">
+
+            <div class="row bg-gray-dark  m-0  mb-1 ">
+              <div class="col  pt-2  text-light ">
+                <div class=" row display-9">
+                  <div class="col">
+                    <table class=" table table-borderless table-sm text-light">
+                      <tbody>
+                      <tr>
+                        <td class="display-10" style="width: 54%;"> {{'factory-monitoring.number-of-stop'|translate}} <span class="float-right">:</span></td>
+                        <td> {{stopCount}}</td>
+                      </tr>
+                      <tr>
+                        <td class="display-10"> {{'factory-monitoring.average-stop-time'|translate}}<span class="float-right">:</span></td>
+                        <td> {{averageStops}}</td>
+                      </tr>
+                      <tr>
+                        <td class="display-10"> {{'factory-monitoring.total-stop-time'|translate}}<span class="float-right">:</span></td>
+                        <td>{{totalStops}}</td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Work Hours -->
+            <div class="row bg-gray-dark m-0 mb-1  px-1 pt-3 flex-grow-1">
+              <div class="col-md-12 p-0 align-self-center">
+                <monitoring-stop-analysis [injected]="stops"></monitoring-stop-analysis>
+              </div>
+            </div>
+
+            <div class="row mb-1 ">
+              <div class="col-6  pr-1    text-center">
+                <div class="bg-gray-dark p-1 flex-grow-1">
+                  <span class="d-block display-9 text-light">{{'last-stop-duration' | translate}}</span>
+                  <span class=" display-10 text-danger text-bold"> {{(models[0].lastStopDurationAsString)}}</span>
+                </div>
+
+              </div>
+
+              <div class="col-6  pl-1    text-center">
+                <div class="bg-gray-dark p-1 flex-grow-1">
+                  <span class="d-block display-9 text-light">{{'last-stop-reason' | translate}}</span>
+                  <span class=" display-9 text-danger text-bold"> {{models[0].lastStopReason||'-'}}</span>
+                </div>
+              </div>
+            </div>
+
+
+          </div>
+        </p-tabPanel>
+        <p-tabPanel header="{{'quality' | translate}}">
+          <div class="py-1 px-0 d-flex flex-column">
+            <div class="row bg-gray-dark  m-0  mb-1 ">
+              <div class="col  pt-2  text-light ">
+                <div class=" row display-9 mb-2">
+                  <!-- <div class="col text-light"> :</div> -->
+                  <div class="col text-warning text-bold ">{{'scrap-causes'|translate}}</div>
+                </div>
+              </div>
+            </div>
+            <div class="row bg-gray-dark m-0 mb-1  px-1 pt-3 flex-grow-1">
+              <div class="col-md-12 p-0 align-self-center">
+                <scrap-rework-chart-component [injected]="scrapData"></scrap-rework-chart-component>
+              </div>
+            </div>
+            <div class="row bg-gray-dark  m-0  mb-1 ">
+              <div class="col  pt-2  text-light ">
+                <div class=" row display-9 mb-2">
+                  <!-- <div class="col text-light"> :</div> -->
+                  <div class="col text-warning text-bold ">{{'rework-causes'|translate}}</div>
+                </div>
+              </div>
+            </div>
+            <div class="row bg-gray-dark m-0 mb-1  px-1 pt-3 flex-grow-1">
+              <div class="col-md-12 p-0 align-self-center">
+                <scrap-rework-chart-component [injected]="reworkData"></scrap-rework-chart-component>
+              </div>
+            </div>
+          </div>
+        </p-tabPanel>
+        <p-tabPanel header="{{'sensor-data' | translate}}">
+            <equipment-monitoring-modal-detail [model]="models[0].equipmentDataStream"></equipment-monitoring-modal-detail>
+        </p-tabPanel>
+        <p-tabPanel header="{{'Malfunction' | translate}}">
+          <div class="py-1 px-0 d-flex flex-column">
+            <div class="row bg-gray-dark  m-0  mb-1 ">
+              <div class="col  pt-2  text-light ">
+                <div class=" row display-9 mb-2">
+                  <div class="col text-light"> {{'maintenance-state'|translate}}:</div>
+                  <div class="col text-warning text-bold ">{{models[0].maintenanceState}}</div>
+                </div>
+              </div>
+            </div>
+            <div class="row bg-gray-dark  m-0  mb-1 ">
+              <div class="col  pt-2  text-light ">
+                <div class=" row display-9 mb-2">
+                  <div class="col text-light"> {{'maintenance-order-id'|translate}}:</div>
+                  <div class="col text-light text-bold ">{{models[0]?.maintenanceOperationWsDto?.maintenanceOrder?.maintenanceId}}</div>
+                </div>
+              </div>
+            </div>
+            <div class="row shadow-sm m-0 mb-1 bg-gray-dark">
+              <table class="table table-borderless table-sm text-light m-2">
+                <tr>
+                  <td class="display-10">{{'operation-name' | translate}}</td>
+                  <td class="display-10">{{'order-type' | translate}}</td>
+                  <td class="display-10">{{'planner-group' | translate}}</td>
+                  <td class="display-10">{{'equipment-name' | translate}}</td>
+                  <td class="display-10">{{'malfunction-start' | translate}}</td>
+                </tr>
+                <tr>
+                  <td class="display-10" style="color:#ffba06;">{{models[0]?.maintenanceOperationWsDto?.equipmentOperation?.operationCode}}</td>
+                  <td class="display-10" style="color:#ffba06;">{{models[0]?.maintenanceOperationWsDto?.maintenanceOrderType?.maintenanceOrderType}}</td>
+                  <td class="display-10" style="color:#ffba06;">{{models[0]?.maintenanceOperationWsDto?.plannerGroup?.plannerGroup}}</td>
+                  <td class="display-10" style="color:#ffba06;">{{models[0]?.maintenanceOperationWsDto?.equipment?.equipmentName}}</td>
+                  <td class="display-10" style="color:#ffba06;">{{models[0]?.maintenanceOperationWsDto?.maintenanceNotification?.malfunctionStart}}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </p-tabPanel>
+        <p-tabPanel header="{{'hsc' | translate}}">
+          <div class="py-1 px-0 d-flex flex-column">
+            <div class="row bg-gray-dark  m-0  mb-1 ">
+              <div class="col p-2 text-light ">
+                <div class="row display-9 m-1">
+                  <table class="table table-bordered m-0">
+                    <tbody>
+                      <tr>
+                        <td class="text-warning text-bold">{{'hsc'|translate}}-1</td>
+                        <td class="text-warning text-bold">{{'hsc'|translate}}-2</td>
+                        <td class="text-warning text-bold">{{'hsc'|translate}}-3</td>
+                        <td class="text-warning text-bold">{{'hsc'|translate}}-4</td>
+                        <td class="text-warning text-bold">{{'hsc'|translate}}-5</td>
+                        <td class="text-warning text-bold">{{'hsc'|translate}}-6</td>
+                        <td class="text-warning text-bold">{{'hsc'|translate}}-7</td>
+                        <td class="text-warning text-bold">{{'hsc'|translate}}-8</td>
+                      </tr>
+                      <tr>
+                        <td class="text-white">{{models[0].hsc1}}</td>
+                        <td class="text-white">{{models[0].hsc2}}</td>
+                        <td class="text-white">{{models[0].hsc3}}</td>
+                        <td class="text-white">{{models[0].hsc4}}</td>
+                        <td class="text-white">{{models[0].hsc5}}</td>
+                        <td class="text-white">{{models[0].hsc6}}</td>
+                        <td class="text-white">{{models[0].hsc7}}</td>
+                        <td class="text-white">{{models[0].hsc8}}</td>
+                      </tr>
+                      <tr>
+                        <td class="text-warning text-bold">{{'hsc'|translate}}-9</td>
+                        <td class="text-warning text-bold">{{'hsc'|translate}}-10</td>
+                        <td class="text-warning text-bold">{{'hsc'|translate}}-11</td>
+                        <td class="text-warning text-bold">{{'hsc'|translate}}-12</td>
+                        <td class="text-warning text-bold">{{'hsc'|translate}}-13</td>
+                        <td class="text-warning text-bold">{{'hsc'|translate}}-14</td>
+                        <td class="text-warning text-bold">{{'hsc'|translate}}-15</td>
+                        <td class="text-warning text-bold">{{'hsc'|translate}}-16</td>
+                      </tr>
+                      <tr>
+                        <td class="text-white">{{models[0].hsc9}}</td>
+                        <td class="text-white">{{models[0].hsc10}}</td>
+                        <td class="text-white">{{models[0].hsc11}}</td>
+                        <td class="text-white">{{models[0].hsc12}}</td>
+                        <td class="text-white">{{models[0].hsc13}}</td>
+                        <td class="text-white">{{models[0].hsc14}}</td>
+                        <td class="text-white">{{models[0].hsc15}}</td>
+                        <td class="text-white">{{models[0].hsc16}}</td>
+                      </tr>
+                      <tr>
+                        <td class="text-warning text-bold">{{'hsc'|translate}}-17</td>
+                        <td class="text-warning text-bold">{{'hsc'|translate}}-18</td>
+                        <td class="text-warning text-bold">{{'hsc'|translate}}-19</td>
+                        <td class="text-warning text-bold">{{'hsc'|translate}}-20</td>
+                      </tr>
+                      <tr>
+                        <td class="text-white">{{models[0].hsc17}}</td>
+                        <td class="text-white">{{models[0].hsc18}}</td>
+                        <td class="text-white">{{models[0].hsc19}}</td>
+                        <td class="text-white">{{models[0].hsc20}}</td>
+                        
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </p-tabPanel>
+      </p-tabView>
+
+    </div>
+
+  </div>
+</div>
+

@@ -1,0 +1,80 @@
+<div class="row  mb-1 p-2 ">
+  <strong class=" col text-muted"> {{'machine-status'|translate}}</strong>
+  <div class="col"><span class="legend-box closed"></span> {{'Closed'|translate}}</div>
+  <div class="col"><span class="legend-box running"></span> {{'Running'|translate}}</div>
+  <div class="col"><span class="legend-box standby"></span> {{'StandBy'|translate}}</div>
+  <div class="col"><span class="legend-box machineSetup"></span> {{'Setup'|translate}}</div>
+  <div class="col"><span class="legend-box machineStop"></span> {{'Stopped'|translate}}</div>
+</div>
+<!--endof legend area-->
+
+<!--chart drawing begin-->
+<div class="row  status-container" [style.minHeight]="'100px'"  
+[style.height]="(vLHeight)? vLHeight + 20 +'px': containerHeight +'px'"
+     (resized)="onResizeContainer($event)">
+
+  <!--here we draw shiftArray.length vertical lines for hour 00:00 to 24:00-->
+  <!--on left side we left leftVlOffset px, this leftVlOffset px will be used to draw workstations label-->
+  <ng-container *ngFor="let item of shiftArray; let index=index;">
+    <div class="vl vl-bolder" [style.height]="vLHeight+'px'" [style.minHeight]="(vLHeight)? vLHeight+'px': containerHeight +'px'"  [ngStyle]="{'left':((chartWidth/(shiftArray.length-1))*index+leftVlOffset)+'px'}"
+         [ngClass]="{'vl-bolder':(index%2)==0}"></div>
+
+  </ng-container>
+  <!--        <div class="vl vl-bolder" [ngStyle]="{'left':((chartWidth/6)*0+leftVlOffset)+'px'}"></div>-->
+  <!--        <div class="vl" [ngStyle]="{'left':((chartWidth/6)*1+leftVlOffset)+'px'}"></div>-->
+
+  <!--end of vertical lines-->
+
+  <!--horizontal line begin-->
+  <div class="hl" [style.left]="leftVlOffset+'px'" [style.minHeight]="(vLHeight)? vLHeight+'px': containerHeight +'px'" [style.maxHeight] = "'600px'" [ngStyle]="{'width':(chartWidth+2)+'px'}"></div>
+  <!--horizontal line end-->
+
+  <!--here we draw x axes horizontal label that defined in hourArray -->
+
+  <ng-container *ngFor="let item of shiftArray; let index=index;">
+        <span class="position-absolute hour-span hour-bold" [style.top]="(vLHeight)? vLHeight+'px': containerHeight +'px'"
+              [ngClass]="{'hour-bold':(index%2)==0}"
+              [ngStyle]="{'left':((chartWidth/(shiftArray.length-1))*index+leftHourOffset)+'px'}"
+        >{{item}}</span>
+  </ng-container>
+  <!--        <span class="position-absolute hour-span hour-bold" [ngStyle]="{'left':(leftHourOffset)+'px'}">06:00</span>-->
+  <!--        <span class="position-absolute hour-span" [ngStyle]="{'left':((chartWidth/6)+leftHourOffset)+'px'}">10:00</span>-->
+  <!--        <span class="position-absolute hour-span hour-bold" [ngStyle]="{'left':((chartWidth/6)*2+leftHourOffset)+'px'}">14:00</span>-->
+  <!--        <span class="position-absolute hour-span" [ngStyle]="{'left':((chartWidth/6)*3+leftHourOffset)+'px'}">18:00</span>-->
+  <!--        <span class="position-absolute hour-span hour-bold" [ngStyle]="{'left':((chartWidth/6)*4+leftHourOffset)+'px'}">22:00</span>-->
+  <!--        <span class="position-absolute hour-span" [ngStyle]="{'left':((chartWidth/6)*5+leftHourOffset)+'px'}">02:00</span>-->
+  <!--        <span class="position-absolute hour-span hour-bold" [ngStyle]="{'left':((chartWidth/6)*6+leftHourOffset)+'px'}">06:00</span>-->
+  <!--end of x axes horizontal labels-->
+
+
+  <ng-container *ngFor="let item of workstationStatusArray; let index=index;">
+
+        <span class="position-absolute"
+              [style.left]="xLabelLeftOffset+'px'"
+              [style.top]="((index*barRowHeight)+(barMargin*1.8))+'px'">
+
+          <a href="javascript:;" (click)="showWorkStationDetailModal(item)">{{item.workstationName.length>20?item.workstationName.substring(0,20):item.workstationName}}</a>
+
+        <span *ngIf="item.workstationName.length>20" style="cursor: pointer" [pTooltip]="item.workstationName " >...</span>
+        </span>
+    <div class="position-absolute" [ngStyle]="{'top':((index*barRowHeight)+barMargin)+'px'}">
+
+      <ng-container *ngFor="let aItem of item.states;">
+            <span [style.height]="barHeight+'px'"
+            [pTooltip]="showMachineToolTip(aItem)" [escape]="false"
+            tooltipPosition="top" [tooltipZIndex]="9999999"
+                  [style.left]="getLeft(aItem)"
+                  [style.width]="getWidth(aItem)"
+                  class="position-absolute span_opacity" [ngClass]="{
+                   'span_standby': aItem.s=='StandBy',
+                   'span_running': aItem.s=='Running',
+                   'span_closed': (aItem.s=='Closed') || (aItem.s== 'closed'),
+                   'span_machine_stop': aItem.s=='Stopped',
+                   'span_machine_setup': aItem.s=='Setup'}"></span>
+
+      </ng-container>
+
+    </div>
+  </ng-container>
+
+</div>

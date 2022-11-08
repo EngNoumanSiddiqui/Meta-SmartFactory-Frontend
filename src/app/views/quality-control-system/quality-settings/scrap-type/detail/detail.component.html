@@ -1,0 +1,41 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i> {{'scrap-type-detail' | translate}}  
+        </div>
+        <div class="card-body">
+          <table class="table table-bordered">
+            <tbody *ngIf="part">
+            <tr>
+              <td width="30%" *ngIf="part.typeScrap">{{'scrap-code' | translate}}*</td>
+              <td width="30%" *ngIf="part.typeRework">{{'rework-code' | translate}}*</td>
+              <td>{{part.scrapCode}} </td>
+            </tr>
+            <tr>
+              <td>{{'type-scrap' | translate}}*</td>
+              <!-- <td *ngIf="part.typeRework">{{'type-rework' | translate}}*</td> -->
+                <td> <i class="fa " style="color: cornflowerblue; font-size: x-large;" 
+                  [ngClass]="{'fa-check-circle': part.typeScrap === true, 'fa-close': part.typeScrap === false}"></i></td>
+              </tr>
+            <tr>
+              <td *ngIf="part.typeScrap">{{'scrap-description' | translate}}*</td>
+              <td *ngIf="part.typeRework">{{'rework-description' | translate}}*</td>
+              <td>{{part.scrapDescription}}  </td>
+            </tr>
+            <tr>
+                <td>{{'type-rework' | translate}}</td>
+                <td><i class="fa " style="color: cornflowerblue; font-size: x-large;" 
+                  [ngClass]="{'fa-check-circle': part.typeRework === true, 'fa-close': part.typeRework === false}"></i> </td>
+              </tr>
+            
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

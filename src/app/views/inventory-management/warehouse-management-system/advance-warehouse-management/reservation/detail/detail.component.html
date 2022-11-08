@@ -1,0 +1,1284 @@
+<div class="animated fadeIn">
+  <div class="row" *ngIf="reservationDetail">
+    <p-tabView class="col-md-12">
+      <!-- RESERVATION INFORMATION  -->
+      <p-tabPanel header="{{'reservation-information'|translate}}">
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="card">
+              <div class="card-header">
+                <i class="fa fa-align-justify"></i> {{'reservation-information' | translate}}
+              </div>
+              <div class="card-body">
+
+                <form #reservationEditForm="ngForm">
+                  <table class="table table-bordered table-sm">
+                    <tbody *ngIf="reservationDetail">
+                      <tr class>
+                        <td>{{'reservation-number' | translate}}</td>
+                        <td>
+                          {{reservationDetail.reservationId}}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td width="40%">{{'plant'| translate}}</td>
+                        <td>
+                          <a href="javascript:;" (click)="showDialog(reservationDetail.plantId, dialogEnum.PLANT)" >
+                            {{reservationDetail.plantName}}
+                          </a>
+
+                        </td>
+                      </tr>
+                      <tr>
+                        <td width="40%">{{'movement-type'| translate}}</td>
+                        <td>
+                          {{reservationDetail.movementType}}
+
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>{{'production-order' | translate}}</td>
+                        <td>
+                          <a href="javascript:;"
+                          (click)="showDialog(reservationDetail.prodOrderId, dialogEnum.PRODUCTIONORDER)" >
+                            {{reservationDetail.prodOrderId}}
+                          </a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td width="40%">{{'job-order-id'| translate}}</td>
+                        <td>
+                          <a href="javascript:;"
+                          (click)="showDialog(reservationDetail.itemNo, dialogEnum.JOBORDER)" >
+                            {{reservationDetail.itemNo}}
+                          </a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td width="40%">{{'reserved-job-order-operation-id'| translate}}</td>
+                        <td>
+                          <a href="javascript:;"
+                          (click)="showDialog(reservationDetail.waitingForJobOrderOperationId, dialogEnum.JOBORDEROPERATION)">
+                          {{reservationDetail.waitingForJobOrderOperationId}}</a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td width="40%">{{'reserved-job-order-quantity'| translate}}</td>
+                        <td>
+                        {{reservationDetail.waitingForJobQuantity}}
+                        </td>
+                      </tr>
+                     
+                      <tr>
+                        <td>{{'sales-order-id' | translate}}</td>
+                        <td>
+                          <a href="javascript:;"
+                          (click)="showDialog(reservationDetail.saleOrderId, dialogEnum.ORDER)" >
+                            {{reservationDetail.saleOrderId}}
+                          </a>
+
+                        </td>
+                      </tr>
+                      <tr>
+                        <td width="40%">{{'sales-order-detail-id'| translate}}</td>
+                        <td>
+                          <a href="javascript:;"
+                          (click)="showDialog(reservationDetail.orderDetailId, dialogEnum.ORDERITEM)" >
+                            {{reservationDetail.orderDetailId}}
+                          </a>
+
+                        </td>
+                      </tr>
+                      <tr>
+                        <td width="40%">{{'material-name'| translate}}</td>
+                        <td>
+                          <a href="javascript:;"
+                          (click)="showDialog(reservationDetail.materialId, dialogEnum.STOCK)" >
+                            {{reservationDetail.materialName}}
+                          </a>
+
+                        </td>
+                      </tr>
+                      <!-- <tr>
+                        <td width="40%">{{'height'| translate}}</td>
+                        <td>
+                          <div class="input-group input-group-sm">
+                            <input class="form-control form-control-sm" type="number"
+                              [(ngModel)]="reservationDetail.height" name="height" min="1"
+                              readonly />
+
+                          </div>
+
+                        </td>
+                      </tr>
+                      <tr>
+                        <td width="40%">{{'width'| translate}}</td>
+                        <td>
+                          <div class="input-group input-group-sm">
+                            <input class="form-control form-control-sm" type="number"
+                              [(ngModel)]="reservationDetail.width" name="width" min="1"
+                              readonly />
+
+                          </div>
+
+                        </td>
+                      </tr>
+                      <tr>
+                        <td width="40%">{{'dimension-unit'| translate}}</td>
+                        <td>
+                          {{(reservationDetail.dimensionUnit && reservationDetail.dimensionUnit !=='0') ? reservationDetail.dimensionUnit : ''}}
+
+                        </td>
+                      </tr> -->
+                      <tr>
+                        <td width="40%">{{'quantity'| translate}}</td>
+                        <td>
+                          {{reservationDetail.enteredUnitQuantity}}
+
+
+                        </td>
+                      </tr>
+                      <tr>
+                        <td width="40%">{{'quantity-unit'| translate}}</td>
+                        <td>
+                          {{reservationDetail.enteredUnitMeasure}}
+                          <!-- <div class="input-group input-group-sm">
+                          <select id="enteredUnitMeasure" name="enteredUnitMeasure" class="form-control-sm"
+                            [(ngModel)]="reservationDetail.enteredUnitMeasure" required disabled>
+                            <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                            <option *ngFor="let item of unitList" value="{{item.unit}}">{{item.unit}}</option>
+                          </select>
+
+                        </div> -->
+
+                        </td>
+                      </tr>
+                      <tr>
+                        <td width="40%">{{'warehouse-from'| translate}}</td>
+                        <td>
+                          <a href="javascript:;"
+                          (click)="showDialog(reservationDetail.fromWareHouse?.wareHouseId, dialogEnum.WAREHOUSE)" >
+                            {{reservationDetail.fromWareHouse?.wareHouseName}}
+                          </a>
+
+                        </td>
+                      </tr>
+                      <tr>
+                        <td width="40%">{{'warehouse-name'| translate}}</td>
+                        <td>
+                          <a href="javascript:;"
+                          (click)="showDialog(reservationDetail.warehouseId, dialogEnum.WAREHOUSE)" >
+                            {{reservationDetail.warehouseName}}
+                          </a>
+
+                        </td>
+                      </tr>
+                      <tr>
+                        <td width="40%">{{'location-no'| translate}}</td>
+                        <td>
+                          {{reservationDetail.locationNo}}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td width="40%">{{'barcode'| translate}}</td>
+                        <td>
+                          {{reservationDetail.barcode}}
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td width="40%">{{'batch'| translate}}</td>
+                        <td>
+                          <a href="javascript:;"
+                          (click)="showDialog(reservationDetail.batch, dialogEnum.BATCH)" >
+                            {{reservationDetail.batch}}
+                          </a>
+
+                        </td>
+                      </tr>
+                      <tr>
+                        <td width="40%">{{'final-issue'| translate}}</td>
+                        <td>
+
+                          <p-checkbox name="finalIssue" binary="true" disabled="true"
+                            [(ngModel)]="reservationDetail.finalIssue" pTooltip="{{'final-issue'  | translate}}"
+                            tooltipPosition="top"></p-checkbox>
+
+                        </td>
+                      </tr>
+                      <tr>
+                        <td width="40%">{{'requirement-date'| translate}}</td>
+                        <td>
+                          {{reservationDetail.requirementDate | date:'dd/MM/yyyy HH:mm'}}
+
+                        </td>
+                      </tr>
+                      <tr>
+                        <td width="40%">{{'requirement-quantity'| translate}}</td>
+                        <td>
+                          {{reservationDetail.requirementQuantity}}
+
+
+                        </td>
+                      </tr>
+                      <tr>
+                        <td width="40%">{{'withdrawn-quantity'| translate}}</td>
+                        <td>
+                          {{reservationDetail.withdrawnQuantity}}
+
+
+                        </td>
+                      </tr>
+                      <tr>
+                        <td width="40%">{{'delivered-quantity'| translate}}</td>
+                        <td>
+                          {{reservationDetail.deliveredQuantity}}
+
+
+                        </td>
+                      </tr>
+                      <tr>
+                        <td width="40%">{{'base-unit-measure'| translate}}</td>
+                        <td>
+                          {{reservationDetail.baseUnitMeasure}}
+                          <!-- <div class="input-group input-group-sm">
+                          <select id="baseUnitMeasure" name="baseUnitMeasure" class="form-control-sm"
+                            [(ngModel)]="reservationDetail.baseUnitMeasure" disabled>
+                            <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                            <option *ngFor="let item of unitList" value="{{item.unit}}">{{item.unit}}</option>
+                          </select>
+                        </div> -->
+                        </td>
+                      </tr>
+                      <tr>
+                        <td width="40%">{{'reservation-status'| translate}}</td>
+                        <td>
+                          {{reservationDetail.latestReservationStatus}}
+
+
+                        </td>
+                      </tr>
+
+                    </tbody>
+                  </table>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="card">
+              <div class="card-header">
+                <i class="fa fa-align-justify"></i> {{'status' | translate}}
+                <div class="card-actions">
+                  <button type="button" class="btn btn-primary text-white"
+                          (click)="initialize(this.id)"><i class="fa fa-refresh"></i></button>
+                </div>
+              </div>
+              
+              <div class="card-body">
+                <table class="table table-bordered table-sm">
+                  <tbody *ngIf="reservationDetail">
+                    <tr>
+                      <td width="50%">
+                        {{'sales' | translate }} {{'order-detail-status' | translate}}
+                      </td>
+                      <td>{{reservationDetail.orderDetailstatus}}</td>
+                    </tr>
+
+                    <tr>
+                      <td>
+                        {{'purchase-order-detail-status' | translate}}
+                      </td>
+                      <td>{{reservationDetail.purcahseOrderDetailstatus}}</td>
+                    </tr>
+
+                    <tr>
+                      <td>
+                        {{'job-order-status' | translate}}
+                      </td>
+                      <td>{{reservationDetail.jobOrderStatus}}</td>
+                    </tr>
+
+                    <tr>
+                      <td>
+                        {{'prod-order-status' | translate}}
+                      </td>
+                      <td>{{reservationDetail.prodOrderStatus}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+
+            <div class="card">
+              <div class="card-header">
+                <i class="fa fa-align-justify"></i> <b>{{'dimension-information' | translate}}</b>
+              </div>
+              <div class="card-body">
+                <table class="table table-bordered table-sm dimension-table">
+                  <tbody *ngIf="reservationDetail">
+                    <tr>
+                      <td>{{'dimension-unit'| translate}}</td>
+                      <td>
+                        {{(reservationDetail.dimensionUnit && reservationDetail.dimensionUnit !=='0') ? reservationDetail.dimensionUnit : ''}}
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>{{'width'| translate}}</td>
+                      <td>{{ reservationDetail.width }}</td>
+                    </tr>
+
+                    <tr>
+                      <td>{{'height'| translate}}</td>
+                      <td>{{reservationDetail.height}}</td>
+                    </tr>
+                    <!-- <tr>
+                      <td colspan="2" class="dim-td"> <b>{{'beginning-dimension' | translate}}</b></td>
+                    </tr>
+                    <tr>
+                      <td>{{'beginning-width'| translate}}</td>
+                      <td>{{reservationDetail?.beginWidth}}</td>
+                    </tr>
+
+                    <tr>
+                      <td>{{'beginning-height'| translate}}</td>
+                      <td>{{reservationDetail?.beginHeight}}</td>
+                    </tr>
+
+                    <tr>
+                      <td colspan="2" class="dim-td"> <b>{{'ending-dimension' | translate}}</b></td>
+                    </tr>
+                    <tr>
+                      <td>{{'ending-width'| translate}}</td>
+                      <td>{{reservationDetail?.endWidth}}</td>
+                    </tr>
+
+                    <tr>
+                      <td>{{'ending-height'| translate}}</td>
+                      <td>{{reservationDetail?.endHeight}}</td>
+                    </tr> -->
+
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </p-tabPanel>
+
+      <!-- PRODUCTION ORDER DETAILS -->
+      <p-tabPanel header="{{'production-order-details' | translate}}">
+        <ng-template pTemplate="content">
+          <!-- <div class="row">
+            <div class="col-lg-12">
+              <div class="card">
+                <div class="card-header">
+                  <i class="fa fa-align-justify"></i> {{'production-order-details' | translate}}
+                </div>
+                <div class="card-body">
+                  <table class="table table-bordered table-sm half-width">
+                    <tbody>
+                      <tr>
+                        <td>{{'prod-order-id' | translate}}</td>
+                        <td> {{prodOrder?.prodOrderId}}</td>
+                      </tr>
+                      <tr>
+                        <td>{{'material' | translate}}</td>
+                        <td>{{prodOrder?.materialName}}</td>
+                      </tr>
+                      <tr>
+                        <td>{{'plant' | translate}}</td>
+                        <td>{{prodOrder?.plantName}}</td>
+                      </tr>
+                      <tr>
+                        <td>{{'batch' | translate}}</td>
+                        <td>{{jobDetail?.batch}}</td>
+                      </tr>
+                      <tr>
+                        <td>{{'order-quantity' | translate}}</td>
+                        <td> {{prodOrder?.quantity}}</td>
+                      </tr>
+                      <tr>
+                        <td>{{'produced-quantity' | translate}}</td>
+                        <td> {{prodOrder?.deliveryQuantity}}</td>
+                      </tr>
+                      <tr>
+                        <td>{{'gr-quantity' | translate}}</td>
+                        <td> {{prodOrder?.grQuantity}}</td>
+                      </tr>
+
+                      <tr>
+                        <td>{{'order-unit' | translate}}</td>
+                        <td> {{prodOrder?.orderUnit}}</td>
+                      </tr>
+                      <tr>
+                        <td>{{'base-unit' | translate}}</td>
+                        <td> {{prodOrder?.baseUnit}}</td>
+                      </tr>
+                      <tr>
+                        <td>{{'store-location' | translate}}</td>
+                        <td>{{prodOrder?.warehouseName}}</td>
+                      </tr>
+                      <tr>
+                        <td>{{'create-date' | translate}}</td>
+                        <td> {{prodOrder?.createDate|date:"dd/MM/yyyy"}}</td>
+                      </tr>
+                      <tr>
+                        <td>{{'start-date' | translate}}</td>
+                        <td> {{prodOrder?.startDate|date:"dd/MM/yyyy"}}</td>
+                      </tr>
+                      <tr>
+                        <td>{{'end-date' | translate}}</td>
+                        <td> {{prodOrder?.finishDate|date:"dd/MM/yyyy"}}</td>
+                      </tr>
+                      <tr>
+                        <td>{{'actual-start' | translate}}</td>
+                        <td> {{prodOrder?.actualStart|date:"dd/MM/yyyy"}}</td>
+                      </tr>
+                      <tr>
+                        <td>{{'actual-finish' | translate}}</td>
+                        <td> {{prodOrder?.actualFinish|date:"dd/MM/yyyy"}}</td>
+                      </tr>
+                      <tr>
+                        <td>{{'status' | translate}}</td>
+                        <td> {{ prodOrder?.prodOrderStatus }}</td>
+                      </tr>
+
+                      <tr>
+                        <td>{{'priority' | translate}}</td>
+                        <td> {{ prodOrder?.priority }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div> -->
+          <div class="d-flex float-right">
+            <button type="button" class="btn btn-primary text-white"
+            (click)="initialize(this.id)"><i class="fa fa-refresh"></i></button>
+          </div>
+          <p-tabView>
+            <p-tabPanel header="{{'prod-order-detail'|translate}}" >
+              <div class="row" >
+                <div class="col-md-12">
+                  <table *ngIf="prodOrder" class="table table-sm   table-outline bg-white">
+                    <thead class="table-secondary">
+                    <tr>
+                      <th colspan="2"> {{'prod-order-detail'|translate}}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                      <td width="30%">{{'prod-order-id' | translate}}<span class="float-right">:</span></td>
+                      <td> {{prodOrder?.prodOrderId}}</td>
+                    </tr>
+                    <tr>
+                      <td width="30%">{{'material' | translate}}<span class="float-right">:</span></td>
+                      <td>
+                        <a href="javascript:;" (click)="showMaterialDetail(prodOrder?.materialId)">{{prodOrder?.materialName}}</a>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td width="30%">{{'plant' | translate}}<span class="float-right">:</span></td>
+                      <td>
+                        <a href="javascript:;" (click)="showPlantDetail(prodOrder?.plantId)">{{prodOrder?.plantName}}</a>
+                       </td>
+                    </tr>
+                    <tr>
+                      <td width="30%">{{'batch' | translate}}<span class="float-right">:</span></td>
+                      <td>
+                        <a href="javascript:;" (click)="showBatchDetail(prodOrder?.batch)"> {{prodOrder?.batch}}</a>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td width="30%">{{'order-quantity' | translate}}<span class="float-right">:</span></td>
+                      <td> {{prodOrder?.quantity}}</td>
+                    </tr>
+                    <tr>
+                        <td width="30%">{{'produced-quantity' | translate}}<span class="float-right">:</span></td>
+                        <td> {{prodOrder?.deliveryQuantity}}</td>
+                      </tr>
+                    <tr>
+                      <td width="30%">{{'gr-quantity' | translate}}<span class="float-right">:</span></td>
+                      <td> {{prodOrder?.grQuantity}}</td>
+                    </tr>
+
+                    <tr>
+                      <td width="30%">{{'order-unit' | translate}}<span class="float-right">:</span></td>
+                      <td> {{prodOrder?.orderUnit}}</td>
+                    </tr>
+                    <tr>
+                      <td width="30%">{{'base-unit' | translate}}<span class="float-right">:</span></td>
+                      <td> {{prodOrder?.baseUnit}}</td>
+                    </tr>
+                    <tr>
+                      <td width="30%">{{'store-location' | translate}}<span class="float-right">:</span></td>
+                      <td>
+                        <a href="javascript:;" (click)="showWarehouseDetail(prodOrder?.warehouse?.wareHouseId)">{{prodOrder?.warehouseName}}</a>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td width="30%">{{'create-date' | translate}}<span class="float-right">:</span></td>
+                      <td> {{prodOrder?.createDate|date:"dd/MM/yyyy"}}</td>
+                    </tr>
+                    <tr>
+                      <td width="30%">{{'start-date' | translate}}<span class="float-right">:</span></td>
+                      <td> {{prodOrder?.startDate|date:"dd/MM/yyyy"}}</td>
+                    </tr>
+                    <tr>
+                      <td width="30%">{{'end-date' | translate}}<span class="float-right">:</span></td>
+                      <td> {{prodOrder?.finishDate|date:"dd/MM/yyyy"}}</td>
+                    </tr>
+                    <tr>
+                      <td width="30%">{{'actual-start' | translate}}<span class="float-right">:</span></td>
+                      <td> {{prodOrder?.actualStart|date:"dd/MM/yyyy"}}</td>
+                    </tr>
+                    <tr>
+                      <td width="30%">{{'actual-finish' | translate}}<span class="float-right">:</span></td>
+                      <td> {{prodOrder?.actualFinish|date:"dd/MM/yyyy"}}</td>
+                    </tr>
+                    <tr>
+                      <td width="30%">{{'status' | translate}}<span class="float-right">:</span></td>
+                      <td> {{ prodOrder?.prodOrderStatus }}</td>
+                    </tr>
+
+                    <tr>
+                      <td width="30%">{{'priority' | translate}}<span class="float-right">:</span></td>
+                      <td> {{ prodOrder?.priority }}</td>
+                    </tr>
+                  </table>
+                  <div *ngIf="!prodOrder" class="text-center">
+                    <strong class=""><i class="fa fa-warning "></i>{{'NO_DATA_FOUND'|translate}}!</strong>
+                  </div>
+                </div>
+              </div>
+            </p-tabPanel>
+          <p-tabPanel  header="{{'job-order-list'|translate}}">
+            <div class="row">
+              <div class="col-md-12">
+                <p-table *ngIf="prodOrder?.jobOrderList" [columns]="cols" [value]="prodOrder?.jobOrderList" [autoLayout]="true">
+                  <ng-template pTemplate="caption">
+                    Job Order List
+                  </ng-template>
+                  <ng-template pTemplate="header" let-columns>
+                    <tr>
+                      <th *ngFor="let col of columns">
+                        {{col.header | translate}}
+                      </th>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-list let-columns="columns">
+                    <tr>
+                      <td>
+                        <a href="javascript:;" (click)="showJobOrderDetail(list.jobOrderId)"> {{list.jobOrderId}}</a>
+                      </td>
+                      <td>
+                        <ng-container *ngFor="let operation of list.jobOrderOperations">
+                          <span *ngFor="let item of operation['jobOrderStockProduceList']; last as isLast">
+                            <!-- {{item.stockNo}} -->
+                            <a href="javascript:;" (click)="showDialog(item.stockId, dialogEnum.STOCK)" >
+                              {{item.stockNo}}
+                            </a>
+                            <span *ngIf="!isLast">, </span>
+                          </span>
+                        </ng-container>
+                      
+                      </td>
+                      <td>
+                        <ng-container *ngFor="let operation of list.jobOrderOperations">
+                          <span *ngFor="let item of operation['jobOrderStockProduceList']; last as isLast">
+                            <a href="javascript:;" (click)="showDialog(item.stockName, dialogEnum.STOCK)" >
+                              {{item.stockName}}
+                            </a>
+                            <span *ngIf="!isLast">, </span>
+                          </span>
+                        </ng-container>
+                       
+                      </td>
+                      <td>{{list.quantity}}</td>
+                      <td>{{list.plannedQuantity}}</td>
+                      <td>{{prodOrder.grQuantity}}</td>
+                      <td>{{prodOrder.orderUnit}}</td>
+                      <td>{{prodOrder.baseUnit}}</td>
+                      <td>{{list.description}}</td>
+                      <td>{{list.createDate |date:'dd-MM-yyyy HH:mm'}}</td>
+                      <td>{{list.startDate |date:'dd-MM-yyyy HH:mm'}}</td>
+                      <td>{{list.finishDate |date:'dd-MM-yyyy HH:mm'}}</td>
+                      <td>{{list.actualStart |date:'dd-MM-yyyy HH:mm'}}</td>
+                      <td>{{list.actualFinish |date:'dd-MM-yyyy HH:mm'}}</td>
+
+                    </tr>
+                  </ng-template>
+                </p-table>
+                <div *ngIf="!prodOrder?.jobOrderList" class="text-center">
+                  <strong class=""><i class="fa fa-warning "></i>{{'NO_DATA_FOUND'|translate}}!</strong>
+                </div>
+              </div>
+            </div>
+          </p-tabPanel>
+         
+        </p-tabView>
+
+        </ng-template>
+      </p-tabPanel>
+
+      <!-- PURCHASE ORDER DETAILS -->
+      <p-tabPanel header="{{'purchase-order-detail' | translate}}">
+        <ng-template pTemplate="content">
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="card">
+                <div class="card-header">
+                  <i class="fa fa-align-justify"></i> {{'purchase-order-detail' | translate}}
+                  <div class="card-actions">
+                    <button type="button" class="btn btn-primary text-white"
+                            (click)="initialize(this.id)"><i class="fa fa-refresh"></i></button>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="row" *ngIf="purchaseOrder">
+                    <div class="col-md-12 d-flex">
+                        <div class="col-md-6">
+                          <table class="table table-bordered table-sm m-2">
+                            <tbody>
+
+                              <tr>
+                                <td width="40%">{{'purchase-order-detail-id' | translate}}</td>
+                                <td>
+                                  <a href="javascript:;" (click)="showDialog(purchaseOrder?.purchaseOrderDetailId, dialogEnum.PURCHASEORDERITEMDETAIL)" >
+                                    {{purchaseOrder?.purchaseOrderDetailId}}
+                                  </a>
+                                </td>
+                              </tr>
+
+                              <tr>
+                                <td>{{'purchase-order-id' | translate}}</td>
+                                <td>
+                                  <a href="javascript:;" (click)="showDialog(purchaseOrder?.purchaseOrderId, dialogEnum.PURCHASEORDER)" >
+                                    {{purchaseOrder?.purchaseOrderId}}
+                                  </a>
+                                </td>
+                              </tr>
+
+                              <tr>
+                                <td>{{'stock-no' | translate}}</td>
+                                <td>
+                                  <a href="javascript:;" (click)="showDialog(purchaseOrder?.stockId, dialogEnum.STOCK)" >
+                                    {{purchaseOrder?.stockNo}}
+                                  </a>
+                                </td>
+                              </tr>
+
+                              <tr>
+                                <td>{{'stock-name' | translate}}</td>
+                                <td>
+                                  <a href="javascript:;" (click)="showDialog(purchaseOrder?.stockId, dialogEnum.STOCK)" >
+                                    {{purchaseOrder?.stockName}}
+                                  </a>
+                                </td>
+                              </tr>
+
+                              <tr>
+                                <td>{{'warehouse-name' | translate}}</td>
+                                <td>
+                                  <a href="javascript:;" (click)="showDialog(purchaseOrder?.wareHouseId, dialogEnum.WAREHOUSE)" >
+                                    {{purchaseOrder?.wareHouseName}}
+                                  </a>
+                                </td>
+                              </tr>
+
+                              <tr>
+                                <td>{{'quantity' | translate}}</td>
+                                <td>{{purchaseOrder?.quantity}}</td>
+                              </tr>
+
+                              <tr>
+                                <td>{{'total-income-quantity' | translate}}</td>
+                                <td>{{purchaseOrder?.totalIncomeQuantity}}</td>
+                              </tr>
+
+                              <tr>
+                                <td>{{'base-unit' | translate}}</td>
+                                <td>{{purchaseOrder?.baseUnit}}</td>
+                              </tr>
+
+                              <tr>
+                                <td>{{'order-unit' | translate}}</td>
+                                <td>{{purchaseOrder?.orderUnit}}</td>
+                              </tr>
+
+                              <tr>
+                                <td>{{'batch' | translate}}</td>
+                                <td>
+                                  <a href="javascript:;" (click)="showDialog(purchaseOrder?.batch, dialogEnum.BATCH)" >
+                                    {{purchaseOrder?.batch}}
+                                  </a>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                        <div class="col-md-6">
+                          <table class="table table-bordered table-sm m-2">
+                            <tbody>
+                              <tr>
+                                <td width="40%">{{'parent-purchase-order-id' | translate}}</td>
+                                <td>
+                                  <a href="javascript:;" (click)="showDialog(purchaseOrder?.parentPurchaseOrderId, dialogEnum.PURCHASEORDER)" >
+                                    {{purchaseOrder?.parentPurchaseOrderId}}
+                                  </a>
+                                </td>
+                              </tr>
+
+                              <tr>
+                                <td>{{'order-date' | translate}}</td>
+                                <td>{{purchaseOrder?.porderDate|date:"dd/MM/yyyy" }}</td>
+                              </tr>
+
+                              <tr>
+                                <td>{{'delivery-date' | translate}}</td>
+                                <td>{{purchaseOrder?.deliveryDate|date:"dd/MM/yyyy" }}</td>
+                              </tr>
+
+                              <tr>
+                                <td>{{'delivery-completion-date' | translate}}</td>
+                                <td>{{purchaseOrder?.deliveryCompletionDate |date:"dd/MM/yyyy" }}</td>
+                              </tr>
+
+                              <tr>
+                                <td>{{'status' | translate}}</td>
+                                <td>{{purchaseOrder?.purchaseOrderStatus}}</td>
+                              </tr>
+
+                              <tr>
+                                <td>{{'priority' | translate}}</td>
+                                <td>{{purchaseOrder?.priority }}</td>
+                              </tr>
+
+                              <tr>
+                                <td>{{'description' | translate}}</td>
+                                <td>{{purchaseOrder?.description}}</td>
+                              </tr>
+
+                            </tbody>
+                          </table>
+                        </div>
+                    </div>
+
+
+                  </div>
+
+                  <div *ngIf="!purchaseOrder" class="text-center">
+                    <strong class=""><i class="fa fa-warning "></i>{{'NO_DATA_FOUND'|translate}}!</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </p-tabPanel>
+
+      <!-- MAINTENANCE ORDER DETAILS -->
+      <p-tabPanel header="{{'maintenance-order-detail' | translate}}">
+        <div class="card">
+          <div class="card-header">
+            {{'maintenance-order'|translate}}
+            <div class="card-actions">
+              <button type="button" class="btn btn-primary text-white" 
+                      (click)="initialize(this.id)"><i class="fa fa-refresh"></i></button>
+            </div>
+          </div>
+          <div class="card-body" >
+            <table class="table table-bordered table-sm half-width" *ngIf="maintenanceorder">
+              <tbody>
+                <tr>
+                  <td width="35%">{{'maintenance-order-id' | translate}}</td>
+                  <td>{{maintenanceorder?.maintenanceId}}</td>
+
+                </tr>
+                <!-- <tr>
+                  <td>{{'equipment' | translate}}</td>
+                  <td>{{data?.equipment?.equipmentName}}
+                  </td>
+
+                </tr> -->
+                <!-- <tr>
+                  <td>{{'maintenance-order-type' | translate}}</td>
+                  <td>{{maintenanceorder?.maintenanceOrderType?.maintenanceOrderTypeName}}</td>
+
+                </tr> -->
+
+                <tr>
+                  <td>{{'assembly' | translate}}</td>
+                  <td>{{maintenanceorder?.assembly}}</td>
+                </tr>
+
+                <tr>
+                  <td>{{'problem-definition' | translate}}</td>
+                  <td>{{maintenanceorder?.problemDefination}}</td>
+                </tr>
+
+                <!-- <tr>
+                  <td>{{'planner-group' | translate}}</td>
+                  <td> {{maintenanceorder?.plannerGroup?.plannerGroup}}
+                  </td>
+                </tr> -->
+
+                <tr>
+                  <td>{{'address' | translate}}</td>
+                  <td>{{maintenanceorder?.address}}</td>
+                </tr>
+
+                <tr>
+                  <td>{{'date-revision' | translate}}</td>
+                  <td>{{maintenanceorder?.dateRevision}}</td>
+                </tr>
+
+                <tr>
+                  <td>{{'date-basic-start' | translate}}</td>
+                  <td>{{maintenanceorder?.dateBasicStart|date:'dd/MM/yyyy'}}</td>
+                </tr>
+                <tr>
+                  <td>{{'date-basic-finish' | translate}}</td>
+                  <td>{{maintenanceorder?.datebasicFinish|date:'dd/MM/yyyy'}}</td>
+                </tr>
+
+                <tr>
+                  <td>{{'date-priority' | translate}}</td>
+                  <td>{{maintenanceorder?.datePriority}}</td>
+                </tr>
+
+                <tr>
+                  <td>{{'create-date' | translate}}</td>
+                  <td>{{maintenanceorder?.createDate}}</td>
+                </tr>
+
+                <tr>
+                  <td>{{'update-date' | translate}}</td>
+                  <td>{{maintenanceorder?.updateDate }}</td>
+                </tr>
+
+                <tr>
+                  <td>{{'actual-start-date' | translate}}</td>
+                  <td>{{maintenanceorder?.actualStartDate |date:'short'}}</td>
+
+                </tr>
+
+
+                <tr>
+                  <td>{{'actual-finish-date' | translate}}</td>
+                  <td>{{maintenanceorder?.actualFinishDate |date:'short'}}</td>
+                </tr>
+
+                <tr>
+                  <td>{{'priority' | translate}}</td>
+                  <td>{{maintenanceorder?.priority}}</td>
+                </tr>
+
+                <!-- <tr>
+                  <td>{{'workstation' | translate}}</td>
+                  <td> {{data?.mainWorkStation?.workStationName}}
+                  </td>
+
+                </tr>
+                <tr>
+                  <td>{{'planning-plant' | translate}}</td>
+                  <td> {{data?.planningPlant?.plantName}}
+                  </td>
+
+
+                </tr>
+                <tr>
+                  <td>{{'maintenance-system-condition' | translate}}</td>
+                  <td> {{data?.maintenanceSystemCondition?.description}}
+                  </td>
+
+                </tr>
+                <tr>
+                  <td>{{'maintenance-activity-type' | translate}}</td>
+                  <td> {{data?.maintenanceActivityType?.description}}
+                  </td>
+
+                </tr>
+                <tr>
+                  <td>{{'maintenance-category' | translate}}</td>
+                  <td> {{data?.maintenanceCategory?.description}}
+                  </td>
+
+                </tr>
+                <tr>
+                  <td>{{'functional-location' | translate}}</td>
+                  <td> {{data?.maintenanceFunctionalLocation?.description}}
+                  </td>
+
+                </tr>
+
+
+                <tr>
+                  <td width="30%">{{'response-by' | translate}}</td>
+                  <td> {{data?.responseby?.firstName}} {{data?.responseby?.lastName}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'status' | translate}}</td>
+                  <td>{{maintenanceorder?.maintenanceStatus}}</td>
+                </tr> -->
+
+
+
+
+                <!-- <tr>
+                  <td>{{'maintenance-reason' | translate}}</td>
+                  <td> {{data?.maintenanceReason?.description}}
+                  </td>
+                </tr> -->
+
+              </tbody>
+
+            </table>
+
+            <div *ngIf="!maintenanceorder" class="text-center">
+              <strong class=""><i class="fa fa-warning "></i>{{'NO_DATA_FOUND'|translate}}!</strong>
+            </div>
+          </div>
+        </div>
+      </p-tabPanel>
+
+      <!-- NOTIFICATION DETAILS -->
+      <p-tabPanel header="{{'notification-details' | translate}}">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="d-flex float-right">
+              <button type="button" class="btn btn-primary text-white"
+              (click)="initialize(this.id)"><i class="fa fa-refresh"></i></button>
+            </div>
+            <p-tabView>
+              <p-tabPanel header="{{'Notification List'|translate}}">
+
+                <p-table *ngIf="reservationDetail.stockTransferNotificationDetailList" [value]="reservationDetail.stockTransferNotificationDetailList"
+                  [dataKey]="'stockTransferNotificationDetailId'" [columns]="notificationSelectedColumns"
+                  [autoLayout]="true">
+
+                  <ng-template pTemplate="header" let-columns let-rowData>
+
+                    <tr>
+                      <th style="width: 3em"></th>
+
+                        <th>{{'stock-transfer-receipt-notification-id' | translate}}</th>
+                        <th>{{'stock-transfer-notification-detail-id' | translate}}</th>
+                        <th>{{'material-no' | translate}}</th>
+                        <th>{{'material-name' | translate}}</th>
+
+                        <th>{{'quantity' | translate}}</th>
+                        <th>{{'unit' | translate}}</th>
+                        <th>{{'good-movement-document-type' | translate}}</th>
+                        <th>{{'goods-movement-activity-type' | translate}}</th>
+                        <th>{{'status' | translate}}</th>
+
+                    </tr>
+                  </ng-template>
+
+                  <ng-template pTemplate="body" let-rowData let-expanded="expanded" let-columns="columns">
+                    <tr>
+                      <td>
+                        <a href="#" [pRowToggler]="rowData">
+                          <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+                        </a>
+                      </td>
+                      <!-- <ng-container  *ngIf="(rowData.goodMovementDocumentType === 'GOODS_ISSUE' && rowData.goodsMovementActivityType === 'SALES_ORDER')"> -->
+                        <td>
+                          <a href="javascript:;" (click)="showDialog(rowData.stockTransferReceiptNotificationId, dialogEnum.TRANSFERNOTIFICATION)">
+                            {{rowData.stockTransferReceiptNotificationId}}
+                          </a>
+                        </td>
+                        <td>
+                            {{rowData.stockTransferNotificationDetailId}}
+                        </td>
+                        <td>
+                          <a href="javascript:;" (click)="showDialog(rowData.materialId, dialogEnum.STOCK)">
+                            {{rowData.materialNo}}
+                          </a>
+                        </td>
+                        <td>
+                          <a href="javascript:;" (click)="showDialog(rowData.materialId, dialogEnum.STOCK)">
+                            {{rowData.materialName}}
+                          </a>
+                        </td>
+
+
+                        <td>{{ rowData.quantity }}</td>
+                        <td>{{ rowData.baseUnit }}</td>
+
+                        <td>{{ rowData.goodMovementDocumentType}}</td>
+                        <td>{{ rowData.goodsMovementActivityType}}</td>
+                        <td>{{ rowData.goodsMovementStatus }}</td>
+
+                    </tr>
+                  </ng-template>
+
+                  <ng-template pTemplate="rowexpansion" let-rowData let-columns="columns">
+                    <tr>
+                      <td colspan="2"></td>
+                        <td colspan="4">
+
+                          <ng-container *ngIf="rowData.goodMovementDocumentType === 'SALES_ORDER' && rowData.goodsMovementActivityType === 'GOODS_ISSUE'">
+                            <tr>
+                              <td><strong>{{'sales-order-id' | translate}}</strong> :
+                                <a href="javascript:;" (click)="showDialog(rowData.salesOrderId, dialogEnum.ORDER)">
+                                  {{rowData.salesOrderId}}
+                                </a>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td><strong>{{'sales-order-no' | translate}}</strong> : {{rowData.salesOrderNo}}</td>
+                            </tr>
+                          </ng-container>
+
+                          <ng-container  *ngIf="rowData.goodMovementDocumentType === 'PURCHASE_ORDER' && rowData.goodsMovementActivityType === 'GOODS_RECEIPT'">
+                            <tr>
+                              <td><strong>{{'purchase-order-detail-id' | translate}}</strong> :
+                                <a href="javascript:;" (click)="showDialog(rowData.itemNo, dialogEnum.PURCHASEORDERITEMDETAIL)">
+                                  {{rowData.itemNo}}
+                                </a>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td><strong>{{'purchase-order-id' | translate}}</strong> :
+                                <a href="javascript:;" (click)="showDialog(rowData.purchaseOrderId, dialogEnum.PURCHASEORDER)">
+                                  {{rowData.purchaseOrderId}}
+                                </a>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td><strong>{{'purchase-order-no' | translate}}</strong> : {{rowData.purchaseOrderNo}}</td>
+                            </tr>
+                          </ng-container>
+
+                          <ng-container *ngIf="rowData.goodMovementDocumentType === 'PRODUCTION_ORDER' && rowData.goodsMovementActivityType === 'GOODS_RECEIPT'">
+                            <tr>
+                              <td><strong>{{'prod-order-id' | translate}}</strong> :
+                                <a href="javascript:;" (click)="showDialog(rowData.prodOrderId, dialogEnum.PRODUCTIONORDER)">
+                                  {{rowData.prodOrderId}}
+                                </a>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td><strong>{{'prod-order-no' | translate}}</strong> : {{rowData.prodOrderNo}}</td>
+                            </tr>
+                          </ng-container>
+
+                          <tr *ngIf="rowData.goodMovementDocumentType !== 'PRODUCTION_ORDER' && rowData.goodsMovementActivityType !== 'TRANSFER_POSTING'">
+                            <td><strong>{{'act-name' | translate}}</strong> :
+                              <a href="javascript:;" (click)="showDialog(rowData.actId, dialogEnum.STAFF)">
+                                {{rowData.actName}}
+                              </a>
+                            </td>
+                          </tr>
+
+                          <tr>
+                            <td><strong>{{'warehouse-from-name' | translate}}</strong> :
+                              <a href="javascript:;" (click)="showDialog(rowData.wareHouseFromId, dialogEnum.WAREHOUSE)">
+                                {{rowData.wareHouseFromName}}
+                              </a>
+                              </td>
+                          </tr>
+
+                          <tr>
+                            <td><strong>{{'warehouse-to-name' | translate}}</strong> :
+                              <a href="javascript:;" (click)="showDialog(rowData.wareHouseToId, dialogEnum.WAREHOUSE)">
+                                {{rowData.wareHouseToName}}
+                              </a>
+                            </td>
+                          </tr>
+
+                          <tr>
+                            <td><strong>{{'document-no' | translate}}</strong> : {{rowData.documentNo}}</td>
+                          </tr>
+
+                          <tr *ngIf="!(rowData.goodMovementDocumentType === 'PURCHASE_ORDER' && rowData.goodsMovementActivityType === 'GOODS_RECEIPT')">
+                            <td><strong>{{'document-date' | translate}}</strong> : {{rowData.documentDate| date:'dd/MM/yyyy HH:mm'}}</td>
+                          </tr>
+                          <tr *ngIf="rowData.goodsMovementActivityType == 'TRANSFER_POSTING'">
+                            <td><strong>{{'posting-date' | translate}}</strong> : {{rowData.postingDate | date:'dd/MM/yyyy HH:mm'}}</td>
+                          </tr>
+
+                          <tr *ngIf="rowData.goodsMovementActivityType == 'TRANSFER_POSTING'">
+                            <td><strong>{{'P Employee Name' | translate}}</strong> :
+                              <a href="javascript:;" (click)="showDialog(rowData.pemployeeId, dialogEnum.STAFF)">
+                                {{rowData.pemployeeName}}
+                              </a>
+                            </td>
+                          </tr>
+                        </td>
+                        <td colspan="4">
+                          <tr>
+                            <td><strong>{{'barcode' | translate}}</strong> : {{rowData.barcode}}</td>
+                          </tr>
+                          <tr>
+                            <td><strong>{{'barcode-to' | translate}}</strong> : {{rowData.barcodeTo}}</td>
+                          </tr>
+                          <tr>
+                            <td><strong>{{'location-no' | translate}}</strong> : {{rowData.locationNo}}</td>
+                          </tr>
+                          <tr *ngIf="rowData.goodMovementDocumentType === 'PURCHASE_ORDER' && rowData.goodsMovementActivityType === 'GOODS_RECEIPT'">
+                            <td><strong>{{'document-date' | translate}}</strong> : {{rowData.documentDate| date:'dd/MM/yyyy HH:mm'}}</td>
+                          </tr>
+                            <tr *ngIf="rowData.goodsMovementActivityType !== 'TRANSFER_POSTING'">
+                              <td><strong>{{'posting-date' | translate}}</strong> : {{rowData.postingDate | date:'dd/MM/yyyy HH:mm'}}</td>
+                            </tr>
+
+                            <tr *ngIf="rowData.goodsMovementActivityType !== 'TRANSFER_POSTING'">
+                              <td><strong>{{'P Employee Name' | translate}}</strong> :
+                                <a href="javascript:;" (click)="showDialog(rowData.pemployeeId, dialogEnum.STAFF)">
+                                  {{rowData.pemployeeName}}
+                                </a>
+                              </td>
+                            </tr>
+
+                            <tr>
+                              <td><strong>{{'defected' | translate}}</strong> : {{(rowData.defected ? 'yes' : 'no') | translate}}</td>
+                            </tr>
+
+                            <tr>
+                              <td><strong>{{'batch' | translate}}</strong> :
+                                <a href="javascript:;" (click)="showDialog(rowData.batch, dialogEnum.BATCH)">
+                                  {{rowData.batch}}
+                                </a>
+                              </td>
+                            </tr>
+
+
+
+
+
+                            <ng-container *ngIf="rowData.goodsMovementActivityType === 'TRANSFER_POSTING'">
+                              <tr>
+                                <td><strong>{{'From Workstation' | translate}}</strong> :
+                                  <a href="javascript:;" (click)="showDialog(rowData.fromWorkstationId, dialogEnum.WORKSTATION)">
+                                    {{rowData.fromWorkstation}}
+                                  </a>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td><strong>{{'To Workstation' | translate}}</strong> :
+                                  <a href="javascript:;" (click)="showDialog(rowData.toWorkstationId, dialogEnum.WORKSTATION)">
+                                    {{rowData.toWorkstation}}
+                                  </a>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td><strong>{{'description' | translate}}</strong> : {{rowData.description}}</td>
+                              </tr>
+                              <tr>
+                                <td><strong>{{'create-date' | translate}}</strong> : {{rowData.createDate | date:'dd/MM/yyyy HH:mm'}}</td>
+                              </tr>
+                            </ng-container>
+
+
+                        </td>
+
+
+                    </tr>
+                  </ng-template>
+                </p-table>
+
+                <div *ngIf="!reservationDetail.stockTransferNotificationDetailList" class="text-center">
+                  <strong class=""><i class="fa fa-warning "></i>{{'NO_DATA_FOUND'|translate}}!</strong>
+                </div>
+
+              </p-tabPanel>
+
+              <p-tabPanel header="{{'pallet-list'|translate}}">
+                <div class="row">
+                  <div class="col-md-12">
+                    <p-table *ngIf="palletList && palletList.length !== 0" [columns]="palletSelectedColumns" [value]="palletList" [dataKey]="'stockTransferNotificationDetailId'">
+
+                      <ng-template pTemplate="header" let-columns>
+                        <tr>
+                          <th style="width: 3em"></th>
+                          <th *ngFor="let col of columns">
+                            {{col.header | translate}}
+                          </th>
+                        </tr>
+                      </ng-template>
+                      <ng-template pTemplate="body" let-rowData let-expanded="expanded" let-columns="columns">
+                        <tr *ngIf="rowData.pallet">
+                          <td>
+                            <a href="#" [pRowToggler]="rowData">
+                              <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+                            </a>
+                          </td>
+                          <td *ngFor="let col of columns" style="cursor: pointer" [ngSwitch]="col.field">
+                            <span *ngSwitchCase="'palletId'"> {{rowData?.palletId}} </span>
+                            <span *ngSwitchCase="'palletName'"> {{rowData?.palletSetting?.palletName}} </span>
+                            <span *ngSwitchCase="'palletSettingId'"> {{rowData?.palletSetting?.palletSettingId}}
+                            </span>
+                            <span *ngSwitchCase="'materialNo'"> {{rowData?.stock?.stockNo}} </span>
+                            <span *ngSwitchCase="'materialName'"> {{rowData?.stock?.stockName}} </span>
+                            <span *ngSwitchCase="'wareHouseId'"> {{rowData?.wareHouse?.wareHouseId}} </span>
+                            <span *ngSwitchCase="'palletStatus'"> {{rowData?.palletStatus}} </span>
+                          </td>
+                        </tr>
+                      </ng-template>
+                      <ng-template pTemplate="rowexpansion" let-rowData let-columns="columns">
+                        <tr>
+                          <td colspan="2"></td>
+                          <td colspan="2">
+                            <tr>
+                              <td><strong>{{'cycle-quantity' | translate}}</strong> : {{rowData?.cycleQuantity}}</td>
+                            </tr>
+                            <tr>
+                              <td><strong>{{'good-quantity' | translate}}</strong> : {{rowData?.goodQuantity}}</td>
+                            </tr>
+                            <tr>
+                              <td><strong>{{'scrap-quantity' | translate}}</strong> : {{rowData?.scrapQuantity}}</td>
+                            </tr>
+                            <tr>
+                              <td><strong>{{'rework-quantity' | translate}}</strong> : {{rowData?.reworkQuantity}}
+                              </td>
+                            </tr>
+                          </td>
+                          <td colspan="2">
+                            <tr>
+                              <td><strong>{{'pallet-request' | translate}}</strong> :
+                                {{rowData?.jobOrder?.jobOrderId}}</td>
+                            </tr>
+                            <tr>
+                              <td><strong>{{'batch' | translate}}</strong> : {{rowData?.batch}}</td>
+                            </tr>
+                            <tr>
+                              <td><strong>{{'create-date' | translate}}</strong> :
+                                {{rowData?.createDate | date:'dd/MM/yyyy HH:mm'}}</td>
+                            </tr>
+                            <tr>
+                              <td><strong>{{'update-date' | translate}}</strong> :
+                                {{rowData?.updateDate | date:'dd/MM/yyyy HH:mm'}}</td>
+                            </tr>
+                          </td>
+                          <td colspan="2"></td>
+                        </tr>
+                      </ng-template>
+                    </p-table>
+                    <div *ngIf="!palletList || palletList.length == 0" class="text-center">
+                      <strong class=""><i class="fa fa-warning "></i>{{'NO_DATA_FOUND'|translate}}!</strong>
+                    </div>
+                  </div>
+                </div>
+              </p-tabPanel>
+
+             
+            </p-tabView>
+
+          </div>
+        </div>
+
+      </p-tabPanel>
+
+    </p-tabView>
+
+  </div>
+</div>

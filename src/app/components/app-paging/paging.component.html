@@ -1,0 +1,58 @@
+<ul class="pagination mb-0">
+
+  <li *ngIf="showSearch">
+    <div class="form-group btn-setting">
+      <div class="col-md-12">
+        <div class="input-group">
+                  <span class="input-group-btn">
+                    <button type="button" class="btn btn-primary" (click)="search(searchItem)"><i class="fa fa-search"></i> {{'search' | translate}}</button>
+                  </span>
+          <input type="text" id="input1-group2" name="input1-group2" class="form-control"
+                 placeholder="{{'search' | translate}}" (ngModelChange)="search($event)" [(ngModel)]="searchItem">
+        </div>
+      </div>
+    </div>
+  </li>
+
+  <!-- First Page -->
+  <li [ngClass]="{disabled:pager.currentPage === 1}" class="page-item {{liClass}}">
+    <a [ngClass]="{disabled:pager.currentPage === 1}" class="page-link {{aClass}}" (click)="setPage(1, $event)">
+      {{FirstText}}
+    </a>
+  </li>
+
+  <!-- Previous Page -->
+  <li  [ngClass]="{disabled:pager.currentPage === 1}" class="page-item {{liClass}}">
+    <a [ngClass]="{disabled:pager.currentPage === 1}" class="page-link {{aClass}}" (click)="setPage(pager.currentPage -1, $event)">
+      {{PreviousText}}
+    </a>
+  </li>
+
+  <!-- Pages -->
+  <li  *ngFor="let page of pageLinks" [ngClass]="{active:pager.currentPage === page}" class="page-item {{liClass}}" >
+    <a [ngClass]="{active:pager.currentPage === page}" class="page-link {{aClass}}" (click)="setPage(page, $event)">
+      {{page}}
+    </a>
+  </li>
+
+  <!-- Next Page -->
+  <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}" class="page-item {{liClass}}">
+    <a [ngClass]="{disabled:pager.currentPage === (pager.totalPages)}" class="page-link {{aClass}}" (click)="setPage(pager.currentPage + 1, $event)">
+      {{NextText}}
+    </a>
+  </li>
+
+  <!-- Last Page -->
+  <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}" class="page-item {{liClass}}">
+    <a [ngClass]="{disabled:pager.currentPage === pager.totalPages}" class="page-link {{aClass}}" (click)="setPage(pager.totalPages, $event)">
+      {{LastText}}
+    </a>
+  </li>
+
+
+  <!-- Select options -->
+  <li class="page-item">
+    <select class="form-control " style="margin-top:0px; padding-top: 5px;" *ngIf="RowsPerPageOptions" (change)="onRppChange($event)" >
+      <option *ngFor="let opt of RowsPerPageOptions" [value]="opt" [selected]="rows == opt">{{opt}}</option>
+    </select>
+</ul>

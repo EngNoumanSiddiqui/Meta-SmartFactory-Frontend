@@ -1,0 +1,96 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+        <div class="card"> 
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i> {{'control-indicator-data-information' | translate}}
+          </div>
+          <div class="card-body">
+            <form #inspForm="ngForm">
+              <table class="table table-bordered">
+                <tr>
+                  <td>{{'indicator-data-code' | translate}}</td>
+                  <td>
+                    <input
+                      type="text" 
+                      id="code"
+                      name="code"
+                      [(ngModel)]="controlIndicatorData.characteristicControlIndicatorDataCode"
+                      class="form-control"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'decimal-places' | translate}}</td>
+                  <td>
+                    <input
+                      type="number"
+                      id="decimalPlaces"
+                      name="decimalPlaces"
+                      [(ngModel)]="controlIndicatorData.decimalPlaces"
+                      class="form-control"
+                      required
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'measurement-unit' | translate}}</td>
+                  <td>
+                    <unit-auto-complete [selectedUnit]="controlIndicatorData.decimalPlacesUnit" (unitChangeEvent)="setSelectedUnit($event)"></unit-auto-complete>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>{{'lower-specific-limit' | translate}}</td>
+                  <td>
+                    <input
+                      type="number"
+                      id="lowerSpecificLimit"
+                      name="lowerSpecificLimit"
+                      [(ngModel)]="controlIndicatorData.lowerSpecificLimit"
+                      class="form-control"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'upper-limit' | translate}}</td>
+                  <td>
+                    <input
+                      type="number"
+                      id="upperLimit"
+                      name="upperLimit"
+                      [(ngModel)]="controlIndicatorData.upperLimit"
+                      class="form-control"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'target-value' | translate}}</td>
+                  <td>
+                    <input
+                      type="number"
+                      id="targetValue"
+                      name="targetValue"
+                      [(ngModel)]="controlIndicatorData.targetValue"
+                      class="form-control"
+                    />
+                  </td>
+                </tr>
+              </table>
+            </form> 
+          </div>
+        </div>
+      <div class="row col-md-12">
+        <button
+          type="submit"
+          class="btn btn-sm btn-primary"
+          [disabled]="!inspForm.form.valid"
+          (click)="save()"
+        >
+          <i class="fa fa-dot-circle-o"></i>
+          {{ "save" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

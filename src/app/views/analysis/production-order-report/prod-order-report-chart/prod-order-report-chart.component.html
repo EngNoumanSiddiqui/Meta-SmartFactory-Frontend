@@ -1,0 +1,27 @@
+<div class="col-md-12">
+
+  <p-tabView>
+    <p-tabPanel header="{{'efficiency-and-performance'|translate}}">
+      <p-chart type="bar" [data]="barEfficiencyData" [options]="efficiencyOptions"></p-chart>
+    </p-tabPanel>
+
+    <p-tabPanel header="{{'quantity'|translate}}">
+      <p-chart type="bar" [data]="lineQuantityData" [options]="quantityOptions"></p-chart>
+    </p-tabPanel>
+
+    <p-tabPanel header="{{'stops'|translate}}">
+      <p-chart type="bar" #stopChart [data]="stopPORData" [options]="stopPOROptions"></p-chart>
+    </p-tabPanel>
+
+    <!-- <p-tabPanel header="{{'machine-status'|translate}}">
+      <div class="row text-center noData" *ngIf=" (!machineStates|| machineStates.length==0)">
+        <strong class=""><i class="fa fa-warning "></i>{{'NO_STATUS_FOUND'|translate}}!</strong>
+      </div>
+      <ng-container *ngIf=" (machineStates&& machineStates.length>0)">
+        <machine-status-analysis [injected]="machineStates"></machine-status-analysis>
+      </ng-container>
+    </p-tabPanel> -->
+
+  </p-tabView>
+
+</div>

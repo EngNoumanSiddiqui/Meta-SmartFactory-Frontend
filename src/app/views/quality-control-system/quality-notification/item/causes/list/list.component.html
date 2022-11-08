@@ -1,0 +1,177 @@
+<p-confirmDialog key="item-causes"></p-confirmDialog>
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <p-table
+            #dt
+            [columns]="selectedColumns"
+            scrollable="true"
+            scrollHeight="55vh"
+            [value]="itemCausesTypes"
+            [rows]="pagination.rows"
+            [totalRecords]="pagination.totalElements"
+            dataKey="itemCauseId"
+            [(selection)]="selectedItemCausesTypes" 
+          >
+            <ng-template pTemplate="caption">
+              <div style="text-align:left; height: 40px;">
+                <button
+                  pButton
+                  class="ui-button-success float-right ml-1"
+                  (click)="modalShow(null,'NEW')"
+                  label="{{ 'add-new' | translate }}"
+                ></button>
+              </div>
+            </ng-template>
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th style="width: 3em" rowspan="2">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th
+                  *ngFor="let col of columns; let i = index"
+                  style="cursor: pointer"
+                  [ngClass]="{
+                    'bg-selected-order': pageFilter.orderByProperty == col.field
+                  }"
+                  (click)="reOrderData(i, col.field)"
+                >
+                  <i [ngClass]="'fa  fa-sort-alpha-' + classReOrder[i]"></i>
+                  {{ col.header | translate }}
+                </th>
+                <th width="80px" rowspan="2">{{ "action" | translate }}</th>
+              </tr>
+              <tr>
+                <th
+                  *ngFor="let col of columns"
+                  class="ui-fluid"
+                  [ngSwitch]="col.field"
+                >
+                  <span  *ngSwitchCase="'shortText'"></span>
+                  <input
+                    *ngSwitchDefault
+                    style="width: 100%"
+                    [(ngModel)]="pageFilter[col.field]"
+                    pInputText
+                    type="text"
+                    (input)="filterByColumn($event.target.value, col.field)"
+                  />
+
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr [pSelectableRow]="rowData" class="ui-fluid cursor-pointer">
+                <td style="width: 3em">
+                  <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                </td>
+                <td
+                  *ngFor="let col of columns"
+                  [ngSwitch]="col.field"
+                >
+                <span *ngSwitchDefault> {{
+                  rowData[col.field] ? (rowData[col.field] + "" | translate) : "" }} </span>
+                </td>
+                <td width="80px">
+                  <button
+                    class="btn btn-sm btn-outline-danger"
+                    type="button"
+                    (click)="delete(rowData.itemCauseId)"
+                  >
+                    <i class="fa fa-trash"></i>
+                  </button>
+                  <button
+                    class="btn btn-sm btn-outline-info"
+                    type="button"
+                    (click)="modalShow(rowData.itemCauseId, 'EDIT')"
+                  >
+                    <i class="fa fa-edit"></i>
+                  </button>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+
+          <br />
+          <div class="row">
+            <app-paging
+              [showSearch]="false"
+              [TotalElements]="pagination.totalElements"
+              [CurrentPage]="pagination.currentPage"
+              [PageSize]="pagination.pageSize"
+              [rows]="pagination.rows"
+              [TotalPageLinkButtons]="pagination.TotalPageLinkButtons"
+              [RowsPerPageOptions]="pagination.RowsPerPageOptions"
+              (onPageChange)="myChanges($event)"
+            ></app-paging>
+
+            <span style="margin-left:2px; padding-top: 2px " class="text-muted"
+              >{{ "total-records" | translate }}:
+              {{ pagination?.totalElements }}</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 
+ 
+<!-- modals -->
+<ng-template [ngIf]="modal.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal" (onHidden)="modal.active=false" class="modal fade"
+       tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+       aria-hidden="true">
+  <div class="modal-dialog modal-success modal-lg" [ngStyle]="{'max-width:900px': itemCausesTypeModal.modal!=='DETAIL'}"
+   role="document">
+    <div class="modal-content">
+      <div class="modal-header" *ngIf= "itemCausesTypeModal.modal!='DETAIL'">
+        <h4 class="modal-title"> {{'item-cause' | translate}}</h4>
+        <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-header" *ngIf= "itemCausesTypeModal.modal=='DETAIL'">
+        <h4 class="modal-title"> {{'quality-cause-details' | translate}}</h4>
+        <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+       <ng-template [ngIf]="itemCausesTypeModal.modal=='DETAIL'">
+        <!-- <detail-quality-causes [id]="itemCausesTypeModal.id" ></detail-quality-causes> -->
+        <!-- DETAILS FOOTER -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="myModal.hide()">{{'close' | translate}}</button>
+          <button
+                  class="btn btn-primary btn-sm"
+                  (click)="modalShow(null,'NEW')"
+                >
+                {{'add-new' | translate}}
+              </button>
+                <button 
+                    class="btn btn-success btn-sm"
+                    type="button"
+                    (click)="modalShow(itemCausesTypeModal.id, 'EDIT')"
+                  >
+                  {{'EDIT' | translate }}
+                </button>
+        </div>
+       </ng-template>
+       <ng-template [ngIf]="itemCausesTypeModal.modal=='NEW'"> 
+        <new-causes (saveAction)="onSaveSuccessful($event, myModal)"></new-causes>
+       </ng-template> 
+       <ng-template [ngIf]="itemCausesTypeModal.modal=='EDIT'">
+        <edit-cause [id]="itemCausesTypeModal.id" (saveAction)="onSaveSuccessful($event, myModal)"></edit-cause>
+       </ng-template>
+      </div>
+      <div *ngIf="itemCausesTypeModal.modal!='DETAIL'">
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="myModal.hide()">{{'close' | translate}}</button>
+      </div>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+</ng-template>

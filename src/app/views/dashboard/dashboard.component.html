@@ -1,0 +1,173 @@
+<div class="col-lg-12">
+  <div class="row ui-fluid  badge-light border p-2  mb-2 align-items-center">
+    <div class=" col-md p-0">
+      <strong class="p-1 text-muted"> {{'plant'|translate}} : </strong>
+      <plant-auto-complete *ngIf="!filterModel.plantId" [addIfMissing]="false" [eventFire]="true"
+        (selectedPlantEvent)="setSelectedPlant($event)"></plant-auto-complete>
+      <strong *ngIf="filterModel.plantId" class="text-muted">
+        {{selectedPlant.plantName}} </strong>
+
+    </div>
+    <div class="col-md d-flex p-0">
+      <strong class="p-1 text-muted col-md-5"> {{'workcenter'|translate}} : </strong>
+      <workcenter-auto-complete [addOption]="true" [plantId]="filterModel.plantId"
+        [selectedWorkCenter]="selectedWorkCenter" (selectedWorkCenterEvent)="setSelectedWorkCenter($event)">
+      </workcenter-auto-complete>
+
+
+    </div>
+    <div class="col-md d-flex pl-1 pr-0">
+      <strong class="p-1 text-muted col-md-6 p-0"> {{'workstation'|translate}} : </strong>
+      <workstation-auto-complete [plantId]="filterModel.plantId"
+        [workCenterId]="slctdWorkCenter?.workCenterId" (selectedWorkStationEvent)="setSelectedWorkstation($event)">
+      </workstation-auto-complete>
+
+    </div>
+    <div class="col-md d-flex pr-0">
+      <strong class="p-1 text-muted col-md-3"> {{'shift'|translate}} : </strong>
+      <p-autoComplete [(ngModel)]="selectedShift" [suggestions]="filteredShift" field="shiftName" [dropdown]="true"
+      (completeMethod)="filterShift($event)" [placeholder]="'select-shift' | translate" (ngModelChange)="onShiftChanged($event)" (onDropdownClick)="handleDropdownClickForShift()"></p-autoComplete>
+    </div>
+    <div class="col-md-2 ">
+
+
+      <p-calendar [(ngModel)]="filterModel.day" placeholder="{{'choose-date'|translate}}" [monthNavigator]="true"
+        [yearNavigator]="true" yearRange="1990:2100" name="startDate" [showIcon]="true" dateFormat="dd/mm/yy" required>
+      </p-calendar>
+
+    </div>
+    
+    <div class="col-auto p-0">
+
+      <button type="button" pButton class="ui-button-info   " [disabled]="!filterModel.day" (click)="analyze()"
+        label="{{'analyze' | translate}}">
+      </button>
+    </div>
+  </div>
+  <div class="row mb-2">
+    <div class="col-4 pl-0">
+      <div class="bg-white float-right graph-btn" [ngStyle]="{'z-index':zIndex ? 2 : 0 }">
+        <button class="btn btn-info btn-xs" (click)="onViewGraph('oee-by-shift')">{{'view' | translate}}</button>
+      </div>
+      <div class="bg-white"  style="height: 35vh;">
+        <app-oee-looses-by-shift [data]="reportDashboardData"></app-oee-looses-by-shift>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="bg-white float-right graph-btn" [ngStyle]="{'z-index':zIndex ? 2 : 0 }">
+        <button class="btn btn-info btn-xs" (click)="onViewGraph('production-by-job-order')">{{'view' | translate}}</button>
+      </div>
+      <div class="bg-white" style="height: 35vh;">
+        <app-production-by-job-order [filterModel]="filterChangeData" [height]="'35vh'"></app-production-by-job-order>
+      </div>
+    </div>
+    <div class="col-4 bg-white">
+      <div class="float-right graph-btn" style="margin-right: 0px;" [ngStyle]="{'z-index':zIndex ? 2 : 0 }">
+        <button class="btn btn-info btn-xs" (click)="onViewGraph('oee-by-workstation')">{{'view' | translate}}</button>
+      </div>
+      <div class="bg-white" style="height: 35vh;">
+        <app-oee-by-workstation [filterModel]="reportDashboardData" [barWidth]="true" [height]="'35vh'">
+        </app-oee-by-workstation>
+      </div>
+    </div>
+  </div>
+  <div class="row mb-2">
+    <div class="col-12 bg-white">
+      <p-tabView>
+        <p-tabPanel header="{{'machine-status' | translate}}">
+          <div class="float-right" style="margin-right: -15px; margin-top:-8px" [ngStyle]="{'z-index':zIndex ? 2 : 0 }">
+            <button class="btn btn-info btn-xs" (click)="onViewGraph('machine-status')">{{'view' | translate}}</button>
+          </div>
+          <app-workstations-status [filterModel]="filterChangeData"></app-workstations-status>
+        </p-tabPanel>
+
+        <p-tabPanel header="{{'production-state' | translate}}">
+          <ng-template pTemplate="content">
+            <div class="float-right" style="margin-right: -15px; margin-top:-8px" [ngStyle]="{'z-index':zIndex ? 2 : 0 }">
+              <button class="btn btn-info btn-xs" (click)="onViewGraph('production-state')">{{'view' | translate}}</button>
+            </div>
+            <app-workstations-state [filterModel]="filterChangeData" [selectedShift]="selectedShift"></app-workstations-state>
+          </ng-template>
+        </p-tabPanel>
+
+      </p-tabView>
+    </div>
+
+  </div>
+  <div class="row">
+    <div class="col-md-12 bg-white py-2">
+      <div style="height: 40px;">
+        <strong class="text-muted ">{{'production-analysis'|translate}}</strong>
+        <div class="float-right" style="margin-right: -15px; margin-top:-8px" [ngStyle]="{'z-index':zIndex ? 2 : 0 }">
+          <button class="btn btn-info btn-xs" (click)="onViewGraph('production-analysis')">{{'view' | translate}}</button>
+        </div>
+      </div>
+      <app-production-analysis [data]="reportDashboardData"></app-production-analysis>
+    </div>
+  </div>
+</div>
+
+<ng-container *ngIf="modal.type === 'production-by-job-order'">
+  <p-dialog header="Production By Job Order" [(visible)]="modal.active" [autoZIndex]="true"  
+    [baseZIndex]="999999" modal="true" dismissableMask="true" (onHide)="onHide(false)"
+    [style]="{'max-width': '100%','width': '100%', 'min-height': '100vh', 'top': '55px', overflow: 'auto'}" appendTo="body">
+    <div class="col-10 bg-white" style="margin-left:7%; margin-right: 5%;">
+      <app-production-by-job-order [filterModel]="filterChangeData" height="80vh"></app-production-by-job-order>
+    </div>
+  </p-dialog>
+</ng-container>
+
+<ng-container *ngIf="modal.type === 'oee-by-workstation'">
+  <p-dialog header="OEE By Workstation" [(visible)]="modal.active" [autoZIndex]="true"  
+    [baseZIndex]="999999" modal="true" dismissableMask="true" (onHide)="onHide(false)"
+    [style]="{'max-width': '100%','width': '100%', 'min-height': '100vh', 'top': '55px', overflow: 'auto'}" baseZIndex="99999">
+    <div class="col-10 bg-white" style="margin-left:7%; margin-right: 5%;">
+      <app-oee-by-workstation [filterModel]="reportDashboardData" height="80vh"></app-oee-by-workstation>
+    </div>
+  </p-dialog>
+</ng-container>
+
+
+<!-- MACHINE STATUS MODAL -->
+<ng-container *ngIf="modal.type === 'machine-status'">
+  <p-dialog header="{{'machine-status'|translate}}" [(visible)]="modal.active" [autoZIndex]="true"  
+    [baseZIndex]="999999" modal="true" dismissableMask="true" (onHide)="onHide(false)"
+    [style]="{'max-width': '100%','width': '100%', 'min-height': '100vh', 'top': '20px', overflow: 'auto'}" baseZIndex="99999">
+    <div class="col-12 bg-white">
+      <app-workstations-status [filterModel]="filterChangeData" [minHeight]="false" [overFlow]="false"></app-workstations-status>
+    </div>
+  </p-dialog>
+</ng-container>
+
+<!-- PRODUCTION STATE MODAL -->
+<ng-container *ngIf="modal.type === 'production-state'">
+  <p-dialog header="{{'production-state'|translate}}" [(visible)]="modal.active" [autoZIndex]="true"  
+    [baseZIndex]="999999" modal="true" dismissableMask="true" (onHide)="onHide(false)"
+    [style]="{'max-width': '100%','width': '100%', 'min-height': '100vh', 'top': '20px', overflow: 'auto'}" baseZIndex="99999">
+    <div class="col-12 bg-white">
+      <app-workstations-state [filterModel]="filterChangeData" [selectedShift]="selectedShift" [minHeight]="false" [overFlow]="false"></app-workstations-state>
+    </div>
+  </p-dialog>
+</ng-container>
+
+<ng-container *ngIf="modal.type === 'production-analysis'">
+  <p-dialog header="{{'production-analysis'|translate}}" [(visible)]="modal.active" [autoZIndex]="true"  
+    [baseZIndex]="999999" modal="true" (onHide)="onHide(false)"
+    [style]="{'max-width': '100%','width': '100%', 'min-height': '100vh', 'top': '20px', overflow: 'auto'}" baseZIndex="99999">
+    <div class="col-12 bg-white">
+      <app-production-analysis [data]="reportDashboardData"></app-production-analysis>
+    </div>
+  </p-dialog>
+</ng-container>
+
+
+<ng-container *ngIf="modal.type === 'oee-by-shift'">
+  <p-dialog header="{{'oee_by_shift'|translate}}" [(visible)]="modal.active" [autoZIndex]="true"  
+    [baseZIndex]="999999" modal="true" (onHide)="onHide(false)"
+    [style]="{'max-width': '100%','width': '100%', 'min-height': '100vh', 'top': '20px', overflow: 'auto'}" baseZIndex="99999">
+    <div class="col-12 bg-white">
+      <!-- <app-production-analysis [data]="reportDashboardData"></app-production-analysis> -->
+      <app-oee-looses-by-shift [data]="reportDashboardData" height="80vh"></app-oee-looses-by-shift>
+    </div>
+  </p-dialog>
+</ng-container>

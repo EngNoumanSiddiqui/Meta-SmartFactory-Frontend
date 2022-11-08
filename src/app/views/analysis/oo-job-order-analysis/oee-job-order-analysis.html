@@ -1,0 +1,322 @@
+<div class="card" id="print-section">
+  <div class="col-lg-12">
+    <div class="row ui-fluid  badge-light border p-2  ">
+      <div class=" col-md-3">
+        <workstation-auto-complete [plantId]="plantId" (selectedWorkStationEvent)="setSelectedWorkStation($event)">
+        </workstation-auto-complete>
+      </div>
+
+      <div class="col-md-3 ">
+        <p-calendar [showIcon]="true" dateFormat="dd.mm.yy" [monthNavigator]="true" [yearNavigator]="true" showTime="true"
+                    [required]="true"
+          yearRange="1990:2100" [(ngModel)]="filterCon.rangeStart" placeholder="{{'start-date'|translate}}">
+        </p-calendar>
+      </div>
+      <div class="col-md-3 ">
+        <p-calendar [showIcon]="true" dateFormat="dd.mm.yy" [monthNavigator]="true" [yearNavigator]="true" showTime="true"
+                    [required]="true"
+          yearRange="1990:2100" [(ngModel)]="filterCon.rangeEnd" placeholder="{{'end-date'|translate}}"></p-calendar>
+      </div>
+      <div class="col-md-auto">
+        <button type="button" pButton class="ui-button-info   "
+          [disabled]="!filterCon.workstationId || !filterCon.rangeEnd||!filterCon.rangeStart" (click)="analyze()"
+          label="{{'analyze' | translate}}">
+        </button>
+      </div>
+    </div>
+
+    <ng-template [ngIf]="treeData && treeData.length>0">
+      <p-tabView>
+
+        <!-- report tab  -->
+        <p-tabPanel header="{{'report'|translate}}">
+          <p-treeTable #dt [columns]="cols" [value]="treeData" [rows]="pagination.pageSize"
+            [totalRecords]="pagination.totalElements" dataKey="key">
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th *ngFor="let col of columns let i=index" style="cursor: pointer">
+                  {{col.header|translate}}
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
+              <tr>
+                <td *ngFor="let col of columns; let i = index" [ngSwitch]="col.field">
+                  <p-treeTableToggler [rowNode]="rowNode" *ngIf="i == 0"></p-treeTableToggler>
+                  <!--        <span *ngSwitchCase="'singleDuration'"> {{getReadableTime(rowData[col.field])}}</span>-->
+                  <span *ngSwitchDefault> {{rowData[col.field]}}</span>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage" let-columns>
+              <tr>
+                <td [attr.colspan]="columns.length">
+                  <div class="noData">
+                    <strong class=""><i class="fa fa-warning "></i>{{'no-data'|translate}}!</strong>
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+          </p-treeTable>
+          <div *ngIf="treeData&&treeData.length>0">
+            <app-paging [TotalElements]="pagination.totalElements" [showSearch]="false"
+              [CurrentPage]="pagination.currentPage" [PageSize]="pagination.pageSize" [rows]="pagination.rows"
+              [TotalPageLinkButtons]="pagination.TotalPageLinkButtons"
+              [RowsPerPageOptions]="pagination.RowsPerPageOptions" (onPageChange)="myChanges($event)"></app-paging>
+            <span style="margin-left:2px; padding-top: 2px " class="text-muted">{{'total-records'|translate}}
+              : {{pagination?.totalElements}}</span>
+          </div>
+        </p-tabPanel>
+        <!-- end report tab -->
+
+        <!-- job order tab -->
+        <p-tabPanel header="{{'job-order-oee'|translate}}">
+
+          <div class="row">
+            <!-- percenetage card -->
+            <div class="col-md-2 px-4">
+              <div class="card-job">
+                <div class="card bg-danger text-white">
+                  <div class="bg-danger cursor" style="padding: 5px" (click)="drawReportGraphs(jobOrderReportData?.reportItemList, 'oee')">
+                    <h6>OEE</h6><br>
+                    <h4 style="float: right;">{{(jobOrderReportData.oee)? jobOrderReportData.oee: '0%'}}</h4>
+                  </div>
+                </div>
+                <div class="card bg-success text-white">
+                  <div class="bg-success cursor" style="padding: 5px" (click)="drawReportGraphs(jobOrderReportData.reportItemList, 'availability')">
+                    <h6>Availability</h6><br>
+                    <h4 style="float: right;">{{(jobOrderReportData.availability)? jobOrderReportData.availability : '0%'}}</h4>
+                  </div>
+                </div>
+                <div class="card bg-danger text-white">
+                  <div class="bg-danger cursor" style="padding: 5px" (click)="drawReportGraphs(jobOrderReportData.reportItemList, 'performance')">
+                    <h6>Performance</h6><br>
+                    <h4 style="float: right;">{{(jobOrderReportData.performance)? jobOrderReportData.performance: '0%'}}</h4>
+                  </div>
+                </div>
+                <div class="card bg-success text-white">
+                  <div class="bg-success cursor" style="padding: 5px" (click)="drawReportGraphs(jobOrderReportData.reportItemList, 'quality')">
+                    <h6>Quality</h6><br>
+                    <h4 style="float: right;">{{(jobOrderReportData.quality)? jobOrderReportData.quality: '0%'}}</h4>
+                  </div>
+                </div>
+
+                <div class="card bg-success text-white">
+                  <div class="bg-success" style="padding: 5px">
+                    <h6>TEEP</h6><br>
+                    <h4 style="float: right;">{{(jobOrderReportData.teep)? jobOrderReportData.teep: '0%'}}</h4>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <!-- end percentage card -->
+            <div class="col-md-10">
+              <div class="row">
+                <div class="col-md-6">
+                  <!-- planned production time -->
+                  <div class="progress progress-planned">
+                    <div class="progress-bar bg-success" style="width: 75%">
+                      <span class="progress-span-top">Planned Production Time
+                        <span style="float: right;">{{ jobOrderReportData.plannedProductionTime }}</span>
+                      </span>
+                    </div>
+                    <div class="progress-perc">
+                      <span class="bg-red">
+                        Schedule Loss
+                      </span>
+                      <span class="bg-per">
+                        {{ jobOrderReportData.scheduleLostPercentage }} %
+                      </span>
+                    </div>
+                  </div>
+                  <!-- end planned production time -->
+                  <br>
+                  <!-- Run Time -->
+                  <div class="progress progress-planned">
+                    <div class="progress-bar bg-success" style="width: 55%;">
+                      <span class="progress-span-top">Run Time
+                        <span style="float: right;">{{ jobOrderReportData.runTime }}</span>
+                      </span>
+                    </div>
+                    <div class="progress-bar bg-danger progress-span-top cursor">
+                      <span (click)="lossType= 'availability'; drawReportGraphs(jobOrderReportData?.reportItemList, 'availability')">Availability<br> Loss</span>
+                    </div>
+                    <div class="progress-perc">
+                      <span class="bg-red">
+                        {{ jobOrderReportData.availabilityLost }}
+                      </span>
+                      <span class="bg-per">
+                        {{ jobOrderReportData.availabilityLostPercentage }} %
+                      </span>
+                    </div>
+                  </div>
+                  <!-- end Run Time -->
+                  <br>
+                  <!-- Net Run Time -->
+                  <div class="progress progress-planned">
+                    <div class="progress-bar bg-success" style="width: 50%;">
+                      <span class="progress-span-top">Net Run Time
+                        <span style="float: right;">{{ jobOrderReportData.netRunTime }}</span>
+                      </span>
+                    </div>
+                    <div class="progress-bar bg-danger progress-span-top cursor">
+                      <span (click)="lossType= 'performance'; drawReportGraphs(jobOrderReportData?.reportItemList, 'performance')">Performance<br> Loss</span>
+                    </div>
+                    <div class="progress-perc">
+                      <span class="bg-red">
+                        {{ jobOrderReportData.performanceLost }}
+                      </span>
+                      <span class="bg-per">
+                        {{ jobOrderReportData?.performanceLostPercentage }} %
+                      </span>
+                    </div>
+                  </div>
+                  <!-- end Net Run Time -->
+                  <br>
+                  <!-- Fully Productive Time -->
+                  <div class="progress progress-planned">
+                    <div class="progress-bar bg-success" style="width: 45%;">
+                      <span class="progress-span-top">Fully Productive Time
+                        <span style="float: right;">{{ jobOrderReportData.realFullyProductiveTime }}</span>
+                      </span>
+                    </div>
+                    <div class="progress-bar bg-danger progress-span-top cursor">
+                      <span (click)="lossType= 'quality'; drawReportGraphs(jobOrderReportData?.reportItemList, 'quality')">Quality<br> Loss</span>
+                    </div>
+                    <div class="progress-perc">
+                      <p>
+                        <span class="bg-per text-success">
+                          {{ jobOrderReportData.scrapCount + jobOrderReportData?.goodCount}} |
+                          <span class="text-danger">{{ jobOrderReportData.scrapCount }}</span>
+                        </span>
+                      </p>
+                      <p> <span class="bg-per">
+                          {{ jobOrderReportData?.qualityLostPercentage }} %
+                        </span></p>
+                    </div>
+                  </div>
+                  <!-- End Fully Productive Time -->
+                </div>
+                <div class="col-md-6 px-1">
+                  <!-- availability loss type table -->
+                  <table class="table table-sm tbl-avl" *ngIf="lossType == 'availability' || lossType == 'oee'">
+                    <thead class="text-center">
+                      <th colspan="3">Availability Loss</th>
+                      <th>Duration</th>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let availabilityLost of jobOrderReportData.topAvailabilityLostList; let index=index">
+                        <td class="table-danger text-center">{{index + 1}}</td>
+                        <td style="width: 65%;">
+                          <p class="h5"><strong>{{availabilityLost?.stopCauseName}}</strong></p>
+                          <p class="h6"><strong>Number of Occurence: {{availabilityLost?.stopCouseCount}}</strong></p>
+                        </td>
+                        <td style="width: 65%;">
+                          <p-progressBar [value]="availabilityLost.stopCausePercentage"></p-progressBar>
+                        </td>
+                        <td class="table-danger text-center">{{ getReadableTime(availabilityLost.actualStopDuration * 1000) }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <!-- end availability loss type table -->
+
+                  <!-- performance loss table -->
+                  <table class="table table-sm tbl-avl" *ngIf="lossType == 'performance'">
+                    <thead class="text-center">
+                      <th style="background-color: white; border: 0;"></th>
+                      <th colspan="3">Performance Loss</th>
+                      <th>Runtime</th>
+                      <th>Late Time</th>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let topPerformanceLost of jobOrderReportData.topPerformanceLostList; let index=index">
+                        <td class="text-center" style="border: 0;">
+                          <span  *ngIf="(topPerformanceLost?.performance * 100) >= 100" class="text-danger" >
+                            <i class="fa fa-exclamation-circle" aria-hidden="true" pTooltip="The Performance for this Job Order is higher than expected.
+                            Please make corrections in the cycle time!
+                            This Job Order has performed {{getReadableTime(topPerformanceLost?.exclamation?.jobOrderPerformanceTime)}} faster with a Performance of {{ getPercentageVal(topPerformanceLost?.exclamation?.realPerformance)}}%.
+                            Current Single Cycle Time is: {{getReadableTime(topPerformanceLost?.exclamation?.currentSingleCycleTime)}}
+                            Suggested Cycle Time is: {{getReadableTime(topPerformanceLost?.exclamation?.suggestedCycleTime)}}">
+                           </i>
+                          </span>
+                        </td>
+                        <td class="table-danger text-center">{{index + 1 }}</td>
+                        <td style="width: 65%;">
+                          <a class="h5" href="javascript:;" (click) = "showJobOrderDetail(topPerformanceLost.jobOrderId)"><strong>{{topPerformanceLost?.dimension}}</strong></a>
+                          <p class="h6"><strong>Ideal Production Time: {{getReadableTime(topPerformanceLost?.netRunTime * 1000)}}</strong></p>
+                        </td>
+                        <td style="width: 65%;">
+                          <p>
+                            <p-progressBar [value]="topPerformanceLost.performanceLossPercentage"></p-progressBar>
+                          </p>
+                          <p style="font-size: 16px; text-align: center;">
+                            {{topPerformanceLost.shiftName}}
+                          </p>
+                        </td>
+                        <td class="table-success text-center">
+                            {{getReadableTime(topPerformanceLost?.runTime * 1000)}}
+                        </td>
+                        <td class="table-danger text-center">{{getReadableTime(topPerformanceLost?.performanceLoss * 1000)}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <!-- end performance loss table -->
+
+                   <!-- quality loss table -->
+                   <table class="table table-sm tbl-avl" *ngIf="lossType == 'quality'">
+                    <thead class="text-center">
+                      <th colspan="3">Quality Loss</th>
+                      <th>Total Quantity</th>
+                      <th>Scrap</th>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let topQualityLost of jobOrderReportData.topQualityLostList; let index=index">
+                        <td class="table-danger text-center">{{index + 1 }}</td>
+                        <td style="width: 65%;">
+                          <p>
+                            <a class="h5" href="javascript:;" (click) = "showJobOrderDetail(topQualityLost.jobOrderId)">
+                              <strong>{{topQualityLost?.dimension}}</strong>
+                            </a>
+                          </p>
+                          <p style="font-size: 16px;">
+                            {{topQualityLost.shiftName}}
+                          </p>
+                        </td>
+                        <td style="width: 65%;">
+                          <p-progressBar [value]="calculateQualityLossPercentage(topQualityLost)"></p-progressBar>
+                        </td>
+                        <td class="table-success text-center">{{topQualityLost?.scrapCount  + topQualityLost?.goodCount}}</td>
+                        <td class="table-danger text-center">{{topQualityLost?.scrapCount}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <!-- end quality loss table -->
+                </div>
+              </div>
+              <br>
+
+              <ng-container>
+                <p-chart  type="line" [data]="data" [options]="options" #chart id="chart"></p-chart>
+              </ng-container>
+<!--
+              <ng-container *ngIf="lossType == 'availability'">
+                <p-chart  type="line" [data]="availabilityLossGraphData" [options]="availabilityLossGraphOptions"></p-chart>
+              </ng-container>
+
+              <ng-container *ngIf="lossType == 'quality'">
+                <p-chart  type="line" [data]="qualityGraphData" [options]="qualityGraphOptions"></p-chart>
+              </ng-container>
+
+              <ng-container *ngIf="lossType == 'performance'">
+                <p-chart  type="line" [data]="performanceGraphData" [options]="performanceGraphOptions"></p-chart>
+              </ng-container> -->
+
+            </div>
+          </div>
+        </p-tabPanel>
+      </p-tabView>
+      <!-- end job order tab -->
+    </ng-template>
+  </div>
+</div>

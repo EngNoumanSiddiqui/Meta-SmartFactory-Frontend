@@ -1,0 +1,145 @@
+<div class="col-lg-12">
+  <div class="card">
+    <div class="card-header">
+      <i class="fa fa-align-justify"></i> {{'stop-cause-details' | translate}}
+    </div>
+    <div class="card-body" *ngIf="stopCause">
+      <div class="row col-md-12 p-0 m-0">
+        <div class="col-md-6">
+          <table class="table table-bordered">
+            <tbody *ngIf="stopCause">
+              <tr>
+                <td> {{'stop-cause-id' | translate}}</td>
+                <td>{{stopCause.stopCauseId}}</td>
+              </tr>
+              <tr>
+                <td> {{'no' | translate}}</td>
+                <td>{{stopCause.stopCauseNo}}</td>
+              </tr>
+              <tr>
+                <td> {{'plant' | translate}}</td>
+                <td>
+                  <a href="javascript:;" (click)="showDetailDialog(stopCause.plant?.plantId,'PLANT')">{{stopCause.plant?.plantName}}</a>
+                </td>
+              </tr>
+
+              <tr>
+                <td> {{'name' | translate}} </td>
+                <td>{{stopCause.stopCauseName}}</td>
+              </tr>
+              <tr>
+                <td> {{'type' | translate}}</td>
+                <td>
+                  <a href="javascript:;" (click)="showDetailDialog(stopCause.stopCauseTypeName,'CAUSETYPE')">{{stopCause.stopCauseTypeName}}</a>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'status'  |translate}}</td>
+                <td>{{stopCause.stopCauseStatus}}</td>
+              </tr>
+              <tr>
+                <td>{{'planned'  | translate}}</td>
+                <td>
+                  {{stopCause.planned?('PLANNED'|translate):('UNPLANNED'|translate)}}
+                </td>
+              </tr>
+              <tr *ngIf="stopCause.planned">
+                <td>{{'start-time'  | translate}}</td>
+                <td> <span *ngIf="stopCause.startTime">{{stopCause.startTime |date: 'HH:mm'}}</span></td>
+              </tr>
+              <tr *ngIf="stopCause.planned">
+                <td style="width: 30%">{{'shift' | translate}}</td>
+                <td>
+                  <a href="javascript:;" (click)="showDetailDialog(stopCause.shift?.shiftId,'SHIFT')">{{stopCause.shift?.shiftName}}</a>
+                </td>
+              </tr>
+              <tr *ngIf="stopCause.planned">
+                <td style="width: 30%">{{'no-of-occurences-per-shift' | translate}}</td>
+                <td>{{stopCause.numberOfOccurancePerShift}}</td>
+              </tr>
+
+              <ng-container *ngIf="stopCause.planned">
+                <tr>
+                  <td>{{'duration' | translate}}</td>
+                  <td>{{stopCause.duration}}</td>
+                </tr>
+              </ng-container>
+
+              <!--<tr>
+              <td colspan="2">
+                <button class="btn btn-outline-primary active" type="button" (click)="goPage(stopCause.stopCauseId)" >{{'edit' | translate}} {{'stop-cause' | translate}}</button>
+                <button class="btn btn-outline-secondary active" type="button" (click)="goPage(-1)"> {{'new' | translate}}  {{'stop-cause' | translate}}</button>
+              </td>
+            </tr>-->
+            </tbody>
+          </table>
+        </div>
+        <div class="col-md-6">
+          <table class="table table-bordered">
+
+            <tr>
+              <td>{{'color'  | translate}}</td>
+              <td>
+                <span style="padding:8px 20px" [ngStyle]="{'background-color':stopCause?.color }"></span>
+              </td>
+            </tr>
+            <tr>
+              <td>{{'affect-job-order-performance' | translate}}</td>
+              <td>
+                <p-checkbox disabled=true [(ngModel)]="stopCause.decreaseJobPerformance" name="decreaseJobPerformance" binary="true" inputId="decreaseJobPerformance"></p-checkbox>
+              </td>
+            </tr>
+            <tr>
+              <td>{{'affect-employee-performance' | translate}}</td>
+              <td>
+                <p-checkbox disabled=true [(ngModel)]="stopCause.decreaseEmployeePerformance" name="decreaseEmployeePerformance" binary="true" inputId="decreaseEmployeePerformance"></p-checkbox>
+              </td>
+            </tr>
+
+            <tr>
+              <td>{{'affect-oee-availability' | translate}}</td>
+              <td>
+                <p-checkbox disabled=true [(ngModel)]="stopCause.affectOeeAvilability" binary="true" inputId="affectOeeAvilability" name="affectOeeAvilability"></p-checkbox>
+              </td>
+            </tr>
+
+            <tr>
+              <td>{{'affect-oee-performance' | translate}}</td>
+              <td>
+                <p-checkbox disabled=true [(ngModel)]="stopCause.affectOeePerformance" binary="true" inputId="affectOeePerformance" name="affectOeePerformance"></p-checkbox>
+              </td>
+            </tr>
+
+            <tr>
+              <td>{{'auto-active' | translate}}</td>
+              <td>
+                <p-checkbox disabled=true [(ngModel)]="stopCause.autoActive" binary="true" name="autoActive" inputId="autoActive"></p-checkbox>
+              </td>
+            </tr>
+            <tr>
+              <td>{{'stop-master' | translate}}</td>
+              <td>
+                <p-checkbox  disabled=true [(ngModel)]="stopCause.stopMaster" name="stopMaster" binary="true" inputId="stopMaster"></p-checkbox>
+              </td>
+            </tr>
+            <tr>
+              <td style="width: 30%">{{'workcenter' | translate}}</td>
+              <td>
+                <a href="javascript:;" (click)="showDetailDialog(stopCause.workCenter?.workCenterId,'WORKCENTER')">{{stopCause.workCenter?.workCenterName}}</a>
+              </td>
+            </tr>
+
+            <tr>
+              <td>{{'cost-rate' | translate}}</td>
+              <td>{{stopCause.costRate}}</td>
+            </tr>
+            <tr>
+              <td>{{'description' | translate}}</td>
+              <td>{{stopCause.description}}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

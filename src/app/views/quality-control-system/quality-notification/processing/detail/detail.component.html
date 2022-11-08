@@ -1,0 +1,58 @@
+<div class="animated fadeIn">
+    <div class="col-md-12">
+      <div>
+          <div class="card">
+            <div class="card-header">
+              <i class="fa fa-align-justify"></i> {{'quality-notification' | translate}}
+            </div>
+            <div class="card-body">
+              <form #stockForm="ngForm">
+                <table class="table table-striped table-outline">
+                  <tbody>
+                  <tr>
+                    <td style="width: 30%;" class="text-bold">{{'priority' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                    <td>{{processing?.priority}}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'required-start' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                    <td>{{processing?.requiredStart | date :'dd/MM/yyyy, h:mm'}}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'required-end' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                    <td>{{processing?.requiredEnd | date :'dd/MM/yyyy, h:mm'}}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'malfunction-start' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                    <td>{{processing?.malfunctionStart | date :'dd/MM/yyyy, h:mm'}}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'malfunction-end' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                    <td>{{processing?.malfunctionEnd | date :'dd/MM/yyyy, h:mm'}}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'deparment-responsible' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                    <td>{{processing?.deparmentResponsible}}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'coordinator' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                    <td>{{processing?.coordinator}}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'reported-by' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                    <td>{{processing?.reportedBy}}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-bold">{{'break-down' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                    <td>{{processing?.breakDown}}</td>
+                  </tr>
+                  
+                  </tbody>
+                </table>
+              </form>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+  
+  

@@ -1,0 +1,312 @@
+<div class="animated fadeIn">
+  <div class="col-md-12">
+    <p-tabView>
+      <p-tabPanel header="{{'project' | translate}}">
+        <div class="card">
+          <div class="card-header">
+            {{'project-details' | translate}}
+          </div>
+          <div class="card-body">
+            <div class="form-group row" *ngIf="projectDto.projectId">
+              <label class="col-md-3 col-form-label" for="quotationStatus">
+                {{'project_id'|translate}}
+              </label>
+              <div class="col-md-9">
+                <div class="input-group">
+                  <input type="text" id="project_id" name="project_id" class="form-control" disabled
+                    [(ngModel)]="projectDto.projectId" />
+                </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-3 col-form-label" for="quotationStatus">
+                {{'project_code'|translate}}
+              </label>
+              <div class="col-md-9">
+                <div class="input-group">
+                  <input type="text" id="project_code" name="project_code" class="form-control"
+                    [(ngModel)]="projectDto.code" />
+                </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-3 col-form-label" for="quotationStatus">
+                {{'project_name'|translate}}
+              </label>
+              <div class="col-md-9">
+                <div class="input-group">
+                  <input type="text" id="project_name" name="project_name" class="form-control"
+                    [(ngModel)]="projectDto.name" />
+                </div>
+              </div>
+            </div>
+              <div class="form-group row">
+                <label class="col-md-3 col-form-label" for="project_status">
+                  {{'project_status'|translate}}
+                </label>
+                <div class="col-md-9">
+                  <div class="input-group">
+                    <select id="project_status" name="project_status" class="form-control"
+                      [(ngModel)]="projectDto.status" (ngModelChange)="onOrderStatusChanged($event)">
+                      <option *ngFor="let item of statusList" [value]="item">{{item | translate}}</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-md-3 col-form-label" for="responsible_employee">{{'responsible_employee' | translate}}</label>
+                <div class="col-md-9">
+                  <employee-auto-complete [selectedEmployeeId]="projectDto.responsibleEmployeeId" 
+                  (selectedEmployeeEvent)="projectDto.responsibleEmployeeId=$event?.employeeId;"></employee-auto-complete>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-md-3 col-form-label" for="description">{{'description' | translate}}</label>
+                <div class="col-md-9">
+                  <textarea id="description" name="description" [(ngModel)]="projectDto.description" class="form-control"
+                    placeholder="{{'description' | translate}}"></textarea>
+                </div>
+              </div>
+              
+              <div class="form-group row">
+                <label class="col-md-3 col-form-label"> {{'planned-start-date' | translate}}</label>
+                <div class="col-md-9 ui-fluid align-self-center">
+                  <p-calendar [required]="true" [(ngModel)]="projectDto.startDate" placeholder="{{'planned-start-date'|translate}}"
+                       yearRange="1990:2100" [showIcon]="true" [showTime]="true" [monthNavigator]="true" [yearNavigator]="true" dateFormat="dd/mm/yy"></p-calendar>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-md-3 col-form-label"> {{'planned-finish-date' | translate}}</label>
+                <div class="col-md-9 ui-fluid align-self-center">
+                  <p-calendar [required]="true" [(ngModel)]="projectDto.finishDate" placeholder="{{'planned-finish-date'|translate}}"
+                       yearRange="1990:2100" [showIcon]="true" [showTime]="true" [monthNavigator]="true" [yearNavigator]="true" dateFormat="dd/mm/yy"></p-calendar>
+                </div>
+              </div>
+  
+          </div>
+        </div>
+      </p-tabPanel>
+      <p-tabPanel header="{{'milestone-list' | translate}}">
+        <div class="card">
+          <div class="card-header">
+            {{'milestone-items' | translate}}
+            <div class="card-actions">
+              <button type="button" class="btn btn-primary" data-toggle="modal" (click)="openPurchaseQuotationDetailsModal(-1)"><i
+                  class="fa fa-plus"></i></button>
+            </div>
+          </div>
+          <div class="card-body" style="width: 100%; overflow-x: scroll;">
+            <p-table dataKey="milestoneId" [value]="projectDto.milestoneDtoList">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th style="width: 3rem"></th>
+                  <!-- <th>{{'plant'|translate}}</th> -->
+                  <th>{{'milestone_code'|translate}}</th>
+                  <th>{{'milestone_name'|translate}}</th>
+                  <th>{{'status'|translate}}</th>
+                  <th>{{'responsible_employee'|translate}}</th>
+                  <th>{{'description'|translate}}</th>
+                  <th>{{'planned-start-date'|translate}}</th>
+                  <th>{{'planned-finish-date'|translate}}</th>
+                  <th>{{'action'|translate}}</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-item let-i="rowIndex" let-expanded="expanded">
+                <tr>
+                  <td>
+                    <a href="#" [pRowToggler]="item">
+                        <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+                    </a>
+                </td>
+                  <!-- <td>{{item.plantName}}</td> -->
+                  <td>{{item.code}}</td>
+                  <td>{{item.name}}</td>
+                  <td>{{item.status}}</td>
+                  <td>{{item.responsibleEmployee?.firstName}} {{item.responsibleEmployee?.lastName}}</td>
+                  <td>{{item.description}}</td>
+                  <td>{{item.startDate | date:'dd/MM/yyyy HH:mm'}}</td>
+                  <td>{{item.finishDate | date:'dd/MM/yyyy HH:mm'}}</td>
+                  <td width="70px">
+                    <button class="btn btn-sm btn-outline-info"
+                      (click)="openPurchaseQuotationDetailsModal(i)"><i class="fa fa-edit"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" 
+                      (click)="deletePurchaseQuotationDetailsModal(i)">
+                      <i class="fa fa-close"></i>
+                    </button>
+                  </td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="rowexpansion" let-item>
+                <tr>
+                  <td colspan="9">
+                   <div class="row col-md-12">
+                    <div class="col-md-6">
+                      <table class="table table-bordered">
+                        <tbody>
+                          <tr>
+                            <td>{{'milestone_id'|translate}}</td>
+                            <td>{{item.milestoneId}}</td>
+                          </tr>
+                          <tr>
+                            <td>{{'milestone_code'|translate}}</td>
+                            <td>{{item.code}}</td>
+                          </tr>
+                          <tr>
+                            <td>{{'milestone_name'|translate}}</td>
+                            <td>{{item.name}}</td>
+                          </tr>
+                           <tr>
+                            <td>{{'planned-start-date'|translate}}</td>
+                            <td>{{item.startDate | date:'dd/MM/yyyy HH:mm'}}</td>
+                          </tr>
+                          <tr>
+                            <td>{{'planned-finish-date'|translate}}</td>
+                            <td>{{item.finishDate | date:'dd/MM/yyyy HH:mm'}}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="col-md-6">
+                      <table class="table table-bordered">
+                        <tbody>
+                          <tr>
+                            <td>{{'scheduled-start-date'|translate}}</td>
+                            <td>{{item.scheduledStartDate | date:'dd/MM/yyyy HH:mm'}}</td>
+                          </tr>
+                          <tr>
+                            <td>{{'scheduled-finish-date'|translate}}</td>
+                            <td>{{item.scheduledFinishDate | date:'dd/MM/yyyy HH:mm'}}</td>
+                          </tr>
+                          <tr>
+                            <td>{{'actual-start-date'|translate}}</td>
+                            <td>{{item.actualStartDate | date:'dd/MM/yyyy HH:mm'}}</td>
+                          </tr>
+                           <tr>
+                            <td>{{'actual-finish-date'|translate}}</td>
+                            <td>{{item.actualFinishData | date:'dd/MM/yyyy HH:mm'}}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                   </div>
+                  </td>
+                            
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+        </div>
+      </p-tabPanel>
+    </p-tabView>
+  </div>
+
+  <div class="row col-md-12 ml-2">
+      <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+        {{'reset' | translate}}
+      </button>
+      <!--[disabled]="!order.purchaseOrderDetailList||order.purchaseOrderDetailList.length==0||!saleForm.form.valid"-->
+      <button type="submit" class="btn btn-sm btn-primary" 
+        [disabled]="!projectDto.milestoneDtoList
+          ||projectDto.milestoneDtoList.length==0
+          ||!projectDto.status"
+        (click)="save()">
+        <i class="fa fa-dot-circle-o"></i>
+        {{'save' | translate}}
+      </button>
+  </div>
+</div>
+<ng-template [ngIf]="params.dialog.visible">
+  <p-dialog class="custom-dialog" [blockScroll]="true"
+    header="{{'milestone-details' | translate}}" [(visible)]="params.dialog.visible"
+    [style]="{width: '900px'}"    [maximizable]="true" #dOrderDetails
+    [contentStyle]="{'min-height':'400px'}" [autoZIndex]="false" [focusOnShow]="false" modal="true" dismissableMask="true">
+    <!---------- MODEL #1 ------------->
+    <div class="col-md-12">
+      <form #transferDetailForm="ngForm">
+        <table class="table table-bordered ui-fluid">
+          <tbody>
+            <tr>
+              <td>{{'milestone_code' | translate}}</td>
+              <td>
+                <input type="text" class="form-control" [(ngModel)]="milestoneItemdto.code" 
+                name="milestone_code" required />
+              </td>
+            </tr>
+            <tr>
+              <td>{{'milestone_name' | translate}}</td>
+              <td>
+                <input type="text" class="form-control" [(ngModel)]="milestoneItemdto.name" 
+                name="milestone_name" required />
+              </td>
+            </tr>
+          <tr>
+            <td>
+              {{'description' | translate}}
+            </td>
+            <td>
+              <textarea id="milestone_description" name="milestone_description" [(ngModel)]="milestoneItemdto.description" class="form-control"
+              placeholder="{{'description' | translate}}"></textarea>
+            </td>
+          </tr>
+          <tr>
+            <td>{{'responsible_employee' | translate}}</td>
+            <td>
+              <employee-auto-complete [selectedEmployeeId]="milestoneItemdto.responsibleEmployeeId" 
+              (selectedEmployeeEvent)="milestoneItemdto.responsibleEmployeeId=$event?.employeeId; milestoneItemdto.responsibleEmployee=$event;"></employee-auto-complete>
+            </td>
+          </tr>
+
+            <tr>
+              <td>{{'status' | translate}}</td>
+              <td>
+                <div class="input-group">
+                  <select id="milstoneStatus" name="milstoneStatus" class="form-control"
+                    [(ngModel)]="milestoneItemdto.status" required>
+                    <option [value]="null"> {{'please-select' | translate}}</option>
+                    <option *ngFor="let item of statusList" [value]="item">{{item}}
+                    </option>
+                  </select>
+                </div>
+              </td>
+            </tr>
+            
+            <tr>
+              <td>{{'planned-start-date'|translate}}</td>
+              <td class="ui-fluid">
+                <p-calendar name="deliveryDate"
+                  [(ngModel)]="milestoneItemdto.startDate" placeholder="{{'planned-start-date'|translate}}"
+                  yearRange="1990:2100" [monthNavigator]="true" [yearNavigator]="true"  [showTime]="true"
+                  dateFormat="dd/mm/yy"
+                  [showIcon]="true">
+                </p-calendar>
+              </td>
+            </tr>
+            <tr>
+              <td>{{'planned-finish-date'|translate}}</td>
+              <td class="ui-fluid">
+                <p-calendar name="deliveryDate"
+                  [(ngModel)]="milestoneItemdto.finishDate" placeholder="{{'planned-finish-date'|translate}}"
+                  yearRange="1990:2100" [monthNavigator]="true" [yearNavigator]="true" [showTime]="true"  dateFormat="dd/mm/yy"
+                  [showIcon]="true">
+                </p-calendar>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </form>
+    </div>
+    <div class="row col-md-12 ml-2">
+      <button class="btn btn-sm btn-danger" (click)="resetNewItemDetails()"><i class="fa fa-ban"></i>
+        {{'reset' | translate}}
+      </button>
+      <button type="submit" class="btn btn-sm btn-primary" [disabled]="!transferDetailForm.form.valid"
+        (click)="addDetails()"><i class="fa fa-dot-circle-o"></i>
+        {{'add' | translate}}
+      </button>
+    </div>
+  </p-dialog>
+</ng-template>
+
+
+<!------------------------- Modals ---------------------------------------->

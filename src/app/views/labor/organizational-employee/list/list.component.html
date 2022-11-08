@@ -1,0 +1,86 @@
+<form #organizationForm="ngForm">
+  <div class="col-lg-12">
+    <div class="row ui-fluid  badge-light border p-2  mb-2">
+      <div class=" col-md d-flex">
+        <strong class="p-1 text-muted"> {{'title'|translate}}</strong>
+        <select id="employeTitleIdx" name="employeTitleIdx" class="form-control" [(ngModel)]="filterModel.titleId">
+          <option [ngValue]="null"> {{'please-select' | translate}}</option>
+          <option *ngFor="let emp of employeeTitleList" value="{{emp.employeeTitleId}}">
+            {{emp.employeeTitleName}}
+          </option>
+        </select>
+      </div>
+      <div class="col-md d-flex">
+        <strong class="p-1 text-muted"> {{'max-level'|translate}}</strong>
+        <p-spinner [(ngModel)]="filterModel.maxLevel" [min]="0" [max]="100" name="maxLevel"></p-spinner>
+      </div>
+      <div class="col-auto">
+
+        <button type="button" pButton class="ui-button-info" (click)="analyze()" label="{{'analyze' | translate}}">
+        </button>
+      </div>
+    </div>
+  </div>
+</form>
+
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <p-organizationChart [value]="organizationData">
+            <ng-template let-node pTemplate="person">
+              <div class="node-header ui-corner-top">{{node.employeTitle.employeeTitleName}}</div>
+              <div class="node-content">
+                <div><a style="cursor: pointer" (click)="modalShow(node.employeeId,'DETAIL')">{{node.firstName}}
+                    {{node.lastName}}</a></div>
+              </div>
+            </ng-template>
+          </p-organizationChart>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template [ngIf]="staffModal.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal"
+    (onHidden)="staffModal.active=false; staffModal.modal=null" class="modal fade" tabindex="-1" role="dialog"
+    aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-success modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"> {{'staff-information' | translate}}</h4>
+          <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+
+          <ng-template [ngIf]="staffModal.modal=='DETAIL'">
+            <p-tabView>
+              <p-tabPanel header="Personal Detail">
+                <staff-detail [id]="staffModal.id" (saveAction)="myModal.hide(); filter(pageFilter)"></staff-detail>
+
+              </p-tabPanel>
+              <p-tabPanel header="Employee Skills">
+                <app-list [id]="{'id':staffModal.id,'status':'read'}" (saveAction)="myModal.hide(); filter(pageFilter)">
+                </app-list>
+              </p-tabPanel>
+
+            </p-tabView>
+          </ng-template>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary"
+            (click)="myModal.hide()">{{'close' | translate}}</button>
+          <button *ngIf="staffModal.modal=='DETAIL'" type="button" class="btn rounded btn-primary"
+            (click)="staffModal.modal='NEW'">{{'new' | translate}}</button>
+          <button *ngIf="staffModal.modal=='DETAIL'" type="button" class="btn rounded btn-success"
+            (click)="staffModal.modal='EDIT'">{{'edit' | translate}}</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</ng-template>

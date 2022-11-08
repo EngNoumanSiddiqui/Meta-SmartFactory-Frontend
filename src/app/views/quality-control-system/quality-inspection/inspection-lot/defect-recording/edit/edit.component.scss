@@ -1,0 +1,15 @@
+.display-flex {
+    display: flex;
+}
+
+::ng-deep form {
+    width: 100%;
+    display: block;
+    span {
+        width: 100%;
+        display: block;
+        input {
+            width: calc(100% - 33px);
+        }
+    }
+}

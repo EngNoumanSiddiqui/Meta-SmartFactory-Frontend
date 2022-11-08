@@ -1,0 +1,9 @@
+<div class="  d-flex ui-fluid">
+    <p-autoComplete [disabled]="disabled" [(ngModel)]="selectedObjectType" [suggestions]="filteredObjectType"
+                    (completeMethod)="searchObjectType($event)" field="equipmentObjectType" [required]="required"
+                     [dropdown]="dropdown" [forceSelection]="true" dataKey="equipmentObjectTypeId"
+                     placeholder="{{placeholder|translate}}" [minLength]="1" name="equipmentObjectType"
+                     (onDropdownClick)="handleDropdownClickForObjectType()" (ngModelChange)="onChangeObjectType($event)" >
+    </p-autoComplete>
+
+</div>

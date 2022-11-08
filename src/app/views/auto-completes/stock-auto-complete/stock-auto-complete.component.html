@@ -1,0 +1,25 @@
+<div class="  d-flex ui-fluid">
+    <div *ngIf="requestSent"><i class="fa fa-spinner fa-pulse"></i></div>
+    <p-autoComplete [(ngModel)]="selectedStock" [suggestions]="filteredStock" #stockautocomplete
+                    (completeMethod)="searchStock($event)" field="stockName" [required]="required" [dropdown]="dropdown"
+                    [forceSelection]="true"  dataKey="stockId" placeholder="{{placeholder|translate}}" [minLength]="1" 
+                    name="stock" [disabled]="disabled" (onDropdownClick)="handleDropdownClickForStock()" 
+                    (onSelect)="onChangeStock($event)" >
+        <ng-template let-cat pTemplate="item">
+            {{cat.stockNo}} | {{cat.stockName}} | {{cat.stockTypeCode}}<span *ngIf="allowStockTypeName"> | {{cat.stockTypeName}}</span>
+        </ng-template>
+        <ng-template let-cat pTemplate="selectedItem">
+            {{cat.stockNo}} | {{cat.stockName}} | {{cat.stockTypeCode}}<span *ngIf="allowStockTypeName"> | {{cat.stockTypeName}}</span>
+        </ng-template>
+        <!-- <ng-template let-cat pTemplate="item">
+            <div class="ui-helper-clearfix d-flex">
+                <div>{{cat.stockNo}}</div>
+                <div>| {{cat.stockName}}</div>
+                <div>| {{cat.stockTypeCode}}</div>
+                <div *ngIf="allowStockTypeName"><span style="margin-left: 4px; margin-right: 4px;">| {{cat.stockTypeName}}</span></div>
+
+            </div>
+        </ng-template> -->
+    </p-autoComplete>
+
+</div>

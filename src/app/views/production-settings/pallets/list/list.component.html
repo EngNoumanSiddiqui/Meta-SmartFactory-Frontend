@@ -1,0 +1,151 @@
+<p-confirmDialog></p-confirmDialog>
+
+
+<div class="animated fadeIn">
+
+
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+
+        <div class="card-body">
+
+          <p-table #dt [columns]="selectedColumns" scrollable="true" scrollHeight="55vh" [value]="pallets" [rows]="pagination.rows" [totalRecords]="pagination.totalElements" dataKey="palletId" 
+          [(selection)]="selectedPallets" >
+
+            <ng-template pTemplate="caption">
+              <div style="text-align:left">
+                <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header" maxSelectedLabels="0"  selectedItemsLabel="{{'columns-selected'|translate}}"
+                               [style]="{minWidth: '200px'}" defaultLabel="Choose Columns">
+                  <ng-template let-col let-i="index" pTemplate="item">
+                    {{col.label|translate}}
+                  </ng-template>
+                </p-multiSelect>
+                <button pButton  class="ui-button-success float-right ml-1" (click)="modalShow(null,'NEW')" label="{{'add-new'|translate}}"> </button>
+                <button pButton  type="button" class="ui-button-warning float-right ml-1" label="{{'reset'  |translate}}" (click)="resetFilter()"></button>
+                 <button pButton  class="ui-button-warning float-right ml-1" type="button"  icon="fa fa-file-alt" iconPos="left" label="{{'export-all'|translate}}" (click)="dt.exportCSV()"></button>
+                <button pButton class="ui-button-warning float-right ml-1" type="button"  icon="fa fa-file" iconPos="left" label="{{'export-selected'|translate}}" (click)="dt.exportCSV({selectionOnly:true})"
+                ></button>
+              </div>
+              <!--<hr>-->
+
+            </ng-template>
+            <ng-template pTemplate="header" let-columns>
+
+              <tr >
+                <th style="width: 3em" rowspan="2">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th *ngFor="let col of columns; let i=index;" style="cursor: pointer" [ngClass]="{'bg-selected-order':pageFilter.orderByProperty ==col.field}" (click)="reOrderData(i,col.field)"><i [ngClass]="'fa  fa-sort-alpha-' + classReOrder[i]"></i>
+                  {{col.header|translate}}
+                </th>
+                <th width="80px" rowspan="2">{{'action' | translate}}</th>
+              </tr>
+              <tr>
+                <th *ngFor="let col of columns" class="ui-fluid" [ngSwitch]="col.field">
+                  <span *ngSwitchDefault ></span>
+
+                  <input *ngSwitchCase="'palletSettingId'" style="width: 100%" [(ngModel)]="pageFilter[col.field]"  pInputText type="text" (input)="filterByColumn($event.target.value,col.field)">
+                  <input *ngSwitchCase="'palletName'" style="width: 100%" [(ngModel)]="pageFilter[col.field]"  pInputText type="text" (input)="filterByColumn($event.target.value,col.field)">
+                  <input *ngSwitchCase="'wareHouse'" style="width: 100%" [(ngModel)]="pageFilter.wareHouseName"  pInputText type="text" (input)="filterByColumn($event.target.value,col.field)">
+                  <input *ngSwitchCase="'operation'" style="width: 100%" [(ngModel)]="pageFilter.operationName"  pInputText type="text" (input)="filterByColumn($event.target.value,col.field)">
+                </th>
+
+              </tr>
+
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr [pSelectableRow]="rowData">
+                <td style="width: 3.3em">
+                  <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                </td>
+                <td *ngFor="let col of columns" class="ui-fluid" style="cursor: pointer" [ngSwitch]="col.field" (click)="modalShow(rowData.palletSettingId,'DETAIL')">
+                  
+                  <span *ngSwitchCase="'wareHouse'">{{rowData[col.field]?.wareHouseName}}</span>
+                  <span *ngSwitchCase="'operation'">{{rowData[col.field]?.operationName}}</span>
+                  <!-- <p *ngIf="col.field != 'wareHouseStockDtoList' && col.field != 'plantName'" (click)="modalShow(rowData.palletId,'DETAIL')">{{rowData[col.field]}}</p>
+                  
+                  <a href="javascript:;" *ngIf="col.field == 'plantName'" (click)="showPlantDetailDialog(rowData.plantId)" > {{rowData.plantName}}</a> -->
+
+                  <span *ngSwitchDefault>{{rowData[col.field]}}</span>
+                  <!-- <p *ngIf="col.field == 'wareHouseStockDtoList'" (click)="modalShow(rowData.palletId,'DETAIL')">
+                    <ng-container *ngFor="let stock of rowData['wareHouseStockDtoList'] |slice:0:3; let i=index">
+                      <strong>({{stock['quantity']}})  </strong>
+                      <small class="text-muted">
+                        {{stock['stockName']}}
+                      </small>,
+                      <span  *ngIf="i==2">...</span>
+                    </ng-container>
+                  </p> -->
+                </td>
+                
+                <td width="80px" >
+                  <button class="btn btn-sm btn-outline-danger" type="button" (click)="delete(rowData.palletSettingId)">
+                    <i class="fa fa-trash"></i></button>
+                  <button class="btn btn-sm btn-outline-info" type="button" (click)="modalShow(rowData.palletSettingId,'EDIT')">
+                    <i class="fa fa-edit"></i></button>
+                </td>
+              </tr>
+
+            </ng-template>
+          </p-table>
+
+          <br/>
+
+          <div class="row">
+            <app-paging
+              [showSearch]="false"
+              [TotalElements]="pagination.totalElements"
+              [CurrentPage]="pagination.currentPage"
+              [PageSize]="pagination.pageSize"            [rows]="pagination.rows"
+              [TotalPageLinkButtons]="pagination.TotalPageLinkButtons"
+              [RowsPerPageOptions]="pagination.RowsPerPageOptions"
+              (onPageChange)="myChanges($event)"
+            ></app-paging>
+            <span style="margin-left:2px; padding-top: 2px " class="text-muted" >{{'total-records'|translate}}: {{pagination?.totalElements}}</span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <!--/.col-->
+  </div>
+</div>
+<!-- [ngClass]="{'modal-lg': palletModal.modal==='DETAIL', 'modal-md': palletModal.modal!=='DETAIL'}" -->
+<div bsModal [config]="{backdrop: 'static', keyboard: false}" #myModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-success modal-lg"
+   role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"> {{'pallet-setting-information' | translate}}</h4>
+        <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <ng-template [ngIf]="palletModal.modal=='NEW'">
+          <pallet-new (saveAction)="myModal.hide(); palletModal.modal=null; search(pageFilter)"></pallet-new>
+        </ng-template>
+        <ng-template [ngIf]="palletModal.modal=='EDIT'">
+          <pallet-edit [id]="palletModal.id" (saveAction)="myModal.hide(); search(pageFilter)"></pallet-edit>
+        </ng-template>
+        <ng-template [ngIf]="palletModal.modal=='DETAIL'">
+          <pallet-detail [id]="palletModal.id" ></pallet-detail>
+        </ng-template>
+
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary" (click)="myModal.hide()">{{'close' | translate}}</button>
+        <button *ngIf="palletModal.modal=='DETAIL'" type="button" class="btn rounded btn-primary" (click)="palletModal.modal='NEW'">{{'new' | translate}}</button>
+        <button *ngIf="palletModal.modal=='DETAIL'" type="button" class="btn rounded btn-success"
+                (click)="palletModal.modal='EDIT'">{{'edit' | translate}}</button>
+
+
+      </div>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

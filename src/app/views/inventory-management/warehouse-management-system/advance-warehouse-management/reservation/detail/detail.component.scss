@@ -1,0 +1,15 @@
+.half-width td{
+    width: 50%;
+}
+::ng-deep .ui-table-wrapper{
+    margin-right: 5px;
+}
+
+.dimension-table td{
+    width: 50%;
+}
+
+.dim-td{
+    background: #c3c3c3;
+    text-align: center;
+}

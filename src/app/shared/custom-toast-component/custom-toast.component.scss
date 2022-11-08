@@ -1,0 +1,40 @@
+:host {
+  overflow: visible !important;
+
+  &:hover .action-buttons {
+    display: flex;
+  }
+}
+
+.container {
+
+}
+
+:host.border-blue{
+  border-top:4px solid #04c4f3;
+}
+:host.border-green{
+  border-top: 4px solid #51d21a;
+}
+:host.border-red{
+  border-top: 4px solid red;
+}
+
+.toast-close-button{
+  color: white;
+  opacity: 1;
+  top: 2px;
+  right: 2px;
+  position: absolute;
+  font-size: 14px;
+}
+
+.action-buttons {
+  align-items: center;
+  gap: 5px;
+  position: absolute;
+  bottom: -30px;
+  left: 15px;
+  padding-top: 20px;
+  display: none;
+}

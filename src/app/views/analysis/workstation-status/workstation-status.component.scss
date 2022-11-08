@@ -1,0 +1,41 @@
+
+.status-container{
+  position: relative;
+  height: 500px;
+}
+.vl {
+  border-left: 1px dashed #bababa;
+  height: 450px;
+  position: absolute;
+  opacity: 0.5;
+
+}
+.vl-bolder{
+  border-left: 2px solid #6c808c !important;
+}
+.hour-span {
+  top: 450px;
+  font-size: 12px;
+}
+.hour-bold{
+  font-weight: 700;
+  font-size: 13px;
+}
+.hl {
+  border-bottom: 2px solid #666666;
+  width: 900px;
+  position: absolute;
+  opacity: 0.5;
+  left: 100px;
+  top: 450px;
+
+}
+
+.legend-box{
+  height: 15px;
+  width: 20px!important;
+  padding:0 9px;
+ border-radius: 2px;
+  opacity: 0.75;
+  margin-right: 1px;
+}

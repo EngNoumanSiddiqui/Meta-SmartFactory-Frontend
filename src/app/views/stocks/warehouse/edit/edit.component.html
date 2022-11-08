@@ -1,0 +1,149 @@
+<div class="animated fadeIn">
+  <div class="row">
+
+    <div class="col-lg-12 col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i>{{'edit' | translate}} {{'warehouse' | translate}}
+        </div>
+        <div class="card-body">
+          <form #warehouseForm="ngForm">
+
+            <table class="table table-bordered">
+              <tbody *ngIf="wareHouse !== null">
+                <tr>
+
+                  <td>{{'parent-warehouse'|translate}}</td>
+                  <td>
+                    <warehouse-auto-complete [plantId]="wareHouse.plantId"
+                      (selectedWareHouseEvent)="setSelectedWarehouse($event)"
+                      [selectedWareHouseId]="wareHouse.parentId"></warehouse-auto-complete>
+                </tr>
+                <tr>
+                  <td>{{'plant' | translate}} </td>
+                  <td>
+                    <span
+                      *ngIf="wareHouse.plantId && selectedPlant && wareHouse.plantId=== selectedPlant.plantId">{{selectedPlant.plantName}}</span>
+                    <plant-auto-complete *ngIf="!wareHouse.plantId && !selectedPlant"
+                      [selectedPlantId]="wareHouse.plantId" (selectedPlantEvent)="setSelectedPlant($event)"
+                      [eventFire]="true"></plant-auto-complete>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'default-selected' | translate}}</td>
+                  <td>
+                    <p-checkbox [(ngModel)]="wareHouse.defaultSelected" binary="true" inputId="binary"
+                      name="defaultSelected"></p-checkbox>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'factory-calendar' | translate}}</td>
+                  <td>
+                    <factory-calendar-auto-complete [selectedFactoryCalendarId]="wareHouse.factoryCalendarId"
+                      (selectedFactoryCalendarEvent)="wareHouse.factoryCalendarId=$event?.factoryCalendarId"></factory-calendar-auto-complete>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>{{'warehouse' | translate}} {{'no' | translate}}</td>
+                  <td><input type="text" class="form-control" name="wareHouseNo" [(ngModel)]="wareHouse.wareHouseNo" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'warehouse' | translate}} {{'name' | translate}} </td>
+                  <td><input type="text" class="form-control" name="wareHouseName" required
+                      [(ngModel)]="wareHouse.wareHouseName" /></td>
+                </tr>
+
+
+                <tr>
+                  <td>{{'type' | translate}}</td>
+                  <td>
+                    <div class="row">
+                      <table class="table table-borderless">
+                        <tbody>
+                          <tr>
+                            <td>PURCHASE</td>
+                            <td>
+                              <label class="switch switch-3d switch-success">
+                                <input class="switch-input" name="purchase" type="checkbox"
+                                  [(ngModel)]="wareHouse.purchase" (ngModelChange)="onTypeChanged('purchase',$event)">
+                                <span class="switch-label"></span>
+                                <span class="switch-handle"></span>
+                              </label>
+                            </td>
+                            <td>SALES</td>
+                            <td>
+                              <label class="switch switch-3d switch-success">
+                                <input class="switch-input" name="sales" type="checkbox" [(ngModel)]="wareHouse.sales"
+                                  (ngModelChange)="onTypeChanged('sales',$event)">
+                                <span class="switch-label"></span>
+                                <span class="switch-handle"></span>
+                              </label>
+                            </td>
+                            <td>PROCESS</td>
+                            <td>
+                              <label class="switch switch-3d switch-success">
+                                <input class="switch-input" name="process" type="checkbox"
+                                  [(ngModel)]="wareHouse.process" (ngModelChange)="onTypeChanged('process',$event)">
+                                <span class="switch-label"></span>
+                                <span class="switch-handle"></span>
+                              </label>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>SCRAP</td>
+                            <td>
+                              <label class="switch switch-3d switch-success">
+                                <input class="switch-input" name="scrap" type="checkbox" [(ngModel)]="wareHouse.scrap"
+                                  (ngModelChange)="onTypeChanged('scrap',$event)">
+                                <span class="switch-label"></span>
+                                <span class="switch-handle"></span>
+                              </label>
+                            </td>
+                            <td>REWORK</td>
+                            <td>
+                              <label class="switch switch-3d switch-success">
+                                <input class="switch-input" name="rework" type="checkbox" [(ngModel)]="wareHouse.rework"
+                                  (ngModelChange)="onTypeChanged('rework',$event)">
+                                <span class="switch-label"></span>
+                                <span class="switch-handle"></span>
+                              </label>
+                            </td>
+                            <td>QUALITY</td>
+                            <td>
+                              <label class="switch switch-3d switch-success">
+                                <input class="switch-input" name="quality" type="checkbox"
+                                  [(ngModel)]="wareHouse.quality" (ngModelChange)="onTypeChanged('quality',$event)">
+                                <span class="switch-label"></span>
+                                <span class="switch-handle"></span>
+                              </label>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'description' | translate}}</td>
+                  <td><input type="text" class="form-control" name="desc" [(ngModel)]="wareHouse.description" /> </td>
+                </tr>
+
+                <tr>
+                  <td colspan="2">
+                    <!--<button type="reset" class="btn btn-sm btn-danger" (click)="goPage()"><i class="fa fa-ban"></i>
+                  {{'cancel' | translate}}</button>-->
+                    <button type="submit" class="btn btn-sm btn-primary" [disabled]="formValid()" (click)="save()"><i
+                        class="fa fa-dot-circle-o"></i>
+                      {{'save' | translate}}</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

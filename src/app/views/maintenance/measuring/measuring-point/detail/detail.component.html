@@ -1,0 +1,75 @@
+<div class="animated fadeIn">
+  <div class="row" *ngIf="measuringPoint">
+
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i> {{'measuring-point-detail' | translate}}
+        </div>
+        <div class="card-body">
+          <table class="table table-bordered">
+            <tbody>
+            <tr>
+              <td width="25%">{{'measuring-point-id' | translate}}</td>
+              <td>{{measuringPoint.equipmentMeasuringPointId}}</td>
+              <td width="35%">{{'code-group' | translate}}</td>
+              <td>{{measuringPoint.equipmentCodeGroupHeader?.equipmentCodeGroup?.shortText}}</td>
+            </tr>
+            <tr>
+              <td>{{'functional-location' | translate}}</td>
+              <td>{{measuringPoint.maintenanceFunctionalLocation?.description}}</td>
+              <td>{{'code-group-header' | translate}}</td>
+              <td>{{measuringPoint.equipmentCodeGroupHeader?.shortText}}</td>
+            </tr>
+            <tr>
+              <td> {{'equipment' | translate}}</td>
+              <td>{{measuringPoint.equipment?.equipmentName}}</td>
+              <td>{{'counter-overflow-reading' | translate}}</td>
+              <td>{{measuringPoint.counterOverflowReading}}</td>
+             
+            </tr>
+            <tr>
+              <td> {{'measuring-point-counter' | translate}} </td>
+              <td><p-checkbox name="counter" binary="true" [disabled]="true" [(ngModel)]="measuringPoint.measuringPointIsCounter"></p-checkbox></td>
+              <td>{{'target-value' | translate}}</td>
+              <td>{{measuringPoint.targetValue}}</td>
+            </tr>
+            <tr>
+              <td> {{'measuring-point-no' | translate}}</td>
+              <td>{{measuringPoint.equipmentMeasuringPointNo}}</td>
+              <td>{{'target-value-text' | translate}}</td>
+              <td>{{measuringPoint.targetValueText}}</td>
+            </tr>
+            <tr>
+              <td>{{'measuring-position' | translate}}</td>
+              <td>{{measuringPoint.measurementPosition}}</td>
+              <td>{{'count-backwards' | translate}}</td>
+              <td><p-checkbox name="countBackwards" binary="true" [disabled]="true" [(ngModel)]="measuringPoint.countBackwards"></p-checkbox> </td>
+            </tr>
+            <tr>
+              <td>{{'characteristic' | translate}}</td>
+              <td>{{measuringPoint.maintenanceCharacteristic?.characteristic}}</td>
+              <td>{{'annual-estimate' | translate}}</td>
+              <td>{{measuringPoint.annualEstimate}}</td>
+            </tr>
+            <tr>
+              <td>{{'characteristic-unit' | translate}}</td>
+              <td>{{measuringPoint.maintenanceCharacteristic?.unitMeasure}}</td>
+              <td>{{'annual-estimate-unit' | translate}}</td>
+              <td>{{measuringPoint.annualEstimateUnit}}</td>
+            </tr>
+            <tr>
+              <td>{{'decimal-places' | translate}}</td>
+              <td>{{measuringPoint.decimalPlaces}}</td>
+             
+            </tr>
+           
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  </div>

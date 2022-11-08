@@ -1,0 +1,137 @@
+
+.monitoring_block{
+  border: 2px solid #1F1E21;
+  border-radius: 4px;
+  text-align: center;
+  margin-top: 20px;
+}
+
+
+.monitoring_span{
+  padding: 5px;
+  border-bottom:  2px solid #1F1E21;
+  background-color: #414143;
+  color: white;
+  font-weight: bold;
+  // min-height: 33.8px;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.monitoring_span > span {
+  padding: 10px 0;
+  text-align: center;
+}
+
+.monitoring_span_prod{
+  background-color: #76F110 !important;
+  color: black;
+}
+
+.monitoring_span_stop{
+  background-color: #EE452F !important;
+  color: black;
+}
+
+.monitoring_span_maintenance{
+  background-color: #4eb2f7 !important;
+  color: black;
+}
+
+.monitoring_span_waiting_for_job{
+  background-color: #FFDB9B !important;
+  color: black;
+}
+
+.monitoring_span_waiting_for_labor{
+  border: 1px solid #8b8872;
+  background-color: #8b8872;
+}
+
+.monitoring_span_waiting_for_maintenance{
+  border: 1px solid #5c3c64;
+  background-color: #5c3c64;
+}
+
+.monitoring_span_waiting_for_quality{
+  border: 1px solid #e9c4a7;
+  background-color: #e9c4a7;
+}
+
+.monitoring_span_setup {
+  background-color: #20a8d8 !important;
+  color: black;
+}
+
+.monitoring_span_setup_overtime {
+  background-color: #806bf8 !important;
+  color: black;
+}
+
+
+.workstation-status-prod{
+  color: #76F110;
+}
+
+.workstation-status-setup {
+  color: #5dcaef;
+}
+
+.workstation-status-setup_overtime {
+  color: #806bf8;
+}
+
+.workstation-status-prod-dark{
+  color: #01a117;
+}
+.workstation-status-maintenance{
+  color: #5dcaef;
+}
+.workstation-status-waiting-for-job{
+  color: #FFDB9B;
+}
+
+.workstation-status-waiting-for-labor{
+  border: 1px solid #8b8872;
+  background-color: #8b8872;
+}
+
+.workstation-status-waiting-for-maintenance{
+  border: 1px solid #5c3c64;
+  background-color: #5c3c64;
+}
+
+.workstation-status-waiting-for-quality{
+  border: 1px solid #e9c4a7;
+  background-color: #e9c4a7;
+}
+
+.workstation-status-standby-dark{
+  color: #e4cd01;
+}
+.monitoring-machine-status_setup {
+  color: #5dcaef;
+}
+.workstation-status-stop{
+  color: #EE452F;
+}
+
+
+.monitoring-machine-status_prod{
+  color: #76F110;
+}
+.monitoring-machine-status_prod-dark{
+  color: #0f8b03;
+}
+.monitoring-machine-status_standby{
+  color: #ffff00;
+}
+.monitoring-machine-status_closed{
+  color: #EE452F;
+}
+.monitoring-machine-status_setup{
+  color: #5dcaef;
+}
+.monitoring-machine-status_stopped{
+  color: #EE452F;
+}

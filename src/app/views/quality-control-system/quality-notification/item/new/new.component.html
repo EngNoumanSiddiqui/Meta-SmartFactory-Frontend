@@ -1,0 +1,69 @@
+<div class="animated fadeIn">
+    <div class="row">
+      <p-tabView class="col-md-12">
+        <p-tabPanel header="{{ 'item-details' | translate }}">
+          <div class="card">
+            <div class="card-header"> 
+              <i class="fa fa-align-justify"></i> {{'item-details' | translate}}
+            </div>
+            <div class="card-body">
+              <form #inspForm="ngForm"> 
+                <table class="table table-bordered">
+                  <tr>
+                    <td>{{'defect-location' | translate}}</td>
+                    <td>
+
+                       <quality-defect-location-auto-complete (selectedDefectLocationEvent)="item.qualityDefectLocationId=$event.defectLocationId"></quality-defect-location-auto-complete>
+                    </td>
+                  </tr> 
+                  <tr>
+                    <td>{{'defect-type' | translate}}</td>
+                    <td>
+                        <quality-defect-type-auto-complete (selectedDefectTypeEvent)="item.qualityDefectTypeId=$event.defectTypeId"></quality-defect-type-auto-complete>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'description' | translate}}</td>
+                    <td>
+                        <input
+                        type="text"
+                        id="description"
+                        name="description"
+                        [(ngModel)]="item.description"
+                        class="form-control"
+                      />
+                    </td>
+                  </tr>
+                </table>
+              </form>
+            </div>
+        </div>
+        <div class="row col-md-12">
+          <button
+            type="submit"
+            class="btn btn-sm btn-danger"
+            [disabled]="!inspForm.form.valid" 
+            (click)="reset()"
+          >
+          <i class="fa fa-ban" aria-hidden="true"></i>
+            {{ "reset" | translate }}
+          </button>
+          <button
+            type="submit"
+            class="btn btn-sm btn-primary"
+            [disabled]="!inspForm.form.valid"
+            (click)="save()"
+          >
+            <i class="fa fa-dot-circle-o"></i>
+            {{ "save" | translate }}
+          </button>
+        </div>
+      </p-tabPanel>
+      <!-- CAUSES -->
+      <p-tabPanel header="{{ 'causes' | translate }}">
+        <list-causes></list-causes>
+      </p-tabPanel>
+      </p-tabView>
+    </div> 
+  </div>
+  

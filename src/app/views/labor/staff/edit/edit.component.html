@@ -1,0 +1,618 @@
+<div class="animated fadeIn">
+  <form #staffForm="ngForm">
+    <p-tabView>
+      <p-tabPanel header="{{'personal-details' | translate}}">
+
+        <div class="row ui-fluid">
+
+
+          <div class="col-lg-6">
+            <div class="card">
+              <div class="card-header">
+                <i class="fa fa-align-justify"></i>{{'personal-information' | translate}}
+              </div>
+              <div class="card-body">
+                <table class="table table-bordered">
+                  <tbody>
+                    <tr>
+                      <td width="30%">{{'personal' | translate}} {{'no' | translate}}</td>
+                      <td><input type="text" class="form-control" name="employeeNo" [(ngModel)]="staff.employeeNo" />
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>{{'personal' | translate}} {{'first-name' | translate}}*</td>
+                      <td><input type="text" class="form-control" required name="firstName"
+                          [(ngModel)]="staff.firstName" />
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>{{'personal' | translate}} {{'last-name' | translate}}*</td>
+                      <td><input type="text" class="form-control" required name="lastName"
+                          [(ngModel)]="staff.lastName" />
+                      </td>
+                    </tr>
+
+
+
+
+                    <tr>
+                      <td>{{'title' | translate}}</td>
+                      <td>
+                        <div class="input-group">
+                          <select id="employeTitleId" name="employeTitleId" class="form-control"
+                            [(ngModel)]="staff.employeeTitleId">
+                            <option [ngValue]="null">{{'please-select' | translate}}</option>
+                            <option *ngFor="let emp of EmployeeTitleList" value="{{emp.employeeTitleId}}">
+                              {{emp.employeeTitleName}}
+                            </option>
+                          </select>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'group-type' | translate}}</td>
+                      <td>
+                        <div class="input-group">
+
+                          <select id="GroupType" name="GroupType" class="form-control" required
+                            [(ngModel)]="staff.groupType">
+                            <option [value]="null"> {{'please-select' | translate}}</option>
+                            <option *ngFor="let type of GroupTypeList" [value]="type">
+                              {{type}}</option>
+                          </select>
+
+                        </div>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>{{'birth-date' |translate}}</td>
+                      <td>
+                        <p-calendar [showIcon]="true" [(ngModel)]="staff.birthDate" name="birthDate"
+                          [ngModelOptions]="{standalone: true}" dateFormat="dd/mm/yy" [monthNavigator]="true"
+                          [yearNavigator]="true" yearRange="1960:2100"></p-calendar>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>{{'gender' | translate}}</td>
+                      <td>
+                        <div class="input-group">
+
+                          <select id="gender" name="gender" class="form-control" [(ngModel)]="staff.gender">
+                            <option [ngValue]="null">{{'please-select' | translate}}</option>
+                            <option *ngFor="let gender of GenderList" value="{{gender}}">{{gender}}</option>
+                          </select>
+
+                        </div>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>{{'blood-type' | translate}}</td>
+                      <td>
+                        <div class="input-group">
+
+                          <select id="bloodGroup" name="bloodGroup" class="form-control" [(ngModel)]="staff.bloodGroup">
+                            <option [ngValue]="null">{{'please-select' | translate}}</option>
+                            <option *ngFor="let blood of BloodList" value="{{blood}}">{{blood}}</option>
+                          </select>
+
+                        </div>
+                      </td>
+                    </tr>
+
+
+                    <tr>
+                      <td>{{'plant' | translate}} {{'name' | translate}}</td>
+                      <td>
+                        <span
+                          *ngIf="staff.plantId && selectedPlant && staff.plantId=== selectedPlant.plantId">{{selectedPlant.plantName}}</span>
+                        <plant-auto-complete *ngIf="!staff.plantId && !selectedPlant" [required]="true"
+                          [addIfMissing]="false" [selectedPlantId]="staff.plantId"
+                          (selectedPlantEvent)="setSelectedPlant($event)" [eventFire]="true">
+                        </plant-auto-complete>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'description' | translate}}</td>
+                      <td><input type="text" class="form-control" name="description" [(ngModel)]="staff.description" />
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>{{'start-date'| translate}}</td>
+                      <td>
+                        <p-calendar [showIcon]="true" [(ngModel)]="staff.jobEntryDate" name="jobEntryDate"
+                          [ngModelOptions]="{standalone: true}" [monthNavigator]="true" [yearNavigator]="true"
+                          yearRange="1990:2100" dateFormat="dd/mm/yy"></p-calendar>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>{{'end-date'| translate}}</td>
+                      <td>
+                        <p-calendar [showIcon]="true" [(ngModel)]="staff.jobExitDate" name="jobExitDate"
+                          [ngModelOptions]="{standalone: true}" [monthNavigator]="true" [yearNavigator]="true"
+                          yearRange="1990:2100" dateFormat="dd/mm/yy"></p-calendar>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>{{'dummy'| translate}}</td>
+                      <td>
+                        <p-checkbox name="dummy" binary="true"  [(ngModel)]="staff.dummy"></p-checkbox>
+                      </td>
+                    </tr>
+
+                    <!-- <tr>
+                      <td colspan="2">
+                        <button type="reset" class="btn btn-sm btn-danger" (click)="goPage()"><i class="fa fa-ban"></i>
+                        {{'cancel' | translate}}
+                      </button>
+                        <button type="submit" class="btn btn-sm btn-primary" [disabled]="!staffForm.form.valid"
+                          (click)="save()"><i class="fa fa-dot-circle-o"></i>
+                          {{'save' | translate}}
+                        </button>
+                      </td>
+                    </tr> -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="card">
+              <div class="card-header">
+                <i class="fa fa-align-justify"></i>{{'contact-information' | translate}}
+              </div>
+              <div class="card-body">
+                <table class="table table-bordered">
+                  <tbody>
+                    <tr align="center">
+                      <td colspan="2">
+                        <image-adder [referenceId]="staff.employeeId" [tableType]="'STAFF'"></image-adder>
+                        <!-- <media-chooser (mediaIdEvent)="setLoadedImage($event)" [accept]="'image/*'"
+                                     [referenceId]="staff.employeeId" [tableType]="tableTypeForImg"
+                                     [picture]="picture"></media-chooser>
+                      <div *ngIf="picture" class="row justify-content-md-center">
+                        <img [src]="picture" style="display: block;  height: 300px; max-width: 100%">
+                      </div>
+                      <div *ngIf="!picture" class="row justify-content-md-center">
+                        <img [src]="'assets/img/avatars/avatar.png'"
+                             style="display: block;  height: 300px; max-width: 100%">
+                      </div> -->
+                      </td>
+                    </tr>
+
+
+                    <tr>
+                      <td>{{'mobile' | translate}}</td>
+                      <td><input type="text" class="form-control" name="gsm" [(ngModel)]="staff.gsm" /></td>
+                    </tr>
+                    <tr>
+                      <td>{{'phone' | translate}}</td>
+                      <td><input type="text" class="form-control" name="phone" [(ngModel)]="staff.phone" /></td>
+                    </tr>
+                    <tr>
+                      <td width="30%">{{'email' | translate}}</td>
+                      <td>
+                        <input type="email" class="form-control" minlength="3" maxlength="50" [(ngModel)]="staff.email"
+                          required placeholder="{{'email'|translate}}" name="email" #email="ngModel"
+                          pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$">
+                        <small [hidden]="email.valid || (email.pristine)" class="text-danger">
+                          Email is required <i>Fex.: john@doe.com</i>
+                        </small>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'address' |translate}} - 1</td>
+                      <td><input type="text" class="form-control" name="address1" [(ngModel)]="staff.address1" /></td>
+                    </tr>
+                    <tr>
+                      <td>{{'address' |translate}} - 2</td>
+                      <td><input type="text" class="form-control" name="address2" [(ngModel)]="staff.address2" /></td>
+                    </tr>
+
+                    <tr>
+                      <td>{{'country' |translate}}</td>
+                      <td>
+                        <div class="input-group">
+                          <select id="countryIdx" name="countryIdx" class="form-control"
+                            (change)="countrySelection($event)" [(ngModel)]="staff.countryId">
+                            <option [ngValue]="null">{{'please-select' | translate}}</option>
+                            <option value="{{country.countryId}}" *ngFor="let country of CountryList">
+                              {{country.countryName}}
+                            </option>
+                          </select>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>{{'city' | translate}}</td>
+                      <td>
+                        <div class="input-group">
+                          <select id="cityIdx" name="cityIdx" class="form-control" [(ngModel)]="staff.cityId"
+                            [disabled]="params.cityDisabled">
+                            <option [ngValue]="null">{{'please-select' | translate}}</option>
+                            <option value="{{city.cityId}}" *ngFor="let city of CityList">{{city.cityName}}</option>
+                          </select>
+                        </div>
+                      </td>
+                    </tr>
+
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <i class="fa fa-align-justify"></i>{{'security-information' | translate}}
+              </div>
+              <div class="card-body">
+                <table class="table table-bordered">
+                  <tbody>
+
+                    <tr *ngIf="!cloned">
+                      <td>{{'password' | translate}}</td>
+                      <td>
+                        <div class="input-group ">
+
+                          <input disabled minlength="4" maxlength="16" type="password" value="*********" />
+
+                          <!-- <button pButton type="button" class="ui-button-warn" style="height: 28px;border-radius: 0;"></button> -->
+                          <span class="input-group-btn">
+                            <button type="button" class="btn btn-sm btn-primary" (click)="chPwdModal.show()">
+                              <i class="fa fa-key"></i> {{'reset' |translate}}</button>
+                          </span>
+                        </div>
+
+                      </td>
+                    </tr>
+                    <tr *ngIf="cloned">
+                      <td width="30%">{{'password' | translate}}*</td>
+                      <td>
+
+                        <div class="ui-inputgroup">
+                          <input [type]="showPassword ? 'text' : 'password'" class="form-control" minlength="4"
+                            maxlength="8" name="password" [(ngModel)]="staff.password" required
+                            validateEqual="confirmPassword" reverse="true" #password="ngModel">
+                          <button pButton type="button" icon="{{showPassword? 'pi pi-eye': 'pi pi-eye-slash'}}"
+                            class="ui-button-warn" (click)="onShowPassword()" id="pass"></button>
+                        </div>
+                        <small [hidden]="password.valid || (password.pristine )" class="text-danger">
+                          Password is required. (min 4, max 16 charater)
+                        </small>
+                      </td>
+
+                    </tr>
+                    <tr>
+                      <td>{{'id-code' | translate}}*</td>
+                      <td><input type="text" class="form-control" required name="identity"
+                          [(ngModel)]="staff.identity" />
+                      </td>
+                    </tr>
+                    <tr *ngIf="!cloned">
+                      <td>{{'rf-id' | translate}}*</td>
+                      <td>
+                        <div class="input-group ">
+                          <input *ngIf="!IsDisabledRFID" name="rfid" minlength="4" maxlength="8" type="password"
+                            [(ngModel)]="staff.rfid" />
+                          <input *ngIf="IsDisabledRFID" disabled minlength="4" maxlength="8" type="password"
+                            [value]="(staff.rfid ? '******' : '')" />
+                          <span class="input-group-btn">
+                            <button type="button" class="btn btn-sm btn-primary"
+                              (click)="IsDisabledRFID = !IsDisabledRFID;staff.rfid = ''">
+                              <i class="fa fa-key"></i> {{(IsDisabledRFID ? 'reset' : 'cancel') |translate}}</button>
+                          </span>
+                        </div>
+                        <!-- <input type="password" class="form-control" [(ngModel)]="staff.rfid" name="rfid" required /> -->
+                      </td>
+                    </tr>
+                    <tr *ngIf="cloned">
+                      <td>{{'rf-id' | translate}}*</td>
+                      <td>
+                        <div class="ui-inputgroup">
+                          <input [type]="showRFID ? 'text' : 'password'" class="form-control" minlength="4"
+                            maxlength="8" name="rfid" [(ngModel)]="staff.rfid" required reverse="true" #rfid="ngModel">
+                          <button pButton type="button" icon="{{showRFID? 'pi pi-eye': 'pi pi-eye-slash'}}"
+                            class="ui-button-warn" (click)="showRFID = !showRFID" id="rfidbutton"></button>
+                        </div>
+                        <small [hidden]="rfid.valid || (rfid.pristine )" class="text-danger">
+                          RFID is required. (min 4, max 8 charater)
+                        </small>
+                        <!-- <input type="text" class="form-control" [(ngModel)]="staff.rfid" name="rfid" required /> -->
+                      </td>
+                    </tr>
+
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+        <div class="row">
+          <div class="col-lg-12">
+            <table class="table table-bordered">
+              <thead>
+                <th class="card-header" colspan="2">{{'roles' | translate}}</th>
+              </thead>
+              <tbody>
+                <tr>
+                  <td width="30%">{{'roles' | translate}}</td>
+                  <td>
+                    <div class="col-md-6 ui-fluid">
+                      <p-multiSelect class="p-2" [options]="RoleListTree" dataKey="roleId" optionLabel="defaultRoleName"
+                        [(ngModel)]="selectedroles"></p-multiSelect>
+                    </div>
+
+                  </td>
+                </tr>
+                <!-- <tr>
+              <td>
+                <div *ngFor="let role of staff.employeeRoleDtoList">
+                  <label class="switch switch-3d switch-success">
+                    <input checked class="switch-input" type="checkbox" disabled>
+                    <span class="switch-label"></span>
+                    <span class="switch-handle"></span>
+                  </label>
+                  {{role.defaultRoleName}}
+                </div>
+              </td>
+              <td>
+                <div *ngFor="let permission of staff.employeePermissionDtoList">
+                  <label class="switch switch-3d switch-success">
+                    <input class="switch-input" type="checkbox" disabled *ngIf="permission.isActive === false">
+                    <input checked class="switch-input" type="checkbox" disabled *ngIf="permission.isActive === true">
+                    <span class="switch-label"></span>
+                    <span class="switch-handle"></span>
+                  </label>
+                  {{permission.name}} (
+                  <span *ngIf="permission.isInternal">Internal</span>
+                  <span *ngIf="permission.isExternal">External</span>
+                  )
+
+                </div>
+              </td>
+            </tr> -->
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </p-tabPanel>
+      <p-tabPanel header="{{'employee-skills' | translate}}" [disabled]="cloned">
+        <ng-template pTemplate="content">
+          <app-employee-skills-list [id]="{'id':this.id,'status':'edit'}"></app-employee-skills-list>
+        </ng-template>
+      </p-tabPanel>
+      <p-tabPanel header="{{'send-email' | translate}}">
+        <div class="row">
+          <div class="col-lg-12">
+            <table class="table table-bordered">
+              <tbody>
+                <tr>
+                  <td width="30%">{{'cc' | translate}}</td>
+                  <td>
+                    <input class="form-control" type="text" name="ccList" [(ngModel)]="staff.ccList" />
+                  </td>
+                </tr>
+                <tr>
+                  <td width="30%">{{'bcc' | translate}}</td>
+                  <td>
+                    <input class="form-control" type="text" name="bccList" [(ngModel)]="staff.bccList" />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </p-tabPanel>
+      <p-tabPanel header="{{'costing' | translate}}">
+        <div class="row">
+          <div class="col-lg-12">
+            <table class="table table-bordered">
+              <tbody>
+                <tr>
+                  <td width="30%">{{'cost-rate' | translate}}</td>
+                  <td>
+                    <input class="form-control" type="number" min="1" name="employeeCostRate"
+                      [(ngModel)]="staff.employeeCostRate" />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </p-tabPanel>
+
+    </p-tabView>
+
+    <div class="row col-md-12">
+      <button type="submit" class="btn btn-sm btn-primary" [disabled]="!staffForm.form.valid" (click)="save()"><i
+          class="fa fa-dot-circle-o"></i>
+        {{'save' | translate}}
+      </button>
+    </div>
+  </form>
+</div>
+
+
+<!----------------------- Modals -------------------------------------->
+
+<div bsModal [config]="{backdrop: 'static', keyboard: false}" #myModal="bs-modal" class="modal fade" tabindex="-1"
+  role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class=" modal-dialog modal-info mymodal-dialog" role="document">
+    <div class="modal-content mymodal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          <span>{{'roles' | translate}}</span>
+        </h4>
+        <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body new-modal">
+
+        <div class="form-group row">
+          <div class="col-lg-3" style="max-height: 700px; overflow: auto;">
+            <p-listbox [options]="RoleListTree" [(ngModel)]="SelectedRolesTree" multiple="multiple" checkbox="checkbox"
+              (onChange)="changeRoleList($event)" filter="filter" optionLabel="label" [style]="{'width':'100%'}">
+              <p-header><i class="fa fa-shield"></i> {{'roles' | translate}}</p-header>
+            </p-listbox>
+          </div>
+          <div class="col-lg-9">
+            <div class="form-group row">
+
+              <div class="col-md-6">
+                <label class="col-md-12 col-form-label"><strong>{{'permission-for-selected-role' |
+                    translate}}</strong></label>
+                <div class="form-group row" style="max-height: 350px; overflow: auto;">
+                  <div class="col-md-12">
+                    <p-tree [value]="SelectedRolesTree" selectionMode="checkbox" [style]="{'width':'100%'}"
+                      (onNodeSelect)="nodeSelectFromRoleTree($event)"></p-tree>
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="col-md-1 align-middle" style="padding-left: 0px !important;">
+                <br />
+                <br />
+                <button type="button" class="btn btn-dark"><i class="fa fa-exchange fa-2x"></i></button>
+                <br />
+                <br />
+              </div>
+
+              <div class="col-md-5">
+                <label class="col-md-12 col-form-label"><strong>{{'cancelled-permission' |
+                    translate}}</strong></label>
+                <div class="form-group row" style="max-height: 350px; overflow: auto;">
+                  <div class="col-md-12">
+                    <p-tree [value]="ExtractedPermissionsAfterUpdate" selectionMode="checkbox"
+                      [style]="{'width':'100%'}" (onNodeSelect)="nodeSelectFromExtractedRoles($event)"></p-tree>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <div class="form-group row">
+
+              <div class="col-md-6">
+                <label class="col-md-12 col-form-label"><strong>{{'all-permissions' | translate}}</strong></label>
+                <div class="form-group row" style="max-height: 350px; overflow: auto;">
+                  <div class="col-md-12">
+                    <p-tree [value]="AllOtherPermissions" selectionMode="checkbox" [style]="{'width':'100%'}"
+                      (onNodeSelect)="nodeSelectFromPermissionTree($event)"></p-tree>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-1 align-middle" style="padding-left: 0px !important;">
+                <br />
+                <br />
+                <button type="button" class="btn btn-dark"><i class="fa fa-exchange fa-2x"></i></button>
+                <br />
+                <br />
+              </div>
+
+              <div class="col-md-5">
+                <label class="col-md-12 col-form-label"><strong>{{'inserted-permissions' |
+                    translate}}</strong></label>
+                <div class="form-group row" style="max-height: 350px; overflow: auto;">
+                  <div class="col-md-12">
+                    <p-tree [value]="AllOtherExtractedPermissions" selectionMode="checkbox" [style]="{'width':'100%'}"
+                      (onNodeSelect)="nodeSelectFromExtractedPermissions($event)"></p-tree>
+                  </div>
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="myModal.hide()">{{'close' | translate}}</button>
+        <button type="button" class="btn btn-success" (click)="myModal.hide();checkPermissionsandRoles()">{{'save' |
+          translate}}
+        </button>
+      </div>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<div bsModal [config]="{backdrop: 'static', keyboard: false}" #chPwdModal="bs-modal" class="modal fade" tabindex="-1"
+  role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-info" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          <span>{{'change-password' | translate}}</span>
+        </h4>
+        <button type="button" class="close" (click)="closeChPwdModal()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body new-modal">
+
+        <div class="form-group row">
+          <div class="col-md-12">
+            <form #chPassForm="ngForm">
+              <table class="table table-borderless">
+                <tbody>
+                  <tr>
+                    <td width="30%">{{'new-password' | translate}}</td>
+                    <td>
+                      <div class="ui-inputgroup">
+                        <input [type]="showPassword ? 'text' : 'password'" class="form-control" minlength="4"
+                          maxlength="16" name="password" [(ngModel)]="newPassword" required
+                          validateEqual="confirmPassword" reverse="true" #password="ngModel">
+                        <button pButton type="button" icon="{{showPassword? 'pi pi-eye': 'pi pi-eye-slash'}}"
+                          class="ui-button-warn" (click)="onShowPassword()" id="pass"></button>
+                      </div>
+                      <small [hidden]="password.valid || (password.pristine )" class="text-danger">
+                        Password is required. (min 4, max 16 charater)
+                      </small>
+
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td>{{'re-password' | translate}}</td>
+                    <td><input [type]="showPassword ? 'text' : 'password'" class="form-control" minlength="4"
+                        maxlength="16" name="confirmPassword" [(ngModel)]="rePassword" required validateEqual="password"
+                        reverse="false" #confirmPassword="ngModel">
+                      <small [hidden]="confirmPassword.valid || (confirmPassword.pristine )" class="text-danger">
+                        Password mismatch
+                      </small>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </form>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeChPwdModal()">{{'close' | translate}}</button>
+        <button [disabled]="!chPassForm.form.valid" type="button" class="btn btn-success"
+          (click)="changePassword()">{{'save' |
+          translate}}
+        </button>
+      </div>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

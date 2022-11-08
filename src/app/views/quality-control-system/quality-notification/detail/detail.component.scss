@@ -1,0 +1,10 @@
+.tables_outer {
+    display: flex;
+    justify-content: space-between;
+    .table  {
+        width: 48%;
+    }
+    .text-regular {
+        font-weight: 400 !important;
+    }
+}

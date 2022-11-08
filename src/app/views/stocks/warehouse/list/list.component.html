@@ -1,0 +1,169 @@
+<p-confirmDialog></p-confirmDialog>
+
+
+<div class="animated fadeIn">
+
+
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+
+        <div class="card-body">
+
+          <p-table #dt [columns]="selectedColumns" scrollable="true" scrollHeight="55vh" [value]="wareHouses" [rows]="pagination.rows" [totalRecords]="pagination.totalElements" dataKey="wareHouseId" [(selection)]="selectedWarehouses" >
+
+            <ng-template pTemplate="caption">
+              <div style="text-align:left">
+                <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header" maxSelectedLabels="0"  selectedItemsLabel="{{'columns-selected'|translate}}"
+                               [style]="{minWidth: '200px'}" defaultLabel="Choose Columns">
+                  <ng-template let-col let-i="index" pTemplate="item">
+                    {{col.label|translate}}
+                  </ng-template>
+                </p-multiSelect>
+                <button pButton  class="ui-button-success float-right ml-1" (click)="modalShow(null,'NEW')" label="{{'add-new'|translate}}"> </button>
+                <button pButton  type="button" class="ui-button-warning float-right ml-1" label="{{'reset'  |translate}}" (click)="resetFilter()"></button>
+                <p-splitButton [style]="{'margin-right' : '5px'}" label="{{'export-all'|translate}}"
+                icon="fa fa-file-alt" [model]="menuItems" styleClass="ui-button-warning float-right">
+              </p-splitButton>
+              <p-splitButton [style]="{'margin-right' : '5px'}" label="{{'export-selected'|translate}}"
+                icon="fa fa-file" [model]="selecteMenuItems" styleClass="ui-button-warning float-right">
+              </p-splitButton>
+              </div>
+              <!--<hr>-->
+
+            </ng-template>
+            <ng-template pTemplate="header" let-columns>
+
+              <tr >
+                <th style="width: 3em" rowspan="2">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th *ngFor="let col of columns; let i=index;" style="cursor: pointer" [ngClass]="{'bg-selected-order':pageFilter.orderByProperty ==col.field}" (click)="reOrderData(i,col.field)"><i [ngClass]="'fa  fa-sort-alpha-' + classReOrder[i]"></i>
+                  {{col.header|translate}}
+                </th>
+                <th width="80px" rowspan="2">{{'action' | translate}}</th>
+              </tr>
+              <tr>
+                <th *ngFor="let col of columns" class="ui-fluid" [ngSwitch]="col.field">
+                  <span *ngSwitchCase="'wareHouseStockDtoList'" style="width: 100%"  ></span>
+                  <span *ngSwitchCase="'type'" ></span>
+                  <ng-container *ngSwitchCase="'defaultSelected'" >
+                    <!-- <select id="defaultSelected" name="defaultSelected" class="form-control" [(ngModel)]="pageFilter.defaultSelected" (ngModelChange)="filter(pageFilter)">
+                      <option value="" selected> {{'please-select' | translate}}</option>
+                      <option value="true">True</option>
+                      <option value="false">False</option>
+                    </select> -->
+                  </ng-container>  
+                <span *ngSwitchCase="'plantName'" ></span>
+                  <input *ngSwitchDefault style="width: 100%" [(ngModel)]="pageFilter[col.field]"  pInputText type="text" (input)="filterByColumn($event.target.value,col.field)">
+                </th>
+
+              </tr>
+
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr [pSelectableRow]="rowData">
+                <td style="width: 3em">
+                  <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                </td>
+                <td *ngFor="let col of columns" style="cursor: pointer">
+                  <a href="javascript:;" *ngIf="col.field == 'wareHouseId'" (click)="modalShow(rowData.wareHouseId,'DETAIL')" > {{rowData.wareHouseId}}</a>
+                  <a href="javascript:;" *ngIf="col.field == 'parentWareHouseName'" (click)="modalShow(rowData.parentId,'DETAIL')" > {{rowData.parentWareHouseName}}</a>
+                  
+                  <p *ngIf="col.field != 'wareHouseStockDtoList' && col.field != 'plantName' && col.field != 'wareHouseId' && col.field != 'parentWareHouseName' && col.field != 'defaultSelected'" (click)="modalShow(rowData.wareHouseId,'DETAIL')">{{rowData[col.field]}}</p>
+                  
+                  <a href="javascript:;" *ngIf="col.field == 'plantName'" (click)="showPlantDetailDialog(rowData.plantId)" > {{rowData.plantName}}</a>
+
+                  <p *ngIf="col.field == 'type'" (click)="modalShow(rowData.wareHouseId,'DETAIL')">
+                    <ng-container *ngIf="rowData['rework'] === true">REWORK</ng-container>
+                    <ng-container *ngIf="rowData['scrap'] === true"><ng-container *ngIf="rowData['rework'] === true">, </ng-container>SCRAP</ng-container>
+                    <ng-container *ngIf="rowData['sales'] === true"><ng-container *ngIf="rowData['rework'] === true || rowData['scrap'] === true" >, </ng-container>SALES</ng-container>
+                    <ng-container *ngIf="rowData['purchase'] === true"><ng-container *ngIf="rowData['rework'] === true || rowData['scrap'] === true || rowData['sales'] === true" >, </ng-container>PURCHASE</ng-container>
+                    <ng-container *ngIf="rowData['process'] === true"><ng-container *ngIf="rowData['rework'] === true || rowData['scrap'] === true || rowData['sales'] === true || rowData['purchase'] === true" >, </ng-container>PROCESS</ng-container>
+                    <ng-container *ngIf="rowData['quality'] === true"><ng-container *ngIf="rowData['rework'] === true || rowData['scrap'] === true || rowData['sales'] === true || rowData['purchase'] === true || rowData['process'] === true" >, </ng-container>QUALITY</ng-container>
+                  </p>
+                  
+                  <p *ngIf="col.field == 'defaultSelected'">
+                    <p-checkbox [(ngModel)]="rowData.defaultSelected" binary="true" inputId="binary" name="defaultSelected" disabled></p-checkbox>
+                  </p>
+                  <p *ngIf="col.field == 'wareHouseStockDtoList'" (click)="modalShow(rowData.wareHouseId,'DETAIL')">
+                    <ng-container *ngFor="let stock of rowData['wareHouseStockDtoList'] |slice:0:3; let i=index">
+                      <strong>({{stock['quantity']}})  </strong>
+                      <small class="text-muted">
+                        {{stock['stockName']}}
+                      </small>,
+                      <span  *ngIf="i==2">...</span>
+                    </ng-container>
+                  </p>
+                </td>
+                
+                <td width="80px" >
+                  <button class="btn btn-sm btn-outline-danger" type="button" (click)="delete(rowData.wareHouseId)">
+                    <i class="fa fa-trash"></i></button>
+                  <button class="btn btn-sm btn-outline-info" type="button" (click)="modalShow(rowData.wareHouseId,'EDIT')">
+                    <i class="fa fa-edit"></i></button>
+                </td>
+              </tr>
+
+            </ng-template>
+          </p-table>
+
+          <br/>
+
+          <div class="row">
+            <app-paging
+              [showSearch]="false"
+              [TotalElements]="pagination.totalElements"
+              [CurrentPage]="pagination.currentPage"
+              [PageSize]="pagination.pageSize"            [rows]="pagination.rows"
+              [TotalPageLinkButtons]="pagination.TotalPageLinkButtons"
+              [RowsPerPageOptions]="pagination.RowsPerPageOptions"
+              (onPageChange)="myChanges($event)"
+            ></app-paging>
+            <span style="margin-left:2px; padding-top: 2px " class="text-muted" >{{'total-records'|translate}}: {{pagination?.totalElements}}</span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <!--/.col-->
+  </div>
+</div>
+<div bsModal [config]="{backdrop: 'static', keyboard: false}" #myModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true" (onHidden)="warehModal.modal=null;warehModal.id=null;">
+  <div class="modal-dialog modal-success modal-lg"
+    [ngClass]="{'modal-lg': warehModal.modal==='DETAIL', 'modal-md': warehModal.modal!=='DETAIL'}"
+   role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"> {{'warehouse-information' | translate}}</h4>
+        <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <ng-template [ngIf]="warehModal.modal=='NEW'">
+          <warehouse-new (saveAction)="myModal.hide(); warehModal.modal=null; search(pageFilter)"></warehouse-new>
+        </ng-template>
+        <ng-template [ngIf]="warehModal.modal=='EDIT'">
+          <warehouse-edit [id]="warehModal.id" (saveAction)="myModal.hide(); search(pageFilter)"></warehouse-edit>
+        </ng-template>
+        <ng-template [ngIf]="warehModal.modal=='DETAIL'">
+          <warehouse-detail [id]="warehModal.id" ></warehouse-detail>
+        </ng-template>
+
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary" (click)="myModal.hide()">{{'close' | translate}}</button>
+        <button *ngIf="warehModal.modal=='DETAIL'" type="button" class="btn rounded btn-primary" (click)="warehModal.modal='NEW'">{{'new' | translate}}</button>
+        <button *ngIf="warehModal.modal=='DETAIL'" type="button" class="btn rounded btn-success"
+                (click)="warehModal.modal='EDIT'">{{'edit' | translate}}</button>
+
+
+      </div>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

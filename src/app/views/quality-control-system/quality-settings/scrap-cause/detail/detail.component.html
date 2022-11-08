@@ -1,0 +1,108 @@
+<div class="animated fadeIn">
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="card">
+              <div class="card-header">
+                <i class="fa fa-align-justify"></i> {{'scrap-cause-details' | translate}}
+              </div>
+              <div class="card-body">
+                <table class="table table-bordered">
+                  <tbody>
+                    <tr>
+                        <td width="30%">{{'scrap-cause-id' | translate}}</td>
+                        <td>
+                            {{scrapCauseReqDto.scrapCauseId}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="30%">{{'scrap-cause-name' | translate}}</td>
+                        <td>
+                            {{scrapCauseReqDto.scrapCauseName}}
+                        </td>
+                    </tr>
+                  <tr>
+                    <td width="30%">{{'scrap-code' | translate}}</td>
+                    <td>
+                        {{scrapCauseReqDto.scrapCode}}
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td>{{'scrap-cause-for'| translate}}</td>
+                    <td>
+                      <span class="d-flex">
+                        <div class="p-field-checkbox">
+                          <label for="binary" class="pr-3">{{'output' | translate}}</label>
+                          <p-checkbox [(ngModel)]="scrapCauseReqDto.scrapMaterial" binary="true" [disabled]="true"
+                          inputId="scrapMaterial" name="scrapMaterial"></p-checkbox>
+                        </div>
+
+                        <div class="p-field-checkbox">
+                          <label for="binary" class="pr-3 pl-5">{{'input' | translate}}</label>
+                          <p-checkbox [(ngModel)]="scrapCauseReqDto.scrapRawMaterial" binary="true"  [disabled]="true"
+                          inputId="scrapRawMaterial" name="scrapRawMaterial"></p-checkbox>
+                        </div>
+                      </span>
+                    </td>
+                  </tr>
+                    <tr>
+                      <td>{{'setup' | translate}}</td>
+                      <td>
+                        <p-checkbox [disabled]="true" [name]="'setup'" [(ngModel)]="scrapCauseReqDto.setup"
+                                    binary="true" inputId="setup"></p-checkbox>
+                      </td>
+                    </tr>
+                  <tr>
+                    <td>{{'create_auto_prod' | translate}}</td>
+                    <td>
+                      <p-checkbox [disabled]="true" [name]="'create_auto_prod'" [(ngModel)]="scrapCauseReqDto.createAutoProdOrder"
+                      binary="true" inputId="create_auto_prod"></p-checkbox>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'scrap-master' | translate}}</td>
+                    <td>
+                      <p-checkbox [disabled]="true" [name]="'scrapMaster'" [(ngModel)]="scrapCauseReqDto.scrapMaster" 
+                      binary="true" inputId="scrapMaster"></p-checkbox>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'scrap-description' | translate}}</td>
+                    <td>
+                        {{scrapCauseReqDto.scrapDescription}}
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+                <div class="card">
+                  <div class="card-header">
+                    <i class="fa fa-align-justify"></i> {{'scrap-type' | translate}}  {{'details' | translate}}
+                  </div>
+                  <div class="card-body">
+                    <table class="table table-bordered">
+                      <tbody *ngIf="scrapCauseReqDto.scrapType">
+                        <tr>
+                            <td width="30%">{{'scrap-type-id' | translate}}</td>
+                            <td><a href="javascript:;" (click)="showDetailDialog(scrapCauseReqDto.scrapType?.scrapTypeId)">{{scrapCauseReqDto.scrapType?.scrapTypeId}}</a></td>
+                        </tr>
+                        <tr>
+                            <td width="30%">{{'scrap-type-code' | translate}}</td>
+                            <td><a href="javascript:;" (click)="showDetailDialog(scrapCauseReqDto.scrapType?.scrapTypeId)">{{scrapCauseReqDto.scrapType?.scrapCode}}</a></td>
+                        </tr>
+                        <tr>
+                            <td>{{'scrap-type-description' | translate}}</td>
+                            <td>{{scrapCauseReqDto.scrapType?.scrapDescription}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+        </div>
+      </div>
+
+

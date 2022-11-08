@@ -1,0 +1,375 @@
+<div class="animated fadeIn">
+  <p-tabView>
+    <p-tabPanel header="{{'basic-information'| translate }}">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i>{{'workstation-information' | translate}}
+        </div>
+        <div class="card-body">
+          <table class="table table-bordered">
+            <tbody *ngIf="workstation">
+              <tr>
+                <td width="35%">{{'workstation-id' | translate}}</td>
+                <td>{{workstation?.workStationId}}</td>
+              </tr>
+              <tr>
+                <td width="35%">{{'workstation' | translate}} - {{'no' | translate}}</td>
+                <td>{{workstation?.workStationNo}}</td>
+              </tr>
+              <tr>
+                <td>{{'workstation' | translate}} - {{'name' | translate}} </td>
+                <td>{{workstation?.workStationName}}</td>
+              </tr>
+              <tr>
+                <td>{{'workstation' | translate}} - {{'type' | translate}}</td>
+                <td>
+                  <a href="javascript:;"
+                    (click)="showWorkStationTypeDetail(workstation)">{{workstation?.workStationTypeName}}</a>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'parent-workstation' | translate}} </td>
+                <td>
+                  <a *ngIf="workstation?.parentId" href="javascript:;"
+                    (click)="showWorkStationDetails(workstation?.parentId)">{{workstation?.parentId}}</a>
+                </td>
+              </tr>
+
+              <tr>
+                <td>{{'child-workstation' | translate}} </td>
+                <td>
+                  <a *ngIf="workstation?.childId" href="javascript:;"
+                    (click)="showWorkStationDetails(workstation?.childId)">{{workstation?.childId}}</a>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'output-warehouse' | translate}} </td>
+                <td>
+                  <a *ngIf="workstation?.outputWarehouse" href="javascript:;"
+                  (click)="showWarehouseDetail(workstation?.outputWarehouse?.wareHouseId)">
+                  {{workstation?.outputWarehouse?.wareHouseName}}
+                </a>
+                 
+                </td>
+              </tr>
+              <tr>
+                <td>{{'plant' | translate}}</td>
+                <td>
+                  <a href="javascript:;"
+                    (click)="showPlantDetail(workstation?.plant?.plantId)">{{workstation?.plant?.plantName}}</a>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'warehouse' | translate}}</td>
+                <td>
+                  <a href="javascript:;"
+                    (click)="showWarehouseDetail(workstation?.warehouse?.wareHouseId)">{{workstation?.warehouse?.wareHouseName}}</a>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'workstation-category'|translate}}</td>
+                <td>
+                  <a href="javascript:;"
+                    (click)="showWorkStationCategoryDetail(workstation?.workStationCategory)">{{workstation?.workStationCategory?.wsCatName}}</a>
+                </td>
+              </tr>
+              
+              <tr>
+                <td>{{'workcenter' | translate}}</td>
+                <td>
+                  <a href="javascript:;"
+                    (click)="showWorkcenterDetail(workstation?.workCenterId)">{{workstation?.workCenterName}}</a>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'input-location' | translate}}</td>
+                <td>
+                    {{workstation.inputWarehouseLocationNo}}
+                </td>
+              </tr>
+              <tr>
+                <td>{{'output-location' | translate}}</td>
+                <td>
+                 
+                    {{workstation.outputWarehouseLocationNo}}
+                
+                 
+                </td>
+              </tr>
+              <tr>
+                <td>{{'panel-ip' | translate}}</td>
+                <td>{{workstation?.panelIP}}</td>
+              </tr>
+              <tr>
+                <td>{{'panel-status' | translate}}</td>
+                <td>{{workstation?.panelActive ? 'ACTIVE' : 'INACTIVE'}}</td>
+              </tr>
+              <tr>
+                <td>{{'use-msf-calendar' |translate}}</td>
+                <td>
+                  <p-checkbox [disabled]="true" name="useMsfCalendar" binary="true" [(ngModel)]="workstation.useMsfCalendar">
+                  </p-checkbox>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'skip-changeover-control' |translate}}</td>
+                <td>
+                  <p-checkbox [disabled]="true" name="skipChangeoverControl" binary="true" [(ngModel)]="workstation.skipChangeoverControl">
+                  </p-checkbox>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'description' | translate}}</td>
+                <td>{{workstation?.description}}</td>
+              </tr>
+              <!--<tr>
+                    <td colspan="2">
+                      <button class="btn btn-outline-primary active" type="button" (click)="goPage(workstation?.workStationId)" >{{'edit' | translate}} </button> &nbsp;
+                      <button class="btn btn-outline-success active" type="button" (click)="goPage(-1)"> {{'new' | translate}}</button>
+                    </td>
+                  </tr>-->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </p-tabPanel>
+    <p-tabPanel header="{{'additional-information'| translate }}">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i>{{'workstation-information' | translate}}
+        </div>
+        <div class="card-body d-flex">
+          <div class="row" style="width: 100%;">
+            <div class="col-md-6">
+              <table class="table table-bordered table-half">
+                <tbody *ngIf="workstation">
+                  <tr>
+                    <td>{{'serial-no' | translate}}</td>
+                    <td>{{workstation?.serialNo}}</td>
+                  </tr>
+                  <tr>
+                    <td>{{'producer' | translate}}</td>
+                    <td>{{workstation?.producer}}</td>
+                  </tr>
+                  <tr>
+                    <td>{{'trade-mark' | translate}}</td>
+                    <td>{{workstation?.mark}}</td>
+                  </tr>
+                  <tr>
+                    <td>{{'model' | translate}}</td>
+                    <td>{{workstation?.model}}</td>
+                  </tr>
+                  <tr>
+                    <td>{{'production' | translate}} - {{'date' | translate}}</td>
+                    <td>{{workstation?.productDate|date:'dd-MM-yyyy'}}</td>
+                  </tr>
+                  <tr>
+                    <td>{{'purchase-date' | translate}}</td>
+                    <td>{{workstation?.purchaseDate|date:'dd-MM-yyyy'}}</td>
+                  </tr>
+                  <tr>
+                    <td>{{'number-of-scissors' | translate}}</td>
+                    <td>{{workstation?.numberOfScissors}}</td>
+                  </tr>
+                  <tr>
+                    <td>{{'capacity' | translate}}</td>
+                    <td>{{workstation?.capacity}}</td>
+                  </tr>
+                  <tr>
+                    <td>{{'min-producer' | translate}}</td>
+                    <td>{{workstation?.minCapacity}}</td>
+                  </tr>
+                  <tr>
+                    <td>{{'target-availability'  | translate}} %</td>
+                    <td>
+                      {{workstation?.targetAvailability}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'target-oee' | translate}} %</td>
+                    <td>
+                      {{workstation?.targetOee}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'target-performance' | translate}} %</td>
+                    <td>
+                      {{workstation?.targetPerformance}}
+                    </td>
+                  </tr>
+                 
+                 
+                </tbody>
+              </table>
+            </div>
+            <div class="col-md-6">
+              <table class="table table-bordered table-half">
+                <tbody *ngIf="workstation">
+                  <tr>
+                    <td>{{'cycle-period' | translate}}</td>
+                    <td>{{workstation?.cyclePeriod}}</td>
+                  </tr>
+                  <tr>
+                    <td>KWh</td>
+                    <td>{{workstation?.kwh}}</td>
+                  </tr>
+                  <tr>
+                    <td>KWh {{'cost' | translate}}</td>
+                    <td>{{workstation?.kwhCost}}</td>
+                  </tr>
+                  <tr>
+                    <td>{{'base-unit' | translate}}</td>
+                    <td>
+                     {{workstation?.baseUnit}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'max-standby-duration'  | translate}}</td>
+                    <td>
+                      {{getReadableTime(workstation?.maxStandbyDuration)}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'max-running-duration' | translate}}</td>
+                    <td>
+                      {{getReadableTime(workstation?.maxRunningDuration)}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'max-stop-duration' | translate}}</td>
+                    <td>
+                      {{getReadableTime(workstation?.maxStopDuration)}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'max-setup-duration' | translate}}</td>
+                    <td>
+                      {{getReadableTime(workstation?.maxSetupDuration)}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'max-buffer-quantity' | translate}}</td>
+                    <td>
+                      {{workstation?.maxBufferQuantity}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'target-quality' | translate}}</td>
+                    <td>
+                      {{workstation?.targetQuality}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{'target-teep' | translate}}</td>
+                    <td>
+                      {{workstation.targetTeep}}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </p-tabPanel>
+    <p-tabPanel header="{{'labor'| translate }}">
+
+    </p-tabPanel>
+    <p-tabPanel header="{{'documentation'| translate }}">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i>{{'workstation-information' | translate}}
+        </div>
+        <div class="card-body">
+          <image-viewer></image-viewer>
+        </div>
+      </div>
+    </p-tabPanel>
+    <p-tabPanel header="{{'analysis'| translate }}">
+
+    </p-tabPanel>
+    <p-tabPanel header="{{'costing' | translate}}">
+      <div class="row">
+        <div class="col-lg-12">
+          <table class="table table-bordered">
+            <tbody>
+              <tr>
+                <td width="30%">{{'cost-rate' | translate}}</td>
+                <td>
+                  {{workstation?.workstationCostRate}}
+                </td>
+              </tr>
+              <tr>
+                <td width="30%">{{'currency' | translate}}</td>
+                <td>
+                  {{workstation?.currency}}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </p-tabPanel>
+    <p-tabPanel header="{{'material-groups' | translate}}">
+      <ng-template pTemplate="content">
+        <app-workstation-groups [isDetails]="true" [workstationId]="workstation.workStationId" 
+        [workstationNo]="workstation.workStationNo" 
+        [workstationName]="workstation.workStationName" 
+        [data]="workstation.workstationMaterialGroupList"></app-workstation-groups>
+      </ng-template>
+    </p-tabPanel>
+    <p-tabPanel header="{{'material-dimensions' | translate}}">
+      <div class="row d-flex pl-0 pr-0">
+        <div class="col-md-8">
+          <div class="card">
+            <div class="card-header">
+              <i class="fa fa-align-justify"></i>{{'material-dimensions' | translate}}
+            </div>
+            <div class="card-body">
+              <table class="table table-bordered">
+                <tbody >
+                <tr>
+                  <td width="50%">{{'average-diameter' | translate}}</td>
+                  <td>
+                   {{workstation?.avarageDiameter}}
+                    
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'inner-diameter' | translate}}</td>
+                  <td>
+                    {{workstation?.innerDiameter}}
+                    
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'length' | translate}}</td>
+                  <td>{{workstation?.length}} </td>
+                </tr>
+                <tr>
+                  <td>{{'outer-diameter'|translate}}</td>
+                  <td>{{workstation?.outerDiameter}} </td>
+                </tr>
+                <tr>
+                  <td>{{'density'|translate}}</td>
+                  <td>{{workstation?.density}} </td>
+                </tr>
+                <tr>
+                  <td>{{'weight' | translate}}</td>
+                  <td>{{workstation?.weight}} </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </p-tabPanel>
+    <p-tabPanel header="{{'basic-data-screen' | translate}}">
+      <app-basic-detail *ngIf="workstation" [id]="workstation?.workStationId"></app-basic-detail>
+    </p-tabPanel>
+    <p-tabPanel header="{{'capacities' | translate}}">
+      <app-capacity-detail *ngIf="workstation" [id]="workstation?.workStationId"></app-capacity-detail>
+    </p-tabPanel>
+  </p-tabView>
+</div>

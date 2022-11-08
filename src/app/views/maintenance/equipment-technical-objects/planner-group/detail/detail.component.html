@@ -1,0 +1,63 @@
+
+<div class="animated fadeIn" >
+    <div class="col-md-12" *ngIf="data">
+      <div class="card">
+        <div class="card-header">
+          {{'equipment-planner-group' | translate}}
+        </div>
+        <div class="card-body" >
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label" >{{'planner-group-id' | translate}}</label>
+            <div class="col-md-9 col-form-label">
+              {{data.plannerGroupId}}
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label" >{{'planner-group' | translate}}</label>
+            <div class="col-md-9 col-form-label">
+              {{data.plannerGroup}}
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label" >{{'definition' | translate}}</label>
+            <div class="col-md-9 col-form-label">
+              {{data.definition}}
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label" >{{'mail' | translate}}</label>
+            <div class="col-md-9 col-form-label">
+              {{data.mail}}
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label" >{{'telephone' | translate}}</label>
+            <div class="col-md-9 col-form-label">
+              {{data.telephone}}
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label" >{{'plant' | translate}}</label>
+            <div class="col-md-9 col-form-label">
+              {{data?.maintanencePlanningPlant?.plantName}}
+            </div>
+          </div>
+
+          <table class="table table-sm table-bordered" *ngIf="data.equipmentlist">
+            <thead>
+            <th>{{'equipment-name' | translate}}</th>
+            <th>{{'equipment-no' | translate}}</th>
+            <th>{{'equipment-type-name' | translate}}</th>
+            </thead>
+            <tbody >
+            <tr *ngFor="let item of data.equipmentlist">
+              <td>{{item.equipmentName}}</td>
+              <td>{{item.equipmentNo}}</td>
+              <td>{{item.equipmentTypeName }}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+</div>

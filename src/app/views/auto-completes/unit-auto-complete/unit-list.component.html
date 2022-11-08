@@ -1,0 +1,77 @@
+
+
+
+<div class="ui-inputgroup  d-flex ui-fluid">
+  <p-dropdown  #dd class="flex-grow-1" id="dialogOrderUnit" name="unit" [required]="required" [filter]="true" filterBy="value.unit" dataKey="unit"
+              [disabled]="disabled" placeholder="{{'please-select'|translate}}" [options]="unitList" (ngModelChange)="onChangeUnit($event)"
+              [(ngModel)]="selectedUnit"
+              optionLabel="unit"></p-dropdown>
+  <button *ngIf="addIfMissing" pButton type="button" icon="fa fa-plus-circle"
+          (click)="modalShow()">
+  </button>
+</div>
+
+
+<ng-template [ngIf]="modal.active">
+
+
+  <div bsModal [config]="{backdrop: 'static',show:true}" #myModal="bs-modal" class="modal fade"   (onHidden)="modal.active=false"
+       tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog modal-success" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            <span>{{'unit' | translate}}</span>
+          </h4>
+          <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+
+
+          <!---------- MODEL #2 ------------->
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label" for="dialogUnit"> {{'unit' | translate}}</label>
+            <div class="col-md-9">
+              <input type="text" id="dialogUnit" name="dialogUnit" [(ngModel)]="weightUnit.unit"
+                     class="form-control" placeholder="{{'unit' | translate}}">
+
+              <!--<span class="help-block">This is a help text</span>-->
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label" for="dialogDimension"> {{'dimension' | translate}}</label>
+            <div class="col-md-9">
+              <input type="text" id="dialogDimension" name="dialogDimension" [(ngModel)]="weightUnit.dimension"
+                     class="form-control" placeholder="{{'dimension' | translate}}">
+
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label" for="dialogDescription"> {{'description' | translate}}</label>
+            <div class="col-md-9">
+              <input type="text" id="dialogDescription" name="dialogDescription" [(ngModel)]="weightUnit.unitDescription"
+                     class="form-control" placeholder="{{'description' | translate}}">
+
+            </div>
+          </div>
+
+
+
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="myModal.hide()">{{'close' | translate}}</button>
+          <button type="button" class="btn btn-danger"
+                  (click)="resetWeightUnit()">{{'reset' | translate}}</button>
+          <button [disabled]="!weightUnit.unit" type="button" class="btn btn-success"
+                  (click)="addWeightUnit(); myModal.hide()">{{'add' | translate}}</button>
+        </div>
+      </div> <!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
+</ng-template>
+

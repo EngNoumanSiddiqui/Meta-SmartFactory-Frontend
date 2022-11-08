@@ -1,0 +1,36 @@
+<div class="ui-inputgroup  d-flex ui-fluid">
+    <p-autoComplete [disabled]="disabled" [(ngModel)]="selectedDefectType" [suggestions]="filteredDefectType"
+                    (completeMethod)="searchDefectType($event)" field="defectTypeText" [required]="required"
+                     [dropdown]="dropdown" [forceSelection]="true" dataKey="defectTypeId"
+                     placeholder="{{placeholder|translate}}" [minLength]="1" name="defectTypeCode"
+                     (onDropdownClick)="handleDropdownClickForDefectType()" (ngModelChange)="onChangeDefectType($event)" >
+    </p-autoComplete>
+
+    <button *ngIf="addIfMissing" pButton icon="fa fa-plus-circle"
+        (click)="modalShow()">
+    </button>
+
+</div>
+
+<ng-template [ngIf]="modal.active">
+    <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myqualityNotificationModal="bs-modal" class="modal fade"   (onHidden)="modal.active=false"
+         tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+      <div class="modal-dialog modal-success " role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">
+              <span >{{'new-quality-notification' | translate}}</span>
+            </h4>
+            <button type="button" class="close" (click)="myqualityNotificationModal.hide()" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <new-defect-type (saveAction)="OnSave($event)"></new-defect-type>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+  </ng-template>

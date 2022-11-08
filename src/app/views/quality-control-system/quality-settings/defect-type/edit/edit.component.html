@@ -1,0 +1,77 @@
+<div class="animated fadeIn">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i> {{'defect-type-information' | translate}}
+          </div>
+          <div class="card-body">
+            <form #inspForm="ngForm">
+              <table class="table table-bordered"> 
+                <tr>
+                  <td>{{'defect-type-id' | translate}}</td>
+                  <td>
+                    <input
+                      type="text"
+                      id="defectTypeId"
+                      name="defectTypeId"
+                      [(ngModel)]="defectType.defectTypeId"
+                      class="form-control"
+                      disabled
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'code' | translate}}</td>
+                  <td>
+                    <input
+                      type="text"
+                      id="defectTypeCode"
+                      name="defectTypeCode"
+                      [(ngModel)]="defectType.defectTypeCode"
+                      class="form-control" disabled
+                      required
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'description' | translate}}</td>
+                  <td>
+                    <input  
+                      type="text"
+                      id="defectTypeText"
+                      name="defectTypeText"
+                      [(ngModel)]="defectType.defectTypeText"
+                      class="form-control"
+                      required
+                    />
+                  </td>
+                </tr>
+              </table>
+            </form>
+          </div>
+        </div>
+        <div class="row col-md-12">
+            <button
+            type="submit"
+            class="btn btn-sm btn-danger"
+            [disabled]="!inspForm.form.valid"
+            (click)="reset()"
+          >
+          <i class="fa fa-ban" aria-hidden="true"></i>
+            {{ "reset" | translate }}
+          </button>
+          <button
+            type="submit"
+            class="btn btn-sm btn-primary"
+            [disabled]="!inspForm.form.valid"
+            (click)="save()"
+          >
+            <i class="fa fa-dot-circle-o"></i>
+            {{ "save" | translate }}
+          </button>
+        </div> 
+      </div>
+    </div>
+  </div>
+  

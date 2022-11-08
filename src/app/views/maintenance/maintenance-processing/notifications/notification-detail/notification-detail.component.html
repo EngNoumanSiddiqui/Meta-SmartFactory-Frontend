@@ -1,0 +1,419 @@
+
+  <div class="col-lg-12 ">
+    
+    <form #notificationForm="ngForm">
+       <p-tabView>
+        <p-tabPanel header="{{'notification-details'|translate}}">
+          <div class="card" style="margin: 0px;">
+            <div class="card-header">
+              {{'maintenance-notification-information'|translate}}
+              <button pButton *ngIf="!dataModel.maintenanceOrder"  style="width: 180px;"
+                type="button" class="ui-button-warning float-right ml-1" label="{{'create-order'  |translate}}" 
+                (click)="showCreateOrderModal()"></button>
+            </div>
+            <div class="card-body">
+              <table class="table table-bordered m-0">
+                <tbody>
+                  <tr>
+                    <td Width="50%">
+              <table class="table table-bordered m-0">
+                <tr>
+                  
+                  <td width="30%"><strong>{{'maintenance-notification-id' | translate}} </strong></td>
+                  <td>
+                   {{dataModel.maintenanceNotificationId}}
+                  </td>
+                </tr>
+                <tr>
+                  
+                  <td width="30%"><strong>{{'notification-type' | translate}} </strong></td>
+                  <td>
+                        {{dataModel.maintenanceNotificationType}}
+                      
+                  </td>
+                </tr>
+                <tr>
+                  <td class="font-weight-bold">{{'functional-location' | translate}}</td>
+                  <td>
+                    <span *ngIf="dataModel.maintenanceFunctionalLocation">
+                      <a href="javascript:;" 
+                        (click)="showDetailModal(dataModel.maintenanceFunctionalLocation.maintenanceFunctionalLocationId,
+                        modalType.FUNCTIONALLOCATION);">
+                        {{dataModel.maintenanceFunctionalLocation.description}}
+                      </a>
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                    <td class="font-weight-bold">{{'equipment' | translate}}</td>
+                    <td>
+                      <span *ngIf="dataModel.equipment">
+                        <a href="javascript:;" 
+                        (click)="showDetailModal(dataModel.equipment.equipmentId,
+                        modalType.EQUIPMENT);">
+                        {{dataModel.equipment.equipmentName}}
+                      </a>
+                      </span>
+                    </td>
+                </tr>
+                <tr>
+                  <td class="font-weight-bold">{{'plant' | translate}}</td>
+                  <td>
+                    <span *ngIf="dataModel.mainPlant">
+                      <a href="javascript:;" 
+                        (click)="showDetailModal(dataModel.mainPlant.plantId,
+                        modalType.PLANT);">
+                        {{dataModel.mainPlant.plantName}}
+                      </a>
+                    </span>
+                  
+                  </td>
+                </tr>
+                <tr>
+                <td class="font-weight-bold">{{'workstation' | translate}}</td>
+                  <td>
+                    <span *ngIf="dataModel.workStation">
+                      <a href="javascript:;" 
+                        (click)="showDetailModal(dataModel.workStation.workStationId,
+                        modalType.WORKSTATION);">
+                        {{dataModel.workStation.workStationName}}
+                      </a>
+                    </span>
+                  </td>
+                </tr>
+               
+                <tr>
+                  <td class="font-weight-bold">{{'planner-group' | translate}}</td>
+                  <td>
+                    <span *ngIf="dataModel.equipmentPlannerGroup">
+                      <a href="javascript:;" 
+                        (click)="showDetailModal(dataModel.equipmentPlannerGroup.plannerGroupId,
+                        modalType.PLANNERGROUP);">
+                        {{dataModel.equipmentPlannerGroup.definition}}
+                      </a>
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="font-weight-bold">{{'breakdown' | translate}}</td>
+                  <td>
+                    <p-checkbox
+                    class="form-control"
+                    [(ngModel)]="dataModel.breakdown"
+                    binary="true"
+                    name="breakdown"
+                    disabled
+                  ></p-checkbox>
+                  </td>
+                <tr *ngIf="dataModel.breakdown && !(dataModel.notificationStatus=='INPROCESS' || dataModel.notificationStatus=='OUTSTANDING')">
+                  <td class="font-weight-bold">{{'breakdown-duration' | translate}}</td>
+                  <td>
+                    <span *ngIf="dataModel.breakdownDuration">{{
+                      dataModel.breakdownDuration
+                    }}</span>
+                  </td>
+                 
+                </tr>
+               <tr>
+                  <td class="font-weight-bold">{{'problem-definition' | translate}}</td>
+                  <td>
+                    <span *ngIf="dataModel.problemDefination">{{
+                      dataModel.problemDefination
+                    }}</span>
+                  </td>
+                  
+                </tr>
+              </table>
+              </td>
+              <td>
+                <table class="table table-bordered m-0">
+                  <tr>
+                    <td class="font-weight-bold" width="30%">{{'priority' | translate}}</td>
+                    <td>
+                      <span>{{ dataModel.priority }}</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="font-weight-bold">{{'catalog/code-group' | translate}}</td>
+                    <td>
+                      <span>{{ dataModel.notificationNo }}</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="font-weight-bold">{{'abc-indicator' | translate}}</td>
+                    <td>
+                      <span *ngIf="dataModel.equipmentABCIndicator">
+                        <a href="javascript:;" 
+                          (click)="showDetailModal(dataModel.equipmentABCIndicator.equipmentAbcIndicatorId,
+                          modalType.ABCINDICATOR);">
+                          {{dataModel.equipmentABCIndicator.equipmentAbcIndicatorDescription}}
+                        </a>
+                      </span>
+                    </td>
+                  </tr>
+                  
+                  <tr>
+                    <td class="font-weight-bold">{{'reported-by' | translate}}</td>
+                    <td>
+                      <span *ngIf="dataModel.reportedby">
+                        <a href="javascript:;" 
+                        (click)="showDetailModal(dataModel.reportedby.employeeId,
+                        modalType.STAFF);">
+                        {{ dataModel.reportedby.firstName
+                        }}{{ dataModel.reportedby.lastName }}
+                      </a>
+                    </span> 
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="font-weight-bold">{{'response-by' | translate}}</td>
+                    <td>
+                      <span *ngIf="dataModel.responseby">
+                        <a href="javascript:;" 
+                        (click)="showDetailModal(dataModel.responseby.employeeId,
+                        modalType.STAFF);">
+                        {{ dataModel.responseby.firstName
+                        }}{{ dataModel.responseby.lastName }}
+                      </a>
+                    </span> 
+                    </td>
+                  </tr>
+                
+                  
+                  <tr>
+                    <td class="font-weight-bold">{{'required-start' | translate}}</td>
+                    <td>
+                      <span *ngIf="dataModel.requiredStart">{{
+                        dataModel.requiredStart | date : 'short'
+                      }}</span>
+                    </td>
+                  </tr>
+                  <tr *ngIf="dataModel.notificationStatus==='COMPLETED'">
+                    <td class="font-weight-bold">{{'required-end' | translate}}</td>
+                    <td>
+                      <span *ngIf="dataModel.requiredEnd">{{
+                        dataModel.requiredEnd | date: 'short'
+                      }}</span>
+                    </td>
+                  </tr>
+                  <tr *ngIf="dataModel.breakdown">
+                    <td class="font-weight-bold">{{'malfunction-start' | translate}}</td>
+                    <td>
+                      <span *ngIf="dataModel.malfunctionStart">{{
+                        dataModel.malfunctionStart | date: 'short'
+                      }}</span>
+                    </td>
+                  <tr *ngIf="dataModel.breakdown && !(dataModel.notificationStatus=='INPROCESS' || dataModel.notificationStatus=='OUTSTANDING')">
+                    <td class="font-weight-bold">{{'malfunction-end' | translate}}</td>
+                    <td>
+                      <span *ngIf="dataModel.malfunctionEnd">{{
+                        dataModel.malfunctionEnd | date: 'short'
+                      }}</span>
+                    </td>
+                  </tr>
+                
+<!--                  
+                  <tr>
+                    <td>{{ "cancel-reason" | translate }}</td>
+                    <td>
+                      <span *ngIf="dataModel.cancelReason">{{
+                        dataModel.cancelReason
+                      }}</span>
+                    </td>
+                  </tr> -->
+                  <tr>
+                    <td class="font-weight-bold">{{ "notification-status" | translate }}</td>
+                    <td>
+                      <span *ngIf="dataModel.notificationStatus">{{
+                        dataModel.notificationStatus
+                      }}</span>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+              </tr>
+              </tbody>
+              </table>
+            </div>
+          </div>
+        </p-tabPanel>
+        <p-tabPanel *ngIf="dataModel.maintenanceOrder as data;" header="{{'maintenance-order-detail' | translate}}">
+          <div class="card">
+            <div class="card-header">
+              {{'maintenance-order'|translate}}
+            </div>
+            <div class="card-body">
+              <table class="table m-0" style="border-top: 5px solid white;">
+                <tbody>
+                  <tr>
+                    <td width="50%">
+                <table class="table table-bordered">
+                  <tbody>
+                  <tr>
+                    <td class="font-weight-bold" width="35%">{{'maintenance-order-id' | translate}}</td>
+                    <td >{{data.maintenanceId}}</td>
+                   
+                  </tr>
+                  <tr>
+                    <td class="font-weight-bold">{{'equipment' | translate}}</td>
+                    <td>
+                      <a href="javascript:;" (click)="showDetailModal(data?.equipment?.equipmentId, modalType.EQUIPMENT)">
+                        {{data?.equipment?.equipmentName}}
+                      </a>
+                    </td>
+                  
+                  </tr>
+                  <tr>
+                    <td class="font-weight-bold">{{'maintenance-order-type' | translate}}</td>
+                    <td>{{data.maintenanceOrderType?.maintenanceOrderTypeName}}</td>
+                   
+                  </tr>
+                  <tr>
+                    <td class="font-weight-bold">{{'planner-group' | translate}}</td>
+                    <td>
+                      <a href="javascript:;" (click)="showDetailModal(data?.plannerGroup?.plannerGroupId, modalType.PLANNERGROUP)">
+                        {{data?.plannerGroup?.plannerGroup}}
+                      </a>
+                    </td>
+                   
+                  </tr>
+                  <tr>
+                    <td class="font-weight-bold">{{'workstation' | translate}}</td>
+                    <td>
+                      <a href="javascript:;" (click)="showDetailModal(data?.mainWorkStation?.mainWorkStationId, modalType.WORKSTATION)">
+                        {{data?.mainWorkStation?.mainWorkStationName}}
+                      </a> 
+                    </td>
+                   
+                  </tr>
+                  <tr>
+                    <td class="font-weight-bold">{{'planning-plant' | translate}}</td>
+                    <td> 
+                      <a href="javascript:;" (click)="showDetailModal(data?.planningPlant?.plantId, modalType.PLANT)">
+                        {{data?.planningPlant?.plantName}}
+                      </a> 
+                    </td>
+                    <!-- <td>{{'assembly' | translate}}</td>
+                    <td>{{data.assembly}}</td> -->
+                  
+                  </tr>
+                  <tr>
+                    <td class="font-weight-bold">{{'maintenance-system-condition' | translate}}</td>
+                    <td> {{data?.maintenanceSystemCondition?.description}}
+                    </td>
+                  
+                  </tr>
+                  <tr>
+                    <td class="font-weight-bold">{{'maintenance-activity-type' | translate}}</td>
+                    <td> 
+                      <a href="javascript:;" 
+                      (click)="showDetailModal(data?.maintenanceActivityType?.maintenanceActivityTypeId,
+                       modalType.MAINTENANCEACTIVITYTYPE)">
+                        {{data?.maintenanceActivityType?.description}}
+                      </a> 
+                    </td>
+                  
+                  </tr>
+                  <tr>
+                    <td class="font-weight-bold">{{'maintenance-category' | translate}}</td>
+                    <td>
+                      <a href="javascript:;" 
+                      (click)="showDetailModal(data?.maintenanceCategory?.maintenanceCategoryId,
+                       modalType.MAINTENANCECATEGORYTYPE)">
+                        {{data?.maintenanceCategory?.description}}
+                      </a> 
+                    </td>
+                 
+                  </tr>
+                  <tr>
+                    <td class="font-weight-bold">{{'functional-location' | translate}}</td>
+                    <td> 
+                      <a href="javascript:;" 
+                      (click)="showDetailModal(data?.maintenanceFunctionalLocation?.maintenanceFunctionalLocationId,
+                       modalType.FUNCTIONALLOCATION)">
+                        {{data?.maintenanceFunctionalLocation?.description}}
+                      </a> 
+                    </td>
+                  
+                  </tr>
+                  <tr>
+                    <td class="font-weight-bold" *ngIf="data.maintenanceStatus==='COMPLETED' || data.maintenanceStatus==='INPROCESS'">{{'actual-start-date' | translate}}</td>
+                    <td *ngIf="data.maintenanceStatus==='COMPLETED' || data.maintenanceStatus==='INPROCESS'">{{data?.actualStartDate |date:'short'}}</td>
+                   
+                  </tr>
+                  </tbody>
+
+                </table>
+                </td>
+                <td>
+                  <table class="table table-bordered">
+                    <tbody>
+                      <tr>
+                        <td class="font-weight-bold" width="30%">{{'response-by' | translate}}</td>
+                        <td> 
+                          <a href="javascript:;" 
+                          (click)="showDetailModal(data?.responseby?.employeeId,
+                           modalType.STAFF)">
+                          {{data?.responseby?.firstName}} {{data?.responseby?.lastName}}
+                          </a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="font-weight-bold">{{'status' | translate}}</td>
+                        <td>{{data.maintenanceStatus}}</td>
+                      </tr>
+                      <tr>
+                        <td class="font-weight-bold">{{'priority' | translate}}</td>
+                        <td>{{data.priority}}</td>
+                      </tr>
+                      <tr>
+                        <td class="font-weight-bold">{{'date-priority' | translate}}</td>
+                        <td>{{data.datePriority}}</td>
+                      </tr>
+                      <tr>
+                        <td class="font-weight-bold">{{'address' | translate}}</td>
+                        <td>{{data.address}}</td>
+                      </tr>
+                      <tr>
+                        <td class="font-weight-bold">{{'date-revision' | translate}}</td>
+                        <td>{{data.dateRevision}}</td>
+                      </tr>
+                      <tr>
+                        <td class="font-weight-bold">{{'problem-definition' | translate}}</td>
+                        <td>{{data.problemDefination}}</td>
+                      </tr>
+                      <tr>
+                        <td class="font-weight-bold">{{'date-basic-start' | translate}}</td>
+                        <td>{{data.dateBasicStart|date:'dd/MM/yyyy'}}</td>
+                      </tr>
+                      <tr>
+                        <td class="font-weight-bold">{{'date-basic-finish' | translate}}</td>
+                        <td>{{data.datebasicFinish|date:'dd/MM/yyyy'}}</td>
+                      </tr>
+                      <tr>
+                        <td class="font-weight-bold">{{'maintenance-reason' | translate}}</td>
+                        <td> {{data?.maintenanceReason?.description}}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="font-weight-bold" *ngIf="data.maintenanceStatus==='COMPLETED'">{{'actual-finish-date' | translate}}</td>
+                        <td *ngIf="data.maintenanceStatus==='COMPLETED'">{{data?.actualFinishDate |date:'short'}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+                </tr>
+                </tbody>
+                </table>
+            </div>
+          </div>
+        </p-tabPanel>
+        <p-tabPanel header="{{'operation-details' | translate}}" *ngIf="dataModel.maintenanceOrder as data;">
+          <maintenance-order-operation-list [isDetail]="true" [maintenanceOrderId]="data.maintenanceId"></maintenance-order-operation-list>
+        </p-tabPanel>
+        <p-tabPanel header="{{'component-details' | translate}}" *ngIf="dataModel.maintenanceOrder as data;">
+          <maintenance-order-component-list [isDetail]="true" [maintenanceOrderId]="data.maintenanceId"></maintenance-order-component-list>
+        </p-tabPanel>
+      </p-tabView>
+    </form>
+  </div>

@@ -1,0 +1,963 @@
+<!--<form #orderEdit="ngForm" >-->
+<div class="animated fadeIn">
+  <div class="row" *ngIf="order" #editDiv>
+    <form #saleForm="ngForm" class="col-md-12 p-0 ui-fluid">
+      <div class="col-md-12">
+        <div class="mb-2 p-0">
+          <table class="table table-md table-responsive-sm  table-striped table-outline mb-0">
+            <tbody>
+              <tr>
+                <!-- <td width="20%" class="text-bold">{{'order-id' | translate}}<span class="float-right">:</span></td>
+                <td>
+                  {{order.orderId}}
+                </td> -->
+                <td width="20%" class="text-bold">{{'order-no' | translate}}<span class="float-right">:</span></td>
+                <td width="30%">
+                  <div class="input-group">
+                    <input type="text" class="form-control" name="orderNo" id="orderNo" [(ngModel)]="order.orderNo"
+                      readonly />
+                    <span>
+                      <button type="button" class="btn btn-primary" data-toggle="modal" (click)="op.toggle($event)"><i
+                          class="fa fa-question-circle"></i></button>
+                    </span>
+                    <p-overlayPanel #op [dismissable]="true" [showCloseIcon]="true" appendTo="body" baseZIndex="9999">
+                      <strong class="border-bottom">{{'last-given-no'|translate}}</strong>
+                      <ng-container *ngFor="let st of lastOrderNos">
+                        <span class="d-block small border-bottom">
+                          {{st}}
+                        </span>
+                      </ng-container>
+                    </p-overlayPanel>
+                  </div>
+                </td>
+                <!-- <td width="20%" class="text-bold">{{'order-confirmation' | translate}}<span class="float-right">:</span></td>
+                <td width="30%">
+                  <input type="text" class="form-control" [(ngModel)]="order.referenceId"
+                        name="referenceId" />
+                </td> -->
+
+                <td width="20%" class="text-bold">{{'division' | translate}}<span class="float-right">:</span></td>
+                <td width="30%">
+                  <select name="actTypeId" class="form-control" [(ngModel)]="order.actTypeId" (ngModelChange)="orderTypeChanged($event)">
+                    <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                    <option *ngFor="let type of listActTypes" [value]="type.actTypeId">{{type.actTypeName}}</option>
+                  </select>
+                </td>
+
+              </tr>
+              <tr>
+                <td width="20%" class="text-bold">{{'order-status' | translate}}<span class="float-right">:</span></td>
+                <td width="30%">
+                  <select id="orderStatus" name="orderStatus" class="form-control" [(ngModel)]="order.orderStatus"  (ngModelChange)="onOrderStatusChanged($event)">
+                    <!-- <option [ngValue]="null"> {{'please-select' | translate}}</option> -->
+                    <option *ngFor="let type of listOrderStatus" value="{{type}}">{{type}}</option>
+                  </select>
+                </td>
+                <td width="20%" class="text-bold">{{'customer-name' | translate}}<span class="float-right">:</span></td>
+                <td width="30%">
+                  <div class="ui-inputgroup d-flex">
+                    <auto-complete class="flex-grow-1" [allElements]="actList" [itemName]="'actName'" [dropdown]="true"
+                      [required]="true" [selectedEl]="selectedCustomer" (selectedEvent)="setSelectedCustomer($event)">
+                    </auto-complete>
+                    <button pButton icon="fa fa-plus-circle"
+                      (click)="params.dialog.title = 'new-customer'; myModal.show()">
+                    </button>
+                  </div>
+                </td>
+
+              </tr>
+              <tr>
+                
+                <td width="20%" class="text-bold">{{'check-stock' | translate}}<span class="float-right">:</span></td>
+                <td width="30%">
+                  <p-checkbox [disabled]="true" [(ngModel)]="order.checkStock" name="checkStock" binary="true" inputId="binary"></p-checkbox>
+                </td>
+
+                <td width="20%" class="text-bold">{{'customer-order-no' | translate}}<span class="float-right">:</span></td>
+                <td width="30%">
+                  <input type="text" id="customerOrderNo" name="customerOrderNo" maxlength="25"  [(ngModel)]="order.customerOrderNo"
+                    class="form-control" placeholder="{{'customer-order-no' | translate}}" />
+                </td>
+
+              </tr>
+              <tr>
+                <td width="20%" class="text-bold">{{'delivery-date' | translate}}<span class="float-right">:</span></td>
+                <td width="30%">
+                  <p-calendar class="ui-fluid custom-calendar remove-scroll"
+                  [(ngModel)]="order.deliveryDate" [monthNavigator]="true" (ngModelChange)="onDeliveryDateChanged($event)"
+                  [yearNavigator]="true" yearRange="1990:2100" name="deliveryDates" [showIcon]="true" [showTime]="true"
+                  dateFormat="dd/mm/yy"></p-calendar>
+                </td>
+
+                <td width="20%" class="text-bold">{{'parity' | translate}}<span class="float-right">:</span></td>
+                <td width="30%">
+                  <parity-auto-complete [selectedParity]="order.parity" [language]="language"
+                  (selectedParityEvent)="order.parity=$event?.parityName;"></parity-auto-complete>
+                </td>
+              </tr>
+              <tr>
+                <td width="20%" class="text-bold">{{'description' | translate}}<span class="float-right">:</span></td>
+                <td width="30%">
+                  <textarea type="text" name="description" [(ngModel)]="order.description"
+                    class="form-control" placeholder="{{'description' | translate}}"></textarea>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="4">
+                  <div class="row align-items-center col-md-12 justify-content-between">
+                    <div class="col-md-2 p-0 d-flex justify-content-between">
+                      <div class="text-bold">
+                        {{'total-net-price' | translate}}<span class="float-right">:</span>
+                      </div>
+                      <div>
+                        {{TotalNetPrice | number}}
+                      </div>
+                    </div>
+                    <div class="col-md-2 p-0 d-flex justify-content-between">
+                      <div class="text-bold">
+                        {{'total-vat-price' | translate}}<span class="float-right">:</span>
+                      </div>
+                      <div>
+                        {{TotalVatPrice | number}}
+                      </div>
+                    </div>
+                    <div class="col-md-2 p-0 d-flex justify-content-between">
+                      <div class="text-bold">
+                        {{'total-discount-price' | translate}}<span class="float-right">:</span>
+                      </div>
+                      <div>
+                        {{TotalDiscountPrice | number}}
+                      </div>
+                    </div>
+                    <div class="col-md-2 p-0 d-flex justify-content-between">
+                      <div class="text-bold">
+                        {{'total-sales-price' | translate}}<span class="float-right">:</span>
+                      </div>
+                      <div>
+                        {{TotalSalesPrice | number}}
+                      </div>
+                    </div>
+                    <div class="col-md-2 p-0 d-flex justify-content-between">
+                      <div class="text-bold">
+                        {{'currency' | translate}}<span class="float-right">:</span>
+                      </div>
+                      <div>
+                        {{selectedCustomer?.contractDto?.currency ? selectedCustomer?.contractDto?.currency : '' }}
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <!-- <tr>
+                <td width="20%" class="text-bold">{{'total-net-price' | translate}}<span class="float-right">:</span></td>
+                <td  width="30%">
+                  {{TotalNetPrice | number:'1.2-2'}}
+                </td>
+                <td width="20%" class="text-bold">{{'total-vat-price' | translate}}<span class="float-right">:</span></td>
+                <td  width="30%">
+                  {{TotalVatPrice | number:'1.2-2'}}
+                </td>
+              </tr>
+              <tr>
+                <td width="20%" class="text-bold">{{'total-sales-price' | translate}}<span class="float-right">:</span></td>
+                <td  width="30%">
+                  {{TotalSalesPrice | number:'1.2-2'}}
+                </td>
+              </tr> -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="d-flex justify-content-end" style="background-color:#f2f2f2;">
+          <button type="button" class="btn btn-primary" data-toggle="modal" (click)="openSaleOrderDetailsModal(-1)">
+            {{'add-item' | translate}} <i class="fa fa-plus"></i></button>
+        </div>
+      </div>
+      <div class="col-md-12" *ngFor="let item of order.orderDetailList; let index=index;">
+        <p-tabView>
+          <p-tabPanel header="{{'sales-order-item'|translate}}">
+            <div class="table-responsive">
+              <table class="table table-sm table-outline mb-0">
+                <thead style="background-color: rgb(242 242 242);">
+                  <tr>
+                    <th>{{'material-no' | translate}}</th>
+                    <th>{{'material' | translate}}</th>
+                    <th>{{'direct-production' |translate}}</th>
+                    <th>{{'prepare-production' |translate}}</th>
+                    <th>{{'stock-management' |translate}}</th>
+                    <th>{{'quantity' |translate}}</th>
+                    <th>{{'base-unit' |translate}}</th>
+                    <th>{{'cost-center' |translate}}</th>
+                    <th>{{'delivery-date' |translate}}</th>
+                    <th>{{'batch' |translate}}</th>
+                    <th>{{'status' |translate}}</th>
+                    <th>{{'warehouse' |translate}}</th>
+                    <th>{{'reference-id'|translate}}</th>
+                    <th>{{'sales-price'|translate}}</th>
+                    <th>{{'unit-price'|translate}}</th>
+                    <th>{{'currency'|translate}}</th>
+                    <th style="width: 90px;">{{'action'|translate}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <a href="javascript:;" (click)="showDetailDialog( item, 'stock')">{{item.stockNo}} </a>
+                    </td>
+                    <td>
+                      <a href="javascript:;" (click)="showDetailDialog( item, 'stock')">{{item.stockName}} </a>
+                    </td>
+                    <td>
+                      <p-checkbox disabled=true name="{{'direcProd' + index}}" [(ngModel)]="item.directProduction" [binary]="true"></p-checkbox>
+                    </td>
+                    <td>
+                      <p-checkbox disabled=true name="{{'prepareProd' + index}}" [(ngModel)]="item.prepareProduction" [binary]="true"></p-checkbox>
+                    </td>
+                    <td>
+                      <p-checkbox disabled=true name="{{'stockManagement' + index}}" [(ngModel)]="item.stockManagement" [binary]="true"></p-checkbox>
+                    </td>
+                    <td>{{item.quantity}}</td>
+                    <td>{{item.unit}}</td>
+                    <td>{{item.costCenterName}}</td>
+                    <td>{{item.deliveryDate | date:'dd-MM-yyyy'}}</td>
+                    <td>
+                      <a href="javascript:;" (click)="showDetailDialog( item, 'batch')">{{item.batch}}</a>
+                    </td>
+                    <td>{{item.orderDetailStatus}}</td>
+                    <td>
+                      <a href="javascript:;" (click)="showDetailDialog( item, 'wareHouse')">{{item.warehouseName}}</a>
+                    </td>
+                    <td>{{item.referenceId}}</td>
+                    <td>{{ item.salePrice }}</td>
+                    <td>{{ item.unitNetPrice }}</td>
+                    <td>{{ item.currency }}</td>
+
+                    <td>
+                      <button *ngIf="item.orderDetailStatus=='REQUESTED' || item.orderDetailStatus=='WAITING' || item.orderDetailStatus=='READY_FOR_PLANNING'
+                        || item.orderDetailStatus=='CONFIRMED' || item.orderDetailStatus=='PARTIAL_COMPLETED' || item.orderDetailStatus=='COMPLETED'
+                        || item.orderDetailStatus=='IN_PROCESS' || item.orderDetailStatus === 'ORDER_IN_HOUSE' || item.orderDetailStatus === 'CANCELED'
+                        || item.orderDetailStatus === 'DOCUMENT_READY' || item.orderDetailStatus === 'DOCUMENT_CONFIRMED'"
+                          class="btn btn-sm btn-outline-info" (click)="openSaleOrderDetailsModal(index)">
+                          <i class="fa fa-edit"></i>
+                      </button>
+                      <button class="btn btn-sm btn-outline-info" (click)="openSaleOrderDetailsModal(index, true)"><i class="fa fa-eye"></i></button>
+                        <button *ngIf="item.orderDetailStatus=='REQUESTED' || item.orderDetailStatus=='WAITING'"
+                          class="btn btn-sm btn-outline-danger" (click)="deleteDetailItemFromList(index)"><i class="fa fa-close"></i></button>
+                        <button type="button" class="btn btn-sm btn-primary mr-1"
+                          [disabled]="!item.prodOrderList || !item.prodOrderList.length
+                          || !( item.orderDetailStatus == 'DOCUMENT_CONFIRMED'
+                                || item.orderDetailStatus == 'PARTIAL_COMPLETED'
+                              )"
+                          (click)="jobOrderClicked(item)">
+                          {{'initial-review' | translate}}
+                        </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="18">
+                      <span class="text-bold">{{'description'| translate}}</span>:
+                      <textarea rows="6" name="desc{{index}}" style="width: 50%;" [(ngModel)]="item.description" class="form-control"></textarea>
+
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </p-tabPanel>
+          <p-tabPanel header="{{'document'| translate }}">
+            <div class="card">
+              <div class="card-header">
+                <i class="fa fa-align-justify"></i>{{ "documentation" | translate }}
+              </div>
+              <div class="card-body">
+                <table class="table table-bordered">
+                  <tbody>
+                    <tr align="center">
+                      <td class="text-center" colspan="2">
+                        <image-adder-v2 [isFile]="true" [referenceId]="item.orderDetailId" [tableType]="'SALES_ORDER_DETAIL'"></image-adder-v2>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </p-tabPanel>
+        </p-tabView>
+
+
+      </div>
+
+
+      <div class="col-md-12" *ngIf="!order.orderDetailList || order.orderDetailList.length==0">
+        <span class="noData text-center">
+          <strong class=""><i class="fa fa-warning "></i>{{'NO_DATA_FOUND'|translate}}!</strong>
+        </span>
+      </div>
+
+
+      <div class="col-md-12 d-flex justify-content-end mt-3">
+        <button type="button" class="btn btn-sm btn-primary mr-1"
+          (click)="sendMail2()"><i class="fa fa-envelope"></i>
+          {{'send-mail' | translate}}
+        </button>
+        <button type="button" class="btn btn-sm btn-warning mr-1" (click)="printAction.next('print');"><i class="fa fa-file"></i>
+          {{'print-document' | translate}}</button>
+
+        <button type="submit" class="btn btn-sm btn-primary mr-1"
+          [disabled]="! order.orderDetailList||order.orderDetailList.length==0 ||isNullMaterial() ||!order.actId||!saleForm.form.valid"
+          (click)="save()"><i class="fa fa-dot-circle-o"></i>
+          {{'save' | translate}}
+        </button>
+
+        <button type="button" class="btn btn-sm btn-secondary mr-1" (click)="closeAction.emit('close');">{{'close' | translate}}</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<ng-template [ngIf]="params.dialog.title==='sale-order-details' || params.dialog.title === 'material'">
+  <p-dialog header="{{'order' | translate}} {{'details' | translate}}"
+    [(visible)]="params.dialog.visible" [style]="{'min-width': '800px',width: '900px'}"
+    [maximizable]="true" modal="true" [autoZIndex]="false">
+    <!---------- MODEL #1 ------------->
+    <form #transferDetailForm="ngForm">
+      <div class="col-md-12" *ngIf="!params.dialog.viewMode">
+        <p-tabView>
+          <p-tabPanel header="{{'main'|translate}}" *ngIf="newRequestOrderDetailCreateDto.orderDetailStatus !== 'COMPLETED'">
+            <table class="table table-bordered  ">
+              <tbody>
+                <!--change-->
+                <tr>
+                  <td>{{'reference-id' | translate}}</td>
+                  <td>
+                     <div class="d-flex align-items-center">
+                      <div  style="width: 95%;" >{{newRequestOrderDetailCreateDto.referenceId}}</div>
+                      <button pButton class="mr-1" label="{{'clear'|translate}}" (click)="clearReferenceId()"></button>
+                      <button pButton icon="fa fa-plus-circle" (click)="addAndIncrementReferenceId()"></button>
+                      <!-- <button pButton icon="fa fa-plus-circle" (click)="addUniqueCode()"></button> -->
+                      <!-- <button pButton icon="fa fa-plus-circle" (click)="addUniqueCode()"></button> -->
+                     </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'plant' | translate}}</td>
+                  <td>
+                    <!-- <ng-template [ngIf]="newRequestOrderDetailCreateDto.plantId">
+                          <plant-auto-complete [selectedPlantId]="newRequestOrderDetailCreateDto.plantId" [required]="true" [addIfMissing]="true"
+                            (selectedPlantEvent)="setSelectedPlant($event)" [eventFire]="true">
+                          </plant-auto-complete>
+                        </ng-template>
+                        <ng-template [ngIf]="!newRequestOrderDetailCreateDto.plantId">
+                            <plant-auto-complete [required]="true" [addIfMissing]="true"
+                              (selectedPlantEvent)="setSelectedPlant($event)" [eventFire]="true">
+                            </plant-auto-complete>
+                        </ng-template> -->
+                    <span style="width: 100%;" *ngIf="selectedPlant"> {{selectedPlant.plantName}}</span>
+                    <plant-auto-complete *ngIf="!selectedPlant" [required]="true"
+                      [selectedPlantId]="newRequestOrderDetailCreateDto.plantId" [addIfMissing]="false"
+                      (selectedPlantEvent)="setSelectedPlant($event)" [eventFire]="true">
+                    </plant-auto-complete>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'product' | translate}}</td>
+                  <!-- <td>
+                        <div class="ui-fluid">
+                          <stock-auto-complete [dropdown]="true" [selectedStock]="selectedStock" sortByFilter = "stockNo"
+                          (selectedStockEvent)="onMaterialChange($event)" [includeMaterials] = "includeMaterials"></stock-auto-complete>
+                        </div>
+                      </td> -->
+                  <td>
+                    <span class="bg-readonly form-control" *ngIf="newRequestOrderDetailCreateDto.stockId && isconfirmORprocessORreadyforplan(newRequestOrderDetailCreateDto)">
+                      {{newRequestOrderDetailCreateDto.stockNo}} | {{newRequestOrderDetailCreateDto.stockName}} | {{newRequestOrderDetailCreateDto.stockName2}} | {{newRequestOrderDetailCreateDto.stockName3}}
+                    </span>
+                    <span class="bg-readonly form-control" *ngIf="newRequestOrderDetailCreateDto.stockId && !isconfirmORprocessORreadyforplan(newRequestOrderDetailCreateDto)"
+                      (click)="params.dialog.title = 'material'; myModal.show()">
+                      {{newRequestOrderDetailCreateDto.stockNo}} | {{newRequestOrderDetailCreateDto.stockName}} | {{newRequestOrderDetailCreateDto.stockName2}} | {{newRequestOrderDetailCreateDto.stockName3}}
+                    </span>
+                    <span class="bg-readonly form-control" *ngIf="!newRequestOrderDetailCreateDto.stockId"
+                      (click)="params.dialog.title = 'material'; myModal.show()">Click to select</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'warehouse' | translate}}</td>
+                  <td>
+                    <ng-template [ngIf]="newRequestOrderDetailCreateDto.warehouseId">
+                      <warehouse-auto-complete [selectedWareHouseId]="newRequestOrderDetailCreateDto.warehouseId"
+                        [disabled]="isconfirmORprocessORreadyforplan(newRequestOrderDetailCreateDto) || !newRequestOrderDetailCreateDto.plantId" [required]="true"
+                        [plantId]="newRequestOrderDetailCreateDto.plantId" [addIfMissing]="true"
+                        (selectedWareHouseEvent)="setSelectedWarehouse($event)" [type]="'SALES'">
+                      </warehouse-auto-complete>
+                    </ng-template>
+                    <ng-template [ngIf]="!newRequestOrderDetailCreateDto.warehouseId">
+                      <warehouse-auto-complete [disabled]="isconfirmORprocessORreadyforplan(newRequestOrderDetailCreateDto) || !newRequestOrderDetailCreateDto.plantId" [required]="true"
+                        [plantId]="newRequestOrderDetailCreateDto.plantId" [addIfMissing]="true"
+                        (selectedWareHouseEvent)="setSelectedWarehouse($event)" [type]="'SALES'">
+                      </warehouse-auto-complete>
+                    </ng-template>
+                  </td>
+                </tr>
+                <!--change-->
+
+
+                <!-- <tr>
+                  <td>{{'height' | translate}}</td>
+                  <td>
+                    <input type="number" class="form-control-sm" name="height"
+                      [(ngModel)]="newRequestOrderDetailCreateDto.height" min="1" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'width' | translate}}</td>
+                  <td>
+                    <input type="number" class="form-control-sm" name="width"
+                      [(ngModel)]="newRequestOrderDetailCreateDto.width" min="1" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'dimension-unit' | translate}}</td>
+                  <td>
+                    <select id="dimensionunit" name="dimensionunit" class="form-control"
+                        [(ngModel)]="newRequestOrderDetailCreateDto.dimensionUnit" required>
+                        <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                        <option *ngFor="let item of unitList" value="{{item.alternativeUnit}}">{{item.alternativeUnit}}
+                        </option>
+                      </select>
+                  </td>
+                </tr> -->
+                <tr>
+                  <td>{{'direct-production' | translate}}</td>
+                  <td>
+                    <p-checkbox name="directProduction" [(ngModel)]="newRequestOrderDetailCreateDto.directProduction" (ngModelChange)="newRequestOrderDetailCreateDto.prepareProduction=false;" [binary]="true"></p-checkbox>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'prepare-production' | translate}}</td>
+                  <td>
+                    <p-checkbox name="prepareProduction" [(ngModel)]="newRequestOrderDetailCreateDto.prepareProduction" (ngModelChange)="newRequestOrderDetailCreateDto.directProduction=false;" [binary]="true"></p-checkbox>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'stock-management' | translate}}</td>
+                  <td>
+                    <p-checkbox name="stockManagement" [(ngModel)]="newRequestOrderDetailCreateDto.stockManagement" (ngModelChange)="newRequestOrderDetailCreateDto.stockManagement;" [binary]="true"></p-checkbox>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'quantity' | translate}}</td>
+                  <td><input type="number" name="quantity" class="form-control" [disabled]="isconfirmORprocessORreadyforplan(newRequestOrderDetailCreateDto)"
+                    [(ngModel)]="newRequestOrderDetailCreateDto.quantity" min="1" (ngModelChange)="calculatePrices()" required />
+                </tr>
+                <tr>
+                  <td>{{'base-unit' | translate}}</td>
+                  <td>
+                    <input name="baseUnit" [(ngModel)]="newRequestOrderDetailCreateDto.unit" disabled readonly
+                      class="form-control" required />
+                  </td>
+                </tr>
+
+
+
+                <tr>
+                  <td>{{'batch-code' | translate}}</td>
+                  <td class="ui-fluid">
+                    <batch-auto-complete [plantId]="newRequestOrderDetailCreateDto.plantId"
+                      [selectedBatchCode]="newRequestOrderDetailCreateDto.batch"
+                      [disabled]="isconfirmORprocessORreadyforplan(newRequestOrderDetailCreateDto)"
+                      [stockId]="newRequestOrderDetailCreateDto.stockId" [actId]="order.actId" [batchLevel]="'SALES_ORDER'"
+                      (selectedBatchEvent)="setSelectedBatch($event)" [addIfMissing]="newRequestOrderDetailCreateDto.orderDetailStatus!=='CONFIRMED'">
+                    </batch-auto-complete>
+
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'order-status' | translate}}</td>
+                  <td>
+                    <select id="Detailstatus" name="Detailstatus" class="form-control"
+                      [(ngModel)]="newRequestOrderDetailCreateDto.orderDetailStatus">
+                      <!-- <option [value]="null"> {{'please-select' | translate}}</option> -->
+                      <option *ngFor="let type of productTreeStatusList" [value]="type">{{type}}</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'shipment-date' | translate}}</td>
+                  <td>
+                    <p-calendar class="ui-fluid custom-calendar remove-scroll"
+                      [(ngModel)]="newRequestOrderDetailCreateDto.shipmentDate" [monthNavigator]="true"
+                      [yearNavigator]="true" yearRange="1990:2100" name="shipmentDate" [showIcon]="true" [showTime]="true"
+                      dateFormat="dd/mm/yy"></p-calendar>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'delivery-date' | translate}}</td>
+                  <td>
+                    <p-calendar class="ui-fluid custom-calendar remove-scroll"
+                      [(ngModel)]="newRequestOrderDetailCreateDto.deliveryDate" [monthNavigator]="true"
+                      [yearNavigator]="true" yearRange="1990:2100" name="deliveryDate" [showIcon]="true" showTime="true"
+                      dateFormat="dd/mm/yy" required></p-calendar>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>{{'priority' | translate}}</td>
+                  <td>
+                    <select [(ngModel)]="newRequestOrderDetailCreateDto.priority" id="priorityId" name="priorityId"
+                      class="form-control" (change)="prioritySelection($event)" required>
+                      <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                      <option value="{{priority}}" *ngFor="let priority of commonPriorities">{{priority | translate}}
+                      </option>
+                    </select>
+                  </td>
+                </tr>
+
+
+
+              </tbody>
+            </table>
+          </p-tabPanel>
+          <p-tabPanel header="{{'main'|translate}}" *ngIf="newRequestOrderDetailCreateDto.orderDetailStatus === 'COMPLETED'">
+            <table class="table table-bordered  ">
+              <tbody>
+                <!--change-->
+                <tr>
+                  <td>{{'reference-id' | translate}}</td>
+                  <td>
+                    {{newRequestOrderDetailCreateDto.referenceId}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'plant' | translate}}</td>
+                  <td>
+                    <span style="width: 100%;" > {{newRequestOrderDetailCreateDto.plantName}}</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'material' | translate}}</td>
+                  <td>
+
+                      {{newRequestOrderDetailCreateDto.stockNo}} | {{newRequestOrderDetailCreateDto.stockName}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'warehouse' | translate}}</td>
+                  <td>
+                    {{newRequestOrderDetailCreateDto.warehouseName}}
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>{{'direct-production' | translate}}</td>
+                  <td>
+                    <p-checkbox name="directProduction" [disabled]="true" [(ngModel)]="newRequestOrderDetailCreateDto.directProduction" [binary]="true"></p-checkbox>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'prepare-production' | translate}}</td>
+                  <td>
+                    <p-checkbox name="prepareProduction" [disabled]="true"  [(ngModel)]="newRequestOrderDetailCreateDto.prepareProduction" [binary]="true"></p-checkbox>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>{{'stock-management' | translate}}</td>
+                  <td>
+                    <p-checkbox name="stockManagement" [disabled]="true"  [(ngModel)]="newRequestOrderDetailCreateDto.stockManagement" [binary]="true"></p-checkbox>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>{{'quantity' | translate}}</td>
+                  <td>{{newRequestOrderDetailCreateDto.quantity}}
+                </tr>
+                <tr>
+                  <td>{{'base-unit' | translate}}</td>
+                  <td>
+                    {{newRequestOrderDetailCreateDto.unit}}
+                  </td>
+                </tr>
+
+
+
+                <tr>
+                  <td>{{'batch-code' | translate}}</td>
+                  <td class="ui-fluid">
+                  {{newRequestOrderDetailCreateDto.batch}}
+
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'order-status' | translate}}</td>
+                  <td>
+                  {{newRequestOrderDetailCreateDto.orderDetailStatus}}
+
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'shipment-date' | translate}}</td>
+                  <td>
+                  {{newRequestOrderDetailCreateDto.shipmentDate | date:'dd/MM/yy HH:mm'}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'delivery-date' | translate}}</td>
+                  <td>
+                    {{newRequestOrderDetailCreateDto.deliveryDate | date:'dd/MM/yy HH:mm'}}
+
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>{{'priority' | translate}}</td>
+                  <td>
+                  {{newRequestOrderDetailCreateDto.priority}}
+                  </td>
+                </tr>
+
+
+
+              </tbody>
+            </table>
+          </p-tabPanel>
+          <p-tabPanel header="{{'pricing'|translate}}">
+            <table class="table table-bordered">
+              <tr>
+                <td width="30%">{{'material' | translate}}</td>
+                <!-- <td>
+                      <div class="ui-fluid">
+                        <stock-auto-complete [dropdown]="true" [selectedStock]="selectedStock" sortByFilter = "stockNo"
+                        (selectedStockEvent)="onMaterialChange($event)" [includeMaterials] = "includeMaterials"></stock-auto-complete>
+                      </div>
+                    </td> -->
+                <td>
+                  <span class="bg-readonly form-control" *ngIf="newRequestOrderDetailCreateDto.stockId && isconfirmORprocessORreadyforplan(newRequestOrderDetailCreateDto)">
+                    {{newRequestOrderDetailCreateDto.stockNo}} | {{newRequestOrderDetailCreateDto.stockName}}
+                  </span>
+                  <span class="bg-readonly form-control" *ngIf="newRequestOrderDetailCreateDto.stockId && !isconfirmORprocessORreadyforplan(newRequestOrderDetailCreateDto)"
+                    (click)="params.dialog.title = 'material'; myModal.show()">
+                    {{newRequestOrderDetailCreateDto.stockNo}} | {{newRequestOrderDetailCreateDto.stockName}}
+                  </span>
+                  <span class="bg-readonly form-control" *ngIf="!newRequestOrderDetailCreateDto.stockId"
+                    (click)="params.dialog.title = 'material'; myModal.show()">Click to select</span>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'currency' | translate}}</td>
+                <td>
+                  <div class="d-flex col-md-12 align-items-center p-0">
+                    <div class="col-md-7 p-0">
+                      <currency-auto-complete [selectedCurrency]="newRequestOrderDetailCreateDto.currency" (selectedCurrencyEvent)="onSelectCurrency($event)" ></currency-auto-complete>
+                    </div>
+                    <div class="col-md-5" *ngIf="selectedMaterialCurrency && exChangeRate && selectedMaterialCurrency!==newRequestOrderDetailCreateDto.currency">
+                      1 {{newRequestOrderDetailCreateDto.currency}} = {{exChangeRate}} {{selectedMaterialCurrency}}
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'unit-net-price' | translate}}</td>
+                <td>
+                  <div class="d-flex col-md-12 align-items-center p-0">
+                    <div class="col-md-7 p-0">
+                        <input type="number" name="unitNetPrice" class="form-control"
+                        [(ngModel)]="newRequestOrderDetailCreateDto.unitNetPrice" min="0"
+                        (ngModelChange)="calculatePrices()" />
+                      </div>
+                      <div class="col-md-5">
+                        List Price: {{materialCurrentPrice}} {{selectedMaterialCurrency}}
+                      </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'net-price' | translate}}</td>
+                <td>
+                  <input type="number" name="netPrice" class="form-control"
+                  [(ngModel)]="newRequestOrderDetailCreateDto.netPrice"
+                  (ngModelChange)="calculateUnitNetPrice()"
+                  min="0" />
+                </td>
+              </tr>
+              <tr>
+                <td>{{'delivery-cost' | translate}}</td>
+                <td>
+                  <input type="number" name="deliveryCost" class="form-control"
+                  [(ngModel)]="newRequestOrderDetailCreateDto.deliveryCost" min="0"
+                  (ngModelChange)="calculatePrices()"/>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'sales-price' | translate}}</td>
+                <td>
+                  <input type="number" name="salePrice" class="form-control" [(ngModel)]="newRequestOrderDetailCreateDto.salePrice" min="0"
+                  (ngModelChange)="calculatePrices()" disabled />
+                </td>
+              </tr>
+              <tr>
+                <td>{{'cost-price' | translate}}</td>
+                <td>
+                  <input type="number" name="costPrice" class="form-control" [(ngModel)]="newRequestOrderDetailCreateDto.costPrice" min="0" />
+                </td>
+              </tr> <!-- FIXED BY MUSTAFA -->
+              <tr>
+                <td>{{'discount' | translate}} %</td>
+                <td>
+                  <div class="d-flex flex-row align-items-center">
+                    <input type="number" class="col-md-6"  name="discount" class="form-control" 
+                    [(ngModel)]="newRequestOrderDetailCreateDto.discount" min="0" 
+                    (ngModelChange)="calculatePrices()"
+                    />
+                    <span class="col-md-6">{{discountPrice}}</span>
+                 </div>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'vat-rate' | translate}} %</td>
+                <td>
+                  <div class="d-flex flex-row align-items-center">
+                    <input type="number" class="col-md-6"  name="vatRate" class="form-control" 
+                    [(ngModel)]="newRequestOrderDetailCreateDto.vatRate" min="0" 
+                    (ngModelChange)="calculatePrices()"
+                    />
+                    <span class="col-md-6">{{vatPrice}}</span>
+                 </div>
+                 </td>
+              </tr>
+              <tr>
+                <td>{{'cost-center' | translate}}:</td>
+                <td >
+                  <cost-center-auto-complete [costCenterId]="newRequestOrderDetailCreateDto.costCenterId"
+                  (selectedCostCenterEvent)="newRequestOrderDetailCreateDto.costCenterId=$event?.costCenterId; newRequestOrderDetailCreateDto.costCenterName=$event?.costCenterName" >
+                  </cost-center-auto-complete>
+                </td>
+              </tr>
+            </table>
+          </p-tabPanel>
+        </p-tabView>
+        
+      </div>
+      <div class="col-md-12" *ngIf="!params.dialog.viewMode">
+
+        <button class="btn btn-sm btn-danger" (click)="resetNewItemDetails()"><i class="fa fa-ban"></i>
+          {{'reset' | translate}}
+        </button>
+        <button type="submit" class="btn btn-sm btn-primary"
+        [disabled]="!transferDetailForm.form.valid || !newRequestOrderDetailCreateDto.stockId"
+          (click)="addDetails()"><i class="fa fa-dot-circle-o"></i>
+          {{'save' | translate}}
+      </button>
+      </div>
+      <div class="col-md-12" *ngIf="params.dialog.viewMode">
+        <p-tabView>
+          <p-tabPanel header="{{'main'|translate}}">
+            <table class="table table-bordered  ">
+              <tbody>
+                <!--change-->
+                <tr>
+                  <td>{{'reference-id' | translate}}</td>
+                  <td>
+                    {{newRequestOrderDetailCreateDto.referenceId}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'plant' | translate}}</td>
+                  <td>
+                    <span style="width: 100%;" > {{newRequestOrderDetailCreateDto.plantName}}</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'material' | translate}}</td>
+                  <td>
+
+                      {{newRequestOrderDetailCreateDto.stockNo}} | {{newRequestOrderDetailCreateDto.stockName}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'warehouse' | translate}}</td>
+                  <td>
+                    {{newRequestOrderDetailCreateDto.warehouseName}}
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>{{'direct-production' | translate}}</td>
+                  <td>
+                    <p-checkbox name="directProduction" [disabled]="true" [(ngModel)]="newRequestOrderDetailCreateDto.directProduction" [binary]="true"></p-checkbox>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'prepare-production' | translate}}</td>
+                  <td>
+                    <p-checkbox name="prepareProduction" [disabled]="true"  [(ngModel)]="newRequestOrderDetailCreateDto.prepareProduction" [binary]="true"></p-checkbox>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'stock-management' | translate}}</td>
+                  <td>
+                    <p-checkbox name="stockManagement" [disabled]="true"  [(ngModel)]="newRequestOrderDetailCreateDto.stockManagement" [binary]="true"></p-checkbox>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'quantity' | translate}}</td>
+                  <td>{{newRequestOrderDetailCreateDto.quantity}}
+                </tr>
+                <tr>
+                  <td>{{'base-unit' | translate}}</td>
+                  <td>
+                    {{newRequestOrderDetailCreateDto.unit}}
+                  </td>
+                </tr>
+
+
+
+                <tr>
+                  <td>{{'batch-code' | translate}}</td>
+                  <td class="ui-fluid">
+                  {{newRequestOrderDetailCreateDto.batch}}
+
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'order-status' | translate}}</td>
+                  <td>
+                  {{newRequestOrderDetailCreateDto.orderDetailStatus}}
+
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'shipment-date' | translate}}</td>
+                  <td>
+                  {{newRequestOrderDetailCreateDto.shipmentDate | date:'dd/MM/yy HH:mm'}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'delivery-date' | translate}}</td>
+                  <td>
+                    {{newRequestOrderDetailCreateDto.deliveryDate | date:'dd/MM/yy HH:mm'}}
+
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>{{'priority' | translate}}</td>
+                  <td>
+                  {{newRequestOrderDetailCreateDto.priority}}
+                  </td>
+                </tr>
+
+
+
+              </tbody>
+            </table>
+          </p-tabPanel>
+          <p-tabPanel header="{{'pricing'|translate}}">
+            <table class="table table-bordered">
+              <tr>
+                <td>{{'material' | translate}}</td>
+                <!-- <td>
+                      <div class="ui-fluid">
+                        <stock-auto-complete [dropdown]="true" [selectedStock]="selectedStock" sortByFilter = "stockNo"
+                        (selectedStockEvent)="onMaterialChange($event)" [includeMaterials] = "includeMaterials"></stock-auto-complete>
+                      </div>
+                    </td> -->
+                <td>
+                  <span class="bg-readonly form-control">
+                    {{newRequestOrderDetailCreateDto.stockNo}} | {{newRequestOrderDetailCreateDto.stockName}}
+                  </span>
+
+                </td>
+              </tr>
+              <tr>
+                <td>{{'currency' | translate}}</td>
+                <td>
+                {{newRequestOrderDetailCreateDto.currency}}
+
+              </tr>
+              <tr>
+                <td>{{'vat-rate' | translate}}</td>
+                <td>
+                  {{newRequestOrderDetailCreateDto.vatRate}}
+              </tr>
+              <tr>
+                <td>{{'net-price' | translate}}</td>
+                <td>
+                  {{newRequestOrderDetailCreateDto.netPrice}}
+              </tr>
+              <tr>
+                <td>{{'delivery-cost' | translate}}</td>
+                <td>
+                 {{newRequestOrderDetailCreateDto.deliveryCost}}
+              </tr>
+              <tr>
+                <td>{{'sales-price' | translate}}</td>
+                <td>
+                {{newRequestOrderDetailCreateDto.salePrice}}
+              </tr>
+              <tr>
+                <td>{{'cost-price' | translate}}</td>
+                <td>
+                  {{newRequestOrderDetailCreateDto.costPrice}}
+              </tr> <!-- FIXED BY MUSTAFA -->
+              <tr>
+                <td>{{'discount' | translate}}%</td>
+                <td>
+                  {{newRequestOrderDetailCreateDto.discount}}
+              </tr>
+              <tr>
+                <td>{{'cost-center' | translate}}</td>
+                <td>
+                  {{newRequestOrderDetailCreateDto.costCenterName}}
+              </tr>
+            </table>
+          </p-tabPanel>
+        </p-tabView>
+      </div>
+    </form>
+
+  </p-dialog>
+</ng-template>
+<div bsModal [config]="{backdrop: 'static', keyboard: false}" #myModal="bs-modal" [config]="{ show: false}"
+  (onHidden)="params.dialog.active=false" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-success modal-lg" role="document"
+  >
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" *ngIf="params.dialog.title != 'material'"> {{'new-customer' | translate}}</h4>
+        <h4 class="modal-title" *ngIf="params.dialog.title == 'material'"> {{'material' | translate}}</h4>
+        <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <!--step2-->
+      <div class="modal-body">
+
+        <ng-container *ngIf="params.dialog.title != 'material'">
+          <customer-new (saveAction)="onSaveNewCustomer($event); myModal.hide();" [fromAutoComplete]="true"></customer-new>
+        </ng-container>
+
+        <ng-container *ngIf="params.dialog.title == 'material'">
+          <div class="form-group row">
+            <!--keep the modal open!!!!!-->
+            <div class="col-md-12">
+              <choose-stock-pane [plantId]="newRequestOrderDetailCreateDto.plantId"
+                (selectedEvent)="onMaterialChange($event);myModal.hide()" [includeMaterials]="includeMaterials"
+                [hideCaption]=false [onlyAddButton]="true" [showStockManagement]="true">
+              </choose-stock-pane>
+            </div>
+          </div>
+        </ng-container>
+
+      </div>
+      <!--step2-->
+      <!-- <div class="modal-footer">
+        <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary" (click)="myModal.hide()">{{'close' | translate}}</button>
+        <button *ngIf="salesModal.modal==='DETAIL'" type="button" class="btn rounded btn-primary" (click)="salesModal.modal='NEW'">{{'new' | translate}}</button>
+
+        <button *ngIf="salesModal.modal==='DETAIL'" type="button" class="btn rounded btn-success"
+                (click)="salesModal.modal='EDIT'">{{'edit' | translate}}</button>
+      </div> -->
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

@@ -1,0 +1,39 @@
+<div class="animated fadeIn">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fa fa-align-justify"></i> {{'parity-information' | translate}}
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <tbody *ngIf="data">
+                            <tr>
+                                <td width="30%">{{'parity-id' | translate}}</td>
+                                <td>{{data?.parityId}} </td>
+                            </tr>
+                            <tr>
+                                <td>{{'parity-code' | translate}}</td>
+                                <td>{{data?.parityCode}} </td>
+                            </tr>
+                            <tr>
+                                <td>{{'parity-name' | translate}}</td>
+                                <td>{{data?.parityName}} </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                  {{'language' | translate}}
+                                </td>
+                                <td>
+                                 {{data?.language}}
+                                </td>
+                              </tr>
+                            <!-- <tr>
+                                <td>{{'location-description' | translate}}</td>
+                                <td>{{data?.locationDescription}} </td>
+                            </tr> -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+</div>

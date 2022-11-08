@@ -1,0 +1,295 @@
+<div class="animated fadeIn">
+  <form #equipmentForm="ngForm">
+    <div class="row ui-fluid" *ngIf="detailEquipment">
+      <div class="col-lg-6">
+        <div class="col-lg-12">
+          <div class="card ">
+
+            <div class="card-header">
+              <i class="fa fa-align-justify"></i> {{'equipment-master' | translate}}
+            </div>
+            <div class="card-body">
+
+              <table class="table table-bordered">
+                <tbody>
+                  <tr>
+                    <td>{{'parent-equipment' | translate}}</td>
+                    <td>
+                      <equipment-auto-complete [selectedEquipmentId]="equipment.parentEquipmentId" (selectedEquipmentEvent)="equipment.parentEquipmentId=$event?.equipmentId"></equipment-auto-complete>
+                    </td>
+                  </tr>
+                <tr>
+                  <td>{{'equipment' | translate}}</td>
+                  <!-- <td>
+                    <input type="text" name="equipmentName" required class="form-control"
+                             [(ngModel)]="equipment.equipmentName"/></td> -->
+
+                  <td>
+                  <span class="bg-readonly form-control" *ngIf="equipment.equipmentName"
+                    (click)="params.dialog.title = 'material'; myModal.show()">
+                    {{equipment.equipmentNo}} | {{equipment.equipmentName}}
+                  </span>
+                  <span class="bg-readonly form-control" *ngIf="!equipment.equipmentName"
+                    (click)="params.dialog.title = 'material'; myModal.show()">
+                    {{'click-to-select' | translate}}</span>
+                </td>
+                </tr>
+
+                <!-- <tr>
+                  <td>{{'equipment-no' | translate}}</td>
+                  <td><input type="text" class="form-control" name="equipmentNo" [(ngModel)]="equipment.equipmentNo"/>
+                  </td>
+                </tr> -->
+                <tr>
+                  <td>{{'description' | translate}}</td>
+                  <td><input type="text" class="form-control" name="descrip" [(ngModel)]="equipment.description"/>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'valid-from' | translate}}</td>
+                  <td>
+                    <div>
+                      <p-calendar [(ngModel)]="equipment.validFrom" name="validFrom"
+                                  [monthNavigator]="true" [yearNavigator]="true" yearRange="1990:2100"
+                                  required [showIcon]="true" dateFormat="dd/mm/yy"></p-calendar>
+                    </div>
+                  </td>
+
+
+                </tr>
+
+                <tr>
+                  <td>{{'category' | translate}}</td>
+                  <td>
+                    <equipment-category-auto-complete [required]="true" [dropdown]="true" [addIfMissing]="true" [selectedCategory]="detailEquipment.equipmentCategory"
+                                                      (selectedCategoryEvent)="setSelectedCategory($event)"></equipment-category-auto-complete>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'datamin-square-error' | translate}}</td>
+                  <td><input type="text" class="form-control" name="descrip" [(ngModel)]="equipment.dataMinSquareError"/>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'total-error-count' | translate}}</td>
+                  <td><input type="text" class="form-control" name="descrip" [(ngModel)]="equipment.totalErrorCount"/>
+                  </td>
+                </tr>
+   
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-12">
+          <div class="card ">
+
+            <div class="card-header">
+              <i class="fa fa-align-justify"></i> {{'location' | translate}}
+            </div>
+            <div class="card-body">
+
+              <table class="table table-bordered">
+                <tbody>
+                  <tr>
+                    <td>{{'functional-location' | translate}}</td>
+                    <td> <span class="bg-readonly form-control" *ngIf="equipment.maintenanceFuntionalLocationId" 
+                      (click)="modalShow('FUNCTIONAL_LOCATION')">
+                      {{equipment.maintenanceFuntionalLocationDesc}}</span>
+                      <span class="bg-readonly form-control" *ngIf="!equipment.maintenanceFuntionalLocationId" 
+                      (click)="modalShow('FUNCTIONAL_LOCATION')">
+                      {{'choose-functional-location' | translate}}</span>
+                    </td>
+                  </tr>
+                <tr>
+                  <td>{{'abc-indicator' | translate}}</td>
+                  <td><abc-indicator-auto-complete [plantId]="selectedPlant?.plantId" [addIfMissing]="true" [selectedAbcIndicator]="detailEquipment.equipmentABCIndicator" (selectedAbcIndicatorEvent)="setSelectedAbcIndicator($event)"></abc-indicator-auto-complete></td>
+                </tr>
+
+                <tr>
+                  <td>{{'planning-plant' | translate}}</td>
+                  <td>
+                    <span *ngIf="equipment.planningPlantId && selectedPlant && equipment.planningPlantId=== selectedPlant.plantId">{{selectedPlant.plantName}}</span>
+              <plant-auto-complete *ngIf="!selectedPlant"  [selectedPlantId]="equipment.planningPlantId" (selectedPlantEvent)="setSelectedPlanningPlant($event)" [eventFire]="true"></plant-auto-complete>
+                    <!-- <plant-auto-complete [eventFire]="true"  [selectedPlant]="detailEquipment.planningPlant" [addIfMissing]="true" (selectedPlantEvent)="setSelectedPlanningPlant($event)"></plant-auto-complete> -->
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'planner-group' | translate}}</td>
+                  <td><planner-group-auto-complete [plantId]="selectedPlant?.plantId" [selectedPlannerGroup]="detailEquipment.equipmentPlannerGroup" [addIfMissing]="true"  (selectedPlannerGroupEvent)="setSelectedPlannerGroup($event)"></planner-group-auto-complete>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'maintenance-workstation' | translate}}</td>
+                  <td>
+
+                    <workstation-auto-complete [plantId]="equipment.planningPlantId" (selectedWorkStationEvent)="setSelectedWorkstation($event)" [selectedWorkStation]="detailEquipment.maintenanceWorkstation" ></workstation-auto-complete>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'maintenance-workstation-plant' | translate}}</td>
+                  <td>
+                    <span *ngIf="equipment.maintenanceWorkstationPlantId && selectedPlant && equipment.maintenanceWorkstationPlantId=== selectedPlant.plantId">{{selectedPlant.plantName}}</span>
+                    <plant-auto-complete *ngIf="!selectedPlant"  [selectedPlantId]="equipment.planningPlantId" (selectedPlantEvent)="setSelectedMaintenancePlant($event)" [eventFire]="true"></plant-auto-complete>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="card">
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i> {{'general' | translate}}
+          </div>
+          <div class="card-body">
+            <table class="table table-bordered">
+              <tbody>
+              <tr>
+                <td>{{'object-type' | translate}}</td>
+                <td>
+                  <equipment-object-type-auto-complete [required]="true" [dropdown]="true"
+                                                       [selectedObjectType]="detailEquipment.equipmentObjectType"
+                                                       (selectedObjectTypeEvent)="setSelectedObjectType($event)"></equipment-object-type-auto-complete>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'weight' | translate}}</td>
+                <td><input type="number" min="0" name="weight" class="form-control" [(ngModel)]="equipment.weight"/>
+                </td>
+              </tr>
+
+              <tr>
+                <td>{{'weight-unit' | translate}}</td>
+                <td>
+                  <unit-auto-complete (unitChangeEvent)="equipment.weightUnit=$event" [selectedUnit]="detailEquipment.weightUnit"></unit-auto-complete>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'manufacturer' | translate}}</td>
+                <td>
+                  <act-auto-complete [addIfMissing]="true" [supplier]="true" [selectedAct]="detailEquipment.manufacturer"
+                                     (selectedActEvent)="setSelectedManufacturer($event)"></act-auto-complete>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'model' | translate}}</td>
+                <td><input type="number" min="0" name="modelNumber" class="form-control"
+                           [(ngModel)]="equipment.modelNumber"/></td>
+              </tr>
+              <tr>
+                <td>{{'manufacturer-part-no' | translate}}</td>
+                <td><input type="text" min="0" name="manufacturerPartNo" class="form-control"
+                           [(ngModel)]="equipment.manufacturerPartNo"/></td>
+              </tr>
+              <tr>
+                <td>{{'manufacturer-serial-no' | translate}}</td>
+                <td><input type="text" min="0" name="manufacturerSerialNo" class="form-control"
+                           [(ngModel)]="equipment.manufacturerSerialNo"/></td>
+              </tr>
+              <tr>
+                <td>{{'manufacturer-month' | translate}}</td>
+                <td><input type="text" min="0" name="manufacturerMonth" class="form-control"
+                           [(ngModel)]="equipment.manufacturerMonth"/></td>
+              </tr>
+              <tr>
+                <td>{{'manufacturer-year' | translate}}</td>
+                <td><input type="text" min="0" name="manufacturerYear" class="form-control"
+                           [(ngModel)]="equipment.manufacturerYear"/></td>
+              </tr>
+              <tr>
+                <td>{{'manufacturer-country' | translate}}</td>
+                <td>
+                  <country-auto-complete (selectedCountryEvent)="setSelectedCountry($event)"
+                                         [selectedCountry]="detailEquipment.manufacturerCountry" ></country-auto-complete>
+                </td>
+              </tr>
+
+              <tr>
+                <td colspan="2">
+                  <button type="reset" class="btn btn-sm btn-danger" (click)="cancel()"><i class="fa fa-ban"></i>
+                    {{'cancel' | translate}}
+                  </button>
+                  <button type="submit" class="btn btn-sm btn-primary"
+                          (click)="save()" [disabled]="!equipmentForm.form.valid"><i class="fa fa-dot-circle-o"></i>
+                    {{'save' | translate}}
+                  </button>
+
+                </td>
+              </tr>
+              </tbody>
+            </table>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+
+
+
+<ng-template [ngIf]="modal.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal" class="modal fade" (onHidden)="modal.active=false"
+       tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog modal-success modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <!-- <h4 class="modal-title" *ngIf="modal.type=='NOTIFICATION'"> {{'maintenance-notification' | translate}}</h4> -->
+          <h4 class="modal-title" *ngIf="modal.type=='FUNCTIONAL_LOCATION'"> {{'functional-location' | translate}}</h4>
+          <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+
+         <choose-location-pane *ngIf="modal.type=='FUNCTIONAL_LOCATION'" 
+         (selectedEvent)="setSelectedFunctionalLocation($event);myModal.hide()">
+        </choose-location-pane>
+         <!-- <choose-notification-pane *ngIf="modal.type=='NOTIFICATION'" [fromMaintenanceOrder]="true" (selectedEvent)="setSelectedNotification($event, myModal);"></choose-notification-pane> -->
+
+        </div>
+      </div> <!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</ng-template>
+
+
+<div bsModal [config]="{backdrop: 'static', keyboard: false}" #myModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+  aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-success modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          <span>{{params.dialog.title | translate}}</span>
+        </h4>
+        <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <ng-container *ngIf="params.dialog.title == 'material'">
+          <div class="form-group row">
+            <!--keep the modal open!!!!!-->
+            <div class="col-md-12">
+              <choose-stock-pane [plantId]="equipment.planningPlantId"
+                (selectedEvent)="selectMaterialChanged($event);myModal.hide()"
+                [hideCaption]=false  [onlyAddButton]="true">
+              </choose-stock-pane>
+            </div>
+          </div>
+        </ng-container>
+        <!---------- MODEL #2 ------------->
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="myModal.hide()">{{'close' | translate}}</button>
+      </div>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div>

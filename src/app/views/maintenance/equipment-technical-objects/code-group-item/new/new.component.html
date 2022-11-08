@@ -1,0 +1,52 @@
+<p-confirmDialog></p-confirmDialog>
+
+<!--<form #orderEdit="ngForm" >-->
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          {{'catalog-profile'|translate}}
+        </div>
+        <div class="card-body">
+          <form #codeGroupItemForm="ngForm" class="form-horizontal ui-fluid">
+            <div class="form-group row">
+              <label class="col-md-3 col-form-label" for="shortText">{{'code-group' | translate}}</label>
+              <div class="col-md-9">
+                <p-dropdown  class="ui-dropdown" placeholder="{{'select-code-group'|translate}}"
+                             [options]="codeGroupHeaderList" [(ngModel)]="selectedCodeGroupHeader" optionLabel="shortText"
+                             required name="codeGroup"> </p-dropdown>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-3 col-form-label" for="equipment-category">{{'profile-name' | translate}}</label>
+              <div class="col-md-9">
+                <input id="equipment-category"  class="form-control" [(ngModel)]="dataModel.parameter"
+                       name="parameter"  required/>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-3 col-form-label" for="shortText">{{'short-text' | translate}}</label>
+              <div class="col-md-9">
+                <input id="shortText"  class="form-control" [(ngModel)]="dataModel.shortText"
+                       name="shortText"  required/>
+                <!--<span class="help-block">This is a help text</span>-->
+              </div>
+            </div>
+
+          </form>
+        </div>
+        <div class="card-footer">
+          <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+            {{'reset' | translate}}
+          </button>
+          <button type="submit" class="btn btn-sm btn-primary" [disabled]="!codeGroupItemForm.form.valid"
+                  (click)="save()"><i class="fa fa-dot-circle-o"></i>
+            {{'save' | translate}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div><!--/.row-->
+</div>
+<!--</form>-->

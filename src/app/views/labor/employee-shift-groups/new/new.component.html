@@ -1,0 +1,122 @@
+<div class="animated fadeIn" style="margin: 10px;">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i>{{'employee'|translate}} {{'shift' | translate}} {{'group' | translate}}
+          {{'details' |
+          translate}}
+        </div>
+        <div class="card-body">
+          <p-tabView>
+            <p-tabPanel header="{{'main' | translate}}">
+              <form #empShiftForm="ngForm">
+                <table class="table table-bordered">
+                  <tbody>
+                    <tr>
+                      <td>{{'group-code'|translate}}</td>
+                      <td><input id="groupCode" name="groupCode" type="text" class="form-control"
+                          [(ngModel)]="employeeShift.groupCode" /> </td>
+                      <td>{{'start-date'|translate}}</td>
+                      <td>
+                        <p-calendar name="startDate" [showIcon]="true" dateFormat="dd/mm/yy" [monthNavigator]="true"
+                          [yearNavigator]="true" yearRange="1990:2100" [(ngModel)]="employeeShift.startDate"
+                          placeholder="{{'start-date'|translate}}"></p-calendar>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>{{'group-name'|translate}}</td>
+                      <td><input type="text" class="form-control" name="groupName"
+                          [(ngModel)]="employeeShift.groupName" /> </td>
+                      <td>{{'finish-date'|translate}}</td>
+                      <td>
+                        <p-calendar name="finishDate" [showIcon]="true" dateFormat="dd/mm/yy" [monthNavigator]="true"
+                          [yearNavigator]="true" yearRange="1990:2100" [(ngModel)]="employeeShift.finishDate"
+                          placeholder="{{'finish-date'|translate}}"></p-calendar>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>{{'shift-group'|translate}}</td>
+                      <td>
+                        <div class="input-group">
+                          <select id="empShift" name="empShift" class="form-control"
+                            [(ngModel)]="employeeShift.employeeGenericGroupId"
+                            (ngModelChange)="onShiftGroupChange($event)">
+                            <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                            <option *ngFor="let group of empGenericList" value="{{group.employeeGenericGroupId}}">
+                              {{group.groupName}}
+                            </option>
+                          </select>
+                        </div>
+                      </td>
+                      <td>{{'start-time' | translate}}</td>
+                      <td>
+                        <p-calendar name="startTime" [timeOnly]="true" showTime="true" hourFormat="24"
+                          [(ngModel)]="employeeShift.startTime" placeholder="{{'start-time'|translate}}"></p-calendar>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>{{'shift'|translate}}</td>
+                      <td>
+                        <div class="input-group">
+                          <select id="shift" name="shift" class="form-control" [(ngModel)]="employeeShift.shiftId"
+                            (ngModelChange)="onShiftChange($event)">
+                            <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                            <option *ngFor="let shift of shiftList" value="{{shift.shiftId}}">{{shift.shiftName}}
+                            </option>
+                          </select>
+                        </div>
+                      </td>
+                      <td>{{'end-time' | translate}}</td>
+                      <td>
+                        <p-calendar name="finishTime" [timeOnly]="true" showTime="true" hourFormat="24"
+                          [(ngModel)]="employeeShift.finishTime" placeholder="{{'end-time'|translate}}"></p-calendar>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td colspan="2">
+                        <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+                          {{'reset' | translate}}</button>
+                        <button type="submit" class="btn btn-sm btn-primary" [disabled]="!empShiftForm.form.valid"
+                          (click)="save()"><i class="fa fa-dot-circle-o"></i>
+                          {{'save' | translate}}
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </form>
+            </p-tabPanel>
+            <p-tabPanel header="{{'employee-list' | translate}}">
+              <p-table #dt [value]="members" [paginator]="true" [rows]="20" [showCurrentPageReport]="true" 
+              currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowsPerPageOptions]="[20,30,50]">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th>{{'employee-no' | translate}}</th>
+                    <th>{{'employee-id' | translate}}</th>
+                    <th>{{'first-name' | translate}}</th>
+                    <th>{{'last-name' | translate}}</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-rowData>
+                  <tr>
+                    <td>{{rowData.employeeNo}}</td>
+                    <td>{{rowData.employeeId}}</td>
+                    <td>{{rowData.firstName}}</td>
+                    <td>{{rowData.lastName}}</td>
+                  </tr>
+                </ng-template>
+              </p-table>
+
+            </p-tabPanel>
+          </p-tabView>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

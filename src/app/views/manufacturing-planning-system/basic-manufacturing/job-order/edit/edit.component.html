@@ -1,0 +1,55 @@
+<div class="animated fadeIn">
+    <div class="row text-center noData" *ngIf="!isLoading() && (!jobDetail)">
+      <strong class=""><i class="fa fa-warning "></i>{{'NO_JOB_DETAIL_FOUND'|translate}}!</strong>
+    </div>
+
+    <ng-template [ngIf]="jobDetail && jobDetail.jobOrderCombinedList">
+      <div class="col-md-12" *ngFor="let child of jobDetail.jobOrderCombinedList">
+          <table class="table table-sm table-outline bg-white">
+              <thead class="table-secondary">
+              <tr>
+                <th colspan="5" class="align-self-center"> Job Order : 
+                    <a href="javascript:;" (click)="showOpenJobOrderDetail(child.jobOrderId)" class="text-info">
+                        {{child.jobOrderId}}</a></th>
+              </tr>
+              <tr>
+                <th>Job Order Stock Id</th>
+                <th>Material</th>
+                <th>Planned Quantity</th>
+                <th>Produced Quantity</th>
+                <th>Quantity Unit</th>
+              </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of child.jobOrderStockProduceList;">
+                  <td>{{item.jobOrderStockId}}</td>
+                  <td>
+                    <a href="javascript:;" (click)="showStockDetail(item.stockId)">{{item.stockName}}</a>
+                  </td>
+                  <td style="text-align: center;">{{item.neededQuantity}}</td>
+                  <td style="display: flex; flex-direction: row; width: 150px;">
+                    <input type="number" min="0" class="form-control" [(ngModel)]="item.quantity"
+                      (ngModelChange)="checkStockQuantity($event, item)"
+                      name="quantity" required/>
+                    <input type="number" min="0" class="form-control" [(ngModel)]="item.defectQuantity"
+                      name="defectQuantity" required/>
+                      <!-- {{item.quantity}}-{{item.defectQuantity}} -->
+                  </td>
+                  <td>{{item.unit}}</td>
+                </tr>
+              </tbody>
+          </table>
+      </div>
+    </ng-template>
+
+    <div class="col-md-12" *ngIf="jobDetail && jobDetail.jobOrderCombinedList">
+      <button type="reset" class="btn btn-sm btn-danger" (click)="saveAction.next()"><i class="fa fa-ban"></i>
+              {{'cancel' | translate}}
+      </button>
+      <button type="submit" class="btn btn-sm btn-primary"
+              (click)="saveJobDetails()"><i class="fa fa-dot-circle-o"></i>
+        {{'save' | translate}}
+      </button>
+    </div>
+  </div>
+  

@@ -1,0 +1,78 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i>{{'account-type-information' | translate}}
+        </div>
+        <div class="card-body">
+          <form #workCenterForm="ngForm">
+            <table class="table table-bordered">
+              <tbody>
+                <!-- <tr>
+                  <td>
+                    {{'account-type-id' | translate}}
+                  </td>
+                  <td><input type="text" class="form-control"  name="actTypeId" 
+                    required [(ngModel)]="payLoadObject.actTypeId"/>
+                  </td>
+                </tr> -->
+                <tr>
+                  <td>
+                    {{'account-type-no' | translate}}
+                  </td>
+                  <td><input type="text" class="form-control"  name="actTypeNo" 
+                    disabled [(ngModel)]="payLoadObject.actTypeNo"/>
+                  </td>
+                </tr>
+              <tr>
+                <td>
+                  {{'account-type-name' | translate}}
+                </td>
+                <td><input type="text" class="form-control"  name="actTypeName" 
+                  required [(ngModel)]="payLoadObject.actTypeName"/>
+                </td>
+              </tr>
+              <tr>
+                <td> {{'account-position' | translate}}</td>
+                <td>
+                  <div style="display: flex">
+                    <p style="align-items: center">
+                      <input type="radio" name="customer" value="CUSTOMER" [(ngModel)]="payLoadObject.accountPosition"
+                        required="" oninvalid="this.setCustomValidity('Choose Account Type Customer or Supplier or Both')" oninput="this.setCustomValidity('')" />  Customer</p>
+                    <p style="align-items: center; margin-left: 10px">
+                      <input type="radio" name="supplier" value="SUPPLIER" [(ngModel)]="payLoadObject.accountPosition" required=""
+                        oninvalid="this.setCustomValidity('Choose Account Type Customer or Supplier or Both')" oninput="this.setCustomValidity('')" /> Supplier</p>
+                    <p style="align-items: center; margin-left: 10px">
+                        <input type="radio" name="Both" value="BOTH" [(ngModel)]="payLoadObject.accountPosition" required=""
+                           oninvalid="this.setCustomValidity('Choose Account Type Customer or Supplier or Both')" oninput="this.setCustomValidity('')" /> Both</p>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'plant' | translate}}</td>
+                <td>
+                  <span *ngIf="payLoadObject.plantId && selectedPlant && payLoadObject.plantId=== selectedPlant.plantId">{{selectedPlant.plantName}}</span>
+                </td>
+              </tr>
+              
+             
+              <tr>
+                <td colspan="2">
+                  <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+                    {{'reset' | translate}}
+                  </button>
+                  <button type="submit" class="btn btn-sm btn-primary" [disabled]="!workCenterForm.form.valid"
+                          (click)="save()"><i class="fa fa-dot-circle-o"></i>
+                    {{'save' | translate}}
+                  </button>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,19 @@
+
+
+.mfixed {
+  display: flex;
+  position: fixed;
+  width: 30%;
+  input[type='text'] {
+    align-content: flex-start;
+    width: 80%;
+    line-height: 25px;
+    font-size: 14px;
+  }
+  z-index: 1;
+}
+
+.myTable {
+  position: relative;
+  top: 40px;
+}

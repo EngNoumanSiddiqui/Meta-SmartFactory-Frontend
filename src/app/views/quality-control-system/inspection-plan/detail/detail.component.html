@@ -1,0 +1,86 @@
+<div class="animated fadeIn">
+  <p-tabView class="col-md-12" (onChange)="handleChange($event)">
+    <p-tabPanel header="{{'inspection-plan-detail'|translate}}">
+        <div class="card" *ngIf="inspectionPlan">
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i> {{'inspection-plan-detail' | translate}}
+          </div>
+          <div class="card-body">
+            <form #stockForm="ngForm">
+              <div class="ui-g">
+                <div class="right-side ui-g-6"> 
+                  <table class="table table-outline">
+                    <tbody>
+                      <tr>
+                        <td width="30%" class="text-bold">{{'inspection-plan-id' | translate}} <span style="width: 0 !important;" class="float-right">:</span> </td>
+                        <td>{{inspectionPlan.inspectionPlanId}}</td>
+                      </tr>
+                      <tr>
+                        <td width="30%" class="text-bold">{{'inspection-plan-code' | translate}} <span style="width: 0 !important;" class="float-right">:</span> </td>
+                        <td>{{inspectionPlan.inspectionPlanCode}}</td>
+                      </tr>
+                      <tr>
+                        <td class="text-bold">{{'material-no' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                        <td>{{inspectionPlan.stock?.stockNo}}</td>
+                      </tr>
+                      <tr>
+                        <td class="text-bold">{{'material-name' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                        <td>{{inspectionPlan.stock?.stockName}}</td>
+                      </tr>
+                      <tr>
+                        <td class="text-bold">{{'plant' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                        <td>{{inspectionPlan.plant?.plantName}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="right-side ui-g-6">
+                  <table class="table table-outline">
+                    <tbody>
+                      <tr>
+                        <td class="text-bold">{{'usage' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                        <td>{{inspectionPlan.qualityUsage?.usageText}}</td>
+                      </tr>
+                      <tr>
+                        <td class="text-bold">{{'planning-work-center' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                        <td>{{inspectionPlan.planningWorkcenterId}}</td>
+                      </tr>
+                      <tr>
+                        <td class="text-bold">{{'group' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                        <td>{{inspectionPlan.group}}</td>
+                      </tr>
+                      <tr>
+                        <td class="text-bold">{{'groupCounter' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                        <td>{{inspectionPlan.groupCounter}}</td>
+                      </tr>
+                      <tr>
+                        <td class="text-bold">{{'from-lot-size' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                        <td>{{inspectionPlan.fromLotSize}}</td>
+                      </tr>
+                      <tr>
+                        <td class="text-bold">{{'to-lot-size' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                        <td>{{inspectionPlan.toLotSize}}</td>
+                      </tr>
+                      <tr>
+                        <td class="text-bold">{{'key-date' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                        <td>{{inspectionPlan.keyDate | date :'dd/MM/yyyy HH:mm'}}</td>
+                      </tr>
+                      <tr>
+                        <td class="text-bold">{{'status' | translate}}<span style="width: 0 !important;" class="float-right">:</span></td>
+                        <td>{{inspectionPlan.status}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>  
+            </form>
+          </div>
+        </div>
+    </p-tabPanel>
+
+    <p-tabPanel header="{{'operation'|translate}}">
+      <list-inspection-plan-operation [inspectionPlanId]="inspectionPlan.inspectionPlanId"></list-inspection-plan-operation>
+    </p-tabPanel>
+  </p-tabView>
+</div>
+

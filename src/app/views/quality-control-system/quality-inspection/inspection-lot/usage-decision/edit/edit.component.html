@@ -1,0 +1,148 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">   
+        <div class="card">
+          <div class="">
+            <form #inspForm="ngForm">
+              <table class="table table-bordered">
+                <tr> 
+                  <td>{{'ud-code' | translate}}</td>
+                  <td> 
+                    <select id="udCode" name="udCode" class="form-control" [(ngModel)]="usageDecision.udCode" (change)="onSelectedUsCode($event)" required>
+                      <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                      <option value="{{udCode}}" *ngFor="let udCode of udCodeList">{{udCode}}
+                      </option>
+                    </select>
+                  </td>
+                </tr>  
+                <tr>
+                  <td>{{'usage-decision' | translate}}</td>
+                  <td>
+                    <input
+                      type="text"
+                      id="usageDecision"
+                      name="usageDecision"
+                      [(ngModel)]="usageDecision.usageDecision"
+                      class="form-control"
+                      disabled
+                    />
+                  </td>
+                </tr> 
+                <tr>
+                  <td>{{'quality-score' | translate}}</td>
+                  <td>
+                      <input
+                      type="text"
+                      id="qualityScore"
+                      name="qualityScore"
+                      [(ngModel)]="usageDecision.qualityScore"
+                      class="form-control"
+                      disabled
+                    />
+                    
+                  </td>
+                </tr> 
+                <tr>
+                  <td>{{'inspection-lot-quality' | translate}}</td>
+                  <td class="display-flex">
+                    <input
+                    type="number"
+                    id="inspectionLotQuantity"
+                    name="inspectionLotQuantity"
+                    [(ngModel)]="usageDecision.inspectionLotQuantity"
+                    class="form-control"
+                    disabled
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'sample-size' | translate}}</td>
+                  <td>
+                    <input
+                      type="number"
+                      id="sampleSize"
+                      name="sampleSize"
+                      [(ngModel)]="usageDecision.sampleSize"
+                      class="form-control"
+                      disabled
+                    />
+                  </td>
+                </tr> 
+                <tr>
+                  <td>{{'unrestricted-use' | translate}}</td>
+                  <td>
+                      <input
+                      type="number"
+                      id="unrestrictedUse"
+                      name="unrestrictedUse"
+                      [(ngModel)]="usageDecision.unrestrictedUse"
+                      class="form-control" 
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'scrap' | translate}}</td>
+                  <td>
+                    <input
+                      type="number"
+                      id="scrap"
+                      name="scrap"
+                      [(ngModel)]="usageDecision.scrap"
+                      class="form-control"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'sample-usage' | translate}}</td>
+                  <td>
+                    <input
+                    type="number"
+                    id="sampleUsage"
+                    name="sampleUsage"
+                    [(ngModel)]="usageDecision.sampleUsage"
+                    class="form-control"
+                  />
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'blocked-stock' | translate}}</td>
+                  <td>
+                    <input
+                    type="number"
+                    id="blockedStock"
+                    name="blockedStock"
+                    [(ngModel)]="usageDecision.blockedStock"
+                    class="form-control"
+                  />
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'reserves' | translate}}</td>
+                  <td>
+                    <input
+                    type="number"
+                    id="reserves"
+                    name="reserves"
+                    [(ngModel)]="usageDecision.reserves"
+                    class="form-control"
+                  />
+                  </td>
+                </tr>
+              </table>
+            </form>
+          </div>
+        </div>
+        <div class="row col-md-12">
+          <button
+            type="submit"
+            class="btn btn-sm btn-primary"
+            [disabled]="!inspForm.form.valid"
+            (click)="save()"
+          >
+            <i class="fa fa-dot-circle-o"></i>
+            {{ "save" | translate }}
+          </button>
+        </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,274 @@
+<p-confirmDialog></p-confirmDialog>
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <p-table #dt [columns]="selectedColumns" scrollable="true" scrollHeight="55vh"
+           [value]="employees" [rows]="pagination.rows"
+            [totalRecords]="pagination.totalElements" dataKey="employeeId" [(selection)]="selectedStaffs">
+            <ng-template pTemplate="caption">
+              <div style="text-align:left">
+                <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header" maxSelectedLabels="0"
+                  selectedItemsLabel="{{'columns-selected'|translate}}" [style]="{minWidth: '200px'}"
+                  defaultLabel="Choose Columns">
+                  <ng-template let-col let-i="index" pTemplate="item">
+                    {{col.label|translate}}
+                  </ng-template>
+                </p-multiSelect>
+
+                <button pButton class="ui-button-success float-right" (click)="modalShow(null,'NEW')"
+                  label="{{'add-new'|translate}}"> </button>
+                <button pButton style="margin-right: 5px" class="ui-button-primary float-right" (click)="cloneModalShow('CLONE')"
+                  label="{{'Clone'|translate}}" [disabled]="selectedStaffs.length!=1"> </button>
+                  
+                  <p-splitButton [style]="{'margin-right' : '5px'}"  label="{{'export-selected'|translate}}" 
+                  icon="fa fa-file" [model]="selecteMenuItems" 
+                  styleClass="ui-button-warning float-right">
+                </p-splitButton>
+                <p-splitButton [style]="{'margin-right' : '5px'}"  label="{{'export-all'|translate}}" 
+                icon="fa fa-file-alt" [model]="menuItems" 
+                styleClass="ui-button-warning float-right">
+              </p-splitButton>
+               
+                
+                <button pButton [disabled]="selectedStaffs.length<2" style="margin-right: 5px"
+                  class="ui-button-warning float-right" type="button" icon="fa fa-file" iconPos="left"
+                  (click)="modalShow(null,'COMPARE')" label="Compare"> </button>
+
+              </div>
+              <!--<hr>-->
+            </ng-template>
+
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th style="width: 3em" rowspan="2">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th *ngFor="let col of columns; let i=index;" style="cursor: pointer"
+                  [ngClass]="{'bg-selected-order':pageFilter.orderByProperty ==col.field}"
+                  (click)="reOrderData(i,col.field)"><i [ngClass]="'fa  fa-sort-alpha-' + classReOrder[i]"></i>
+                  {{col.header|translate}}
+                </th>
+                <th width="80px" rowspan="2">{{'action' | translate}}</th>
+              </tr>
+              <tr>
+                <th *ngFor="let col of columns" class="ui-fluid" [ngSwitch]="col.field">
+                  <span *ngSwitchCase="'email'"></span>
+                  <span *ngSwitchCase="'phone'"></span>
+                  <span *ngSwitchCase="'description'"></span>
+                  <span *ngSwitchCase="'gsm'"></span>
+                  <select *ngSwitchCase="'employeeTitleName'" id="employeTitleIdx" name="employeTitleIdx" class="form-control"
+                  [(ngModel)]="pageFilter.employeeTitleName" (ngModelChange)="filter(pageFilter)">
+                  <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                  <option *ngFor="let emp of EmployeeTitleList" value="{{emp.employeeTitleName}}">
+                    {{emp.employeeTitleName}}
+                  </option>
+                </select>
+                  <select *ngSwitchCase="'gender'" id="gender" name="operationType" class="form-control"
+                    [(ngModel)]="pageFilter.gender" (ngModelChange)="filter(pageFilter)">
+                    <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                    <option *ngFor="let gender of genderList" value="{{gender}}">{{gender}}</option>
+                  </select>
+                  <select *ngSwitchCase="'bloodGroup'" id="bloodGroup" name="operationType" class="form-control"
+                    [(ngModel)]="pageFilter.bloodGroup" (ngModelChange)="filter(pageFilter)">
+                    <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                    <option *ngFor="let blood of bloodList" value="{{blood}}">{{blood}}</option>
+                  </select>
+                  <span *ngSwitchCase="'plant'"></span>
+                  <span *ngSwitchCase="'rfid'"></span>
+
+                  <!-- <select *ngSwitchCase="'plant'" [disabled]="plantListDisable" style="width: 100%" id="plant" name="plant" class="form-control" [(ngModel)]="pageFilter.plantId" (ngModelChange)="filter(pageFilter)">
+                    <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                    <option *ngFor="let plant of filteredPlantList" value="{{plant.plantId}}">{{plant.plantName}}</option>
+                  </select> -->
+
+                  <!-- <input *ngSwitchCase="'plant'" style="width: 100%" [(ngModel)]="pageFilter[col.field]"  pInputText type="text" (input)="filterByColumn($event.target.value,col.field)">
+                   -->
+                  <input *ngSwitchDefault style="width: 100%" [(ngModel)]="pageFilter[col.field]" pInputText type="text"
+                    (input)="filterByColumn($event.target.value,col.field)">
+
+                </th>
+              </tr>
+            </ng-template>
+
+
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr [pSelectableRow]="rowData">
+                <td style="width: 3em">
+                  <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                </td>
+                <td *ngFor="let col of columns" style="cursor: pointer" [ngSwitch]="col.field">
+
+                  <a *ngSwitchCase="'plant'" href="javascript:;" (click)="showPlantDetail(rowData[col.field]?.plantId)">
+                    {{rowData[col.field]?.plantName}}</a>
+                  <a *ngSwitchCase="'employeeId'" href="javascript:;" (click)="modalShow(rowData.employeeId,'DETAIL')">
+                      {{rowData[col.field]}}</a>
+
+                    <span *ngSwitchCase="'employeeTitleName'" (click)="modalShow(rowData.employeeId,'DETAIL')">
+                      {{rowData.employeTitle?.employeeTitleName}}</span>
+                    <span *ngSwitchCase="'rfid'" (click)="modalShow(rowData.employeeId,'DETAIL')">
+                        {{rowData.rfid ? '*****' : ''}}</span>
+
+                  <span *ngSwitchDefault (click)="modalShow(rowData.employeeId,'DETAIL')"> {{rowData[col.field]}}</span>
+                  <!-- {{rowData[col.field]}}
+                    -->
+                </td>
+
+                <td width="80px">
+                  <button class="btn btn-sm btn-outline-danger" type="button" (click)="delete(rowData.employeeId)">
+                    <i class="fa fa-trash"></i></button>
+                  <button class="btn btn-sm btn-outline-info" type="button"
+                    (click)="modalShow(rowData.employeeId,'EDIT')">
+                    <i class="fa fa-edit"></i></button>
+
+                    <button class="btn btn-sm btn-outline-info" type="button" pTooltip="ADD Group" tooltipPosition="top"
+                    (click)="employeeGroupModalShow(rowData.employeeId,'EMPLOYEEDETAILGROUP')">
+                    <i class="fa fa-user-circle"></i></button>
+                    <button class="btn btn-sm btn-outline-danger" type="button" pTooltip="REMOVE GROUP" tooltipPosition="top"
+                    (click)="employeeGroupModalRemove(rowData.employeeId,'EMPLOYEEDETAILGROUP')">
+                    <i class="fa fa-user-circle"></i></button>
+                </td>
+              </tr>
+            </ng-template>
+
+          </p-table>
+          <br />
+          <div class="row">
+            <app-paging [TotalElements]="pagination.totalElements" [CurrentPage]="pagination.currentPage"
+              [PageSize]="pagination.pageSize" [rows]="pagination.rows"
+              [TotalPageLinkButtons]="pagination.TotalPageLinkButtons"
+              [RowsPerPageOptions]="pagination.RowsPerPageOptions" (onPageChange)="myChanges($event)"></app-paging>
+            <span style="margin-left:2px; padding-top: 2px " class="text-muted">{{'total-records'|translate}}:
+              {{pagination?.totalElements}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--/.col-->
+  </div>
+</div>
+<ng-template [ngIf]="staffModal.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal"
+    (onHidden)="staffModal.active=false; staffModal.modal=null" class="modal fade" tabindex="-1" role="dialog"
+    aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-success modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"> {{'staff-information' | translate}}</h4>
+          <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+
+          <ng-template [ngIf]="staffModal.modal=='DETAIL'">
+
+            <p-tabView>
+              <p-tabPanel header="Personal Detail">
+                <staff-detail [id]="staffModal.id" (saveAction)="myModal.hide(); filter(pageFilter)"></staff-detail>
+              </p-tabPanel>
+              <p-tabPanel header="Employee Skills">
+                <ng-template pTemplate="content">
+                  <app-employee-skills-list [id]="{'id':staffModal.id,'status':'read'}"
+                    (saveAction)="myModal.hide(); filter(pageFilter)"></app-employee-skills-list>
+                </ng-template>
+              </p-tabPanel>
+            </p-tabView>
+
+          </ng-template>
+
+          
+          <ng-template [ngIf]="staffModal.modal=='EDIT'">
+              <staff-edit [id]="staffModal.id" (saveAction)="myModal.hide(); filter(pageFilter)"></staff-edit>
+          </ng-template>
+          <ng-template [ngIf]="staffModal.modal=='CLONE'">
+            <staff-edit [id]="staffModal.id" [cloned]="true" (saveAction)="myModal.hide(); filter(pageFilter)"></staff-edit>
+          </ng-template>
+          <ng-template [ngIf]="staffModal.modal=='NEW'">
+            <staff-new (saveAction)="myModal.hide(); filter(pageFilter)"></staff-new>
+          </ng-template>
+          <ng-template [ngIf]="staffModal.modal=='COMPARE'">
+            <app-comparison [selectedEmployees]="selectedStaffs"></app-comparison>
+          </ng-template>
+
+        
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary"
+            (click)="myModal.hide()">{{'close' | translate}}</button>
+          <button *ngIf="staffModal.modal=='DETAIL'" type="button" class="btn rounded btn-primary"
+            (click)="staffModal.modal='NEW'">{{'new' | translate}}</button>
+          <button *ngIf="staffModal.modal=='DETAIL'" type="button" class="btn rounded btn-success"
+            (click)="staffModal.modal='EDIT'">{{'edit' | translate}}</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</ng-template>
+
+
+<ng-template [ngIf]="employeeGroupModal.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal" 
+    (onHidden)="employeeGroupModal.active=false; employeeGroupModal.modal=null" class="modal fade" tabindex="-1" role="dialog"
+    aria-labelledby="myModalLabel" aria-hidden="true" >
+    <div class="modal-dialog modal-success modal-lg modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"> {{'add-new-group' | translate}}</h4>
+          <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <ng-template [ngIf]="employeeGroupModal.modal=='EMPLOYEEDETAILGROUP'">
+            <employee-detail-groups-new (saveAction)="myModal.hide();" [isRemove]="false" [id]="employeeGroupModal.id"></employee-detail-groups-new>
+        </ng-template>
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary"
+            (click)="myModal.hide()">{{'close' | translate}}</button>
+
+   
+  
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</ng-template>
+
+<ng-template [ngIf]="employeeGroupModalHide.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myModal="bs-modal" 
+    (onHidden)="employeeGroupModalHide.active=false; employeeGroupModalHide.modal=null" class="modal fade" tabindex="-1" role="dialog"
+    aria-labelledby="myModalLabel" aria-hidden="true" >
+    <div class="modal-dialog modal-success modal-lg modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"> {{'remove-employee-group' | translate}}</h4>
+          <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+
+
+          <ng-template [ngIf]="employeeGroupModalHide.modal=='EMPLOYEEDETAILGROUP'">
+            <employee-detail-groups-new (saveAction)="myModal.hide();" [isRemove]="true"  [id]="employeeGroupModalHide.id"></employee-detail-groups-new>
+        </ng-template>
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary"
+            (click)="myModal.hide()">{{'close' | translate}}</button>
+
+   
+  
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</ng-template>

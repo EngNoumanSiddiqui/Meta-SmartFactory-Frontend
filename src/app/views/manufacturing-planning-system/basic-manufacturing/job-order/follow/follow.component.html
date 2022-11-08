@@ -1,0 +1,100 @@
+<p-confirmDialog></p-confirmDialog>
+
+<div class="animated fadeIn">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <p-table #dt [columns]="selectedColumns" [value]="allJobs" [rows]="pagination.rows"
+                        [totalRecords]="pagination.totalElements" dataKey="jobOrderId"
+                        scrollable="true" scrollHeight="55vh">
+
+                        <ng-template pTemplate="caption">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <!-- <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
+                                    maxSelectedLabels="0" selectedItemsLabel="{{'columns-selected'|translate}}"
+                                    [style]="{minWidth: '200px'}" defaultLabel="Choose Columns">
+                                    <ng-template let-col let-i="index" pTemplate="item">
+                                        {{col.label|translate}}
+                                    </ng-template>
+                                </p-multiSelect>  -->
+                                <p-multiSelect [options]="cols" class="pl-2" [(ngModel)]="selectedColumns" optionLabel="header"
+                                selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px', float: 'left'}" defaultLabel="Choose Columns"></p-multiSelect>
+
+                                </div>
+
+                                <div class="col-md-2">
+                                    <workcenter-auto-complete [plantId]="pageFilter.plantId" (selectedWorkCenterEvent)="setSelectedWorkCenter($event)"></workcenter-auto-complete>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <workstation-auto-complete [plantId]="pageFilter.plantId" [workCenterId]="workCenterId" [disabled] ="!workCenterId"
+                                    (selectedWorkStationEvent)="setSelectedWorkStation($event)" [selectedWorkStation]="workCenterId">
+                                  </workstation-auto-complete>
+                                </div>
+
+                            </div>
+                        </ng-template>
+
+                        <ng-template pTemplate="header" let-columns>
+                            <tr>
+                                <ng-container *ngFor="let col of columns; let i=index">
+                                    <th>
+                                        {{col.header|translate}}
+                                    </th>
+                                </ng-container>
+                                <!-- <th width="60px" rowspan="2">{{'action' | translate}}</th> -->
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-rowData let-columns="columns" let-expanded="expanded">
+                            <tr>
+                                <td *ngFor="let col of columns" style="cursor: pointer" [ngSwitch]="col.field">
+
+                     
+                                    <a href="javascript:;" *ngSwitchCase="'jobOrderId'"
+                                        (click)="showJobOrderDetail(rowData.jobOrderId)">
+                                        {{rowData.jobOrderId}}</a>
+                     
+                                    <a href="javascript:;" *ngSwitchCase="'workStation.workStationName'"
+                                        (click)="showWsDetail(rowData.workStation.workStationId)">
+                                        {{rowData.workStation?.workStationName}}
+                                    </a>
+
+                                    <span *ngSwitchCase="'plannedDuration'">{{rowData.plannedDuration}}</span>
+                                    <span *ngSwitchCase="'actualSetup'">{{rowData.actualSetup}}</span>
+                                    <span *ngSwitchCase="'plannedStart'">{{rowData.startDate | date: 'HH:mm'}}</span>
+                                    <span *ngSwitchCase="'duration'">{{rowData.duration}}</span>
+                                    <span *ngSwitchCase="'productionState'">{{rowData?.workStation?.workStationState }}</span>
+                                    <span *ngFor="let item of rowData.jobOrderStockProduceList last as isLast">
+                                        <p *ngSwitchCase="'goodPieces'">{{item.quantity}}</p>
+                                        <p *ngSwitchCase="'scrapPieces'">{{item.defectQuantity}}</p>
+                                        <p *ngSwitchCase="'scrap-per'">{{ checkIllegalNumber(item) }}</p>
+                                    </span>
+
+                                    <span *ngSwitchDefault>
+                                        {{(rowData[col.field]?(rowData[col.field]+''):'')|translate}} </span>
+                                </td>
+                                
+                            </tr>
+
+                        </ng-template>
+
+                    </p-table>
+                    <br />
+                    <div class="row">
+                        <app-paging [TotalElements]="pagination.totalElements" [CurrentPage]="pagination.currentPage"
+                            [PageSize]="pagination.pageSize" [rows]="pagination.rows"
+                            [TotalPageLinkButtons]="pagination.TotalPageLinkButtons"
+                            [RowsPerPageOptions]="pagination.RowsPerPageOptions" (onPageChange)="myChanges($event)">
+                        </app-paging>
+                        <span style="margin-left:2px; padding-top: 2px "
+                            class="text-muted">{{'total-records'|translate}}:
+                            {{pagination?.totalElements}}</span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

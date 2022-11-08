@@ -1,0 +1,252 @@
+<div class="animated fadeIn position-relative">
+  <div class="d-flex justify-content-around badge-light border align-items-center flex-lg-row flex-column position-static mx-auto p-2">
+    <div>
+      <div>
+        <p-radioButton name="group1" value="ALL" label="{{'all'|translate}}" [(ngModel)]="machineState"
+                       inputId="opt1"></p-radioButton>
+      </div>
+      <div class="pt-3">
+        <p-radioButton name="group1" value="PRODUCTION" label="{{'PRODUCTION'|translate}}" [(ngModel)]="machineState"
+                       inputId="opt2"></p-radioButton>
+      </div>
+      
+    </div>
+    <div>
+      <div>
+        <p-radioButton name="group1" value="CLOSED" label="{{'CLOSED'|translate}}" [(ngModel)]="machineState"
+                       inputId="opt3"></p-radioButton>
+      </div>
+      <div class="pt-3">
+        <p-radioButton name="group1" value="MANIPULATION" label="{{'MANIPULATION'|translate}}"
+                       [(ngModel)]="machineState" inputId="opt4"></p-radioButton>
+      </div>
+    </div>
+    <div>
+      <div>
+        <p-radioButton name="group1" value="WAITING_FOR_JOB" label="{{'WAITING_FOR_JOB'|translate}}"
+                       [(ngModel)]="machineState" inputId="opt5"></p-radioButton>
+      </div>
+      <div class="pt-3">
+        <p-radioButton name="group1" value="WAITING_FOR_LABOR" label="{{'WAITING_FOR_LABOR'|translate}}"
+                       [(ngModel)]="machineState" inputId="opt6"></p-radioButton>
+      </div>
+    </div>
+    
+    <div>
+    <div>
+      <p-radioButton name="group1" value="WAITING_FOR_MAINTENANCE" label="{{'WAITING_FOR_MAINTENANCE'|translate}}"
+                     [(ngModel)]="machineState" inputId="opt7"></p-radioButton>
+    </div>
+    <div class="pt-3">
+      <p-radioButton name="group1" value="WAITING_FOR_QUALITY" label="{{'WAITING_FOR_QUALITY'|translate}}"
+                     [(ngModel)]="machineState" inputId="opt8"></p-radioButton>
+    </div>
+  </div>
+  <div>
+
+    <div class="d-flex">
+    <div>
+      <label class="switch switch-3d switch-success">
+        <input checked class="switch-input" type="checkbox" name="allMode" [(ngModel)]="allMode">
+        <span class="switch-label"></span>
+        <span class="switch-handle"></span>
+      </label>
+      {{'big'|translate}}
+    </div>
+    <div>
+      <label class="switch switch-3d switch-success">
+        <input checked class="switch-input" type="checkbox" name="malfunction" [(ngModel)]="malfunction">
+        <span class="switch-label"></span>
+        <span class="switch-handle"></span>
+      </label>
+      {{'malfunction'|translate}}
+    </div>
+    <div>
+      <label class="switch switch-3d switch-success">
+        <input checked class="switch-input" type="checkbox" name="showInActive" [(ngModel)]="showInActive">
+        <span class="switch-label"></span>
+        <span class="switch-handle"></span>
+      </label>
+      {{'show-inactive'|translate}}
+    </div>
+  </div>
+  <div class="pt-1">
+    <span class="col-4 pt-1">{{'workcenter'|translate}} </span>
+    <auto-complete [dropdown]="true" [itemName]="'workCenterName'" [allElements]="workcenterList"
+                   (selectedEvent)="workCenterChanged($event)"></auto-complete>
+
+  </div>
+  </div>
+  </div>
+  <div class="row soft-scroll">
+    <!--<pre>{{monitoringDataItem | json}}</pre>-->
+    <div class="col-lg-12">
+      <div class="row">
+        <ng-container *ngFor="let monitoringDataItem of monitoringDatas">
+          <ng-template
+
+            [ngIf]="(!selectedWorkCenterId||selectedWorkCenterId==monitoringDataItem.datas[0].workCenterId)
+            &&(machineState=='ALL'|| machineState==monitoringDataItem.datas[0].status)
+            &&((showInActive && (monitoringDataItem.datas[0].status=='CLOSED' || monitoringDataItem.datas[0].status!=='CLOSED')) || (!showInActive && (monitoringDataItem.datas[0].status!=='CLOSED')) )
+            &&((plant && (plant.plantId==monitoringDataItem.datas[0].plantId)) || (!plant))">
+            <div class="col-lg-2 col-md-3 col-sm-4 col-6">
+              <div *ngIf="allMode" class="monitoring_block">
+                <div class="" (click)="showMonitoringDetail(monitoringDataItem)" >
+                  <div class="col-12 monitoring_span"  [ngClass]="{ 'monitoring_span_prod': monitoringDataItem.datas[0].status == 'PRODUCTION' ,
+                       'monitoring_span_setup': monitoringDataItem.datas[0].status=='SETUP' ,
+                       'monitoring_span_setup_overtime': monitoringDataItem.datas[0].status=='SETUP_OVERTIME' ,
+                       'monitoring_span_maintenance'  :  monitoringDataItem.datas[0].status ==  'MAINTENANCE',
+                        'monitoring_span_waiting_for_job'  :  monitoringDataItem.datas[0].status ==  'WAITING_FOR_JOB' ||monitoringDataItem.datas[0].status ==  'MANIPULATION',
+                        'monitoring_span_waiting_for_labor'  :  monitoringDataItem.datas[0].status ==  'WAITING_FOR_LABOR',
+                        'monitoring_span_waiting_for_maintenance'  :  monitoringDataItem.datas[0].status ==  'WAITING_FOR_MAINTENANCE',
+                        'monitoring_span_waiting_for_quality'  :  monitoringDataItem.datas[0].status ==  'WAITING_FOR_QUALITY',
+                        'monitoring_span_stop'  : monitoringDataItem.datas[0].status == 'STOPPED' ||monitoringDataItem.datas[0].status == 'CLOSED'||monitoringDataItem.datas[0].status == 'UNKNOWN_STOPPED'}">
+
+                    {{monitoringDataItem.datas[0]?.workStationName}}
+                    <br>
+
+                    <span *ngIf="monitoringDataItem.datas[0].status!='PRODUCTION'"
+                          class="text-capitalize">{{'stop-time'|translate}}
+                      {{monitoringDataItem.datas[0].lastStopDurationAsString}}</span>
+                    <span *ngIf="monitoringDataItem.datas[0].status=='PRODUCTION'"
+                          class="text-capitalize">{{'operation-time'|translate}}
+                      {{monitoringDataItem.datas[0].jobOperationTimeAsString}}</span>
+
+                  </div>
+                  <div class="col-12 bg-dark">
+                    <div class="col-12 display-6 ">
+<!--                       <span>-->
+<!--                         <ng-template let-item="monitoringDataItem.datas[0].oeeAvarageReport">-->
+<!--                             <span-->
+<!--                               [ngClass]="{'text-danger':item.workPerformance<=65,'text-warning':(item.workPerformance<85&&item.workPerformance>65),-->
+<!--                                 'text-success':(item.workPerformance>=85)}">{{item.workPerformance}}-->
+<!--                            </span>-->
+<!--                         </ng-template>-->
+<!--                       </span>-->
+                      <span *ngIf="(monitoringDataItem.datas[0].onSchedule)">
+                        <span [ngClass]="{'text-danger':monitoringDataItem.datas[0].onSchedule<=65,
+                             'text-warning':(monitoringDataItem.datas[0].onSchedule<85
+                             && monitoringDataItem.datas[0].onSchedule>65),
+                             'text-success':(monitoringDataItem.datas[0].onSchedule>=85)}">
+                            {{monitoringDataItem.datas[0].onSchedule + '%'}}
+                        </span>
+                      </span>
+                      <span  class="col-12 display-15 text-white px-0" *ngIf="!(monitoringDataItem.datas[0].onSchedule)">0</span>
+                    </div>
+                    <div class="col-12 display-11 text-white">
+                      <p-overlayPanel #wp [dismissable]="true" appendTo="body" baseZIndex="9999">
+                        <h4> {{'on-schedule'|translate}}</h4>
+                       <li> estimatedCount=   (currentDuration*plannedQuantity)/plannedDuration</li>
+                        <br>
+                        <li> <strong>{{'on-schedule'|translate}}=</strong> (100*actualCount)/estimatedCount</li>
+
+
+                      </p-overlayPanel>
+                      <span class="" (mouseenter)="wp.show($event)"
+                            (mouseleave)="wp.hide()"> {{'on-schedule'|translate}}</span>
+
+                    </div>
+                    <div class="row">
+                      <div class="col-6 px-0">
+                        <div class="col-12  p-0">
+
+                          <span *ngIf="(monitoringDataItem.datas[0].oeeAvarageReport.oee1)">
+                            <span [ngClass]="{'text-danger':monitoringDataItem.datas[0].oeeAvarageReport.oee1<=65,
+                                'text-warning':(monitoringDataItem.datas[0].oeeAvarageReport.oee1<85
+                                && monitoringDataItem.datas[0].oeeAvarageReport.oee1>65),
+                                'text-success':(monitoringDataItem.datas[0].oeeAvarageReport.oee1>=85)}">
+                                {{monitoringDataItem.datas[0].oeeAvarageReport.oee1 + '%'}}
+                            </span>
+                          </span>
+                          <span class="col-12 display-15 text-white px-0" *ngIf="!(monitoringDataItem.datas[0].oeeAvarageReport.oee1)">0</span>
+
+                        </div>
+                        <div class="col-12 display-11 text-white px-0">
+                          <p-overlayPanel #op2 [dismissable]="true" appendTo="body" baseZIndex="9999">
+                            {{'analyse-oee1'|translate}}
+                          </p-overlayPanel>
+                          <span class="" (mouseenter)="op2.show($event)"
+                                (mouseleave)="op2.hide()"> {{'oee'|translate}}</span>
+
+                        </div>
+                      </div>
+                      <div class="col-6 px-0">
+                        <div class="col-12 text-white p-0" >
+                          {{(monitoringDataItem.datas[0] && monitoringDataItem.datas[0].materiaList && monitoringDataItem.datas[0].materiaList[0])?monitoringDataItem.datas[0].materiaList[0].producedQuantity:'-'}}
+                        </div>
+                        <div class="col-12 display-11 text-white px-0">{{'good-count'|translate}}</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-12 monitoring_span" style="line-break: anywhere;"
+                       [ngClass]="{ 'monitoring_span_prod': monitoringDataItem.datas[0].status == 'PRODUCTION' ,
+                       'monitoring_span_setup': monitoringDataItem.datas[0].status=='SETUP' ,
+                       'monitoring_span_setup_overtime': monitoringDataItem.datas[0].status=='SETUP_OVERTIME' ,
+                       'monitoring_span_maintenance'  :  monitoringDataItem.datas[0].status ==  'MAINTENANCE',
+                        'monitoring_span_standby'  :  monitoringDataItem.datas[0].status ==  'WAITING_FOR_JOB' ||monitoringDataItem.datas[0].status ==  'MANIPULATION',
+                        'monitoring_span_waiting_for_labor'  :  monitoringDataItem.datas[0].status ==  'WAITING_FOR_LABOR',
+                        'monitoring_span_waiting_for_maintenance'  :  monitoringDataItem.datas[0].status ==  'WAITING_FOR_MAINTENANCE',
+                        'monitoring_span_waiting_for_quality'  :  monitoringDataItem.datas[0].status ==  'WAITING_FOR_QUALITY',
+                        'monitoring_span_stop'  : monitoringDataItem.datas[0].status == 'STOPPED' ||monitoringDataItem.datas[0].status == 'CLOSED'||monitoringDataItem.datas[0].status == 'UNKNOWN_STOPPED'}">
+                    <ng-template
+                      [ngIf]="monitoringDataItem.datas[0].status !='CLOSED'">{{(monitoringDataItem.datas[0].status == 'STOPPED' ? monitoringDataItem.datas[0].stopReason : monitoringDataItem.datas[0].status)|translate}}</ng-template>
+                    <ng-template
+                      [ngIf]="monitoringDataItem.datas[0].status == 'CLOSED'">{{'PANEL_INACTIVE'|translate}}</ng-template>
+
+                  </div>
+                  <div class="col-12  text-uppercase monitoring_span"
+                       [ngClass]="{'monitoring-machine-status_standby': monitoringDataItem.datas[0].machineStatus=='StandBy',
+                   'monitoring-machine-status_prod': monitoringDataItem.datas[0].machineStatus=='Running',
+                   'monitoring-machine-status_setup': monitoringDataItem.datas[0].machineStatus=='Setup',
+                   'monitoring_span_stop': monitoringDataItem.datas[0].machineStatus=='Stopped',
+                   'monitoring-machine-status_closed': monitoringDataItem.datas[0].machineStatus=='Closed'
+                   }">
+                    {{(monitoringDataItem.datas[0].machineStatus || '-')|translate}}
+                  </div>
+                  <div class="col-12 monitoring_span text-white" *ngIf="malfunction"
+                    [ngStyle]="{'background-color': ((monitoringDataItem.datas[0]?.maintenanceState === 'MALFUNCTION_MNTC')||(monitoringDataItem.datas[0]?.maintenanceState === 'MALFUNCTION')) ? '#4bcfed' : ''}">
+                    {{((monitoringDataItem.datas[0]?.maintenanceState === 'MALFUNCTION_MNTC') || (monitoringDataItem.datas[0]?.maintenanceState === 'MALFUNCTION')) ? monitoringDataItem.datas[0]?.maintenanceState : '-'}}
+                  </div>
+                  <div class="col-12 monitoring_span text-white text-uppercase">
+                    {{(monitoringDataItem.datas[0].operationName) ||'-'}}
+                  </div>
+                  <div class="col-12 monitoring_span text-white text-uppercase">
+                    {{monitoringDataItem.datas[0].materiaList && monitoringDataItem.datas[0].materiaList.length ? 
+                      ((monitoringDataItem.datas[0].materiaList[0]?.materialNo) + ' / ' +
+                      (monitoringDataItem.datas[0].materiaList[0]?.materialName)) ||'-' 
+                      : '-'}}
+                  </div>
+
+                </div>
+              </div>
+              <div *ngIf="!allMode" class="monitoring_block">
+                <div class="" (click)="showMonitoringDetail(monitoringDataItem)">
+                  <div class="col-12 monitoring_span"
+                       [ngClass]="{ 'monitoring_span_prod': monitoringDataItem.datas[0].status == 'PRODUCTION' ,
+                       'monitoring_span_setup': monitoringDataItem.datas[0].status=='SETUP' ,
+                       'monitoring_span_setup_overtime': monitoringDataItem.datas[0].status=='SETUP_OVERTIME' ,
+                       'monitoring_span_maintenance'  :  monitoringDataItem.datas[0].status ==  'MAINTENANCE',
+                        'monitoring_span_standby'  :  monitoringDataItem.datas[0].status ==  'WAITING_FOR_JOB' ||monitoringDataItem.datas[0].status ==  'MANIPULATION',
+                        'monitoring_span_waiting_for_labor'  :  monitoringDataItem.datas[0].status ==  'WAITING_FOR_LABOR',
+                        'monitoring_span_waiting_for_maintenance'  :  monitoringDataItem.datas[0].status ==  'WAITING_FOR_MAINTENANCE',
+                        'monitoring_span_waiting_for_quality'  :  monitoringDataItem.datas[0].status ==  'WAITING_FOR_QUALITY',
+                        'monitoring_span_stop'  : monitoringDataItem.datas[0].status == 'STOPPED' ||monitoringDataItem.datas[0].status == 'CLOSED'||monitoringDataItem.datas[0].status == 'UNKNOWN_STOPPED'}">
+                    {{monitoringDataItem.datas[0]?.workStationName}}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<ng-template [ngIf]="selectedItem">
+  <modal-content [modal]="modal" [model]="selectedItem" (modalClosedEvent)="selectedItem=null;">
+  </modal-content>
+</ng-template>
+
+

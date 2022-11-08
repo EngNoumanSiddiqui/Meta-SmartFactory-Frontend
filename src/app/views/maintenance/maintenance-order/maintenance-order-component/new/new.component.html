@@ -1,0 +1,101 @@
+<!--<form #orderEdit="ngForm" >-->
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          {{'maintenance-component'|translate}}
+        </div>
+        <div class="card-body">
+          <form #saleForm="ngForm" class="form-horizontal ui-fluid">
+            <table class="table table-bordered">
+              <tbody>
+              <tr>
+                <td width="35%">{{'component' | translate}}</td>
+                <td> 
+                  <span *ngIf="dataModel.stockId" class="form-control bg-readonly" (click)="choosepaneModal.active=true; choosepaneModal.modalType='component'">{{dataModel.stockName}}</span>
+                    <span *ngIf="!dataModel.stockId" class="form-control bg-readonly"(click)="choosepaneModal.active=true; choosepaneModal.modalType='component'">{{'click-to-select'|translate}}</span>
+                </td>
+              </tr>
+              <tr>
+                <td>{{'quantity' | translate}}</td>
+                <td><input class="form-control" [(ngModel)]="dataModel.quantity" type="number" min="0"
+                           name="componentQuantity" required/>
+                </td>
+              </tr>
+              <tr>
+                <td width="35%">{{'quantity-unit' | translate}}</td>
+                <td><unit-auto-complete [disabled]="dataModel.quantityUnit" [addIfMissing]="false"
+                   [selectedUnit]="dataModel.quantityUnit" 
+                   (unitChangeEvent)="dataModel.quantityUnit=$event"></unit-auto-complete>
+                </td>
+              </tr>
+              <tr>
+                <td >{{'material-cost' | translate}}</td>
+                <td><input class="form-control" [(ngModel)]="dataModel.materialCost" type="number" min="0"
+                  name="materialCost"/>
+                </td>
+              </tr>
+              <tr>
+                <td >{{'final-cost' | translate}}</td>
+                <td><input class="form-control" [(ngModel)]="dataModel.finalCost" type="number" min="0"
+                  name="finalCost"/>
+                </td>
+              </tr>
+              <tr>
+                <td >{{'batch' | translate}}</td>
+                <td><batch-auto-complete [addIfMissing]="true" (selectedBatchEvent)="setSelectedBatch($event)"></batch-auto-complete>
+                </td>
+              </tr>
+              </tbody>
+
+            </table>
+
+          </form>
+        </div>
+        <div class="card-footer">
+          <button type="reset" class="btn btn-sm btn-danger" (click)="reset()"><i class="fa fa-ban"></i>
+            {{'reset' | translate}}
+          </button>
+          <button type="submit" class="btn btn-sm btn-primary" [disabled]="!saleForm.form.valid || !dataModel.stockId"
+                  (click)="save()"><i class="fa fa-dot-circle-o"></i>
+            {{'save' | translate}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div><!--/.row-->
+</div>
+<!--</form>-->
+
+
+<ng-template [ngIf]="choosepaneModal.active">
+  <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #chooseModal="bs-modal" (onHidden)="choosepaneModal={active: false, modalType: null, isAuxMaterial: false, direction: null};" class="modal fade"
+       tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog modal-success modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"> {{choosepaneModal.modalType | translate}}</h4>
+          <button type="button" class="close" (click)="chooseModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <!--step2-->
+        <div class="modal-body">
+          <ng-template [ngIf]="choosepaneModal.modalType=='component'">
+            <div class="col-md-12">
+              <choose-stock-pane [hideCaption]="false" [stockTypeName]="'Maintenance assemblies'" [plantId]="selectedPlant?.plantId" (selectedEvent)="setSelectedStock($event);chooseModal.hide()"></choose-stock-pane>
+            </div>
+          </ng-template>
+        </div>
+        <!--step2-->
+        <div class="modal-footer">
+          <button type="button" style="background:lightslategray;" class="btn rounded btn-outline-secondary"
+                  (click)="chooseModal.hide()">{{'close' | translate}}
+          </button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</ng-template>

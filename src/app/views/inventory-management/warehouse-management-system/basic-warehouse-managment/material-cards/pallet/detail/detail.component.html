@@ -1,0 +1,51 @@
+<div class="card">
+    <span class="card-header">{{ "pallet-setting-list" | translate }}</span>
+
+    <div class="card-body">
+        <p-table #dt [value]="palletSetupList" [rows]="pagination.rows" [totalRecords]="pagination.totalElements" 
+        [columns]="cols" dataKey="palletStockId">
+
+            <ng-template pTemplate="header" let-columns>
+                <tr>
+                    <th *ngFor="let col of columns; let i=index;"> {{col.header|translate}}</th>
+                    <!-- <th width="80px" rowspan="2">{{'action' | translate}}</th> -->
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-palletSetup let-rowData let-columns="columns" let-index="rowIndex">
+                <tr [pSelectableRow]="rowData">
+                
+                    <td *ngFor="let col of columns" style="cursor: pointer" [ngSwitch]="col.field">
+
+                        <span *ngSwitchCase="'settingNo'">{{index +1 }}</span>
+                        <span *ngSwitchCase="'palletName'"> {{palletSetup.palletSetting?.palletName}}</span>
+                        <span *ngSwitchCase="'palletCode'"> {{palletSetup.palletSetting?.palleCode}}</span>
+                        <span *ngSwitchDefault>{{palletSetup[col.field]}}</span>
+
+                    </td>
+                    <!-- <td width="80px">
+                        <button class="btn btn-sm btn-outline-danger" type="button" (click)="delete(palletSetup)">
+                            <i class="fa fa-trash"></i></button>
+                        <button class="btn btn-sm btn-outline-info" type="button"
+                            (click)="onRowSelect(palletSetup);">
+                            <i class="fa fa-edit"></i></button>
+                    </td> -->
+                </tr>
+
+            </ng-template>
+        </p-table>
+
+        <br />
+        <div class="row">
+            <div class="col-md-12">
+                <app-paging [showSearch]="false" [TotalElements]="pagination.totalElements"
+                [CurrentPage]="pagination.currentPage" [PageSize]="pagination.pageSize" [rows]="pagination.rows"
+                [TotalPageLinkButtons]="pagination.TotalPageLinkButtons"
+                [RowsPerPageOptions]="pagination.RowsPerPageOptions" (onPageChange)="myChanges($event)"></app-paging>
+            <span style="margin-left:2px; padding-top: 2px " class="text-muted">{{'total-records'|translate}}:
+                {{pagination?.totalElements}}</span>
+            </div>
+
+        </div>
+    </div>
+</div>

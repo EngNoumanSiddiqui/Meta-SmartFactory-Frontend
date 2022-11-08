@@ -1,0 +1,91 @@
+<div class="ui-inputgroup  d-flex ui-fluid">
+    <p-autoComplete [disabled]="disabled" [(ngModel)]="selectedControlIndicatorSample" [suggestions]="filteredControlIndicatorSample"
+                    (completeMethod)="searchControlIndicatorSample($event)" field="controlIndicatorSampleCode" [required]="required"
+                     [dropdown]="dropdown" [forceSelection]="true" dataKey="controlIndicatorSampleId"
+                     placeholder="{{placeholder|translate}}" [minLength]="1" name="controlIndicatorSampleCode"
+                     (onDropdownClick)="handleDropdownClickForControlIndicatorSample()" (ngModelChange)="onChangeControlIndicatorSample($event)" >
+    </p-autoComplete>
+
+    <button *ngIf="addIfMissing" pButton icon="fa fa-plus-circle"
+        (click)="modalShow()">
+    </button>
+
+</div>
+
+<ng-template [ngIf]="modal.active">
+    <div bsModal [config]="{backdrop: 'static', keyboard: false, show: true}" #myqualityIndicatorSampleModal="bs-modal" class="modal fade"   (onHidden)="modal.active=false"
+         tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+      <div class="modal-dialog modal-success " role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">
+              <span >{{'new-quality-indicator-sample' | translate}}</span>
+            </h4>
+            <button type="button" class="close" (click)="myqualityIndicatorSampleModal.hide()" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="animated fadeIn">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="card">
+                    <div class="card-header">
+                      <i class="fa fa-align-justify"></i> {{'quality-indicator-sample-information' | translate}}
+                    </div>
+                    <div class="card-body">   
+                      <form #inspForm="ngForm">
+                        <table class="table table-bordered">
+                          <tr>
+                            <td>{{'indicator-sample-code' | translate}}</td>
+                            <td>
+                              <input
+                                type="text"
+                                id="controlIndicatorSampleCode"
+                                name="controlIndicatorSampleCode"
+                                [(ngModel)]="ControlIndicatorSampleDto.controlIndicatorSampleCode"
+                                class="form-control"
+                                required
+                              />
+                            </td>
+                          </tr>
+                          <tr>
+                          <tr>
+                            <td>{{'indicator-sample-text' | translate}}</td>
+                            <td>
+                              <input
+                                type="text" 
+                                id="controlIndicatorSampleText"
+                                name="controlIndicatorSampleText"
+                                [(ngModel)]="ControlIndicatorSampleDto.controlIndicatorSampleText"
+                                class="form-control"
+                                required
+                              />
+                            </td>
+                          </tr>
+                        </table>
+                      </form>
+                    </div>
+                  </div>
+                  <div class="row col-md-12">
+                    <button
+                      type="submit"
+                      class="btn btn-sm btn-primary"
+                      [disabled]="!inspForm.form.valid"
+                      (click)="save(myqualityIndicatorSampleModal)"
+                    >
+                      <i class="fa fa-dot-circle-o"></i>
+                      {{ "save" | translate }}
+                    </button>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+  </ng-template>

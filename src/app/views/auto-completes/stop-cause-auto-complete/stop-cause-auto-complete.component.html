@@ -1,0 +1,11 @@
+<div class="d-flex ui-fluid">
+    <p-autoComplete [(ngModel)]="selectedStopCause" [suggestions]="filteredStopCause"
+    (completeMethod)="searchStopCause($event)" field="stopCauseName"
+    appendTo="body" [baseZIndex]="9999999"
+     [dropdown]="dropdown" [required]="required" [forceSelection]="true"  dataKey="stopCauseId"
+     placeholder="{{placeholder|translate}}" [minLength]="1" name="stopCause"
+     [disabled]="disabled"
+     (onDropdownClick)="handleDropdownClickForStopCause()" (ngModelChange)="onChangeStopCause($event)" >
+</p-autoComplete>
+
+</div>

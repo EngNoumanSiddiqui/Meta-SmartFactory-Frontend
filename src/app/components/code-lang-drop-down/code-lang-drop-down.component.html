@@ -1,0 +1,8 @@
+<p-dropdown [(ngModel)]="selectedLangCode" [options]="langCodes"  autoWidth="false"
+            [style]="{'width':'150px'}" (onChange)="onChangeLangCode()">
+            
+  <ng-template let-lang pTemplate="item">
+    <img src="assets/img/flags/{{lang.value}}.png" width="20">
+    <span class="mt-6 ml-1" style="font-size:13px;">{{lang.label}}</span>
+  </ng-template>
+</p-dropdown>

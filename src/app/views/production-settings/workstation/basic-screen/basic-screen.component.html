@@ -1,0 +1,192 @@
+<p-confirmDialog></p-confirmDialog>
+<div class="animated fadeIn">
+    <div class="row">
+        <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">
+              <i class="fa fa-align-justify"></i>{{'basic-information'|translate}}
+            </div>
+            <div class="card-body">
+              <form #capacityForm="ngForm">
+              <table class="table table-bordered">
+                <tbody>
+                  <!--
+                    <tr>
+                        <td>{{'workstation-name'|translate}} </td>
+                        <td><input type="text" style="width: 100%"  required name="workStationName" [(ngModel)]="workStation.workStationName" /> </td>
+                    </tr>
+
+                  <tr>
+                    <td>{{'plant'|translate}}</td>
+                    <td>
+                        <div class="input-group">
+                          <select id="plantList" name="plantList" class="form-control" readonly [disabled]="true"
+                                      [(ngModel)]="workStation.plantId">
+                                <option [ngValue]="null" readonly > {{'please-select' | translate}}</option>
+                                <option *ngFor="let plant of plantList" value="{{plant.plantId}}" readonly>{{plant.plantName}}</option>
+                          </select>
+                        </div>
+                      </td>
+                  </tr>
+                  <tr>
+                    <td>{{'work-center' | translate}} </td>
+                    <td>
+                      <div class="input-group">
+                        <select id="workCenterIdx" name="workCenterIdx" class="form-control" [(ngModel)]="workStation.workCenterId" readonly [disabled]="true">
+                          <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                          <option *ngFor="let wl of workcenterList" value="{{wl.workCenterId}}">{{wl.workCenterName}}</option>
+                        </select>
+                      </div>
+                    </td>
+                </tr>
+                  <tr>
+                  <td>{{'work-center-category' | translate}}</td>
+                  <td>
+                      <div class="input-group">
+                        <select id="workCenterId" name="workCenterId" class="form-control" [(ngModel)]="workStation.workstationCategoryCode" readonly [disabled]="true">
+                          <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                          <option *ngFor="let wl of workStationCategoryList" value="{{wl.wsCatCode}}">{{wl.wsCatName}}</option>
+                        </select>
+                      </div>
+                  </td>
+                </tr>
+                  -->
+                <!--commented for now-->
+                <tr>
+                  <td>{{'standard-key-list'|translate}}</td>
+                  <td>
+                      <div class="input-group">
+                        <select id="standardKeyList" name="standardKeyListName" class="form-control" [(ngModel)]="standardKeyObject" (ngModelChange)="onChangeStandardKey($event)" [disabled]="workStationEfficiencyList?.length > 0">
+                          <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                          <option *ngFor="let wl of standardKeyList" [ngValue]="wl">{{wl.standartValue}}</option>
+                        </select>
+                        <!--myModal.show()-->
+                        <span class="input-group-btn">
+                          <button type="button" class="btn btn-primary" data-toggle="modal"
+                                  (click)="params.dialog.title = 'workcenter-type'; standardUnitMeasureListShow(null,'NEW'); myModal.show()" [disabled]="standardKeyObject == null"><i class="fa fa-hand-o-right"></i></button>
+                      </span>
+                      </div>
+                  </td>
+                </tr>
+              <!--commented for now-->
+                </tbody>
+              </table>
+              </form>
+            </div>
+        </div>
+        </div>
+       <!--comment for now-->
+         <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                  <i class="fa fa-align-justify"></i>{{'standard-key-parameter-list' | translate}}
+                </div>
+                <div class="card-body">
+                  <table class="table" style="table-layout: fixed; width: 100%">
+                      <thead>
+                          <tr align="center">
+                            <th>{{'standard-key'|translate}}</th>
+                            <th>{{'parameter'|translate}}</th>
+                            <th>{{'efficiency-rate'|translate}}</th>
+                            <th></th>
+                            <!--
+                            <th>{{'machine'|translate}}</th>
+                            <th>{{'labor'|translate}}</th>
+                            <th>{{'action'|translate}}</th>
+                            -->
+                          </tr>
+                      </thead>
+                    <tbody>
+                    <tr align="center" *ngFor="let item of workStationEfficiencyList; let i = index">
+                      <td class="text-center">{{item?.wsEffcnCode?.standartValue}}</td>
+                      <td class="text-center"> {{item?.wsEffcnParameterCode?.standartParameterDescription}}</td>
+                      <td class="text-center"> {{item.wsEffcnRate}}</td>
+                      <td width="80px" style="display: flex;">
+                          <button class="btn btn-sm"  (click)="params.dialog.title = 'edit-standard-key'; standardUnitMeasureListShow(i,'EDIT');" ><i class="fa fa-edit"></i></button>
+                          <button class="btn btn-sm" (click)="removeFromDumbStandardKeyList(i)" ><i class="fa fa-trash"></i></button>
+                      </td>
+                    </tr>
+                    </tbody>
+                    <tfoot>
+                    <tr >
+                      <td colspan="2">
+                        <button type="cancel" class="btn btn-sm btn-danger" (click)="cancelEfficiencyParameterUpdate()"><i class="fa fa-ban"></i>
+                          {{'cancel' | translate}}</button>
+                        <button type="submit" class="btn btn-sm btn-primary" (click)="save()"><i class="fa fa-dot-circle-o"></i>
+                          {{'save' | translate}}
+                        </button>
+                      </td>
+                    </tr>
+<!--                    <tr *ngIf="editMode">-->
+<!--                      <td colspan="2">-->
+<!--                        <button type="reset" class="btn btn-sm btn-danger" (click)="resetBasicData()"><i class="fa fa-ban"></i>-->
+<!--                          {{'reset' | translate}}</button>-->
+<!--                        <button type="submit" class="btn btn-sm btn-primary" [disabled]="!capacityForm.form.valid" (click)="save()"><i class="fa fa-dot-circle-o"></i>-->
+<!--                          {{'update'|translate}}-->
+<!--                        </button>-->
+<!--                      </td>-->
+<!--                    </tr>-->
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+        </div>
+        <!--comment for now-->
+    </div>
+  </div>
+  <div bsModal [config]="{backdrop: 'static', keyboard: false}" #myModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-success" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            <span *ngIf="params.dialog.title == 'workcenter-type'">{{'new-standard-key'|translate}}</span>
+          </h4>
+          <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!---------- MODEL # ------------->
+          <span>
+           <div class="form-group row">
+             <label class="col-md-3 col-form-label" for="dialogInput"> {{'perimeter'|translate}}</label>
+             <div class="col-md-9">
+              <select id="workCenterIdx" name="workCenterIdx" class="form-control"
+                      [(ngModel)]="standardKeyObject" (ngModelChange)="onChangeStandardKey($event)" disabled>
+                          <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                          <option *ngFor="let wl of standardKeyList"
+                                  value="{{wl}}">{{wl.standartValue}}</option>
+              </select>
+            </div>
+          </div>
+            <div class="form-group row">
+             <label class="col-md-3 col-form-label" for="dialogInput"> {{'parameter'|translate}}</label>
+             <div class="col-md-9">
+               <select id="standardKeyParamSelect" name="standardKeyParamSelectName" class="form-control"
+                       [(ngModel)]="workstationEfficiencyItem.wsEffcnParameterCode">
+                 <option [ngValue]="null"> {{'please-select' | translate}}</option>
+                 <option *ngFor="let skp of filterStandardKeyParameters" [ngValue]="skp">{{skp.standartParameterDescription}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label" for="dialogInput"> {{'efficiency-rate' | translate}}</label>
+            <div class="col-md-9">
+              <input type="number" id="dialogInput" name="dialogInput" [(ngModel)]="workstationEfficiencyItem.wsEffcnRate"
+                     class="form-control">
+            </div>
+          </div>
+        </span>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="myModal.hide()">{{'close' | translate}}</button>
+          <span *ngIf="params.dialog.title == 'workcenter-type'">
+              <button type="button" class="btn btn-danger" (click)="resetBasicData();">{{'reset' | translate}}</button>
+          </span>
+          <span *ngIf="params.dialog.title == 'workcenter-type'">
+            <button type="button" class="btn btn-success" (click)="saveStandardKey(); myModal.hide()">{{'add'|translate}}</button>
+          </span>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
